@@ -1,0 +1,411 @@
+﻿<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{285F92A5-48F8-42B6-A9BF-54DEF5654485}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Urban Blight</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionStrict>Off</OptionStrict>
+    <RootNamespace>Urban_Blight</RootNamespace>
+    <StartupObject>Urban_Blight.Start</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>Urban Blight.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <DebugType>full</DebugType>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>Urban Blight.xml</DocumentationFile>
+    <BaseAddress>285212672</BaseAddress>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>1</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+    <DebugType>none</DebugType>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Infragistics.Excel.v5.3">
+      <Name>Infragistics.Excel.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.Excel.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Shared.v5.3">
+      <Name>Infragistics.Shared.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Shared.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.Misc.v5.3">
+      <Name>Infragistics.WebUI.Misc.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.Misc.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.Shared.v5.3">
+      <Name>Infragistics.WebUI.Shared.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.Shared.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebCalcManager.v5.3">
+      <Name>Infragistics.WebUI.UltraWebCalcManager.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebCalcManager.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebChart.v5.3">
+      <Name>Infragistics.WebUI.UltraWebChart.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebChart.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebGrid.ExcelExport.v5.3">
+      <Name>Infragistics.WebUI.UltraWebGrid.ExcelExport.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebGrid.ExcelExport.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebGrid.v5.3">
+      <Name>Infragistics.WebUI.UltraWebGrid.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebGrid.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebListbar.v5.3">
+      <Name>Infragistics.WebUI.UltraWebListbar.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebListbar.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebNavigator.v5.3">
+      <Name>Infragistics.WebUI.UltraWebNavigator.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebNavigator.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebTab.v5.3">
+      <Name>Infragistics.WebUI.UltraWebTab.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebTab.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.UltraWebToolbar.v5.3">
+      <Name>Infragistics.WebUI.UltraWebToolbar.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.UltraWebToolbar.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.WebCombo.v5.3">
+      <Name>Infragistics.WebUI.WebCombo.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.WebCombo.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.WebDataInput.v5.3">
+      <Name>Infragistics.WebUI.WebDataInput.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.WebDataInput.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.WebDateChooser.v5.3">
+      <Name>Infragistics.WebUI.WebDateChooser.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.WebDateChooser.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.WebNavBar.v5.3">
+      <Name>Infragistics.WebUI.WebNavBar.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.WebNavBar.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.WebSchedule.v5.3">
+      <Name>Infragistics.WebUI.WebSchedule.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.WebSchedule.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.WebUI.WebScheduleDataProvider.v5.3">
+      <Name>Infragistics.WebUI.WebScheduleDataProvider.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\ASP.NET\Bin\Infragistics.WebUI.WebScheduleDataProvider.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.webassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.Misc.v5.3">
+      <Name>Infragistics.Win.Misc.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.Misc.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraChart.v5.3.Design">
+      <Name>Infragistics.Win.UltraChart.v5.3.Design</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraChart.v5.3.Design.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinCalcManager.v5.3">
+      <Name>Infragistics.Win.UltraWinCalcManager.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinCalcManager.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinCalcManager.v5.3.FormulaBuilder">
+      <Name>Infragistics.Win.UltraWinCalcManager.v5.3.FormulaBuilder</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinCalcManager.v5.3.FormulaBuilder.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinChart.v5.3">
+      <Name>Infragistics.Win.UltraWinChart.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinChart.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinDataSource.v5.3">
+      <Name>Infragistics.Win.UltraWinDataSource.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinDataSource.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinDataSource.v5.3.Design">
+      <Name>Infragistics.Win.UltraWinDataSource.v5.3.Design</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinDataSource.v5.3.Design.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinDock.v5.3">
+      <Name>Infragistics.Win.UltraWinDock.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinDock.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinEditors.v5.3">
+      <Name>Infragistics.Win.UltraWinEditors.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinEditors.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinExplorerBar.v5.3">
+      <Name>Infragistics.Win.UltraWinExplorerBar.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinExplorerBar.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinGrid.ExcelExport.v5.3">
+      <Name>Infragistics.Win.UltraWinGrid.ExcelExport.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinGrid.ExcelExport.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinGrid.v5.3">
+      <Name>Infragistics.Win.UltraWinGrid.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinGrid.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinGrid.v5.3.Design">
+      <Name>Infragistics.Win.UltraWinGrid.v5.3.Design</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinGrid.v5.3.Design.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinInkProvider.Ink17.v5.3">
+      <Name>Infragistics.Win.UltraWinInkProvider.Ink17.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinInkProvider.Ink17.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinInkProvider.v5.3">
+      <Name>Infragistics.Win.UltraWinInkProvider.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinInkProvider.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinListBar.v5.3">
+      <Name>Infragistics.Win.UltraWinListBar.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinListBar.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinMaskedEdit.v5.3">
+      <Name>Infragistics.Win.UltraWinMaskedEdit.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinMaskedEdit.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinPrintPreviewDialog.v5.3">
+      <Name>Infragistics.Win.UltraWinPrintPreviewDialog.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinPrintPreviewDialog.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinSchedule.v5.3">
+      <Name>Infragistics.Win.UltraWinSchedule.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinSchedule.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinStatusBar.v5.3">
+      <Name>Infragistics.Win.UltraWinStatusBar.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinStatusBar.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinTabbedMdi.v5.3">
+      <Name>Infragistics.Win.UltraWinTabbedMdi.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinTabbedMdi.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinTabControl.v5.3">
+      <Name>Infragistics.Win.UltraWinTabControl.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinTabControl.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinToolbars.v5.3">
+      <Name>Infragistics.Win.UltraWinToolbars.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinToolbars.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinTree.v5.3">
+      <Name>Infragistics.Win.UltraWinTree.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinTree.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.UltraWinTree.v5.3.Design">
+      <Name>Infragistics.Win.UltraWinTree.v5.3.Design</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.UltraWinTree.v5.3.Design.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="Infragistics.Win.v5.3">
+      <Name>Infragistics.Win.v5.3</Name>
+      <HintPath>..\..\..\..\..\Program Files\Infragistics\NetAdvantage 2005 Volume 3 CLR 1.0\Windows Forms\Bin\Infragistics.Win.v5.3.dll</HintPath>
+      <AssemblyFolderKey>hklm\infragistics.winassemblies.20053</AssemblyFolderKey>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Building.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CityNamer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CitySquare.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GameOver.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GlobalVars.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Intro.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NameGenerator.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Person.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Player.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Start.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <EmbeddedResource Include="CityNamer.resx">
+      <DependentUpon>CityNamer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GameOver.resx">
+      <DependentUpon>GameOver.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Intro.resx">
+      <DependentUpon>Intro.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="licenses.licx" />
+    <EmbeddedResource Include="MainScreen.resx">
+      <DependentUpon>MainScreen.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Start.resx">
+      <DependentUpon>Start.vb</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="My Project\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
