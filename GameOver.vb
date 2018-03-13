@@ -35,7 +35,7 @@ Public Class GameOver
         Me.ubexit = New System.Windows.Forms.Button
         Me.ubContinue = New System.Windows.Forms.Button
         Me.ubPlayAgain = New System.Windows.Forms.Button
-        CType(Me.txt_ending, System.ComponentModel.ISupportInitialize).BeginInit()
+        'CType(Me.txt_ending, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'txt_ending
@@ -88,7 +88,7 @@ Public Class GameOver
         Me.Name = "GameOver"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "GameOver"
-        CType(Me.txt_ending, System.ComponentModel.ISupportInitialize).EndInit()
+        'CType(Me.txt_ending, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

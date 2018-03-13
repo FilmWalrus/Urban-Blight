@@ -156,6 +156,8 @@ Public Class Person
             '-- Success leads to promotions
             maxBonus = (Intelligence / 8.0) + (Creativity / 9.0)
             Employment += GetRandom(0, maxBonus)
+
+            '-- Criminality drops
             Criminality -= GetRandom(0, 1)
         Else
             If Age >= 16 Then
