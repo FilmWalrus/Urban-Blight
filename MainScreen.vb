@@ -271,7 +271,6 @@ Public Class Form1
         Me.UltraTab3.Size = New System.Drawing.Size(200, 100)
         Me.UltraTab3.TabIndex = 0
         Me.UltraTab3.Text = "City"
-
         '
         'UltraTabPageControl3
         '
@@ -562,13 +561,14 @@ Public Class Form1
         '
         'ubcard1
         '
-        Me.ubcard1.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.ubcard1.BackColor = System.Drawing.SystemColors.Control
+        Me.ubcard1.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubcard1.Location = New System.Drawing.Point(512, 32)
         Me.ubcard1.Name = "ubcard1"
         Me.ubcard1.Size = New System.Drawing.Size(136, 48)
         Me.ubcard1.TabIndex = 1
         Me.ubcard1.Text = "Card1"
-        Me.ubcard1.UseVisualStyleBackColor = False
+        Me.ubcard1.UseVisualStyleBackColor = True
         '
         'ubcard2
         '
@@ -1048,7 +1048,7 @@ Public Class Form1
             If SelectedCard = RoadCard And SpendingMoney >= RoadCost And BoxInfo(LastClickedX, LastClickedY).Transportation < Highway Then
                 '-- Build
                 BoxInfo(LastClickedX, LastClickedY).AddRoad()
-                '-- Pay for land
+                '-- Pay for road
                 Players(CurrentPlayer).TotalMoney = SpendingMoney - RoadCost
                 UpdateNeeded = True
             ElseIf SelectedCard < CardCount Then
@@ -1056,6 +1056,7 @@ Public Class Form1
                 If SpendingMoney >= newBuilding.Cost Then
                     '-- Can afford
                     '-- Build
+                    newBuilding.Location = BoxInfo(LastClickedX, LastClickedY)
                     BoxInfo(LastClickedX, LastClickedY).AddBuilding(newBuilding)
                     '-- Pay for card
                     Players(CurrentPlayer).TotalMoney = SpendingMoney - newBuilding.Cost
@@ -1160,9 +1161,9 @@ Public Class Form1
         '-- Population lifecycles
         AgeAndDie()
         Reproduce()
-        Immigration()
+        Travel()
         LeisureAndWork()
-        SpecialEvents()
+        MajorCrimes()
         Emergences()
         Taxation()
     End Sub
@@ -1234,21 +1235,24 @@ Public Class Form1
         LocalEvent = ""
         Dim theName As String
         Dim i, j, k As Integer
+        Dim thePerson As Person
         For i = 0 To GridWidth
             For j = 0 To GridHeight
                 If BoxInfo(i, j).OwnerID = CurrentPlayer Then
                     Dim localPop As Integer = BoxInfo(i, j).getPopulation()
                     For k = 0 To localPop - 1
-                        BoxInfo(i, j).People(k).TouchedKey = 0
-                        If BoxInfo(i, j).People(k).WillReproduce() Then
-                            theName = BoxInfo(i, j).Birth(BoxInfo(i, j).People(k))
+                        thePerson = BoxInfo(i, j).People(k)
+
+                        thePerson.TouchedKey = 0
+                        If thePerson.WillReproduce() Then
+                            theName = BoxInfo(i, j).Birth(thePerson)
 
                             '--Post Event
                             EventCount += 1
                             If EventCount >= EventLimit Then
                                 LocalEvent = EventCount.ToString() + " citizens have given birth." + ControlChars.NewLine
                             Else
-                                LocalEvent += "A citizen at " + GetCityName(i, j) + " has given birth to " + theName + "." + ControlChars.NewLine
+                                LocalEvent += thePerson.Name + " at " + GetCityName(i, j) + " gave birth to " + theName + "." + ControlChars.NewLine
                             End If
                         End If
                     Next
@@ -1258,7 +1262,7 @@ Public Class Form1
         EventString += LocalEvent
     End Sub
 
-    Sub Immigration()
+    Sub Travel()
         Dim InternalCount As Integer = 0
         Dim ExternalCount As Integer = 0
         Dim InternalMove As String = ""
@@ -1368,6 +1372,7 @@ Public Class Form1
                                         thePerson.JobLocation.X = Xloc
                                         thePerson.JobLocation.Y = Yloc
                                         thePerson.JobIndex = n
+                                        thePerson.JobBuilding = currentBuilding
                                         BoxInfo(Xloc, Yloc).Buildings(n).filled += 1
 
                                         '--Post Event
@@ -1418,7 +1423,7 @@ Public Class Form1
             '-- Mark
             BoxInfo(X, Y).VisitedKey = Mobility
 
-            '-- Add to potential canindates
+            '-- Add to potential candidates
             Dim newPoint As New Point(X, Y)
             Points.Add(newPoint)
 
@@ -1437,7 +1442,7 @@ Public Class Form1
         End If
     End Function
 
-    Sub SpecialEvents()
+    Sub MajorCrimes()
         EventCount = 0
         Dim LocalEventTheft As String = ""
         Dim LocalEventMurder As String = ""
@@ -2166,7 +2171,7 @@ Public Class Form1
         Dim Hint As String = ""
         '-- Citizens
         Hint += "Many traits are partially hereditary, like intelligence and creativity. Predispositions towards crime and alcohal can also be passed on.@"
-        Hint += "Each turn your citizens go through six phases: (1) Aging, internal changes and possibly death, (2) Reproduction, (3) Immigration and emigration, (4) Leisure, visiting building and applying for jobs, (5) Crime and accidents, (6) Taxation.@"
+        Hint += "Each turn your citizens go through six phases: (1) Aging, internal changes and possibly death, (2) Reproduction, (3) Travel, (4) Leisure, visiting building and applying for jobs, (5) Crime and accidents, (6) Taxation.@"
         Hint += "The numbers for all eight citizen trait range from 0 to 100.@"
         '-- Population
         Hint += "Dense, crowded cities can be unhygenic and depressing, lowering health and happiness.@"

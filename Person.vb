@@ -4,6 +4,7 @@ Public Class Person
     Public Name As String = ""
     Public JobLocation As New Point(-1, -1)
     Public JobIndex As Integer = -1
+    Public JobBuilding As Building = Nothing
 
     '-- Traits
     Public Happiness As Integer = 0
@@ -328,12 +329,20 @@ Public Class Person
         PersonString += "Drunkenness: " + Drunkenness.ToString + ControlChars.NewLine
         PersonString += "Criminality: " + Criminality.ToString + ControlChars.NewLine
         PersonString += ControlChars.NewLine
+        'If Age < 16 Then
+        '    PersonString += "Minor."
+        'ElseIf JobIndex = -1 Then
+        '    PersonString += "Currently unemployed."
+        'Else
+        '    PersonString += "Employed by the " + BoxInfo(JobLocation.X, JobLocation.Y).Buildings(JobIndex).Type + " at (" + (JobLocation.X + 1).ToString + "," + (JobLocation.Y + 1).ToString + ")" + ControlChars.NewLine
+        'End If
+
         If Age < 16 Then
             PersonString += "Minor."
-        ElseIf JobIndex = -1 Then
+        ElseIf JobBuilding Is Nothing Then
             PersonString += "Currently unemployed."
         Else
-            PersonString += "Employed by the " + BoxInfo(JobLocation.X, JobLocation.Y).Buildings(JobIndex).Type + " at (" + (JobLocation.X + 1).ToString + "," + (JobLocation.Y + 1).ToString + ")" + ControlChars.NewLine
+            PersonString += "Employed by the " + JobBuilding.Type + " at " + JobBuilding.Location.CityName + ControlChars.NewLine
         End If
 
         Return PersonString

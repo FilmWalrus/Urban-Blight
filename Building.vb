@@ -7,6 +7,7 @@ Public Class Building
     Public Filled As Integer = 0
     Public Success As Integer = 0
     Public Info As String = ""
+    Public Location As CitySquare = Nothing
 
     '-- Effect Change
     Public Happiness_adj As Integer = 0

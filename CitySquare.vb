@@ -15,7 +15,7 @@ Public Class CitySquare
     'Public JobsFilled As Integer = 0
     Public Buildings As New ArrayList
     Public People As New ArrayList
-    Public Transportation = 0
+    Public Transportation As Integer = 0
     Public Terrain As Integer = TerrainPlain
 
     '-- Averages
@@ -97,9 +97,9 @@ Public Class CitySquare
         Return RowID.ToString() + "," + ColID.ToString()
     End Function
 
-    Public Function AddBuilding(ByVal NewBuilding As Building)
+    Public Sub AddBuilding(ByVal NewBuilding As Building)
         Buildings.Add(NewBuilding)
-    End Function
+    End Sub
 
     Public Sub AddRoad()
         Transportation = Transportation + 1
