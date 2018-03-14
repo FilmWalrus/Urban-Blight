@@ -47,6 +47,11 @@ Public Class Building
 #End Region
 
 #Region " Functions "
+
+    Public Function GetNameAndAddress() As String
+        Return Type.ToString() + " at " + Location.GetName()
+    End Function
+
     Public Function AffectPerson(ByVal thePerson As Person) As Person
         If Happiness_odds > 0 Then
             If GetRandom(0, 100) <= Happiness_odds Then

@@ -29,11 +29,11 @@ Module GlobalVars
     Public Const TerrainOcean As Integer = 4
 
     '--Roads
-    Public Const None As Integer = 0
-    Public Const Dirt As Integer = 1
-    Public Const Gravel As Integer = 2
-    Public Const Paved As Integer = 3
-    Public Const Highway As Integer = 4
+    Public Const RoadNone As Integer = 0
+    Public Const RoadDirt As Integer = 1
+    Public Const RoadGravel As Integer = 2
+    Public Const RoadPaved As Integer = 3
+    Public Const RoadHighway As Integer = 4
 
     '--Tabs
     Public Const EventTab As Integer = 0

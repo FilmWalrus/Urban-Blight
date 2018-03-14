@@ -2,9 +2,9 @@ Public Class Person
 
 #Region " Variables "
     Public Name As String = ""
-    Public JobLocation As New Point(-1, -1)
-    Public JobIndex As Integer = -1
+
     Public JobBuilding As Building = Nothing
+    Public Residence As CitySquare = Nothing
 
     '-- Traits
     Public Happiness As Integer = 0
@@ -316,6 +316,11 @@ Public Class Person
 #End Region
 
 #Region " Support "
+
+    Public Function GetNameAndAddress() As String
+        Return Name.ToString() + " of " + Residence.GetName()
+    End Function
+
     Public Overrides Function toString() As String
         Dim PersonString As String = ""
         PersonString += "Name: " + Name.ToString + ControlChars.NewLine
@@ -329,20 +334,13 @@ Public Class Person
         PersonString += "Drunkenness: " + Drunkenness.ToString + ControlChars.NewLine
         PersonString += "Criminality: " + Criminality.ToString + ControlChars.NewLine
         PersonString += ControlChars.NewLine
-        'If Age < 16 Then
-        '    PersonString += "Minor."
-        'ElseIf JobIndex = -1 Then
-        '    PersonString += "Currently unemployed."
-        'Else
-        '    PersonString += "Employed by the " + BoxInfo(JobLocation.X, JobLocation.Y).Buildings(JobIndex).Type + " at (" + (JobLocation.X + 1).ToString + "," + (JobLocation.Y + 1).ToString + ")" + ControlChars.NewLine
-        'End If
 
         If Age < 16 Then
             PersonString += "Minor."
         ElseIf JobBuilding Is Nothing Then
             PersonString += "Currently unemployed."
         Else
-            PersonString += "Employed by the " + JobBuilding.Type + " at " + JobBuilding.Location.CityName + ControlChars.NewLine
+            PersonString += "Employed by the " + JobBuilding.GetNameAndAddress() + ControlChars.NewLine
         End If
 
         Return PersonString

@@ -97,31 +97,42 @@ Public Class CitySquare
         Return RowID.ToString() + "," + ColID.ToString()
     End Function
 
+    Public Function GetName() As String
+        If CityName.Length > 0 Then
+            Return CityName
+        Else
+            Return "(" + (RowID + 1).ToString() + "," + (ColID + 1).ToString() + ")"
+        End If
+    End Function
+
     Public Sub AddBuilding(ByVal NewBuilding As Building)
         Buildings.Add(NewBuilding)
     End Sub
 
     Public Sub AddRoad()
         Transportation = Transportation + 1
-        If Transportation > Highway Then
-            Transportation = Highway
+        If Transportation > RoadHighway Then
+            Transportation = RoadHighway
         End If
     End Sub
 
     Public Function MiracleBirth() As String
         Dim newPerson As New Person
+        newPerson.Residence = Me
         People.Add(newPerson)
         Return newPerson.Name
     End Function
 
     Public Function Birth(ByVal theParent As Person) As String
         Dim newPerson As New Person(theParent)
+        newPerson.Residence = Me
         People.Add(newPerson)
         Return newPerson.Name
     End Function
 
     Public Sub AddPerson(ByVal newPerson As Person)
         '-- Use for immigration
+        newPerson.Residence = Me
         People.Add(newPerson)
     End Sub
 
@@ -129,8 +140,8 @@ Public Class CitySquare
 
     End Function
 
-    Public Sub ComputerAverages()
-        Dim tempPerson As Person
+    Public Sub ComputeAverages()
+
         Dim currentPop As Integer = getPopulation()
         AvgHappiness = 0
         AvgHealth = 0
@@ -141,6 +152,7 @@ Public Class CitySquare
         AvgDrunkenness = 0
         AvgCriminality = 0
 
+        Dim tempPerson As Person
         Dim i As Integer
         For i = 0 To currentPop - 1
             People(i).Cap()
@@ -155,7 +167,7 @@ Public Class CitySquare
             If People(i).Employment > 0 Then
                 'Update success of job
                 tempPerson = People(i)
-                BoxInfo(tempPerson.JobLocation.X, tempPerson.JobLocation.Y).Buildings(tempPerson.JobIndex).Success += tempPerson.Employment
+                tempPerson.JobBuilding.Success += tempPerson.Employment
             End If
         Next
 
@@ -205,15 +217,15 @@ Public Class CitySquare
             CityString += "Jobs: " + getJobsFilled.ToString + "/" + getJobsTotal().ToString + ControlChars.NewLine
             CityString += "Transportation: "
             Select Case (Transportation)
-                Case None
+                Case RoadNone
                     CityString += "None" + ControlChars.NewLine
-                Case Dirt
+                Case RoadDirt
                     CityString += "Dirt" + ControlChars.NewLine
-                Case Gravel
+                Case RoadGravel
                     CityString += "Gravel" + ControlChars.NewLine
-                Case Paved
+                Case RoadPaved
                     CityString += "Paved" + ControlChars.NewLine
-                Case Highway
+                Case RoadHighway
                     CityString += "Highway" + ControlChars.NewLine
             End Select
             '--Building details
