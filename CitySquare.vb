@@ -17,6 +17,7 @@ Public Class CitySquare
     Public People As New ArrayList
     Public Transportation As Integer = 0
     Public Terrain As Integer = TerrainPlain
+    Public Coastal As Boolean = False
 
     '-- Averages
     Public AvgHappiness As Integer = 0
@@ -38,18 +39,24 @@ Public Class CitySquare
 
     End Sub
 
-    Public Sub New(ByVal col As Integer, ByVal row As Integer)
+    Public Sub New(ByVal row As Integer, ByVal col As Integer)
         RowID = row
         ColID = col
-        Dim tempNum As Integer = GetRandom(1, 20)
-        If tempNum <= 2 Then
-            Terrain = TerrainOcean
-        ElseIf tempNum <= 4 Then
-            Terrain = TerrainRock
-        ElseIf tempNum <= 6 Then
-            Terrain = TerrainDirt
-        ElseIf tempNum <= 8 Then
+        Dim tempNum As Integer = GetRandom(1, 100)
+        If tempNum <= 10 Then
             Terrain = TerrainForest
+        ElseIf tempNum <= 20 Then
+            Terrain = TerrainMountain
+        ElseIf tempNum <= 27 Then
+            Terrain = TerrainDirt
+        ElseIf tempNum <= 32 Then
+            Terrain = TerrainDesert
+        ElseIf tempNum <= 38 Then
+            Terrain = TerrainSwamp
+        ElseIf tempNum <= 44 Then
+            Terrain = TerrainTownship
+        ElseIf tempNum <= 52 Then
+            Terrain = TerrainLake
         Else
             Terrain = TerrainPlain
         End If
@@ -140,6 +147,54 @@ Public Class CitySquare
 
     End Function
 
+    Function Valid() As Boolean
+        If RowID >= 0 And ColID >= 0 And RowID <= GridWidth And ColID <= GridHeight Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Function GetAdjacents() As ArrayList
+        Dim AdjacentList As New ArrayList()
+
+        If RowID - 1 >= 0 Then
+            AdjacentList.Add(BoxInfo(RowID - 1, ColID))
+        End If
+        If RowID + 1 <= GridWidth Then
+            AdjacentList.Add(BoxInfo(RowID + 1, ColID))
+        End If
+        If ColID - 1 >= 0 Then
+            AdjacentList.Add(BoxInfo(RowID, ColID - 1))
+        End If
+        If ColID + 1 <= GridHeight Then
+            AdjacentList.Add(BoxInfo(RowID, ColID + 1))
+        End If
+
+        Return AdjacentList
+
+    End Function
+
+    Sub UpdateCoastline()
+
+        '-- Lakes can't be coastal
+        If Terrain = TerrainLake Then
+            Coastal = False
+            Return
+        End If
+
+        '-- Any other terrain next to a lake is coastal
+        Dim adjacentList As ArrayList = GetAdjacents()
+        For i As Integer = 0 To adjacentList.Count - 1
+            Dim neighborLocation As CitySquare = adjacentList(i)
+            If neighborLocation.Terrain = TerrainLake Then
+                Coastal = True
+                Return
+            End If
+        Next
+        Coastal = False
+    End Sub
+
     Public Sub ComputeAverages()
 
         Dim currentPop As Integer = getPopulation()
@@ -190,23 +245,38 @@ Public Class CitySquare
         End If
         CityString += "Location: (" + (ColID + 1).ToString + "," + (RowID + 1).ToString + ")" + ControlChars.NewLine
         CityString += "Terrain : "
+
         Select Case (Terrain)
             Case TerrainPlain
-                CityString += "Plain" + ControlChars.NewLine
+                CityString += "Plain"
                 TerrainString = ControlChars.NewLine + "Plains are the default land type. They have no special effects."
             Case TerrainDirt
-                CityString += "Dirt" + ControlChars.NewLine
-                TerrainString = ControlChars.NewLine + "Dirt terrain makes for easy travel and terraforming. You will start out with dirt roads and get a 25% rebate on the land purchase."
+                CityString += "Dirt"
+                TerrainString = ControlChars.NewLine + "Dirt makes for a boring place to live, but it's low upkeep and you start with free dirt roads."
             Case TerrainForest
-                CityString += "Forest" + ControlChars.NewLine
-                TerrainString = ControlChars.NewLine + "The natural beauty of forests boosts the health and happiness of local citizens."
-            Case TerrainRock
-                CityString += "Rock" + ControlChars.NewLine
-                TerrainString = ControlChars.NewLine + "Rocks provide easy access to construction material. Cities placed here automatically erect one currently available building for free."
-            Case TerrainOcean
-                CityString += "Lake" + ControlChars.NewLine
-                TerrainString = ControlChars.NewLine + "Lakes are fun for sailing but can't be built on."
+                CityString += "Forest"
+                TerrainString = ControlChars.NewLine + "The natural beauty and fresh air of forests increases the health and happiness of local citizens."
+            Case TerrainMountain
+                CityString += "Mountain"
+                TerrainString = ControlChars.NewLine + "Mountains reduce mobility but provide inspiring views. The ready access to construction material means you'll get a random building for free."
+            Case TerrainLake
+                CityString += "Lake"
+                TerrainString = ControlChars.NewLine + "Lakes can't be built on, but adjacent coastal regions get a boost to happiness."
+            Case TerrainSwamp
+                CityString += "Swamp"
+                TerrainString = ControlChars.NewLine + "Swamps are free to buy, but a bit expensive to maintain. The foul-smelling, mosquito-ridden bogs aren't great for your health."
+            Case TerrainDesert
+                CityString += "Desert"
+                TerrainString = ControlChars.NewLine + "You get a 50% rebate on empty, wind-swept deserts because, well... not many people want to live there."
+            Case TerrainTownship
+                CityString += "Township"
+                TerrainString = ControlChars.NewLine + "Townships provide free population when you encorporate them, but they also take a cut of the taxes in that location."
         End Select
+        If Coastal Then
+            CityString += ", Coastal"
+        End If
+        CityString += ControlChars.NewLine
+
         If theOwner = 0 Then
             CityString += TerrainString + ControlChars.NewLine + ControlChars.NewLine
             CityString += "Owner: None" + ControlChars.NewLine
@@ -260,7 +330,7 @@ Public Class CitySquare
             city1 = -getDevelopment()
             city2 = -temp.getDevelopment()
         Else
-            '--Head for area with most free jobs in unemployed (choose randomly if tied)
+            '--Head for area with most free jobs if unemployed (choose randomly if tied)
             city1 = -getJobsEmpty()
             city2 = -temp.getJobsEmpty()
         End If

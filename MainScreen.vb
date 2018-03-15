@@ -16,7 +16,8 @@ Public Class Form1
     Dim LastClickedY As Integer = 0
     '--
     Dim Players As ArrayList
-    Dim CurrentPlayer As Integer = 0
+    Dim CurrentPlayer As Player = Nothing
+    Dim CurrentPlayerIndex As Integer = 0
     Dim WinFlag As Boolean = False
     '--
     Dim StartPop As Integer = 4
@@ -30,17 +31,12 @@ Public Class Form1
     '--
     Dim CurrentPerson As Integer = -1
     Dim CurrentView As Integer = 0
-    '--
-    Dim RegularTaxRate As Integer = 5
-    Dim EmployedTaxRate As Integer = 2
-    Dim LandTax As Integer = 10
+
     '--
     Dim theYear As Integer = 1
     '--
     Dim EventString As String = ""
-    Dim LocalEvent As String = ""
-    Dim EventCount As Integer = 0
-    Dim EventLimit As Integer = 5
+
     Friend WithEvents UltraTab1 As TabControl
     Friend WithEvents UltraTab2 As TabControl
     Friend WithEvents UltraTab3 As TabControl
@@ -818,7 +814,7 @@ Public Class Form1
         CreateBoxes()
         CreateOpeningCities()
         UpdatePlayers()
-        CurrentPlayer = -1
+        CurrentPlayerIndex = -1
         UpdateYear()
         init = True
         NextPlayer()
@@ -834,7 +830,7 @@ Public Class Form1
         Dim i As Integer
         For i = 0 To PlayerCount - 1
             '-- Initialize players
-            Dim newPlayer As New Player(i + 1)
+            Dim newPlayer As New Player(i)
             Players.Add(newPlayer)
             If i = 0 Then
                 Players(i).Flag = Flag1
@@ -865,11 +861,7 @@ Public Class Form1
                     ' Create starting population
                     Dim j As Integer
                     For j = 0 To StartPop - 1
-                        Dim founder As New Person
-                        founder.Age = GetRandom(20, 30)
-                        founder.Intelligence = GetRandom(20, 30)
-                        founder.Creativity = GetRandom(20, 30)
-                        founder.Mobility = GetRandom(12, 25)
+                        Dim founder As New Person(True)
                         BoxInfo(startX, startY).AddPerson(founder)
                     Next
 
@@ -883,11 +875,10 @@ Public Class Form1
     End Sub
 
     Sub CreateBoxes()
-        Dim i, j As Integer
         Dim CurrentX As Integer = LeftStart
         Dim CurrentY As Integer = TopStart
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
                 '--Create boxinfo
                 BoxInfo(i, j) = New CitySquare(i, j)
 
@@ -908,10 +899,16 @@ Public Class Form1
                         NewBox.BackColor = ColorDirt
                     Case TerrainForest
                         NewBox.BackColor = ColorForest
-                    Case TerrainRock
-                        NewBox.BackColor = ColorRock
-                    Case TerrainOcean
+                    Case TerrainMountain
+                        NewBox.BackColor = ColorMountain
+                    Case TerrainLake
                         NewBox.BackColor = ColorOcean
+                    Case TerrainSwamp
+                        NewBox.BackColor = ColorSwamp
+                    Case TerrainTownship
+                        NewBox.BackColor = ColorTownship
+                    Case TerrainDesert
+                        NewBox.BackColor = ColorDesert
                 End Select
                 NewBox.TextAlign = ContentAlignment.MiddleCenter
                 NewBox.Text = "0"
@@ -924,6 +921,8 @@ Public Class Form1
             CurrentX = LeftStart
             CurrentY += TopIncrement
         Next
+
+        UpdateCoastline()
     End Sub
 
     Private Sub LabelMouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
@@ -935,7 +934,7 @@ Public Class Form1
         LastClickedX = X
         LastClickedY = Y
         TheBoxes(LastClickedX, LastClickedY).BorderStyle = BorderStyle.Fixed3D
-        If Infotab.SelectedIndex = CityTab And BoxInfo(LastClickedX, LastClickedY).OwnerID = CurrentPlayer Then
+        If Infotab.SelectedIndex = CityTab And BoxInfo(LastClickedX, LastClickedY).OwnerID = CurrentPlayerIndex Then
             ubName.Visible = True
         Else
             ubName.Visible = False
@@ -987,9 +986,9 @@ Public Class Form1
         CurrentView = PopView
 
         '--Advance to next player
-        CurrentPlayer = CurrentPlayer + 1
-        If CurrentPlayer = Players.Count Then
-            CurrentPlayer = 0
+        CurrentPlayerIndex = CurrentPlayerIndex + 1
+        If CurrentPlayerIndex = Players.Count Then
+            CurrentPlayerIndex = 0
             theYear += TimeIncrement
             If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
                 FindWinner()
@@ -997,28 +996,23 @@ Public Class Form1
             UpdateYear()
         End If
 
-        '--Highlight current player
-        gbP1.FlatStyle = FlatStyle.Flat
-        txtP1.BackColor = Color.White
-        gbP2.FlatStyle = FlatStyle.Flat
-        txtP2.BackColor = Color.White
-        gbP3.FlatStyle = FlatStyle.Flat
-        txtP3.BackColor = Color.White
-        gbP4.FlatStyle = FlatStyle.Flat
-        txtP4.BackColor = Color.White
+        CurrentPlayer = Players(CurrentPlayerIndex)
+        CurrentPlayer.UpdateCensusData()
 
-        If CurrentPlayer = 0 Then
-            gbP1.FlatStyle = FlatStyle.Standard
-            txtP1.BackColor = Color.LemonChiffon
-        ElseIf CurrentPlayer = 1 Then
-            gbP2.FlatStyle = FlatStyle.Standard
-            txtP2.BackColor = Color.LemonChiffon
-        ElseIf CurrentPlayer = 2 Then
-            gbP3.FlatStyle = FlatStyle.Standard
-            txtP3.BackColor = Color.LemonChiffon
-        ElseIf CurrentPlayer = 3 Then
-            gbP4.FlatStyle = FlatStyle.Standard
-            txtP4.BackColor = Color.LemonChiffon
+        '--Highlight current player
+        txtP1.BackColor = ColorPlayerUnselected
+        txtP2.BackColor = ColorPlayerUnselected
+        txtP3.BackColor = ColorPlayerUnselected
+        txtP4.BackColor = ColorPlayerUnselected
+
+        If CurrentPlayerIndex = 0 Then
+            txtP1.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayerIndex = 1 Then
+            txtP2.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayerIndex = 2 Then
+            txtP3.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayerIndex = 3 Then
+            txtP4.BackColor = ColorPlayerSelected
         End If
 
         '-- Display new hint
@@ -1027,12 +1021,16 @@ Public Class Form1
         '-- Refill Hand and Update Costs
         UpdateCards()
 
-        '-- Handle Population growth, movement, employment, emergence and taxation
+        '-- Handle Population growth, movement, employment and taxation
         UpdatePeople()
 
         '-- Update averages for views and successes for businesses
         UpdateAverages()
+
+        '-- Successful buildings expand
         BuildingsExpand()
+
+        '-- Display event messages
         txt_event.Text = EventString
         Infotab.SelectedTab = Infotab.TabPages(EventTab)
 
@@ -1045,17 +1043,17 @@ Public Class Form1
 
     Sub Build()
         Dim UpdateNeeded As Boolean = False
-        Dim SpendingMoney As Integer = Players(CurrentPlayer).TotalMoney
+        Dim SpendingMoney As Integer = Players(CurrentPlayerIndex).TotalMoney
         Dim ClickLocation As CitySquare = BoxInfo(LastClickedX, LastClickedY)
 
-        If SelectedCard >= 0 And ClickLocation.OwnerID = CurrentPlayer Then
+        If SelectedCard >= 0 And ClickLocation.OwnerID = CurrentPlayerIndex Then
             'Owned by current player
             If SelectedCard = RoadCard And SpendingMoney >= RoadCost And ClickLocation.Transportation < RoadHighway Then
                 '-- Build road
                 ClickLocation.AddRoad()
 
                 '-- Pay for road
-                Players(CurrentPlayer).TotalMoney = SpendingMoney - RoadCost
+                Players(CurrentPlayerIndex).TotalMoney = SpendingMoney - RoadCost
                 UpdateNeeded = True
             ElseIf SelectedCard < CardCount Then
                 '-- Build building
@@ -1065,24 +1063,24 @@ Public Class Form1
                     ClickLocation.AddBuilding(newBuilding)
 
                     '-- Pay for building card
-                    Players(CurrentPlayer).TotalMoney = SpendingMoney - newBuilding.Cost
+                    Players(CurrentPlayerIndex).TotalMoney = SpendingMoney - newBuilding.Cost
                     '-- Remove building card
                     Cards.RemoveAt(SelectedCard)
                     UpdateNeeded = True
                 End If
             End If
         End If
-        If SelectedCard = LandCard And ClickLocation.Terrain <> TerrainOcean And OwnedAdjacent(CurrentPlayer) And SpendingMoney >= LandCost And ClickLocation.OwnerID < 0 Then
+        If SelectedCard = LandCard And ClickLocation.Terrain <> TerrainLake And OwnedAdjacent(CurrentPlayerIndex) And SpendingMoney >= LandCost And ClickLocation.OwnerID < 0 Then
             '-- Expand territory
-            ClickLocation.OwnerID = CurrentPlayer
+            ClickLocation.OwnerID = CurrentPlayerIndex
 
             '-- Pay for land
-            Players(CurrentPlayer).TotalMoney -= LandCost
+            Players(CurrentPlayerIndex).TotalMoney -= LandCost
             If ClickLocation.Terrain = TerrainDirt Then
                 '-- Dirt effect: rebate
-                Players(CurrentPlayer).TotalMoney += SafeDivide(LandCost, 4)
+                Players(CurrentPlayerIndex).TotalMoney += SafeDivide(LandCost, 4)
                 ClickLocation.Transportation = RoadDirt
-            ElseIf ClickLocation.Terrain = TerrainRock Then
+            ElseIf ClickLocation.Terrain = TerrainMountain Then
                 '-- Rock effect: free building
                 Dim randNum As Integer = GetRandom(0, CardCount - 1)
                 Dim newBuilding As Building = Cards(randNum)
@@ -1110,25 +1108,25 @@ Public Class Form1
                 For i = 0 To PlayerCount - 1
                     WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalScore.ToString + ControlChars.NewLine
                 Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayer + 1).ToString + ControlChars.NewLine
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
             Case TerritoryGame
                 WinningString += "Territory: " + ControlChars.NewLine
                 For i = 0 To PlayerCount - 1
                     WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalTerritory.ToString + ControlChars.NewLine
                 Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayer + 1).ToString + ControlChars.NewLine
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
             Case PopulationGame
                 WinningString += "Population: " + ControlChars.NewLine
                 For i = 0 To PlayerCount - 1
                     WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalPopulation.ToString + ControlChars.NewLine
                 Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayer + 1).ToString + ControlChars.NewLine
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
             Case DevelopmentGame
                 WinningString += "Development: " + ControlChars.NewLine
                 For i = 0 To PlayerCount - 1
                     WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalDevelopment.ToString + ControlChars.NewLine
                 Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayer + 1).ToString + ControlChars.NewLine
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
             Case YearGame
                 Dim max As Integer = 0
                 Dim winningPlayer As Integer = -1
@@ -1165,422 +1163,12 @@ Public Class Form1
 
 #Region " People "
     Sub UpdatePeople()
-        '-- Population lifecycles
-        AgeAndDie()
-        Reproduce()
-        Travel()
-        LeisureAndWork()
-        MajorCrimes()
-        Taxation()
+
+        Dim PersonEvents As New EventsP(CurrentPlayer, theYear)
+
+        EventString += PersonEvents.UpdatePeople()
     End Sub
 
-    Sub AgeAndDie()
-        EventCount = 0
-        LocalEvent = ""
-        Dim i, j, k, m, suddenDeath As Integer
-        Dim thePerson As Person
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
-                    Dim localPop As Integer = BoxInfo(i, j).getPopulation()
-                    k = 0
-                    While (k < localPop)
-                        '--Internal changes 
-                        BoxInfo(i, j).People(k).UpdateInternal(localPop, BoxInfo(i, j).Terrain, BoxInfo(i, j).Transportation)
-                        thePerson = BoxInfo(i, j).People(k)
-
-                        '--Sudden death for the youngish but unhealthy
-                        suddenDeath = 0
-                        suddenDeath += (thePerson.Age - 20.0) / 4.0
-                        If thePerson.Health < 32 Then
-                            suddenDeath += (32 - thePerson.Health) / 4.0
-                        End If
-                        If thePerson.Health <= 0 Or thePerson.Age > 110 Or GetRandom(0, 100) < suddenDeath Then
-                            '--Deaths
-                            If Death(i, j, k) Then
-                                localPop -= 1
-
-                                '--Post Event
-                                EventCount += 1
-                                If EventCount >= EventLimit Then
-                                    LocalEvent = EventCount.ToString() + " citizens died." + ControlChars.NewLine
-                                Else
-                                    LocalEvent += thePerson.GetNameAndAddress() + " died at the age of " + thePerson.Age.ToString() + "." + ControlChars.NewLine
-                                End If
-                            End If
-                        End If
-                        k += 1
-                    End While
-                End If
-            Next
-        Next
-        EventString += LocalEvent
-    End Sub
-
-    Function Death(ByVal Xloc As Integer, ByVal Yloc As Integer, ByVal AddressIndex As Integer) As Boolean
-        If theYear > 10 Then
-            'Free dead person's job
-            Dim thePerson As Person = BoxInfo(Xloc, Yloc).People(AddressIndex)
-            If thePerson.JobBuilding IsNot Nothing Then
-                thePerson.JobBuilding.Filled -= 1
-            End If
-
-            'Kill the man
-            BoxInfo(Xloc, Yloc).People.RemoveAt(AddressIndex)
-
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
-    Sub Reproduce()
-        EventCount = 0
-        Dim EventCountTwins As Integer = 0
-        LocalEvent = ""
-        Dim i, j, k As Integer
-        Dim thePerson As Person
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
-                    Dim localPop As Integer = BoxInfo(i, j).getPopulation()
-                    For k = 0 To localPop - 1
-                        thePerson = BoxInfo(i, j).People(k)
-
-                        thePerson.TouchedKey = 0
-                        If thePerson.WillReproduce() Then
-                            Dim theName As String = BoxInfo(i, j).Birth(thePerson)
-
-                            'Check for twins (very rare)
-                            Dim theName2 As String = ""
-                            If (GetRandom(0, 1000) < 14) Then
-                                theName2 = BoxInfo(i, j).Birth(thePerson)
-                            End If
-
-                            '--Post Event
-                            If theName2.Length <= 0 Then
-                                EventCount += 1
-                                If EventCount >= EventLimit Then
-                                    LocalEvent = EventCount.ToString() + " citizens had children." + ControlChars.NewLine
-                                Else
-                                    LocalEvent += thePerson.GetNameAndAddress() + " gave birth to " + theName + "." + ControlChars.NewLine
-                                End If
-                            Else
-                                'Twins!!
-                                EventCountTwins += 1
-                                If EventCount >= EventLimit Then
-                                    LocalEvent = EventCount.ToString() + " citizens had twins." + ControlChars.NewLine
-                                Else
-                                    LocalEvent += thePerson.GetNameAndAddress() + " had twins named " + theName + " and " + theName2 + "." + ControlChars.NewLine
-                                End If
-                            End If
-
-                        End If
-                    Next
-                End If
-            Next
-        Next
-        EventString += LocalEvent
-    End Sub
-
-    Sub Travel()
-        Dim InternalCount As Integer = 0
-        Dim ExternalCount As Integer = 0
-        Dim InternalMove As String = ""
-        Dim ExternalMove As String = ""
-        Dim i, j, k, m As Integer
-        Dim choice, currentMobility, BuildingsCount, Xloc, Yloc As Integer
-        Dim thePerson As Person
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
-                    Dim localPop As Integer = BoxInfo(i, j).getPopulation()
-                    k = 0
-                    While (k < localPop)
-                        'Find current person on square and update mobility
-                        Dim PeopleList As New ArrayList(BoxInfo(i, j).People)
-                        thePerson = PeopleList(k)
-
-                        'Find range with current mobility and happiness
-                        ClearVisited()
-                        RangeChecker(i, j, thePerson.Mobility, thePerson.Happiness)
-                        If Points.Count > 0 And GetRandom(0, 1) = 1 Then
-                            Dim Cities As New ArrayList
-                            For m = 0 To Points.Count - 1
-                                Xloc = Points(m).X
-                                Yloc = Points(m).Y
-                                Cities.Add(BoxInfo(Xloc, Yloc))
-                            Next
-
-                            '-- Sort the movement options based on preference for space, culture or jobs
-                            If thePerson.Employment = 0 And thePerson.Age >= 16 And GetRandom(0, 30 + thePerson.Mobility) < (38 - localPop) Then
-                                SortType = JobSort
-                            ElseIf GetRandom(0, 80 + thePerson.Mobility) < (30 - localPop) Then
-                                SortType = CultureSort
-                            Else
-                                SortType = PopSort
-                            End If
-                            Cities.Sort()
-                            choice = GetRandom(0, SafeDivide(Cities.Count - 1, 3.0))
-                            Dim NewHouse As New Point(Cities(choice).ColID, Cities(choice).RowID)
-                            If Not (i = NewHouse.X And j = NewHouse.Y) Then
-                                '-- Only "move" if it is to a new square
-                                BoxInfo(i, j).People.RemoveAt(k)
-                                localPop -= 1
-                                BoxInfo(NewHouse.X, NewHouse.Y).People.Add(thePerson)
-
-                                Dim OldAddress As String = thePerson.GetNameAndAddress()
-                                thePerson.Residence = BoxInfo(NewHouse.X, NewHouse.Y)
-                                Dim NewAddress As String = thePerson.Residence.GetName()
-
-
-                                If BoxInfo(NewHouse.X, NewHouse.Y).OwnerID = CurrentPlayer Then
-                                    '--Post Event for internal move
-                                    InternalCount += 1
-                                    If InternalCount >= EventLimit Then
-                                        InternalMove = InternalCount.ToString() + " citizens moved." + ControlChars.NewLine
-                                    Else
-                                        InternalMove += OldAddress + " moved to " + NewAddress + "." + ControlChars.NewLine
-                                    End If
-                                Else
-                                    '--Post Event for external move
-                                    ExternalCount += 1
-                                    If ExternalCount >= EventLimit Then
-                                        ExternalMove = ExternalCount.ToString() + " citizens emigrated." + ControlChars.NewLine
-                                    Else
-                                        ExternalMove += OldAddress + " emigrated to  " + NewAddress + "." + ControlChars.NewLine
-                                    End If
-                                End If
-
-                            End If
-
-                        End If
-                        k += 1
-                    End While
-                End If
-            Next
-        Next
-        EventString += InternalMove + ExternalMove
-    End Sub
-
-    Sub LeisureAndWork()
-        EventCount = 0
-        LocalEvent = ""
-        Dim i, j, k, m, n As Integer
-        Dim currentMobility, BuildingsCount, Xloc, Yloc As Integer
-        Dim thePerson As Person
-        Dim currentBuilding As Building
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
-                    Dim localPop As Integer = BoxInfo(i, j).getPopulation()
-                    For k = 0 To localPop - 1
-                        'Find current person on square
-                        thePerson = BoxInfo(i, j).People(k)
-                        Dim PeopleList As New ArrayList(BoxInfo(i, j).People)
-                        thePerson = PeopleList(k)
-
-                        'Find range with current mobility
-                        ClearVisited()
-                        RangeChecker(i, j, currentMobility)
-                        For m = 0 To Points.Count - 1
-                            Xloc = Points(m).X
-                            Yloc = Points(m).Y
-                            BuildingsCount = BoxInfo(Xloc, Yloc).getDevelopment()
-                            For n = 0 To BuildingsCount - 1
-                                'Have person potentially visit each building in range
-                                currentBuilding = BoxInfo(Xloc, Yloc).Buildings(n)
-                                thePerson = currentBuilding.AffectPerson(thePerson)
-                                If currentBuilding.Hiring() Then
-                                    If thePerson.WillEmploy() Then
-                                        'Have person take job if in range
-                                        thePerson.Employment += 1
-                                        thePerson.JobBuilding = currentBuilding
-                                        currentBuilding.Filled += 1
-                                        'BoxInfo(Xloc, Yloc).Buildings(n).filled += 1
-
-                                        '--Post Event
-                                        EventCount += 1
-                                        If EventCount >= EventLimit Then
-                                            LocalEvent = EventCount.ToString() + " citizens got new jobs." + ControlChars.NewLine
-                                        Else
-                                            LocalEvent += thePerson.GetNameAndAddress() + " took a job at the " + currentBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
-                                        End If
-                                    End If
-
-                                End If
-                            Next
-                        Next
-                        'Return changed person to city
-                        BoxInfo(i, j).People(k) = thePerson
-                    Next
-                End If
-            Next
-        Next
-        EventString += LocalEvent
-    End Sub
-
-    Sub ClearVisited()
-        Points.Clear()
-        Dim i, j As Integer
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                BoxInfo(i, j).VisitedKey = -1
-            Next
-        Next
-    End Sub
-
-    Function RangeChecker(ByVal X As Integer, ByVal Y As Integer, ByVal Mobility As Integer, Optional ByRef Happiness As Integer = -100) As Integer ' -100 is code for not using happiness
-        If Safe(X, Y) Then
-            If BoxInfo(X, Y).VisitedKey > Mobility Or BoxInfo(X, Y).OwnerID < 0 Then
-                Return 0
-            Else
-                If (BoxInfo(X, Y).OwnerID <> CurrentPlayer) And (Happiness <> -100) Then
-                    If theYear <= 20 Or GetRandom(0, 100) <= Happiness Then 'This should only apply to emigration not internal movement!
-                        '-- No early emigration. Happiness encourages patriotism.
-                        Return 0
-                    End If
-                    '-- Possibly emigrate or foreign visit
-                End If
-                '-- Internal move or external vacation
-            End If
-            '-- Mark
-            BoxInfo(X, Y).VisitedKey = Mobility
-
-            '-- Add to potential candidates
-            Dim newPoint As New Point(X, Y)
-            Points.Add(newPoint)
-
-            '-- Continue moving
-            Dim DragLoss1 As Integer = (5 - GetRandom(0, BoxInfo(X, Y).Transportation))
-            Dim DragLoss2 As Integer = (5 - GetRandom(0, BoxInfo(X, Y).Transportation))
-            Mobility = Mobility - (DragLoss1 * DragLoss2)
-            If Mobility < 0 Then
-                Return 0
-            End If
-            RangeChecker(X - 1, Y, Mobility, Happiness)
-            RangeChecker(X + 1, Y, Mobility, Happiness)
-            RangeChecker(X, Y - 1, Mobility, Happiness)
-            RangeChecker(X, Y + 1, Mobility, Happiness)
-
-        End If
-    End Function
-
-    Sub MajorCrimes()
-        EventCount = 0
-        Dim LocalEventTheft As String = ""
-        Dim LocalEventMurder As String = ""
-        Dim LocalEventAccident As String = ""
-        Dim TheftSum As Integer = 0
-        Dim CountTheft As Integer = 0
-        Dim CountMurder As Integer = 0
-        Dim CountAccident As Integer = 0
-        Dim VictimName As String = ""
-        Dim i, j, k, odds, theft, victim As Integer
-        Dim thePerson As Person
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
-                    Dim localPop As Integer = BoxInfo(i, j).getPopulation()
-                    k = 0
-                    While (k < localPop)
-                        thePerson = BoxInfo(i, j).People(k)
-
-                        '-- No crime for extreme youths
-                        If (thePerson.Age < 16) Then
-                            Exit While
-                        End If
-
-                        '-- Theft
-                        odds = 0
-                        odds += thePerson.Criminality / 3.0
-                        If GetRandom(0, 100) < odds Then
-                            theft = Math.Min(thePerson.Criminality, Players(CurrentPlayer).totalMoney())
-                            Players(CurrentPlayer).totalMoney() -= theft
-
-                            TheftSum += theft
-                            CountTheft += 1
-                            '--Post Event
-                            If CountTheft >= EventLimit Then
-                                LocalEventTheft = CountTheft.ToString() + " citizens stole a combined $" + TheftSum.ToString() + "." + ControlChars.NewLine
-                            ElseIf theft > 0 Then
-                                LocalEventTheft += thePerson.GetNameAndAddress() + " stole $" + theft.ToString + "." + ControlChars.NewLine
-                            End If
-                        End If
-
-                        '-- Murder
-                        odds = 0
-                        odds += thePerson.Criminality / 6.5
-                        odds += thePerson.Drunkenness / 9.0
-                        If GetRandom(0, 100) < odds And localPop > 1 Then
-                            victim = k
-                            While (victim = k)
-                                victim = GetRandom(0, localPop - 1)
-                            End While
-                            Dim VictimPerson As Person = BoxInfo(i, j).People(victim)
-
-                            '-- Killing spree potential (especially if the crime paid off)
-                            thePerson.Criminality += GetRandom(4, Math.Min(7, VictimPerson.Employment / 7.0))
-
-                            If Death(i, j, victim) Then
-                                localPop -= 1
-
-                                CountMurder += 1
-                                '--Post Event
-                                If CountMurder >= EventLimit Then
-                                    LocalEventMurder = CountMurder.ToString + " citizens were murdered." + ControlChars.NewLine
-                                Else
-                                    LocalEventMurder += thePerson.GetNameAndAddress() + " killed " + VictimPerson.GetNameAndAddress() + "." + ControlChars.NewLine
-                                End If
-
-                                '--Safety net
-                                If (k < localPop) Then
-                                    Exit While
-                                End If
-                            End If
-                        End If
-
-                        '-- Car Accident
-                        odds = 0
-                        odds += thePerson.Mobility / 10.0
-                        odds += thePerson.Drunkenness / 4.0
-                        odds -= (BoxInfo(i, j).Transportation * 2.0)
-                        If GetRandom(0, 100) <= odds Then
-                            If Death(i, j, k) Then
-                                localPop -= 1
-
-                                CountAccident += 1
-                                '--Post Event
-                                If CountAccident >= EventLimit Then
-                                    LocalEventAccident = CountAccident.ToString() + " citizens died in traffic accidents." + ControlChars.NewLine
-                                Else
-                                    LocalEventAccident += thePerson.GetNameAndAddress() + " died in a car accident." + ControlChars.NewLine
-                                End If
-                            End If
-                        End If
-
-                        k += 1
-                    End While
-                End If
-            Next
-        Next
-        EventString += LocalEventTheft + LocalEventMurder + LocalEventAccident
-    End Sub
-
-    Sub Taxation()
-        Dim revenue As Integer = (GetPlayerPopulation(CurrentPlayer) * RegularTaxRate)
-        revenue += (GetPlayerJobsAndEmployment(CurrentPlayer) * EmployedTaxRate)
-        Dim land As Integer = GetPlayerTerritory(CurrentPlayer)
-        If land > 3 And revenue > (land * LandTax * 2.0) Then
-            land *= LandTax
-            EventString = "You payed " + land.ToString() + " in upkeep." + ControlChars.NewLine + EventString
-        Else
-            land = 0
-        End If
-        EventString = "You collected " + revenue.ToString() + " in taxes." + ControlChars.NewLine + EventString
-        revenue -= land
-        Players(CurrentPlayer).TotalMoney += Math.Max(0, revenue)
-    End Sub
 #End Region
 
 #Region " Support "
@@ -1638,14 +1226,6 @@ Public Class Form1
         Next
     End Sub
 
-    Function Safe(ByVal x As Integer, ByVal y As Integer) As Boolean
-        If x >= 0 And y >= 0 And x <= GridWidth And y <= GridHeight Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
     Sub UpdateCards()
         '--Increase hand to full
         While (Cards.Count < 4)
@@ -1665,14 +1245,15 @@ Public Class Form1
         ubcard3.Text = Cards(2).type + ControlChars.NewLine + "Jobs: " + Cards(2).jobs.ToString() + "  Cost: " + Cards(2).cost.ToString()
         ubcard4.Text = Cards(3).type + ControlChars.NewLine + "Jobs: " + Cards(3).jobs.ToString() + "  Cost: " + Cards(3).cost.ToString()
         '--Land Cost
-        LandCost = (50 + (GetPlayerTerritory(CurrentPlayer) * 20))
+        LandCost = (50 + (CurrentPlayer.TotalTerritory * 20))
         ubland.Text = "Land, Cost: " + LandCost.ToString()
     End Sub
 
     Sub UpdatePlayers()
-        Census()
-        Dim i As Integer
-        For i = 0 To Players.Count - 1
+
+        For i As Integer = 0 To Players.Count - 1
+            RefreshPlayerStats(i)
+
             Dim textString As String = ""
             textString += "Money: " + Players(i).TotalMoney.ToString() + ControlChars.NewLine
             textString += "Pop: " + Players(i).TotalPopulation.ToString() + ControlChars.NewLine
@@ -1713,7 +1294,7 @@ Public Class Form1
         sum = 0
         For i = 0 To GridWidth
             For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
+                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
                     'Also updates success
                     BoxInfo(i, j).ComputeAverages()
                 End If
@@ -1822,29 +1403,29 @@ Public Class Form1
         Return sum
     End Function
 
-    Function OwnedAdjacent(ByVal thePlayer As Integer) As Boolean
-        If LastClickedX - 1 >= 0 Then
-            If BoxInfo(LastClickedX - 1, LastClickedY).OwnerID = thePlayer Then
+    Function OwnedAdjacent(ByVal thePlayerID As Integer) As Boolean
+
+        Dim clickLocation As CitySquare = BoxInfo(LastClickedX, LastClickedY)
+
+        '-- Check if the input player owns a neighboring location
+        Dim adjacentList As ArrayList = clickLocation.GetAdjacents()
+        For i As Integer = 0 To adjacentList.Count - 1
+            Dim neighborLocation As CitySquare = adjacentList(i)
+            If neighborLocation.OwnerID = thePlayerID Then
                 Return True
             End If
-        End If
-        If LastClickedX + 1 <= GridWidth Then
-            If BoxInfo(LastClickedX + 1, LastClickedY).OwnerID = thePlayer Then
-                Return True
-            End If
-        End If
-        If LastClickedY - 1 >= 0 Then
-            If BoxInfo(LastClickedX, LastClickedY - 1).OwnerID = thePlayer Then
-                Return True
-            End If
-        End If
-        If LastClickedY + 1 >= 0 Then
-            If BoxInfo(LastClickedX, LastClickedY + 1).OwnerID = thePlayer Then
-                Return True
-            End If
-        End If
+        Next
         Return False
     End Function
+
+    Sub UpdateCoastline()
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim location As CitySquare = BoxInfo(i, j)
+                location.UpdateCoastline()
+            Next
+        Next
+    End Sub
 
     Function GetCityName(ByVal i As Integer, ByVal j As Integer) As String
         If String.Compare(BoxInfo(i, j).CityName, "") = 0 Then
@@ -1854,25 +1435,21 @@ Public Class Form1
         End If
     End Function
 
-    Sub Census()
+    Sub RefreshPlayerStats(ByVal playerIndex As Integer)
         '-- Updates player info
-        GetPlayerPopulation(CurrentPlayer)
-        GetPlayerJobsAndEmployment(CurrentPlayer)
-        GetPlayerTerritory(CurrentPlayer)
-        GetPlayerDevelopment(CurrentPlayer)
-        GetPlayerScore(CurrentPlayer)
+        Dim thisPlayer As Player = Players(playerIndex)
+        thisPlayer.UpdateCensusData()
 
-
-        If GameType = ScoreGame And Players(CurrentPlayer).TotalScore >= GoalNumber Then
+        If GameType = ScoreGame And thisPlayer.TotalScore >= GoalNumber Then
             WinFlag = True
         End If
-        If GameType = TerritoryGame And Players(CurrentPlayer).TotalTerritory >= GoalNumber Then
+        If GameType = TerritoryGame And thisPlayer.TotalTerritory >= GoalNumber Then
             WinFlag = True
         End If
-        If GameType = PopulationGame And Players(CurrentPlayer).TotalPopulation >= GoalNumber Then
+        If GameType = PopulationGame And thisPlayer.TotalPopulation >= GoalNumber Then
             WinFlag = True
         End If
-        If GameType = DevelopmentGame And Players(CurrentPlayer).TotalDevelopment >= GoalNumber Then
+        If GameType = DevelopmentGame And thisPlayer.TotalDevelopment >= GoalNumber Then
             WinFlag = True
         End If
     End Sub
@@ -1885,7 +1462,7 @@ Public Class Form1
         Dim i, j, k, bMax As Integer
         For i = 0 To GridWidth
             For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
+                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
                     bMax = BoxInfo(i, j).Buildings.Count - 1
                     For k = 0 To bMax
                         BoxInfo(i, j).Buildings(k).Success = 0
@@ -1896,13 +1473,13 @@ Public Class Form1
     End Sub
 
     Sub BuildingsExpand()
-        EventCount = 0
-        LocalEvent = ""
+        Dim EventCount As Integer = 0
+        Dim LocalEvent As String = ""
         Dim i, j, k, odds As Integer
         Dim theBuilding As Building
         For i = 0 To GridWidth
             For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer Then
+                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
                     For k = 0 To BoxInfo(i, j).Buildings.Count - 1
                         theBuilding = BoxInfo(i, j).Buildings(k)
                         If theBuilding.Filled = theBuilding.Jobs Then

@@ -36,6 +36,34 @@ Public Class Person
         Age = 1
     End Sub
 
+    Public Sub New(ByVal isAdult As Boolean)
+        '-- Create randomly
+        Name = Namer.GenerateName()
+
+        Happiness = GetRandom(25, 35)
+        Health = GetRandom(40, 50)
+        Employment = 0
+        Drunkenness = 0
+
+        If isAdult Then
+            '-- Adult
+            Age = GetRandom(20, 30)
+            Intelligence = GetRandom(20, 30)
+            Creativity = GetRandom(20, 30)
+            Mobility = GetRandom(12, 25)
+            Criminality = GetRandom(0, 10)
+        Else
+            '-- Newborn
+            Age = 1
+            Intelligence = GetRandom(3, 10)
+            Creativity = GetRandom(3, 10)
+            Mobility = GetRandom(0, 5)
+            Criminality = GetRandom(0, 5)
+        End If
+
+
+    End Sub
+
     Public Sub New(ByVal Parent As Person)
         '-- Create randomly with heriditary influence
         Name = Namer.GenerateName()
@@ -46,7 +74,7 @@ Public Class Person
         Creativity = GetRandom(3, 8 + (Parent.Creativity / 16.5))
         Mobility = GetRandom(0, 5)
         Drunkenness = GetRandom(0, Math.Max(12, Parent.Drunkenness))
-        Criminality = GetRandom(0, 8 + (Parent.Criminality / 10.0))
+        Criminality = GetRandom(0, 8 + (Parent.Criminality / 6.0))
         Age = 1
     End Sub
 
@@ -109,8 +137,26 @@ Public Class Person
         End If
     End Sub
 
-    Public Function UpdateInternal(ByVal thePop As Integer, ByVal theTerrain As Integer, ByVal theRoad As Integer)
+    Public Sub UpdateInternal()
         Dim maxBonus, maxLoss As Double
+
+        Dim thePop As Integer = Residence.getPopulation()
+        Dim theRoad As Integer = Residence.Transportation
+
+        '-- Age
+        Age = Age + 3
+        If Age <= 28 Then
+            '-- Upslope
+            Health += 1
+        End If
+        If Age >= 45 Then
+            '-- Downslope
+            maxLoss = (Age - 50.0) / 10.0
+            If maxLoss < 0 Then
+                maxLoss = 0
+            End If
+            Health -= GetRandom(maxLoss, maxLoss + 2)
+        End If
 
         '--Health
         If Health < 15 Then
@@ -135,21 +181,6 @@ Public Class Person
         If Happiness <= 15 Then
             '-- Unhappy people lash out at society
             Criminality += GetRandom(0, 2)
-        End If
-
-        '-- Age
-        Age = Age + 3
-        If Age <= 28 Then
-            '-- Upslope
-            Health += 1
-        End If
-        If Age >= 45 Then
-            '-- Downslope
-            maxLoss = (Age - 50.0) / 10.0
-            If maxLoss < 0 Then
-                maxLoss = 0
-            End If
-            Health -= GetRandom(maxLoss, maxLoss + 2)
         End If
 
         '--Employment
@@ -209,12 +240,7 @@ Public Class Person
         End If
         If Age = 16 Then
             '-- Learn to drive
-            If Employment > 0 Then
-                '-- Buy a hotrod
-                Mobility += GetRandom(6, 12)
-            Else
-                Mobility += GetRandom(3, 8)
-            End If
+            Mobility += GetRandom(3, 8)
         End If
 
 
@@ -247,6 +273,7 @@ Public Class Person
             maxBonus = SafeDivide(thePop, 3.0)
             Dim switchman As Integer = GetRandom(0, 2)
             '-- Crowded areas reduces health and happiness and increased crime
+            '-- Is only 1 of these options getting off too easy?
             If switchman = 0 Then
                 Criminality += GetRandom(0, maxBonus)
             ElseIf switchman = 1 Then
@@ -257,13 +284,24 @@ Public Class Person
         End If
 
         '-- Terrain
-        If theTerrain = TerrainForest Then
-            Happiness += GetRandom(1, 3)
-            Health += GetRandom(1, 3)
+        Select Case (Residence.Terrain)
+            Case TerrainForest
+                Happiness += GetRandom(1, 3)
+                Health += GetRandom(1, 3)
+            Case TerrainMountain
+                Creativity += GetRandom(1, 3)
+                Mobility -= GetRandom(1, 3)
+            Case TerrainSwamp
+                Health -= GetRandom(2, 4)
+        End Select
+        If Residence.Coastal Then
+            '-- Coastal areas make people happier
+            Happiness += GetRandom(1, 2)
         End If
 
+
         Cap()
-    End Function
+    End Sub
 
     Function WillReproduce() As Boolean
         'Remove happiness constraint?
@@ -282,17 +320,18 @@ Public Class Person
         End If
     End Function
 
-    Function WillDie() As Boolean
-        If Health = 0 Then
-            Return True
+    Function Die() As Boolean
+        'Free dead person's job
+        If JobBuilding IsNot Nothing Then
+            JobBuilding.Filled -= 1
         End If
-        If Health <= 5 Or Age > 70 Then
-            If GetRandom(0, 100) <= 25 Then
-                Return True
-            End If
-        End If
-        Return False
+
+        'Free dead person's residence
+        Residence.People.Remove(Me)
+
+        Return True
     End Function
+
     Function WillEmploy() As Boolean
         If Employment > 0 Then
             Return False

@@ -10,7 +10,7 @@ Public Class NameGenerator
 #End Region
 
 #Region " Functions "
-    Public Function FillLists()
+    Public Sub FillLists()
         '--Cleanup
         FirstSyllable.Clear()
         Middle.Clear()
@@ -169,7 +169,7 @@ Public Class NameGenerator
         Ending.Add("x")
         Ending.Add("y")
         Ending.Add("z")
-    End Function
+    End Sub
 
     Public Function GenerateName() As String
         Dim nameStr As String = ""

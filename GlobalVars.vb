@@ -25,8 +25,11 @@ Module GlobalVars
     Public Const TerrainPlain As Integer = 0
     Public Const TerrainDirt As Integer = 1
     Public Const TerrainForest As Integer = 2
-    Public Const TerrainRock As Integer = 3
-    Public Const TerrainOcean As Integer = 4
+    Public Const TerrainMountain As Integer = 3
+    Public Const TerrainLake As Integer = 4
+    Public Const TerrainSwamp As Integer = 5
+    Public Const TerrainTownship As Integer = 6
+    Public Const TerrainDesert As Integer = 7
 
     '--Roads
     Public Const RoadNone As Integer = 0
@@ -43,40 +46,47 @@ Module GlobalVars
     Public Const ViewTab As Integer = 4
 
     '--Colors
-    Public Flag1 As Color = Color.IndianRed
-    Public Flag2 As Color = Color.DarkOrchid 'Color.MediumPurple
+    Public Flag1 As Color = Color.Red 'Color.IndianRed
+    Public Flag2 As Color = Color.DarkViolet 'Color.MediumPurple Color.DarkOrchid
     Public Flag3 As Color = Color.DarkOrange
-    Public Flag4 As Color = Color.Gold 'Color.Khaki
+    Public Flag4 As Color = Color.DeepPink 'Color.Gold
 
     Public Const LandTypes As Integer = 5
-    Public ColorOcean As Color = Color.SkyBlue 'Color.MidnightBlue
+    Public ColorOcean As Color = Color.Aqua 'Color.Aqua 'Color.SkyBlue 'Color.MidnightBlue
     Public ColorPlain As Color = Color.PaleGreen
-    Public ColorRock As Color = Color.LightGray
-    Public ColorDirt As Color = Color.Tan
-    Public ColorForest As Color = Color.DarkSeaGreen 'Color.ForestGreen
+    Public ColorMountain As Color = Color.LightSlateGray 'Color.LightGray Gray LightSlateGray
+    Public ColorDirt As Color = Color.Tan 'Color.Tan'Color.Khaki
+    Public ColorForest As Color = Color.DarkSeaGreen 'Color.DarkSeaGreen 'Color.ForestGreen
+    Public ColorSwamp As Color = Color.GreenYellow   'Color.OliveDrab 'Color.DarkSeaGreen LightBlue SteelBlue
+    Public ColorTownship As Color = Color.GhostWhite 'Color.White
+    Public ColorDesert As Color = Color.PaleGoldenrod
+
+    Public ColorPlayerSelected As Color = Color.Gold 'Color.LemonChiffon
+    Public ColorPlayerUnselected As Color = Color.White
 
     '--Views
-    Public Const PopView = 0
-    Public Const LocView = 1
-    Public Const HappinessView = 2
-    Public Const HealthView = 3
-    Public Const EmploymentView = 4
-    Public Const IntelligenceView = 5
-    Public Const CreativityView = 6
-    Public Const MobilityView = 7
-    Public Const DrunkennessView = 8
-    Public Const CriminalityView = 9
-    Public Const JobView = 10
-    Public Const RoadView = 11
+    Public Const PopView As Integer = 0
+    Public Const LocView As Integer = 1
+    Public Const HappinessView As Integer = 2
+    Public Const HealthView As Integer = 3
+    Public Const EmploymentView As Integer = 4
+    Public Const IntelligenceView As Integer = 5
+    Public Const CreativityView As Integer = 6
+    Public Const MobilityView As Integer = 7
+    Public Const DrunkennessView As Integer = 8
+    Public Const CriminalityView As Integer = 9
+    Public Const JobView As Integer = 10
+    Public Const RoadView As Integer = 11
 
     '--
     Public TimeIncrement As Integer = 3
+    Public EventLimit As Integer = 5
     Public Namer As New NameGenerator
 
     '-- Sort Types
-    Public Const PopSort = 0
-    Public Const JobSort = 1
-    Public Const CultureSort = 2
+    Public Const PopSort As Integer = 0
+    Public Const JobSort As Integer = 1
+    Public Const CultureSort As Integer = 2
     Public SortType As Integer = 0
 #End Region
 
