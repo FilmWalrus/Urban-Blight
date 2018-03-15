@@ -20,12 +20,12 @@ Public Class Form1
     Dim CurrentPlayerIndex As Integer = 0
     Dim WinFlag As Boolean = False
     '--
-    Dim StartPop As Integer = 4
+    Dim NoCard As Integer = -1
     Dim CardCount As Integer = 4
     Dim Cards As New ArrayList
     Dim RoadCard As Integer = CardCount
     Dim LandCard As Integer = RoadCard + 1
-    Dim SelectedCard As Integer = -1
+    Dim SelectedCard As Integer = NoCard
     Dim RoadCost As Integer = 50
     '--
     Dim CurrentPerson As Integer = -1
@@ -33,6 +33,7 @@ Public Class Form1
 
     '--
     Dim theYear As Integer = 1
+    Dim StartPop As Integer = 4
     '--
     Dim EventString As String = ""
 
@@ -563,7 +564,7 @@ Public Class Form1
         Me.ubcard1.Size = New System.Drawing.Size(136, 48)
         Me.ubcard1.TabIndex = 1
         Me.ubcard1.Text = "Card1"
-        Me.ubcard1.UseVisualStyleBackColor = True
+        Me.ubcard1.UseVisualStyleBackColor = False
         '
         'ubcard2
         '
@@ -933,7 +934,7 @@ Public Class Form1
         LastClickedX = X
         LastClickedY = Y
         TheBoxes(LastClickedX, LastClickedY).BorderStyle = BorderStyle.Fixed3D
-        If Infotab.SelectedIndex = CityTab And BoxInfo(LastClickedX, LastClickedY).OwnerID = CurrentPlayerIndex Then
+        If BoxInfo(LastClickedX, LastClickedY).OwnerID = CurrentPlayerIndex Then
             ubName.Visible = True
         Else
             ubName.Visible = False
@@ -974,7 +975,7 @@ Public Class Form1
         '-- Cleanup
         TheBoxes(LastClickedX, LastClickedY).BorderStyle = BorderStyle.FixedSingle
         ClearSuccess()
-        SelectedCard = -1
+        SelectedCard = NoCard
         CurrentPerson = -1
         EventString = ""
         txt_event.Text = ""
@@ -1204,6 +1205,9 @@ Public Class Form1
             UpdateGrid()
             UpdatePlayers()
             UpdateCards()
+
+            SelectedCard = NoCard
+            UpdateCardSelection()
         End If
 
     End Sub
@@ -1634,41 +1638,79 @@ Public Class Form1
 
 #Region " Buttons "
     Private Sub ubcard1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard1.Click
-        SelectedCard = 0
-        CardClick()
+        CardClick(0)
     End Sub
     Private Sub ubcard2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard2.Click
-        SelectedCard = 1
-        CardClick()
+        CardClick(1)
     End Sub
     Private Sub ubcard3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard3.Click
-        SelectedCard = 2
-        CardClick()
+        CardClick(2)
     End Sub
     Private Sub ubcard4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard4.Click
-        SelectedCard = 3
-        CardClick()
+        CardClick(3)
     End Sub
     Private Sub ubroad_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubroad.Click
-        SelectedCard = RoadCard
-        txt_card.Text = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCost.ToString()
-        CardClick()
+        CardClick(RoadCard)
     End Sub
 
     Private Sub ubland_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubland.Click
-        SelectedCard = LandCard
-        txt_card.Text = "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
-        CardClick()
+        CardClick(LandCard)
     End Sub
 
-    Public Sub CardClick()
-        If (SelectedCard < CardCount) Then
+    Public Sub CardClick(ByVal CardNumber As Integer)
+
+        '-- Select the clicked card. If they click on it a second time, deselect it.
+        If SelectedCard = CardNumber Then
+            SelectedCard = NoCard
+        Else
+            SelectedCard = CardNumber
+        End If
+
+        UpdateCardSelection()
+
+        '-- Display the card text
+        If (SelectedCard >= 0 And SelectedCard < CardCount) Then
             txt_card.Text = Cards(SelectedCard).Info
+        ElseIf SelectedCard = RoadCard Then
+            txt_card.Text = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCost.ToString()
+        ElseIf SelectedCard = LandCard Then
+            txt_card.Text = "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
         End If
         Infotab.SelectedTab = Infotab.TabPages(CardTab)
     End Sub
 
+    Public Sub UpdateCardSelection()
+
+        Dim newBold As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Bold)
+        Dim newRegular As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Regular)
+
+        ubcard1.Font = newRegular
+        ubcard2.Font = newRegular
+        ubcard3.Font = newRegular
+        ubcard4.Font = newRegular
+        ubroad.Font = newRegular
+        ubland.Font = newRegular
+
+        Select Case SelectedCard
+            Case 0
+                ubcard1.Font = newBold
+            Case 1
+                ubcard2.Font = newBold
+            Case 2
+                ubcard3.Font = newBold
+            Case 3
+                ubcard4.Font = newBold
+            Case RoadCard
+                ubroad.Font = newBold
+            Case LandCard
+                ubland.Font = newBold
+        End Select
+
+    End Sub
+
     Private Sub ubEnd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubEnd.Click
+        SelectedCard = NoCard
+        UpdateCardSelection()
         NextPlayer()
     End Sub
 
