@@ -1234,10 +1234,10 @@ Public Class Form1
                 If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
                     For k = 0 To BoxInfo(i, j).Buildings.Count - 1
                         theBuilding = BoxInfo(i, j).Buildings(k)
-                        If theBuilding.Filled = theBuilding.Jobs Then
+                        If theBuilding.GetEmployeeCount() = theBuilding.Jobs Then
                             '--Must be full
                             odds = 0
-                            odds += SafeDivide(theBuilding.Success, theBuilding.Filled * 2)
+                            odds += SafeDivide(theBuilding.Success, theBuilding.GetEmployeeCount() * 2)
                             If GetRandom(0, 100) <= odds Then
                                 '--Buildings expand
                                 theBuilding.Jobs += 1
@@ -1298,7 +1298,7 @@ Public Class Form1
                             TheBoxes(i, j).Text = BoxInfo(i, j).AvgCriminality.ToString()
                         Case JobView
                             'TheBoxes(i, j).Appearance.FontData.SizeInPoints = SmallFont
-                            TheBoxes(i, j).Text = BoxInfo(i, j).TempJobsFilled.ToString + "/" + BoxInfo(i, j).TempJobsTotal.ToString
+                            TheBoxes(i, j).Text = BoxInfo(i, j).getJobsFilled().ToString + "/" + BoxInfo(i, j).getJobsTotal.ToString
                         Case RoadView
                             TheBoxes(i, j).Text = BoxInfo(i, j).Transportation.ToString
                     End Select
@@ -1434,23 +1434,6 @@ Public Class Form1
             Next
         Next
         Players(thePlayer).TotalDevelopment = sum
-        Return sum
-    End Function
-
-    Function GetPlayerJobsAndEmployment(ByVal thePlayer As Integer) As Integer
-        Dim sum, sum2 As Integer
-        sum = 0
-        sum2 = 0
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = thePlayer Then
-                    sum = sum + BoxInfo(i, j).getJobsFilled()
-                    sum2 = sum2 + BoxInfo(i, j).getJobsTotal()
-                End If
-            Next
-        Next
-        Players(thePlayer).TotalEmployed = sum
-        Players(thePlayer).TotalJobs = sum2
         Return sum
     End Function
 

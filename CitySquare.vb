@@ -9,10 +9,6 @@ Public Class CitySquare
     Public VisitedKey As Integer = -1
 
     '-- Info
-    'Public Population As Integer = 0
-    'Public Development As Integer = 0
-    'Public JobsAvailable As Integer = 0
-    'Public JobsFilled As Integer = 0
     Public Buildings As New ArrayList
     Public People As New ArrayList
     Public Transportation As Integer = 0
@@ -28,10 +24,6 @@ Public Class CitySquare
     Public AvgMobility As Integer = 0
     Public AvgDrunkenness As Integer = 0
     Public AvgCriminality As Integer = 0
-
-    '-- Not trustworthy
-    Public TempJobsTotal As Integer = -1
-    Public TempJobsFilled As Integer = -1
 #End Region
 
 #Region " New "
@@ -73,20 +65,16 @@ Public Class CitySquare
     End Function
     Public Function getJobsTotal() As Integer
         Dim jobTotal As Integer = 0
-        Dim i As Integer
-        For i = 0 To Buildings.Count - 1
+        For i As Integer = 0 To Buildings.Count - 1
             jobTotal = jobTotal + Buildings(i).jobs
         Next
-        TempJobsTotal = jobTotal
         Return jobTotal
     End Function
     Public Function getJobsFilled() As Integer
         Dim jobFilled As Integer = 0
-        Dim i As Integer
-        For i = 0 To Buildings.Count - 1
-            jobFilled = jobFilled + Buildings(i).filled
+        For i As Integer = 0 To Buildings.Count - 1
+            jobFilled = jobFilled + Buildings(i).GetEmployeeCount()
         Next
-        TempJobsFilled = jobFilled
         Return jobFilled
     End Function
     Public Function getJobsEmpty() As Integer
@@ -220,7 +208,7 @@ Public Class CitySquare
             AvgMobility += People(i).Mobility
             AvgDrunkenness += People(i).Drunkenness
             AvgCriminality += People(i).Criminality
-            If People(i).Employment > 0 Then
+            If People(i).JobBuilding IsNot Nothing Then
                 'Update success of job
                 tempPerson = People(i)
                 tempPerson.JobBuilding.Success += tempPerson.Employment
@@ -285,7 +273,7 @@ Public Class CitySquare
             CityString += "Owner: Player " + theOwner.ToString + ControlChars.NewLine
             CityString += "Population: " + getPopulation().ToString + ControlChars.NewLine
             CityString += "Buildings: " + getDevelopment().ToString + ControlChars.NewLine
-            CityString += "Jobs: " + getJobsFilled.ToString + "/" + getJobsTotal().ToString + ControlChars.NewLine
+            CityString += "Jobs: " + getJobsFilled().ToString + "/" + getJobsTotal().ToString + ControlChars.NewLine
             CityString += "Transportation: "
             Select Case (Transportation)
                 Case RoadNone
@@ -303,7 +291,7 @@ Public Class CitySquare
             CityString += ControlChars.NewLine + "Development:" + ControlChars.NewLine
             Dim i As Integer
             For i = 0 To Buildings.Count - 1
-                CityString += Buildings(i).type.ToString() + ": " + Buildings(i).Filled.ToString() + "/" + Buildings(i).Jobs.ToString() + "   Success: " + Buildings(i).Success.ToString() + ControlChars.NewLine
+                CityString += Buildings(i).type.ToString() + ": " + Buildings(i).GetEmployeeCount().ToString() + "/" + Buildings(i).Jobs.ToString() + "   Success: " + Buildings(i).Success.ToString() + ControlChars.NewLine
             Next
         End If
 

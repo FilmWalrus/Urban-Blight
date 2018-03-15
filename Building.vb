@@ -4,10 +4,10 @@ Public Class Building
     Public Type As String = ""
     Public Cost As Integer = 0
     Public Jobs As Integer = 0
-    Public Filled As Integer = 0
     Public Success As Integer = 0
     Public Info As String = ""
     Public Location As CitySquare = Nothing
+    Public Employees As New ArrayList
 
     '-- Effect Change
     Public Happiness_adj As Integer = 0
@@ -376,13 +376,34 @@ Public Class Building
         Return thePerson
     End Function
 
+    Public Function GetEmployeeCount() As Integer
+        Return Employees.Count
+    End Function
+
     Public Function Hiring() As Boolean
-        If Filled < Jobs Then
+        If GetEmployeeCount() < Jobs Then
             Return True
         Else
             Return False
         End If
     End Function
+
+    Public Sub HireEmployee(ByRef Employee As Person)
+        Employees.Add(Employee)
+        Employee.JobBuilding = Me
+        Employee.Employment += 1
+    End Sub
+
+    Public Sub Destroy()
+        '-- All the employees are back on the street
+        For i As Integer = 0 To Employees.Count - 1
+            Dim theEmployee As Person = Employees(i)
+            theEmployee.JobBuilding = Nothing
+        Next
+
+        '-- Remove the building from this location
+        Location.Buildings.Remove(Me)
+    End Sub
 #End Region
 
 End Class

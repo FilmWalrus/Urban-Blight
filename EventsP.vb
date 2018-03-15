@@ -273,10 +273,8 @@
                     '-- Apply for a job if the building is hiring and the person is unemployed
                     If currentBuilding.Hiring() And thePerson.WillEmploy() Then
 
-                        'Have person take job if in range
-                        thePerson.Employment += 1
-                        thePerson.JobBuilding = currentBuilding
-                        currentBuilding.Filled += 1
+                        'Hire the employee
+                        currentBuilding.HireEmployee(thePerson)
 
                         If thePerson.Age = 16 Then
                             '-- If employed from an early age, buy a hotrod
@@ -309,10 +307,13 @@
         Dim LocalEvent As String = ""
 
         Dim LocalEventTheft As String = ""
+        Dim LocalEventArson As String = ""
         Dim LocalEventMurder As String = ""
         Dim LocalEventAccident As String = ""
+
         Dim TheftSum As Integer = 0
         Dim CountTheft As Integer = 0
+        Dim CountArson As Integer = 0
         Dim CountMurder As Integer = 0
         Dim CountAccident As Integer = 0
         Dim VictimName As String = ""
@@ -330,6 +331,7 @@
             '-- Theft
             Dim odds As Integer = 0
             odds += thePerson.Criminality / 3.0
+            odds -= thePerson.Employment / 5.0
             If GetRandom(0, 100) < odds Then
                 Dim theft As Integer = Math.Min(thePerson.Criminality, CurrentPlayer.TotalMoney)
                 CurrentPlayer.TotalMoney -= theft
@@ -345,7 +347,27 @@
             End If
 
             Dim currentLocation As CitySquare = thePerson.Residence
+            Dim buildingCount As Integer = currentLocation.Buildings.Count
             Dim localPop As Integer = currentLocation.getPopulation()
+
+            '-- Arson
+            odds = 0
+            odds += thePerson.Criminality / 8.0
+            odds -= (thePerson.Happiness - 25) / 5.0
+            If GetRandom(0, 150) < odds And buildingCount > 0 Then
+                Dim targetBuilding As Building = currentLocation.Buildings(GetRandom(0, buildingCount - 1))
+                targetBuilding.Destroy()
+
+                CountArson += 1
+                '--Post Event
+                If CountMurder >= EventLimit Then
+                    LocalEventArson = "Citizens burned down " + CountArson.ToString + " buildings." + ControlChars.NewLine
+                Else
+                    LocalEventArson += thePerson.GetNameAndAddress() + " burned down the " + targetBuilding.GetNameAndAddress + "." + ControlChars.NewLine
+                End If
+
+            End If
+
 
             '-- Murder
             odds = 0
@@ -399,7 +421,7 @@
 
         PurgeDead()
 
-        EventString += LocalEventTheft + LocalEventMurder + LocalEventAccident
+        EventString += LocalEventTheft + LocalEventArson + LocalEventMurder + LocalEventAccident
     End Sub
 
     Sub Taxation()

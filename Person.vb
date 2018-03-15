@@ -334,7 +334,7 @@ Public Class Person
     Function Die() As Boolean
         'Free dead person's job
         If JobBuilding IsNot Nothing Then
-            JobBuilding.Filled -= 1
+            JobBuilding.Employees.Remove(Me)
         End If
 
         'Free dead person's residence
@@ -344,11 +344,11 @@ Public Class Person
     End Function
 
     Function WillEmploy() As Boolean
-        If Employment > 0 Then
+        If JobBuilding IsNot Nothing Then
             Return False
         ElseIf Age >= 13 And Intelligence >= 5 Then
             Dim Odds As Double = 20
-            Odds = Odds + (100.0 - Age) / 12.0
+            Odds = Odds + (15 - Math.Abs(Age - 35.0)) / 5.0
             Odds = Odds + (Health / 9.0)
             Odds = Odds + (Happiness / 15.0)
             Odds = Odds - (Drunkenness / 6.0)
