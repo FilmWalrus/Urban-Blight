@@ -23,10 +23,9 @@ Public Class Form1
     Dim StartPop As Integer = 4
     Dim CardCount As Integer = 4
     Dim Cards As New ArrayList
-    Dim RoadCard As Integer = 4
-    Dim LandCard As Integer = 5
+    Dim RoadCard As Integer = CardCount
+    Dim LandCard As Integer = RoadCard + 1
     Dim SelectedCard As Integer = -1
-    Dim LandCost As Integer = 0
     Dim RoadCost As Integer = 50
     '--
     Dim CurrentPerson As Integer = -1
@@ -1041,64 +1040,6 @@ Public Class Form1
         UpdatePlayers()
     End Sub
 
-    Sub Build()
-        Dim UpdateNeeded As Boolean = False
-        Dim SpendingMoney As Integer = Players(CurrentPlayerIndex).TotalMoney
-        Dim ClickLocation As CitySquare = BoxInfo(LastClickedX, LastClickedY)
-
-        If SelectedCard >= 0 And ClickLocation.OwnerID = CurrentPlayerIndex Then
-            'Owned by current player
-            If SelectedCard = RoadCard And SpendingMoney >= RoadCost And ClickLocation.Transportation < RoadHighway Then
-                '-- Build road
-                ClickLocation.AddRoad()
-
-                '-- Pay for road
-                Players(CurrentPlayerIndex).TotalMoney = SpendingMoney - RoadCost
-                UpdateNeeded = True
-            ElseIf SelectedCard < CardCount Then
-                '-- Build building
-                Dim newBuilding As Building = Cards(SelectedCard)
-                If SpendingMoney >= newBuilding.Cost Then
-                    newBuilding.Location = ClickLocation
-                    ClickLocation.AddBuilding(newBuilding)
-
-                    '-- Pay for building card
-                    Players(CurrentPlayerIndex).TotalMoney = SpendingMoney - newBuilding.Cost
-                    '-- Remove building card
-                    Cards.RemoveAt(SelectedCard)
-                    UpdateNeeded = True
-                End If
-            End If
-        End If
-        If SelectedCard = LandCard And ClickLocation.Terrain <> TerrainLake And OwnedAdjacent(CurrentPlayerIndex) And SpendingMoney >= LandCost And ClickLocation.OwnerID < 0 Then
-            '-- Expand territory
-            ClickLocation.OwnerID = CurrentPlayerIndex
-
-            '-- Pay for land
-            Players(CurrentPlayerIndex).TotalMoney -= LandCost
-            If ClickLocation.Terrain = TerrainDirt Then
-                '-- Dirt effect: rebate
-                Players(CurrentPlayerIndex).TotalMoney += SafeDivide(LandCost, 4)
-                ClickLocation.Transportation = RoadDirt
-            ElseIf ClickLocation.Terrain = TerrainMountain Then
-                '-- Rock effect: free building
-                Dim randNum As Integer = GetRandom(0, CardCount - 1)
-                Dim newBuilding As Building = Cards(randNum)
-                newBuilding.Location = ClickLocation
-                ClickLocation.AddBuilding(newBuilding)
-                Cards.RemoveAt(randNum)
-            End If
-            UpdateNeeded = True
-        End If
-
-        If UpdateNeeded Then
-            UpdateGrid()
-            UpdatePlayers()
-            UpdateCards()
-        End If
-
-    End Sub
-
     Public Sub FindWinner()
         Dim WinningString As String = ""
         Dim i As Integer
@@ -1171,14 +1112,153 @@ Public Class Form1
 
 #End Region
 
+#Region " Buildings "
+
+    Sub Build()
+        Dim UpdateNeeded As Boolean = False
+        Dim SpendingMoney As Integer = Players(CurrentPlayerIndex).TotalMoney
+        Dim ClickLocation As CitySquare = BoxInfo(LastClickedX, LastClickedY)
+
+        '-- What is the cost of this card?
+        Dim CardCost As Integer = 0
+        If SelectedCard = RoadCard Then
+            CardCost = RoadCost
+        ElseIf SelectedCard = LandCard Then
+            If ClickLocation.Terrain = TerrainSwamp Then
+                CardCost = 0 '-- Swamps are free!
+            Else
+                CardCost = GetPlayerLandCost(CurrentPlayerIndex)
+            End If
+        ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
+            CardCost = Cards(SelectedCard).Cost
+        Else
+            Return
+        End If
+
+        '-- Can the player afford it?
+        If CardCost > SpendingMoney Then
+            Return
+        End If
+
+        '-- Was the selected CitySquare valid?
+        If SelectedCard = LandCard Then
+            '-- For Land cards they must be unowned, adjacent to land the player already owns, and not a lake
+            If ClickLocation.OwnerID >= 0 Or ClickLocation.Terrain = TerrainLake Or (Not OwnedAdjacent(CurrentPlayerIndex)) Then
+                Return
+            End If
+        Else
+            '-- For Roads and Buildings the player must already own the land
+            If ClickLocation.OwnerID <> CurrentPlayerIndex Then
+                Return
+            End If
+
+            '-- Roads can't be built if highway is already present
+            If SelectedCard = RoadCard And ClickLocation.Transportation = RoadHighway Then
+                Return
+            End If
+        End If
+
+        '-- Pay for construction
+        Players(CurrentPlayerIndex).TotalMoney -= CardCost
+        UpdateNeeded = True
+
+        '-- Do construction
+        If SelectedCard = RoadCard Then
+            '-- Upgrade Road
+            ClickLocation.AddRoad()
+        ElseIf SelectedCard = LandCard Then
+            '-- Expand Territory
+            ClickLocation.OwnerID = CurrentPlayerIndex
+
+            '-- Handle special terrain bonuses
+            If ClickLocation.Terrain = TerrainDirt Then
+                '-- Desert effect: rebate
+                Players(CurrentPlayerIndex).TotalMoney += SafeDivide(CardCost, 2)
+            ElseIf ClickLocation.Terrain = TerrainDirt Then
+                '-- Dirt effect: free road
+                ClickLocation.Transportation = RoadDirt
+            ElseIf ClickLocation.Terrain = TerrainMountain Then
+                '-- Rock effect: free building
+                Dim randNum As Integer = GetRandom(0, CardCount - 1)
+                Dim newBuilding As Building = Cards(randNum)
+                newBuilding.Location = ClickLocation
+                ClickLocation.AddBuilding(newBuilding)
+                Cards.RemoveAt(randNum)
+            ElseIf ClickLocation.Terrain = TerrainTownship Then
+                '-- Township effect: free population
+                Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(GetPlayerPopulation(CurrentPlayerIndex), 15.0)) + 2)
+                Dim randNum As Integer = GetRandom(2, maxFreePopulation)
+                For i As Integer = 0 To randNum - 1
+                    Dim founder As New Person(True)
+                    ClickLocation.AddPerson(founder)
+                Next
+            End If
+        ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
+            '-- Create Building
+            ClickLocation.AddBuilding(Cards(SelectedCard))
+            Cards.RemoveAt(SelectedCard)
+        End If
+
+        '-- Update grid, cards, and players
+        If UpdateNeeded Then
+            UpdateGrid()
+            UpdatePlayers()
+            UpdateCards()
+        End If
+
+    End Sub
+
+    Public Sub ClearSuccess()
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
+                    For k As Integer = 0 To BoxInfo(i, j).Buildings.Count - 1
+                        BoxInfo(i, j).Buildings(k).Success = 0
+                    Next
+                End If
+            Next
+        Next
+    End Sub
+
+    Sub BuildingsExpand()
+        Dim EventCount As Integer = 0
+        Dim LocalEvent As String = ""
+        Dim i, j, k, odds As Integer
+        Dim theBuilding As Building
+        For i = 0 To GridWidth
+            For j = 0 To GridHeight
+                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
+                    For k = 0 To BoxInfo(i, j).Buildings.Count - 1
+                        theBuilding = BoxInfo(i, j).Buildings(k)
+                        If theBuilding.Filled = theBuilding.Jobs Then
+                            '--Must be full
+                            odds = 0
+                            odds += SafeDivide(theBuilding.Success, theBuilding.Filled * 2)
+                            If GetRandom(0, 100) <= odds Then
+                                '--Buildings expand
+                                theBuilding.Jobs += 1
+
+                                '--Post Event
+                                EventCount += 1
+                                If EventCount >= EventLimit Then
+                                    LocalEvent = EventCount.ToString() + " businesses expanded." + ControlChars.NewLine
+                                Else
+                                    LocalEvent += theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString + "." + ControlChars.NewLine
+                                End If
+
+                                BoxInfo(i, j).Buildings(k) = theBuilding
+                            End If
+                        End If
+                    Next
+                End If
+            Next
+        Next
+        EventString += LocalEvent
+    End Sub
+
+#End Region
+
 #Region " Support "
-    '-- Globalized
-    'Function GetRandom(ByVal Min As Integer, ByVal Max As Integer) As Integer
-    '    Randomize(Date.Now.Millisecond)
-    '    Max += 1
-    '    Dim TheResult As Integer = Int(Min + (Rnd() * (Max - Min)))
-    '    Return TheResult
-    'End Function
 
     Sub UpdateGrid()
         Dim i, j As Integer
@@ -1229,23 +1309,31 @@ Public Class Form1
     Sub UpdateCards()
         '--Increase hand to full
         While (Cards.Count < 4)
-            Cards.Add(NewCard())
+            Dim newBuilding As New Building(-1)
+            Cards.Add(newBuilding)
         End While
+
         '--Reduce Cost
-        Dim i, currentCost As Integer
+        Dim i As Integer
         For i = 0 To CardCount - 1
-            If Cards(i).cost = 0 And GetRandom(0, 4) = 0 Then
-                Cards(i) = NewCard()
+
+            If Cards(i).cost = 0 And GetRandom(0, PlayerCount) = 0 Then
+                '-- If no one has bought this building even for free, replace it
+                Dim newBuilding As New Building(-1)
+                Cards.Add(newBuilding)
             End If
+
             Cards(i).cost = Math.Max(Cards(i).cost - 5, 0)
         Next
+
         '--Update text
         ubcard1.Text = Cards(0).type + ControlChars.NewLine + "Jobs: " + Cards(0).jobs.ToString() + "  Cost: " + Cards(0).cost.ToString()
         ubcard2.Text = Cards(1).type + ControlChars.NewLine + "Jobs: " + Cards(1).jobs.ToString() + "  Cost: " + Cards(1).cost.ToString()
         ubcard3.Text = Cards(2).type + ControlChars.NewLine + "Jobs: " + Cards(2).jobs.ToString() + "  Cost: " + Cards(2).cost.ToString()
         ubcard4.Text = Cards(3).type + ControlChars.NewLine + "Jobs: " + Cards(3).jobs.ToString() + "  Cost: " + Cards(3).cost.ToString()
+
         '--Land Cost
-        LandCost = (50 + (CurrentPlayer.TotalTerritory * 20))
+        Dim LandCost As Integer = GetPlayerLandCost(CurrentPlayerIndex)
         ubland.Text = "Land, Cost: " + LandCost.ToString()
     End Sub
 
@@ -1290,10 +1378,9 @@ Public Class Form1
     End Sub
 
     Sub UpdateAverages()
-        Dim i, j, sum As Integer
-        sum = 0
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
+        Dim sum As Integer = 0
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
                 If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
                     'Also updates success
                     BoxInfo(i, j).ComputeAverages()
@@ -1308,10 +1395,9 @@ Public Class Form1
     End Sub
 
     Function GetPlayerPopulation(ByVal thePlayer As Integer) As Integer
-        Dim i, j, sum As Integer
-        sum = 0
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
+        Dim sum As Integer = 0
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
                 If BoxInfo(i, j).OwnerID = thePlayer Then
                     sum = sum + BoxInfo(i, j).getPopulation()
                 End If
@@ -1322,10 +1408,9 @@ Public Class Form1
     End Function
 
     Function GetPlayerTerritory(ByVal thePlayer As Integer) As Integer
-        Dim i, j, sum As Integer
-        sum = 0
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
+        Dim sum As Integer = 0
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
                 If BoxInfo(i, j).OwnerID = thePlayer Then
                     sum = sum + 1
                 End If
@@ -1336,10 +1421,9 @@ Public Class Form1
     End Function
 
     Function GetPlayerDevelopment(ByVal thePlayer As Integer) As Integer
-        Dim i, j, sum As Integer
-        sum = 0
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
+        Dim sum As Integer = 0
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
                 If BoxInfo(i, j).OwnerID = thePlayer Then
                     sum = sum + BoxInfo(i, j).getDevelopment()
                 End If
@@ -1350,11 +1434,11 @@ Public Class Form1
     End Function
 
     Function GetPlayerJobsAndEmployment(ByVal thePlayer As Integer) As Integer
-        Dim i, j, sum, sum2 As Integer
+        Dim sum, sum2 As Integer
         sum = 0
         sum2 = 0
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
                 If BoxInfo(i, j).OwnerID = thePlayer Then
                     sum = sum + BoxInfo(i, j).getJobsFilled()
                     sum2 = sum2 + BoxInfo(i, j).getJobsTotal()
@@ -1368,13 +1452,12 @@ Public Class Form1
 
     Function GetPlayerScore(ByVal thePlayer As Integer) As Integer
         '--Must call getplayer territory and development first
-        Dim i, j, k As Integer
         Dim sum As Double = 0
         Dim personPoints As Double
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
                 If BoxInfo(i, j).OwnerID = thePlayer Then
-                    For k = 0 To BoxInfo(i, j).People.Count - 1
+                    For k As Integer = 0 To BoxInfo(i, j).People.Count - 1
                         '-- Computation of individual's value
                         personPoints = 0
                         personPoints += (BoxInfo(i, j).People(k).Happiness * 2.5)
@@ -1401,6 +1484,21 @@ Public Class Form1
         sum += (SafeDivide(thisPlayer.TotalEmployed, thisPlayer.TotalPopulation) * sum * 0.2)
         Players(thePlayer).TotalScore = sum
         Return sum
+    End Function
+
+    Function GetPlayerLandCost(ByVal thePlayer As Integer) As Integer
+        Dim landCost As Integer = 50
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim theLocation As CitySquare = BoxInfo(i, j)
+                If theLocation.OwnerID = thePlayer Then
+                    If theLocation.Terrain <> TerrainSwamp Then
+                        landCost += 20
+                    End If
+                End If
+            Next
+        Next
+        Return landCost
     End Function
 
     Function OwnedAdjacent(ByVal thePlayerID As Integer) As Boolean
@@ -1453,310 +1551,6 @@ Public Class Form1
             WinFlag = True
         End If
     End Sub
-
-#End Region
-
-#Region " Buildings "
-
-    Public Sub ClearSuccess()
-        Dim i, j, k, bMax As Integer
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
-                    bMax = BoxInfo(i, j).Buildings.Count - 1
-                    For k = 0 To bMax
-                        BoxInfo(i, j).Buildings(k).Success = 0
-                    Next
-                End If
-            Next
-        Next
-    End Sub
-
-    Sub BuildingsExpand()
-        Dim EventCount As Integer = 0
-        Dim LocalEvent As String = ""
-        Dim i, j, k, odds As Integer
-        Dim theBuilding As Building
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
-                    For k = 0 To BoxInfo(i, j).Buildings.Count - 1
-                        theBuilding = BoxInfo(i, j).Buildings(k)
-                        If theBuilding.Filled = theBuilding.Jobs Then
-                            '--Must be full
-                            odds = 0
-                            odds += SafeDivide(theBuilding.Success, theBuilding.Filled * 2)
-                            If GetRandom(0, 100) <= odds Then
-                                '--Buildings expand
-                                theBuilding.Jobs += 1
-
-                                '--Post Event
-                                EventCount += 1
-                                If EventCount >= EventLimit Then
-                                    LocalEvent = EventCount.ToString() + " businesses expanded." + ControlChars.NewLine
-                                Else
-                                    LocalEvent += theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString + "." + ControlChars.NewLine
-                                End If
-
-                                BoxInfo(i, j).Buildings(k) = theBuilding
-                            End If
-                        End If
-                    Next
-                End If
-            Next
-        Next
-        EventString += LocalEvent
-    End Sub
-
-    Public Function NewCard() As Building
-        Dim newBuilding As New Building
-        Dim Bnum As Integer = GetRandom(0, 23)
-        Select Case Bnum
-            Case 0
-                '--Airport
-                newBuilding.Type = "Airport"
-                newBuilding.Cost = 325
-                newBuilding.Jobs = 3
-                newBuilding.Mobility_adj = 15
-                newBuilding.Mobility_odds = 10
-                newBuilding.Info = "Airports are not used frequently by people but vastly increase mobility when visited."
-            Case 1
-                '--Bar
-                newBuilding.Type = "Bar"
-                newBuilding.Cost = 60
-                newBuilding.Jobs = 1
-                newBuilding.Happiness_adj = 4
-                newBuilding.Happiness_odds = 30
-                newBuilding.Drunkenness_adj = 6
-                newBuilding.Drunkenness_odds = 26
-                newBuilding.Info = "Bars provide a social atmosphere to cheer people up but can cause a serious upsurge in drunkenness."
-            Case 2
-                '--Church
-                newBuilding.Type = "Church"
-                newBuilding.Cost = 180
-                newBuilding.Jobs = 1
-                newBuilding.Happiness_adj = 7
-                newBuilding.Happiness_odds = 14
-                newBuilding.Criminality_adj = -3
-                newBuilding.Criminality_odds = 16
-                newBuilding.Drunkenness_adj = -4
-                newBuilding.Drunkenness_odds = 35
-                newBuilding.Info = "While not attended by everyone, churches can have a noticable effect on increasing inner peace and harshly discouraging criminality and drunkenness."
-            Case 3
-                '--College
-                newBuilding.Type = "College"
-                newBuilding.Cost = 320
-                newBuilding.Jobs = 2
-                newBuilding.Drunkenness_adj = 2
-                newBuilding.Drunkenness_odds = 40
-                newBuilding.Intelligence_adj = 6
-                newBuilding.Intelligence_odds = 30
-                newBuilding.Creativity_adj = 3
-                newBuilding.Creativity_odds = 25
-                newBuilding.Info = "Colleges are important bastions of intelligence and creativity but also subject to wild drunken parties."
-            Case 4
-                '--Crime Ring
-                newBuilding.Type = "Crime Ring"
-                newBuilding.Cost = 50
-                newBuilding.Jobs = 4
-                newBuilding.Criminality_adj = 10
-                newBuilding.Criminality_odds = 14
-                newBuilding.Info = "A crime ring brings plenty of cheap jobs but a sharp, if rare, increase in extreme criminal behavior is likely."
-            Case 5
-                '--Factory
-                newBuilding.Type = "Factory"
-                newBuilding.Cost = 125
-                newBuilding.Jobs = 5
-                newBuilding.Health_adj = -3
-                newBuilding.Health_odds = 20
-                newBuilding.Happiness_adj = -2
-                newBuilding.Happiness_odds = 16
-                newBuilding.Info = "Factories provide many needed jobs but their monotony can be depressing and their pollution is unhealthy."
-            Case 6
-                '--Museum
-                newBuilding.Type = "Museum"
-                newBuilding.Cost = 150
-                newBuilding.Jobs = 1
-                newBuilding.Intelligence_adj = 2
-                newBuilding.Intelligence_odds = 32
-                newBuilding.Creativity_adj = 10
-                newBuilding.Creativity_odds = 22
-                newBuilding.Info = "Museums may be stodgy and boring to some, but they can help increase the intelligence and creativity of those occasional visitors."
-            Case 7
-                '--Hospital
-                newBuilding.Type = "Hospital"
-                newBuilding.Cost = 240
-                newBuilding.Jobs = 3
-                newBuilding.Health_adj = 5
-                newBuilding.Health_odds = 35
-                newBuilding.Drunkenness_adj = -3
-                newBuilding.Drunkenness_odds = 12
-                newBuilding.Info = "Hospitals are an excellent way of ensuring the health and well-being of your citizens. The doctors advise moderation of fatty foods and strong drinks, but few listen."
-            Case 8
-                '--Library
-                newBuilding.Type = "Library"
-                newBuilding.Cost = 105
-                newBuilding.Jobs = 2
-                newBuilding.Intelligence_adj = 4
-                newBuilding.Intelligence_odds = 25
-                newBuilding.Happiness_adj = 2
-                newBuilding.Happiness_odds = 14
-                newBuilding.Info = "Libraries are a nice quiet place for citizens to read, relax and learn at their own pace."
-            Case 9
-                '--Mall
-                newBuilding.Type = "Mall"
-                newBuilding.Cost = 385
-                newBuilding.Jobs = 5
-                newBuilding.Happiness_adj = 3
-                newBuilding.Happiness_odds = 45
-                newBuilding.Creativity_adj = -3
-                newBuilding.Creativity_odds = 20
-                newBuilding.Info = "A mall provides a tiny bit of happiness for nearly everyone, but can tend to stifle creativity and local flavor."
-            Case 10
-                '--Memorial
-                newBuilding.Type = "Monument"
-                newBuilding.Cost = 85
-                newBuilding.Jobs = 0
-                newBuilding.Happiness_adj = 3
-                newBuilding.Happiness_odds = 16
-                newBuilding.Creativity_adj = 3
-                newBuilding.Creativity_odds = 16
-                newBuilding.Info = "A bold impressive monument that makes citizen proud, happy and inspired to new creative heights... if only slightly."
-            Case 11
-                '--Office
-                newBuilding.Type = "Office"
-                newBuilding.Cost = 145
-                newBuilding.Jobs = 4
-                newBuilding.Creativity_adj = -2
-                newBuilding.Creativity_odds = 30
-                newBuilding.Info = "Offices are a simple source of jobs and infrastructure that tends not to affect citizens noticably."
-            Case 12
-                '--Park
-                newBuilding.Type = "Park"
-                newBuilding.Cost = 145
-                newBuilding.Jobs = 1
-                newBuilding.Happiness_adj = 3
-                newBuilding.Happiness_odds = 15
-                newBuilding.Creativity_adj = 3
-                newBuilding.Creativity_odds = 20
-                newBuilding.Health_adj = 3
-                newBuilding.Health_odds = 40
-                newBuilding.Info = "Attractive parks allow the casual stroller to engage in happy, healthy and creative exercise and meditation."
-            Case 13
-                '--Police Station
-                newBuilding.Type = "Police Station"
-                newBuilding.Cost = 155
-                newBuilding.Jobs = 2
-                newBuilding.Criminality_adj = -2
-                newBuilding.Criminality_odds = 50
-                newBuilding.Happiness_adj = -1
-                newBuilding.Happiness_odds = 15
-                newBuilding.Info = "Police stations are the best way to crack down on crime, even if every once in a while they spoil some harmless fun."
-            Case 14
-                '--Sidewalks
-                newBuilding.Type = "Sidewalks"
-                newBuilding.Cost = 80
-                newBuilding.Jobs = 0
-                newBuilding.Mobility_adj = 2
-                newBuilding.Mobility_odds = 40
-                newBuilding.Happiness_adj = 1
-                newBuilding.Happiness_odds = 18
-                newBuilding.Info = "Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians."
-            Case 15
-                '--Skyscaper
-                newBuilding.Type = "Skyscaper"
-                newBuilding.Cost = 275
-                newBuilding.Jobs = 6
-                newBuilding.Info = "Skyscrapers provide tons of jobs but have little other effect."
-            Case 16
-                '--Stadium
-                newBuilding.Type = "Stadium"
-                newBuilding.Cost = 220
-                newBuilding.Jobs = 3
-                newBuilding.Happiness_adj = 6
-                newBuilding.Happiness_odds = 24
-                newBuilding.Health_adj = 5
-                newBuilding.Health_odds = 5
-                newBuilding.Drunkenness_adj = 3
-                newBuilding.Drunkenness_odds = 20
-                newBuilding.Info = "Stadiums can bring lots of fun and happiness, especially when the home team wins. The players get exercise and the audience gets entertainment and overpriced beer."
-            Case 17
-                '--Mass Transit
-                newBuilding.Type = "Mass Transit"
-                newBuilding.Cost = 175
-                newBuilding.Jobs = 1
-                newBuilding.Mobility_adj = 5
-                newBuilding.Mobility_odds = 32
-                newBuilding.Info = "Mass Transit allows many of your citizens to gain mobility they never would have had without it."
-            Case 18
-                '--Restaurant
-                newBuilding.Type = "Restaurant"
-                newBuilding.Cost = 120
-                newBuilding.Jobs = 2
-                newBuilding.Happiness_adj = 1
-                newBuilding.Happiness_odds = 40
-                newBuilding.Health_adj = 3
-                newBuilding.Health_odds = 26
-                newBuilding.Info = "Restaurants provide a charming setting for healthy meals and happy dates."
-            Case 19
-                '--Theater
-                newBuilding.Type = "Theater"
-                newBuilding.Cost = 200
-                newBuilding.Jobs = 2
-                newBuilding.Happiness_adj = 4
-                newBuilding.Happiness_odds = 30
-                newBuilding.Creativity_adj = 2
-                newBuilding.Creativity_odds = 25
-                newBuilding.Info = "Theaters bring movies of all different types that increase happiness and often possess creative artistic merit too."
-            Case 20
-                '--TV Station
-                newBuilding.Type = "TV Station"
-                newBuilding.Cost = 250
-                newBuilding.Jobs = 3
-                newBuilding.Happiness_adj = 2
-                newBuilding.Happiness_odds = 70
-                newBuilding.Creativity_adj = -1
-                newBuilding.Creativity_odds = 50
-                newBuilding.Info = "The TV station reaches almost house in a city, subtly boosting happiness and equally subtly stifling creativity."
-            Case 21
-                '--Coffee Shop
-                newBuilding.Type = "Coffee Shop"
-                newBuilding.Cost = 105
-                newBuilding.Jobs = 1
-                newBuilding.Happiness_adj = 2
-                newBuilding.Happiness_odds = 20
-                newBuilding.Mobility_adj = 1
-                newBuilding.Mobility_odds = 20
-                newBuilding.Drunkenness_adj = -2
-                newBuilding.Drunkenness_odds = 40
-                newBuilding.Info = "Coffee shops provide an alternative to alcohol that still cheers one up a notch and increases vigor and on-the-run mobility."
-            Case 22
-                '--Laboratory
-                newBuilding.Type = "Laboratory"
-                newBuilding.Cost = 205
-                newBuilding.Jobs = 2
-                newBuilding.Intelligence_adj = 8
-                newBuilding.Intelligence_odds = 16
-                newBuilding.Health_adj = -2
-                newBuilding.Health_odds = 20
-                newBuilding.Info = "Laboratories are a key source of research and intellectual advancement, but their chemicals and experiments can be unhealthy."
-            Case 23
-                '--Civic Center
-                newBuilding.Type = "Civic Center"
-                newBuilding.Cost = 505
-                newBuilding.Jobs = 7
-                newBuilding.Happiness_adj = 5
-                newBuilding.Happiness_odds = 25
-                newBuilding.Intelligence_adj = 3
-                newBuilding.Intelligence_odds = 25
-                newBuilding.Creativity_adj = 3
-                newBuilding.Creativity_odds = 25
-                newBuilding.Criminality_adj = -2
-                newBuilding.Criminality_odds = 15
-                newBuilding.Info = "Civic centers provide a vast expanse of public buildings and marketplaces for the free flow of cheerful commerce, progressive law, creative art and intellectual ideas."
-        End Select
-        Return newBuilding
-    End Function
 
 #End Region
 

@@ -114,6 +114,7 @@ Public Class CitySquare
 
     Public Sub AddBuilding(ByVal NewBuilding As Building)
         Buildings.Add(NewBuilding)
+        NewBuilding.Location = Me
     End Sub
 
     Public Sub AddRoad()
@@ -123,18 +124,18 @@ Public Class CitySquare
         End If
     End Sub
 
-    Public Function MiracleBirth() As String
+    Public Function MiracleBirth() As Person
         Dim newPerson As New Person
         newPerson.Residence = Me
         People.Add(newPerson)
-        Return newPerson.Name
+        Return newPerson
     End Function
 
-    Public Function Birth(ByVal theParent As Person) As String
+    Public Function Birth(ByVal theParent As Person) As Person
         Dim newPerson As New Person(theParent)
         newPerson.Residence = Me
         People.Add(newPerson)
-        Return newPerson.Name
+        Return newPerson
     End Function
 
     Public Sub AddPerson(ByVal newPerson As Person)
@@ -252,25 +253,25 @@ Public Class CitySquare
                 TerrainString = ControlChars.NewLine + "Plains are the default land type. They have no special effects."
             Case TerrainDirt
                 CityString += "Dirt"
-                TerrainString = ControlChars.NewLine + "Dirt makes for a boring place to live, but it's low upkeep and you start with free dirt roads."
+                TerrainString = ControlChars.NewLine + "Dirt makes for a mind-numbingly boring place to live, but it's low upkeep and you start with free roads."
             Case TerrainForest
                 CityString += "Forest"
-                TerrainString = ControlChars.NewLine + "The natural beauty and fresh air of forests increases the health and happiness of local citizens."
+                TerrainString = ControlChars.NewLine + "The natural beauty and fresh air of forests improve the health and happiness of local citizens."
             Case TerrainMountain
                 CityString += "Mountain"
-                TerrainString = ControlChars.NewLine + "Mountains reduce mobility but provide inspiring views. The ready access to construction material means you'll get a random building for free."
+                TerrainString = ControlChars.NewLine + "Mountains make travel difficult but provide inspiring views. The ready access to construction material mean a free random building."
             Case TerrainLake
                 CityString += "Lake"
-                TerrainString = ControlChars.NewLine + "Lakes can't be built on, but adjacent coastal regions get a boost to happiness."
+                TerrainString = ControlChars.NewLine + "Swimming and sailing are fun, but lakes can't be built on. Adjacent coastal regions get a boost to happiness."
             Case TerrainSwamp
                 CityString += "Swamp"
                 TerrainString = ControlChars.NewLine + "Swamps are free to buy, but a bit expensive to maintain. The foul-smelling, mosquito-ridden bogs aren't great for your health."
             Case TerrainDesert
                 CityString += "Desert"
-                TerrainString = ControlChars.NewLine + "You get a 50% rebate on empty, wind-swept deserts because, well... not many people want to live there."
+                TerrainString = ControlChars.NewLine + "You can drive as fast as you want in the empty, wind-swept desert. And you get a 50% rebate because, well... not many people want to live there."
             Case TerrainTownship
                 CityString += "Township"
-                TerrainString = ControlChars.NewLine + "Townships provide free population when you encorporate them, but they also take a cut of the taxes in that location."
+                TerrainString = ControlChars.NewLine + "Townships provide free population when you incorporate them, but they also take a cut of the taxes in that location."
         End Select
         If Coastal Then
             CityString += ", Coastal"

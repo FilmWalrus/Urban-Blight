@@ -6,6 +6,10 @@ Public Class Person
     Public JobBuilding As Building = Nothing
     Public Residence As CitySquare = Nothing
 
+    '-- Family
+    Public ParentName As String = "Unknown"
+    Public Children As New ArrayList
+
     '-- Traits
     Public Happiness As Integer = 0
     Public Health As Integer = 0 '(0 dies, higher reproduces)
@@ -76,6 +80,8 @@ Public Class Person
         Drunkenness = GetRandom(0, Math.Max(12, Parent.Drunkenness))
         Criminality = GetRandom(0, 8 + (Parent.Criminality / 6.0))
         Age = 1
+        ParentName = Parent.Name
+        Parent.Children.Add(Name)
     End Sub
 
 #End Region
@@ -290,17 +296,22 @@ Public Class Person
                 Health += GetRandom(1, 3)
             Case TerrainMountain
                 Creativity += GetRandom(1, 3)
-                Mobility -= GetRandom(1, 3)
+                Mobility -= GetRandom(0, 2)
             Case TerrainSwamp
                 Health -= GetRandom(2, 4)
+            Case TerrainDirt
+                Creativity -= GetRandom(0, 2)
+            Case TerrainDesert
+                Mobility += GetRandom(1, 3)
         End Select
         If Residence.Coastal Then
             '-- Coastal areas make people happier
             Happiness += GetRandom(1, 2)
         End If
 
-
+        '-- Cap all values between 0 and 100
         Cap()
+
     End Sub
 
     Function WillReproduce() As Boolean
@@ -361,8 +372,11 @@ Public Class Person
     End Function
 
     Public Overrides Function toString() As String
+        '-- Print the citizen's name
         Dim PersonString As String = ""
         PersonString += "Name: " + Name.ToString + ControlChars.NewLine
+
+        '-- Print the citizen's stats
         PersonString += "Age: " + Age.ToString + ControlChars.NewLine
         PersonString += "Health: " + Health.ToString + ControlChars.NewLine
         PersonString += "Happiness: " + Happiness.ToString + ControlChars.NewLine
@@ -374,13 +388,36 @@ Public Class Person
         PersonString += "Criminality: " + Criminality.ToString + ControlChars.NewLine
         PersonString += ControlChars.NewLine
 
+        '-- Print the citizen's age and employment status
         If Age < 16 Then
-            PersonString += "Minor."
-        ElseIf JobBuilding Is Nothing Then
-            PersonString += "Currently unemployed."
-        Else
-            PersonString += "Employed by the " + JobBuilding.GetNameAndAddress() + ControlChars.NewLine
+            PersonString += "Minor." + ControlChars.NewLine
         End If
+        If JobBuilding Is Nothing Then
+            If Age > 16 Then
+                PersonString += "Currently unemployed." + ControlChars.NewLine
+            End If
+        Else
+            PersonString += "Employed by the " + JobBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
+        End If
+        PersonString += ControlChars.NewLine
+
+        '-- Print the citizen's parents and children
+        If ParentName.Length > 0 Then
+            PersonString += "Parent: " + ParentName + ControlChars.NewLine
+        End If
+        If Children.Count > 0 Then
+            PersonString += "Children: "
+            For i As Integer = 0 To Children.Count - 1
+                PersonString += Children(i)
+                If i = Children.Count - 1 Then
+                    PersonString += ControlChars.NewLine
+                Else
+                    PersonString += ", "
+                End If
+            Next
+        End If
+
+
 
         Return PersonString
     End Function

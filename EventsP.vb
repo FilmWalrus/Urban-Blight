@@ -8,6 +8,8 @@
     Public CitizenList As New ArrayList
     Public LocationList As New ArrayList
 
+    Public DeadCitizens As New ArrayList
+
     Public NoDeath As Boolean = False
     Public NoEmigration As Boolean = False
     Public NoCrime As Boolean = False
@@ -91,10 +93,8 @@
                 '--Deaths
                 If thePerson.Die() Then
 
-                    '-- Remove citizen from citizen list
-                    CitizenList.RemoveAt(i)
-                    citizenCount -= 1
-                    i -= 1
+                    '-- Add this citizen to the list of the dead
+                    DeadCitizens.Add(thePerson)
 
                     '--Post Event
                     EventCount += 1
@@ -107,6 +107,8 @@
             End If
 
         Next
+
+        PurgeDead()
 
         EventString += LocalEvent
     End Sub
@@ -125,21 +127,23 @@
             thePerson.TouchedKey = 0
             If thePerson.WillReproduce() Then
                 Dim homeTown As CitySquare = thePerson.Residence
-                Dim theName As String = homeTown.Birth(thePerson)
+                Dim newChild As Person = homeTown.Birth(thePerson)
+                CitizenList.Add(newChild)
 
                 'Check for twins (very rare)
-                Dim theName2 As String = ""
+                Dim newChild2 As Person = Nothing
                 If (GetRandom(0, 1000) < 14) Then
-                    theName2 = homeTown.Birth(thePerson)
+                    newChild2 = homeTown.Birth(thePerson)
+                    CitizenList.Add(newChild2)
                 End If
 
                 '--Post Event
-                If theName2.Length <= 0 Then
+                If newChild2 Is Nothing Then
                     EventCount += 1
                     If EventCount >= EventLimit Then
                         LocalEvent = EventCount.ToString() + " citizens had children." + ControlChars.NewLine
                     Else
-                        LocalEvent += thePerson.GetNameAndAddress() + " gave birth to " + theName + "." + ControlChars.NewLine
+                        LocalEvent += thePerson.GetNameAndAddress() + " gave birth to " + newChild.Name + "." + ControlChars.NewLine
                     End If
                 Else
                     'Twins!!
@@ -147,7 +151,7 @@
                     If EventCount >= EventLimit Then
                         LocalEventTwins = EventCount.ToString() + " citizens had twins." + ControlChars.NewLine
                     Else
-                        LocalEventTwins += thePerson.GetNameAndAddress() + " had twins named " + theName + " and " + theName2 + "." + ControlChars.NewLine
+                        LocalEventTwins += thePerson.GetNameAndAddress() + " had twins named " + newChild.Name + " and " + newChild2.Name + "." + ControlChars.NewLine
                     End If
                 End If
 
@@ -199,6 +203,13 @@
                         End If
                     End If
 
+                    '-- People are reluctant to move to the desert
+                    If newHome.Terrain = TerrainDesert Then
+                        If GetRandom(0, 1) = 0 Then
+                            Continue For
+                        End If
+                    End If
+
                     '-- Move out of original home
                     originalHome.People.Remove(thePerson)
 
@@ -215,7 +226,7 @@
                         If InternalCount >= EventLimit Then
                             InternalMove = InternalCount.ToString() + " citizens moved." + ControlChars.NewLine
                         Else
-                            InternalMove += OldAddress + " moved to " + NewAddress + "." + ControlChars.NewLine
+                            InternalMove += thePerson.Name + " of " + OldAddress + " moved to " + NewAddress + "." + ControlChars.NewLine
                         End If
                     Else
                         '--Post Event for external move
@@ -223,7 +234,7 @@
                         If ExternalCount >= EventLimit Then
                             ExternalMove = ExternalCount.ToString() + " citizens emigrated." + ControlChars.NewLine
                         Else
-                            ExternalMove += OldAddress + " emigrated to  " + NewAddress + "." + ControlChars.NewLine
+                            ExternalMove += thePerson.Name + " of " + OldAddress + " emigrated to  " + NewAddress + "." + ControlChars.NewLine
                         End If
                     End If
 
@@ -351,8 +362,7 @@
 
                 If theVictim.Die() Then
 
-                    currentLocation.People.Remove(theVictim)
-                    citizenCount -= 1
+                    DeadCitizens.Add(theVictim)
 
                     CountMurder += 1
                     '--Post Event
@@ -373,9 +383,7 @@
             If GetRandom(0, 100) <= odds Then
                 If thePerson.Die() Then
 
-                    currentLocation.People.Remove(thePerson)
-                    citizenCount -= 1
-                    i -= 1
+                    DeadCitizens.Add(thePerson)
 
                     CountAccident += 1
                     '--Post Event
@@ -389,27 +397,76 @@
 
         Next
 
+        PurgeDead()
+
         EventString += LocalEventTheft + LocalEventMurder + LocalEventAccident
     End Sub
 
     Sub Taxation()
-        '--
+        '-- Collect taxes from citizens
         Dim RegularTaxRate As Integer = 5
-        Dim EmployedTaxRate As Integer = 2
+        Dim DependentTaxRate As Integer = 2
+        Dim EmployedTaxRate As Integer = 3
+
+        Dim revenue As Integer = 0
+        For i As Integer = 0 To CitizenList.Count - 1
+            Dim thePerson As Person = CitizenList(i)
+
+            '-- Collect taxes for each person
+            Dim personalTax As Integer = 0
+            If thePerson.Age < 16 Then
+                personalTax += DependentTaxRate '-- Children (dependents) don't pay as much tax
+            Else
+                personalTax += RegularTaxRate '-- Adults pay the full standard rate
+            End If
+
+            If thePerson.JobBuilding IsNot Nothing Then
+                '-- Employed citizens pay higher rates
+                personalTax += EmployedTaxRate
+            End If
+
+            '-- Townships take their cut
+            If thePerson.Residence.Terrain = TerrainTownship Then
+                personalTax = Math.Floor(personalTax * 0.8)
+            End If
+
+            revenue += personalTax
+        Next
+
+        '-- Pay upkeep on the land
         Dim LandTax As Integer = 10
 
-        Dim revenue As Integer = (CitizenList.Count * RegularTaxRate)
-        revenue += (CurrentPlayer.TotalEmployed * EmployedTaxRate)
-        Dim land As Integer = CurrentPlayer.TotalTerritory
-        If land > 3 And revenue > (land * LandTax * 2.0) Then
-            land *= LandTax
-            EventString = "You payed " + land.ToString() + " in upkeep." + ControlChars.NewLine + EventString
+        Dim upkeep As Integer = 0
+        For i As Integer = 0 To LocationList.Count - 1
+            Dim theLocation As CitySquare = LocationList(i)
+
+            If theLocation.Terrain = TerrainDirt Then '-- Dirt has lower upkeep
+                upkeep += 8
+            ElseIf theLocation.Terrain = TerrainSwamp Then '-- Swamp has higher upkeep
+                upkeep += 15
+            Else
+                upkeep += LandTax
+            End If
+        Next
+
+        If CurrentPlayer.TotalTerritory > 3 Then
+            '-- Upkeep never exceeds half your revenue
+            Dim halfRevenue As Integer = SafeDivide(revenue, 2.0)
+            If upkeep > halfRevenue Then
+                upkeep = halfRevenue
+            End If
         Else
-            land = 0
+            '-- No upkeep until you have more than 3 territories
+            upkeep = 0
+        End If
+
+        If upkeep > 0 Then
+            EventString = "You payed " + upkeep.ToString() + " in upkeep." + ControlChars.NewLine + EventString
         End If
         EventString = "You collected " + revenue.ToString() + " in taxes." + ControlChars.NewLine + EventString
-        revenue -= land
-        CurrentPlayer.TotalMoney += Math.Max(0, revenue)
+
+        '-- Update the player's money
+        CurrentPlayer.TotalMoney += Math.Max(0, revenue - upkeep)
     End Sub
 
 
@@ -450,6 +507,14 @@
 
     End Sub
 
+    Sub PurgeDead()
+        For i As Integer = 0 To DeadCitizens.Count - 1
+            Dim DeadCitizen As Person = DeadCitizens(i)
+            CitizenList.Remove(DeadCitizen)
+        Next
+        DeadCitizens.Clear()
+    End Sub
+
     Sub ClearVisited()
         For i As Integer = 0 To LocationList.Count - 1
             Dim thisLocation As CitySquare = LocationList(i)
@@ -468,16 +533,23 @@
         '-- Add to potential candidates
         visitList.Add(location)
 
-        '-- Continue moving
+        '-- Poor roads make travel difficult
         Dim DragLoss1 As Integer = (5 - GetRandom(0, location.Transportation))
         Dim DragLoss2 As Integer = (5 - GetRandom(0, location.Transportation))
         Mobility -= (DragLoss1 * DragLoss2)
+
+        '-- Mountains also slow travel
+        If location.Terrain = TerrainMountain Then
+            Mobility -= 6
+        End If
+
+        '-- Check to see if you have enough mobility to continue onward
         If Mobility < 0 Then
             Return 0
         End If
 
+        '-- Continue moving to locations adjacent to this location
         Dim adjacentList As ArrayList = location.GetAdjacents()
-
         For i As Integer = 0 To adjacentList.Count - 1
             RangeChecker(adjacentList(i), Mobility, visitList)
         Next
