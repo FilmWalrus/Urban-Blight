@@ -173,7 +173,7 @@ Public Class NameGenerator
 
     Public Function GenerateName() As String
         Dim nameStr As String = ""
-        Dim i, max As Integer
+        Dim max As Integer
 
         '--First Syllable
         max = FirstSyllable.Count - 1
