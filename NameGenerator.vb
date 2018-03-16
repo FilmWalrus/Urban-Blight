@@ -2,6 +2,7 @@ Public Class NameGenerator
 
 #Region " Variables "
     Dim PersonTitle As New ArrayList
+
     Dim FirstSyllable As New ArrayList
     Dim Middle As New ArrayList
     Dim Ending As New ArrayList
@@ -234,6 +235,11 @@ Public Class NameGenerator
         TownAdjective.Add("Emerald ")
         TownAdjective.Add("Sapphire ")
         TownAdjective.Add("Crystal ")
+        TownAdjective.Add("Pearl ")
+        TownAdjective.Add("Opal ")
+        TownAdjective.Add("Jade ")
+        TownAdjective.Add("Onyx ")
+
         TownAdjective.Add("Steel ")
         TownAdjective.Add("Bronze ")
         TownAdjective.Add("Iron ")
@@ -418,6 +424,8 @@ Public Class NameGenerator
         TownPlaceMountain.Add("Outlook")
         TownPlaceMountain.Add("Mine")
         TownPlaceMountain.Add("Pass")
+        TownPlaceMountain.Add("Falls")
+        TownPlaceMountain.Add("Chasm")
         TownPlaces.Add(TownPlaceMountain)
 
         Dim TownPlaceLake As New ArrayList
@@ -509,10 +517,15 @@ Public Class NameGenerator
             nameStr += TownAdjective(GetRandom(0, TownStart.Count - 1))
             requirePlaceName = True
         Else
-            '-- Random name
-            nameStr += GenerateGenericName()
-
+            '-- Title
             Dim cityEnding As Integer = GetRandom(0, 7)
+            If cityEnding = 0 Then
+                nameStr += PersonTitle(GetRandom(0, PersonTitle.Count - 1))
+            End If
+
+            '-- Random name
+            nameStr += GeneratePersonName()
+
             If cityEnding = 0 Then
                 '-- Posessive
                 nameStr += "'s "
@@ -546,17 +559,6 @@ Public Class NameGenerator
     End Function
 
     Public Function GeneratePersonName() As String
-        Dim nameStr As String = ""
-
-        If GetRandom(0, 12) = 0 Then
-            nameStr += PersonTitle(GetRandom(0, PersonTitle.Count - 1))
-        End If
-        nameStr += GenerateGenericName()
-
-        Return nameStr
-    End Function
-
-    Public Function GenerateGenericName() As String
         Dim nameStr As String = ""
         Dim max As Integer
 
