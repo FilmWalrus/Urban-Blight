@@ -854,9 +854,17 @@ Public Class Form1
             While (True)
                 Dim startX As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
                 Dim startY As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
-                If (BoxInfo(startX, startY).OwnerID < 0 And BoxInfo(startX + 1, startY).OwnerID < 0 And BoxInfo(startX - 1, startY).OwnerID < 0 And BoxInfo(startX, startY - 1).OwnerID < 0 And BoxInfo(startX, startY + 1).OwnerID < 0) Then
-                    BoxInfo(startX, startY).OwnerID = i
-                    BoxInfo(startX, startY).Terrain = TerrainPlain
+                Dim theLocation As CitySquare = BoxInfo(startX, startY)
+
+                '-- Starting cities can't be on or adjacent to another city
+                If (theLocation.OwnerID < 0 And BoxInfo(startX + 1, startY).OwnerID < 0 And BoxInfo(startX - 1, startY).OwnerID < 0 And BoxInfo(startX, startY - 1).OwnerID < 0 And BoxInfo(startX, startY + 1).OwnerID < 0) Then
+                    theLocation.OwnerID = i
+
+                    '-- Starting cities are always on Plain terrain
+                    theLocation.Terrain = TerrainPlain
+
+                    '-- Generate random city name
+                    theLocation.CityName = Namer.GenerateCityName(theLocation)
 
                     ' Create starting population
                     Dim j As Integer
@@ -1170,6 +1178,9 @@ Public Class Form1
         ElseIf SelectedCard = LandCard Then
             '-- Expand Territory
             ClickLocation.OwnerID = CurrentPlayerIndex
+
+            '-- Generate random name
+            ClickLocation.CityName = Namer.GenerateCityName(ClickLocation)
 
             '-- Handle special terrain bonuses
             If ClickLocation.Terrain = TerrainDirt Then
