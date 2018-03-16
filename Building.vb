@@ -9,6 +9,9 @@ Public Class Building
     Public Location As CitySquare = Nothing
     Public Employees As New ArrayList
 
+    '-- Minimum employee standards
+    Public minAge As Integer = 16
+
     '-- Effect Change
     Public Happiness_adj As Integer = 0
     Public Health_adj As Integer = 0 '(0 dies, higher reproduces)
@@ -382,6 +385,14 @@ Public Class Building
 
     Public Function Hiring() As Boolean
         If GetEmployeeCount() < Jobs Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Public Function WillHire(ByRef Candidate As Person) As Boolean
+        If Hiring() And Candidate.Age >= minAge Then
             Return True
         Else
             Return False

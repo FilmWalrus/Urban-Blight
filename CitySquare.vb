@@ -78,12 +78,7 @@ Public Class CitySquare
         Return jobFilled
     End Function
     Public Function getJobsEmpty() As Integer
-        Dim JobsEmpty As Integer = 0
-        Dim i As Integer
-        For i = 0 To Buildings.Count - 1
-            JobsEmpty = JobsEmpty + (Buildings(i).jobs - Buildings(i).filled)
-        Next
-        Return JobsEmpty
+        Return getJobsTotal() - getJobsFilled()
     End Function
 #End Region
 
@@ -111,20 +106,6 @@ Public Class CitySquare
             Transportation = RoadHighway
         End If
     End Sub
-
-    Public Function MiracleBirth() As Person
-        Dim newPerson As New Person
-        newPerson.Residence = Me
-        People.Add(newPerson)
-        Return newPerson
-    End Function
-
-    Public Function Birth(ByVal theParent As Person) As Person
-        Dim newPerson As New Person(theParent)
-        newPerson.Residence = Me
-        People.Add(newPerson)
-        Return newPerson
-    End Function
 
     Public Sub AddPerson(ByVal newPerson As Person)
         '-- Use for immigration
@@ -232,7 +213,7 @@ Public Class CitySquare
         If String.Compare(CityName, "") <> 0 Then
             CityString += "Name: " + CityName + ControlChars.NewLine
         End If
-        CityString += "Location: (" + (ColID + 1).ToString + "," + (RowID + 1).ToString + ")" + ControlChars.NewLine
+        CityString += "Location: (" + (RowID + 1).ToString + "," + (ColID + 1).ToString + ")" + ControlChars.NewLine
         CityString += "Terrain : "
 
         Select Case (Terrain)
