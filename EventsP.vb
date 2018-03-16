@@ -318,7 +318,7 @@
                         If ExternalCount >= EventLimit Then
                             ExternalMove = ExternalCount.ToString() + " citizens emigrated." + ControlChars.NewLine
                         Else
-                            ExternalMove += thePerson.Name + " of " + OldAddress + " emigrated to  " + NewAddress + "." + ControlChars.NewLine
+                            ExternalMove += thePerson.Name + " of " + OldAddress + " emigrated to " + NewAddress + "." + ControlChars.NewLine
                         End If
                     End If
 

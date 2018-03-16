@@ -72,6 +72,7 @@ Public Class NameGenerator
         FirstSyllable.Add("Cl")
         FirstSyllable.Add("Ch")
         FirstSyllable.Add("Chr")
+        FirstSyllable.Add("Cz")
         FirstSyllable.Add("D")
         FirstSyllable.Add("Dr")
         FirstSyllable.Add("F")
@@ -85,11 +86,16 @@ Public Class NameGenerator
         FirstSyllable.Add("J")
         FirstSyllable.Add("K")
         FirstSyllable.Add("Kl")
+        FirstSyllable.Add("Kn")
         FirstSyllable.Add("Kr")
         FirstSyllable.Add("L")
         FirstSyllable.Add("M")
+        FirstSyllable.Add("Mc")
+        FirstSyllable.Add("Mac")
         FirstSyllable.Add("N")
+        FirstSyllable.Add("O'")
         FirstSyllable.Add("P")
+        FirstSyllable.Add("Ph")
         FirstSyllable.Add("Pl")
         FirstSyllable.Add("Pr")
         FirstSyllable.Add("Ph")
@@ -173,12 +179,15 @@ Public Class NameGenerator
         Ending.Add("k")
         Ending.Add("l")
         Ending.Add("ll")
+        Ending.Add("ler")
         Ending.Add("lm")
         Ending.Add("lt")
         Ending.Add("lp")
         Ending.Add("m")
+        Ending.Add("man")
+        Ending.Add("m")
         Ending.Add("n")
-        Ending.Add("mn")
+        Ending.Add("ner")
         Ending.Add("p")
         Ending.Add("que")
         Ending.Add("r")
@@ -194,8 +203,10 @@ Public Class NameGenerator
         Ending.Add("tt")
         Ending.Add("tch")
         Ending.Add("th")
+        Ending.Add("ter")
         Ending.Add("ton")
         Ending.Add("vich")
+        'Ending.Add("vna")
         Ending.Add("w")
         Ending.Add("x")
         Ending.Add("y")
@@ -212,9 +223,11 @@ Public Class NameGenerator
         TownStart.Add("Monarchy of ")
         TownStart.Add("Duchy of ")
         TownStart.Add("Land of ")
+        TownStart.Add("City of ")
         TownStart.Add("Rio de ")
         TownStart.Add("Casa de ")
         TownStart.Add("Mt. ")
+        TownStart.Add("Fort ")
 
 
         TownAdjective.Add("Black ")
@@ -229,6 +242,7 @@ Public Class NameGenerator
         TownAdjective.Add("Smoky ")
         TownAdjective.Add("Blue ")
         TownAdjective.Add("Azure ")
+        TownAdjective.Add("Purple ")
         TownAdjective.Add("Prismatic ")
 
         TownAdjective.Add("Ruby ")
@@ -250,16 +264,21 @@ Public Class NameGenerator
         TownAdjective.Add("South ")
         TownAdjective.Add("East ")
 
+        TownAdjective.Add("First ")
+        TownAdjective.Add("Last ")
+        TownAdjective.Add("High ")
+        TownAdjective.Add("Low ")
+
         TownAdjective.Add("Solitary ")
-        TownAdjective.Add("Two ")
-        TownAdjective.Add("Three ")
-        TownAdjective.Add("Four ")
-        TownAdjective.Add("Five ")
-        TownAdjective.Add("Six ")
-        TownAdjective.Add("Seven ")
-        TownAdjective.Add("Eight ")
-        TownAdjective.Add("Nine ")
-        TownAdjective.Add("Ten ")
+        TownAdjective.Add("Twin ")
+        'TownAdjective.Add("Three ")
+        'TownAdjective.Add("Four ")
+        'TownAdjective.Add("Five ")
+        'TownAdjective.Add("Six ")
+        'TownAdjective.Add("Seven ")
+        'TownAdjective.Add("Eight ")
+        'TownAdjective.Add("Nine ")
+        'TownAdjective.Add("Ten ")
 
         TownAdjective.Add("Dark ")
         TownAdjective.Add("Bright ")
@@ -277,6 +296,7 @@ Public Class NameGenerator
         TownAdjective.Add("Wet ")
         TownAdjective.Add("Humid ")
         TownAdjective.Add("Dry ")
+        TownAdjective.Add("Burnt ")
         TownAdjective.Add("Arid ")
         TownAdjective.Add("Cold ")
         TownAdjective.Add("Frigid ")
@@ -290,35 +310,62 @@ Public Class NameGenerator
         TownAdjective.Add("Shady ")
         TownAdjective.Add("Jagged ")
         TownAdjective.Add("Rocky ")
+        TownAdjective.Add("Stony ")
         TownAdjective.Add("Sandy ")
         TownAdjective.Add("Wooded ")
+        TownAdjective.Add("Sylvan ")
+        TownAdjective.Add("Foggy ")
+        TownAdjective.Add("Fertile ")
 
         TownAdjective.Add("Fair ")
         TownAdjective.Add("Lovely ")
         TownAdjective.Add("Beautiful ")
         TownAdjective.Add("Esteemed ")
+        TownAdjective.Add("Good ")
         TownAdjective.Add("Great ")
         TownAdjective.Add("Grand ")
         TownAdjective.Add("Glorious ")
         TownAdjective.Add("Majestic ")
+        TownAdjective.Add("Worthy ")
         TownAdjective.Add("Lucky ")
         TownAdjective.Add("Sacred ")
         TownAdjective.Add("Holy ")
+        TownAdjective.Add("Blessed ")
         TownAdjective.Add("Ancient ")
+        TownAdjective.Add("Royal ")
+        TownAdjective.Add("Pure ")
+        TownAdjective.Add("Rich ")
+        TownAdjective.Add("Brave ")
+        TownAdjective.Add("True ")
+        TownAdjective.Add("Festive ")
 
         TownAdjective.Add("Grim ")
         TownAdjective.Add("Dire ")
+        TownAdjective.Add("Dread ")
         TownAdjective.Add("Quiet ")
         TownAdjective.Add("Lonely ")
         TownAdjective.Add("Lost ")
         TownAdjective.Add("Forsaken ")
         TownAdjective.Add("Unlucky ")
         TownAdjective.Add("Broken ")
+        TownAdjective.Add("Split ")
         TownAdjective.Add("Dead Man's ")
         TownAdjective.Add("Doomed ")
         TownAdjective.Add("Bloody ")
         TownAdjective.Add("Blasted ")
         TownAdjective.Add("Barren ")
+        TownAdjective.Add("Treacherous ")
+        TownAdjective.Add("Corrupt ")
+        TownAdjective.Add("Evil ")
+        TownAdjective.Add("Foul ")
+        TownAdjective.Add("Poor ")
+        TownAdjective.Add("False ")
+        TownAdjective.Add("Sunken ")
+        TownAdjective.Add("Ugly ")
+        TownAdjective.Add("Wicked ")
+        TownAdjective.Add("Blighted ")
+        TownAdjective.Add("Unworthy ")
+
 
 
         TownEnding.Add("ville")
@@ -328,6 +375,7 @@ Public Class NameGenerator
         TownEnding.Add("istan")
         TownEnding.Add("let")
         TownEnding.Add("land")
+        TownEnding.Add("burg")
 
         '  TerrainPlain As Integer = 0
         '  TerrainDirt As Integer = 1
@@ -339,21 +387,19 @@ Public Class NameGenerator
         '  TerrainDesert As Integer = 7
 
         Dim TownPlacePlain As New ArrayList
-        TownPlacePlain.Add("City")
-        TownPlacePlain.Add("City")
-        TownPlacePlain.Add("City")
-        TownPlacePlain.Add("City")
-        TownPlacePlain.Add("City")
-        TownPlacePlain.Add("Town")
-        TownPlacePlain.Add("Town")
-        TownPlacePlain.Add("Town")
-        TownPlacePlain.Add("Town")
-        TownPlacePlain.Add("Village")
-        TownPlacePlain.Add("Village")
-        TownPlacePlain.Add("Village")
+        For i As Integer = 0 To 8
+            TownPlacePlain.Add("City")
+        Next
+        For i As Integer = 0 To 6
+            TownPlacePlain.Add("Town")
+        Next
+        For i As Integer = 0 To 4
+            TownPlacePlain.Add("Village")
+        Next
         TownPlacePlain.Add("Farm")
         TownPlacePlain.Add("Ranch")
         TownPlacePlain.Add("Garden")
+        TownPlacePlain.Add("Park")
         TownPlacePlain.Add("Valley")
         TownPlacePlain.Add("Hamlet")
         TownPlacePlain.Add("Acres")
@@ -375,12 +421,22 @@ Public Class NameGenerator
         TownPlacePlain.Add("Prairie")
         TownPlacePlain.Add("Grassland")
         TownPlacePlain.Add("Shrubland")
+        TownPlacePlain.Add("Feld")
+        TownPlacePlain.Add("Croft")
+        TownPlacePlain.Add("Crops")
+        TownPlacePlain.Add("Steppe")
+        TownPlacePlain.Add("Veldt")
+        TownPlacePlain.Add("Tract")
+        TownPlacePlain.Add("Region")
+        TownPlacePlain.Add("Tower")
+        TownPlacePlain.Add("Spire")
         TownPlaces.Add(TownPlacePlain)
 
         Dim TownPlaceDirt As New ArrayList
         TownPlaceDirt.Add("Downs")
         TownPlaceDirt.Add("Mound")
         TownPlaceDirt.Add("Hills")
+        TownPlaceDirt.Add("Hill")
         TownPlaceDirt.Add("Flats")
         TownPlaceDirt.Add("Crossroads")
         TownPlaceDirt.Add("Crossing")
@@ -391,6 +447,8 @@ Public Class NameGenerator
         TownPlaceDirt.Add("Byway")
         TownPlaceDirt.Add("Route")
         TownPlaceDirt.Add("Tundra")
+        TownPlaceDirt.Add("Butte")
+        TownPlaceDirt.Add("Knoll")
         TownPlaces.Add(TownPlaceDirt)
 
         Dim TownPlaceForest As New ArrayList
@@ -407,6 +465,14 @@ Public Class NameGenerator
         TownPlaceForest.Add("Birch")
         TownPlaceForest.Add("Hollow")
         TownPlaceForest.Add("Wilderness")
+        TownPlaceForest.Add("Mushrooms")
+        TownPlaceForest.Add("Stumps")
+        TownPlaceForest.Add("Timberland")
+        TownPlaceForest.Add("Copse")
+        TownPlaceForest.Add("Thicket")
+        TownPlaceForest.Add("Weald")
+        TownPlaceForest.Add("Jungle")
+        TownPlaceForest.Add("Rainforest")
         TownPlaces.Add(TownPlaceForest)
 
         Dim TownPlaceMountain As New ArrayList
@@ -426,6 +492,8 @@ Public Class NameGenerator
         TownPlaceMountain.Add("Pass")
         TownPlaceMountain.Add("Falls")
         TownPlaceMountain.Add("Chasm")
+        TownPlaceMountain.Add("Snowcaps")
+        TownPlaceMountain.Add("Bluff")
         TownPlaces.Add(TownPlaceMountain)
 
         Dim TownPlaceLake As New ArrayList
@@ -452,6 +520,11 @@ Public Class NameGenerator
         TownPlaceLake.Add("Pond")
         TownPlaceLake.Add("Fjord")
         TownPlaceLake.Add("Ferry")
+        TownPlaceLake.Add("Cape")
+        TownPlaceLake.Add("Inlet")
+        TownPlaceLake.Add("Strait")
+        TownPlaceLake.Add("Pools")
+        TownPlaceLake.Add("Bridge")
         TownPlaces.Add(TownPlaceLake)
 
         Dim TownPlaceSwamp As New ArrayList
@@ -470,6 +543,8 @@ Public Class NameGenerator
         TownPlaceSwamp.Add("Everglade")
         TownPlaceSwamp.Add("Fen")
         TownPlaceSwamp.Add("Wetland")
+        TownPlaceSwamp.Add("Quagmire")
+        TownPlaceSwamp.Add("Morass")
         TownPlaces.Add(TownPlaceSwamp)
 
         Dim TownPlaceTownship As New ArrayList
@@ -484,6 +559,12 @@ Public Class NameGenerator
         TownPlaceTownship.Add("Inn")
         TownPlaceTownship.Add("Grounds")
         TownPlaceTownship.Add("Zone")
+        TownPlaceTownship.Add("Square")
+        TownPlaceTownship.Add("Monastery")
+        TownPlaceTownship.Add("Abbey")
+        TownPlaceTownship.Add("Commune")
+        TownPlaceTownship.Add("Ruins")
+        TownPlaceTownship.Add("Reservation")
         TownPlaces.Add(TownPlaceTownship)
 
         Dim TownPlaceDesert As New ArrayList
@@ -514,11 +595,16 @@ Public Class NameGenerator
         Dim requirePlaceName As Boolean = False
         If GetRandom(0, 2) = 0 Then
             '-- Adjective
-            nameStr += TownAdjective(GetRandom(0, TownStart.Count - 1))
+            nameStr += TownAdjective(GetRandom(0, TownAdjective.Count - 1))
             requirePlaceName = True
+
+            If GetRandom(0, 9) = 0 Then
+                '-- Rare double adjective
+                nameStr += TownAdjective(GetRandom(0, TownAdjective.Count - 1))
+            End If
         Else
             '-- Title
-            Dim cityEnding As Integer = GetRandom(0, 7)
+            Dim cityEnding As Integer = GetRandom(0, 6)
             If cityEnding = 0 Then
                 nameStr += PersonTitle(GetRandom(0, PersonTitle.Count - 1))
             End If
@@ -530,7 +616,7 @@ Public Class NameGenerator
                 '-- Posessive
                 nameStr += "'s "
                 requirePlaceName = True
-            ElseIf cityEnding = 1 Then
+            ElseIf cityEnding = 1 Or cityEnding = 2 Then
                 '-- Classic endings
                 nameStr += TownEnding(GetRandom(0, TownEnding.Count - 1))
             End If
@@ -560,54 +646,57 @@ Public Class NameGenerator
 
     Public Function GeneratePersonName() As String
         Dim nameStr As String = ""
-        Dim max As Integer
 
         '--First Syllable
-        max = FirstSyllable.Count - 1
-        nameStr += FirstSyllable(GetRandom(0, max))
-
-        '--First Vowel
-        If GetRandom(0, 2) <= 1 Then
-            max = Vowels.Count - 1
-            nameStr += Vowels(GetRandom(0, max))
+        If GetRandom(0, 100) <= 15 Then
+            '-- Start with a vowel
+            nameStr += Vowels(GetRandom(0, Vowels.Count - 1))
         Else
-            max = VowelsPlus.Count - 1
-            nameStr += VowelsPlus(GetRandom(0, max))
+            nameStr += FirstSyllable(GetRandom(0, FirstSyllable.Count - 1))
+
+            '--First Vowel
+            If GetRandom(0, 2) <= 1 Then
+                nameStr += Vowels(GetRandom(0, Vowels.Count - 1))
+            Else
+                nameStr += VowelsPlus(GetRandom(0, VowelsPlus.Count - 1))
+            End If
+
+            '-- Super short name
+            If GetRandom(0, 15) = 0 Then
+                Return nameStr
+            End If
         End If
+
+        '-- Capitalize first letter
+        nameStr = nameStr.Substring(0, 1).ToUpper() + nameStr.Substring(1)
 
         '--Second Syllable
         If GetRandom(0, 1) = 0 Then
-            max = Middle.Count - 1
-            nameStr += Middle(GetRandom(0, max))
+            nameStr += Middle(GetRandom(0, Middle.Count - 1))
         Else
             'Last Syllable
-            max = Ending.Count - 1
-            nameStr += Ending(GetRandom(0, max))
+            nameStr += Ending(GetRandom(0, Ending.Count - 1))
             '--Final Vowel
             If GetRandom(0, 3) = 0 Then
-                max = Vowels.Count - 1
-                nameStr += Vowels(GetRandom(0, max))
+                nameStr += Vowels(GetRandom(0, Vowels.Count - 1))
             End If
             Return nameStr
         End If
 
         '--Second Vowel
         If GetRandom(0, 2) <= 1 Then
-            max = Vowels.Count - 1
-            nameStr += Vowels(GetRandom(0, max))
+            nameStr += Vowels(GetRandom(0, Vowels.Count - 1))
         Else
-            max = VowelsPlus.Count - 1
-            nameStr += VowelsPlus(GetRandom(0, max))
+            nameStr += VowelsPlus(GetRandom(0, VowelsPlus.Count - 1))
         End If
 
         '--Third Syllable
-        max = Ending.Count - 1
-        nameStr += Ending(GetRandom(0, max))
+        nameStr += Ending(GetRandom(0, Ending.Count - 1))
         '--Final Vowel
         If GetRandom(0, 3) = 0 Then
-            max = Vowels.Count - 1
-            nameStr += Vowels(GetRandom(0, max))
+            nameStr += Vowels(GetRandom(0, Vowels.Count - 1))
         End If
+
         Return nameStr
     End Function
 
