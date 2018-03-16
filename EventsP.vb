@@ -43,17 +43,20 @@
         '-- Gather all the occupied territory (all players)
         GatherTerritory()
 
-        '-- Population lifecycles
-        AgeAndDie()
+        '-- Grow, live, and learn
+        LiveYourLife()
 
         '-- Have babies
         Reproduce()
 
+        '-- Die
+        HandleDeaths()
+
         '-- Move between locations (can emigrate to other players)
         Travel()
 
-        '-- Visit buildings within range for leisure and apply for jobs if unemployed
-        LeisureAndWork()
+        '-- Visit buildings within range and apply for jobs if unemployed
+        Work()
 
         '-- Commit crimes like theft and murder and get in car accidents
         MajorCrimes()
@@ -66,51 +69,52 @@
     End Function
 
 
+    Sub LiveYourLife()
+        For i As Integer = 0 To CitizenList.Count - 1
+            Dim thePerson As Person = CitizenList(i)
 
-    Sub AgeAndDie()
-        Dim EventCount As Integer = 0
-        Dim LocalEvent As String = ""
-
-        Dim thePerson As Person
-        Dim citizenCount As Integer = CitizenList.Count
-        For i As Integer = 0 To citizenCount - 1
-            thePerson = CitizenList(i)
-
-            '-- Age and change
+            '-- Age and change internally
             thePerson.UpdateInternal()
 
-            If NoDeath Then
-                Continue For
-            End If
+            Dim originalHome As CitySquare = thePerson.Residence
 
-            '--Sudden death for the youngish but unhealthy
-            Dim suddenDeath As Integer = 0
-            suddenDeath += (thePerson.Age - 20.0) / 4.0
-            If thePerson.Health < 32 Then
-                suddenDeath += (32 - thePerson.Health) / 4.0
-            End If
-            If thePerson.Health <= 0 Or thePerson.Age > 110 Or GetRandom(0, 100) < suddenDeath Then
-                '--Deaths
-                If thePerson.Die() Then
+            '-- Get the odds for traffic tickets
+            Dim drivingOdds As Integer = 0
+            drivingOdds += thePerson.Criminality / 8.0
+            drivingOdds += thePerson.Drunkenness / 4.0
+            drivingOdds += thePerson.Mobility / 9.0
 
-                    '-- Add this citizen to the list of the dead
-                    DeadCitizens.Add(thePerson)
+            Dim parkingOdds As Integer = 1
+            parkingOdds += thePerson.Criminality / 10.0
 
-                    '--Post Event
-                    EventCount += 1
-                    If EventCount >= EventLimit Then
-                        LocalEvent = EventCount.ToString() + " citizens died." + ControlChars.NewLine
-                    Else
-                        LocalEvent += thePerson.GetNameAndAddress() + " died at the age of " + thePerson.Age.ToString() + "." + ControlChars.NewLine
-                    End If
+            'Find all the locations within range (based on the person's mobiility and the quality of roads)
+            ClearVisited()
+            Dim locationsInRange As New ArrayList
+            RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
+
+            ' Visit each location in range
+            For j As Integer = 0 To locationsInRange.Count - 1
+
+                '-- Issue speeding ticket
+                If GetRandom(0, 200) < drivingOdds Then
+                    thePerson.IssueTicket(False)
                 End If
-            End If
 
+                '-- Visit each building at this location
+                Dim currentLocation As CitySquare = locationsInRange(j)
+                For n As Integer = 0 To currentLocation.Buildings.Count - 1
+
+                    '-- Issue parking ticket
+                    If GetRandom(0, 200) < parkingOdds Then
+                        thePerson.IssueTicket(True)
+                    End If
+
+                    '-- Have person potentially visit each building in range for leisure and change due to external factors
+                    Dim currentBuilding As Building = currentLocation.Buildings(n)
+                    currentBuilding.AffectPerson(thePerson)
+                Next
+            Next
         Next
-
-        PurgeDead()
-
-        EventString += LocalEvent
     End Sub
 
     Sub Reproduce()
@@ -127,13 +131,13 @@
             thePerson.TouchedKey = 0
             If thePerson.WillReproduce() Then
                 Dim homeTown As CitySquare = thePerson.Residence
-                Dim newChild As Person = homeTown.Birth(thePerson)
+                Dim newChild As Person = thePerson.Reproduce()
                 CitizenList.Add(newChild)
 
                 'Check for twins (very rare)
                 Dim newChild2 As Person = Nothing
                 If (GetRandom(0, 1000) < 14) Then
-                    newChild2 = homeTown.Birth(thePerson)
+                    newChild2 = thePerson.Reproduce()
                     CitizenList.Add(newChild2)
                 End If
 
@@ -159,6 +163,86 @@
         Next
 
         EventString += LocalEvent + LocalEventTwins
+    End Sub
+
+    Sub HandleDeaths()
+        Dim EventCountNatural As Integer = 0
+        Dim LocalEventNatural As String = ""
+        Dim EventCountIllness As Integer = 0
+        Dim LocalEventIllness As String = ""
+        Dim EventCountAccident As Integer = 0
+        Dim LocalEventAccident As String = ""
+
+        If NoDeath Then
+            Return
+        End If
+
+        Dim thePerson As Person
+        Dim citizenCount As Integer = CitizenList.Count
+        For i As Integer = 0 To citizenCount - 1
+            thePerson = CitizenList(i)
+
+            '-- Handle deaths by natural causes
+            Dim odds As Integer = 0
+            odds += (thePerson.Age - 20.0) / 4.0
+            If thePerson.Health <= 0 Or GetRandom(0, 100) < odds Then
+                If thePerson.Die() Then
+                    DeadCitizens.Add(thePerson)
+
+                    '--Post Event
+                    EventCountNatural += 1
+                    If EventCountNatural >= EventLimit Then
+                        LocalEventNatural = EventCountNatural.ToString() + " citizens died of natural causes." + ControlChars.NewLine
+                    Else
+                        LocalEventNatural += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural cases." + ControlChars.NewLine
+                    End If
+                End If
+            End If
+
+            '-- Handle deaths by illness
+            odds = 0
+            odds += (32 - thePerson.Health) / 4.0
+            If GetRandom(0, 100) < odds Then
+                If thePerson.Die() Then
+                    DeadCitizens.Add(thePerson)
+
+                    '--Post Event
+                    EventCountIllness += 1
+                    If EventCountIllness >= EventLimit Then
+                        LocalEventIllness = EventCountIllness.ToString() + " citizens died of illness." + ControlChars.NewLine
+                    Else
+                        LocalEventIllness += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of illness." + ControlChars.NewLine
+                    End If
+                End If
+            End If
+
+            '-- Handle deaths by car accident
+            Dim currentLocation As CitySquare = thePerson.Residence
+            odds = 0
+            odds += thePerson.Mobility / 10.0
+            odds += thePerson.Drunkenness / 4.0
+            odds += (currentLocation.getPopulation / 5.0)
+            odds -= (currentLocation.Transportation * 2.0)
+            If GetRandom(0, 100) <= odds Then
+                If thePerson.Die() Then
+
+                    DeadCitizens.Add(thePerson)
+
+                    '--Post Event
+                    EventCountAccident += 1
+                    If EventCountAccident >= EventLimit Then
+                        LocalEventAccident = EventCountAccident.ToString() + " citizens died in traffic accidents." + ControlChars.NewLine
+                    Else
+                        LocalEventAccident += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died in a car accident." + ControlChars.NewLine
+                    End If
+                End If
+            End If
+
+        Next
+
+        PurgeDead()
+
+        EventString += LocalEventNatural + LocalEventIllness + LocalEventAccident
     End Sub
 
     Sub Travel()
@@ -214,7 +298,7 @@
                     originalHome.People.Remove(thePerson)
 
                     '-- Move into new home
-                    newHome.People.Add(thePerson)
+                    newHome.AddPerson(thePerson)
                     thePerson.Residence = newHome
 
                     Dim OldAddress As String = originalHome.GetName()
@@ -246,19 +330,21 @@
 
     End Sub
 
-    Sub LeisureAndWork()
+    Sub Work()
         Dim EventCount As Integer = 0
         Dim LocalEvent As String = ""
 
         Dim thePerson As Person
         For i As Integer = 0 To CitizenList.Count - 1
             thePerson = CitizenList(i)
+
             Dim originalHome As CitySquare = thePerson.Residence
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             ClearVisited()
             Dim locationsInRange As New ArrayList
             RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
+            Dim foundJob As Boolean = False
 
             For j As Integer = 0 To locationsInRange.Count - 1
 
@@ -266,32 +352,32 @@
 
                 For n As Integer = 0 To currentLocation.Buildings.Count - 1
 
-                    '-- Have person potentially visit each building in range for leisure
                     Dim currentBuilding As Building = currentLocation.Buildings(n)
-                    currentBuilding.AffectPerson(thePerson)
 
-                    '-- Apply for a job if the building is hiring and the person is unemployed
-                    If currentBuilding.Hiring() And thePerson.WillEmploy() Then
+                    '-- Apply for a job if the building is hiring and the person is interested
+                    If currentBuilding.WillHire(thePerson) And thePerson.WillApply(currentBuilding) Then
 
                         'Hire the employee
                         currentBuilding.HireEmployee(thePerson)
+                        foundJob = True
 
                         If thePerson.Age = 16 Then
                             '-- If employed from an early age, buy a hotrod
                             thePerson.Mobility += GetRandom(3, 4)
                         End If
-
-                        '--Post Event
-                        EventCount += 1
-                        If EventCount >= EventLimit Then
-                            LocalEvent = EventCount.ToString() + " citizens got new jobs." + ControlChars.NewLine
-                        Else
-                            LocalEvent += thePerson.GetNameAndAddress() + " took a job at the " + currentBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
-                        End If
                     End If
                 Next
             Next
 
+            If foundJob Then
+                '--Post Event
+                EventCount += 1
+                If EventCount >= EventLimit Then
+                    LocalEvent = EventCount.ToString() + " citizens got new jobs." + ControlChars.NewLine
+                Else
+                    LocalEvent += thePerson.GetNameAndAddress() + " took a job at the " + thePerson.JobBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
+                End If
+            End If
         Next
 
         EventString += LocalEvent
@@ -333,6 +419,7 @@
             odds += thePerson.Criminality / 3.0
             odds -= thePerson.Employment / 5.0
             If GetRandom(0, 100) < odds Then
+                thePerson.RobberyCount += 1
                 Dim theft As Integer = Math.Min(thePerson.Criminality, CurrentPlayer.TotalMoney)
                 CurrentPlayer.TotalMoney -= theft
 
@@ -355,6 +442,7 @@
             odds += thePerson.Criminality / 8.0
             odds -= (thePerson.Happiness - 25) / 5.0
             If GetRandom(0, 150) < odds And buildingCount > 0 Then
+                thePerson.ArsonCount += 1
                 Dim targetBuilding As Building = currentLocation.Buildings(GetRandom(0, buildingCount - 1))
                 targetBuilding.Destroy()
 
@@ -386,6 +474,8 @@
 
                     DeadCitizens.Add(theVictim)
 
+                    thePerson.MurderCount += 1
+
                     CountMurder += 1
                     '--Post Event
                     If CountMurder >= EventLimit Then
@@ -395,28 +485,6 @@
                     End If
                 End If
             End If
-
-            '-- Car Accident
-            odds = 0
-            odds += thePerson.Mobility / 10.0
-            odds += thePerson.Drunkenness / 4.0
-            odds += (currentLocation.getPopulation / 5.0)
-            odds -= (currentLocation.Transportation * 2.0)
-            If GetRandom(0, 100) <= odds Then
-                If thePerson.Die() Then
-
-                    DeadCitizens.Add(thePerson)
-
-                    CountAccident += 1
-                    '--Post Event
-                    If CountAccident >= EventLimit Then
-                        LocalEventAccident = CountAccident.ToString() + " citizens died in traffic accidents." + ControlChars.NewLine
-                    Else
-                        LocalEventAccident += thePerson.GetNameAndAddress() + " died in a car accident." + ControlChars.NewLine
-                    End If
-                End If
-            End If
-
         Next
 
         PurgeDead()
@@ -430,7 +498,9 @@
         Dim DependentTaxRate As Integer = 2
         Dim EmployedTaxRate As Integer = 3
 
+        '-- Income
         Dim revenue As Integer = 0
+        Dim trafficFines As Integer = 0
         For i As Integer = 0 To CitizenList.Count - 1
             Dim thePerson As Person = CitizenList(i)
 
@@ -447,6 +517,10 @@
                 personalTax += EmployedTaxRate
             End If
 
+            '-- Collect unpaid fines (e.g. traffic tickets) then clear the citizen's debt
+            trafficFines += thePerson.UnpaidFines
+            thePerson.UnpaidFines = 0
+
             '-- Townships take their cut
             If thePerson.Residence.Terrain = TerrainTownship Then
                 personalTax = Math.Floor(personalTax * 0.8)
@@ -456,8 +530,6 @@
         Next
 
         '-- Pay upkeep on the land
-        Dim LandTax As Integer = 10
-
         Dim upkeep As Integer = 0
         For i As Integer = 0 To LocationList.Count - 1
             Dim theLocation As CitySquare = LocationList(i)
@@ -467,7 +539,7 @@
             ElseIf theLocation.Terrain = TerrainSwamp Then '-- Swamp has higher upkeep
                 upkeep += 15
             Else
-                upkeep += LandTax
+                upkeep += 10
             End If
         Next
 
@@ -482,13 +554,18 @@
             upkeep = 0
         End If
 
-        If upkeep > 0 Then
-            EventString = "You payed " + upkeep.ToString() + " in upkeep." + ControlChars.NewLine + EventString
+
+        Dim FinancialString As String = "You collected $" + revenue.ToString() + " in taxes." + ControlChars.NewLine
+        If trafficFines > 0 Then
+            FinancialString += "You collected $" + trafficFines.ToString() + " in traffic fines." + ControlChars.NewLine
         End If
-        EventString = "You collected " + revenue.ToString() + " in taxes." + ControlChars.NewLine + EventString
+        If upkeep > 0 Then
+            FinancialString += "You payed $" + upkeep.ToString() + " in upkeep." + ControlChars.NewLine
+        End If
+        EventString = FinancialString + EventString '-- Put financial updates at the top of the event string
 
         '-- Update the player's money
-        CurrentPlayer.TotalMoney += Math.Max(0, revenue - upkeep)
+        CurrentPlayer.TotalMoney += revenue + trafficFines - upkeep
     End Sub
 
 

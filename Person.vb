@@ -4,6 +4,9 @@ Public Class Person
     Public Name As String = ""
 
     Public JobBuilding As Building = Nothing
+
+    '-- Personal history
+    Public BirthPlace As CitySquare = Nothing
     Public Residence As CitySquare = Nothing
 
     '-- Family
@@ -21,6 +24,17 @@ Public Class Person
     Public Criminality As Integer = 0
     Public Age As Integer = 1
 
+    '-- Criminal Record
+    Public ParkingTicketCount As Integer = 0
+    Public DrivingTicketCount As Integer = 0
+    Public RobberyCount As Integer = 0
+    Public ArsonCount As Integer = 0
+    Public MurderCount As Integer = 0
+
+    '-- Financials
+    Public Wealth As Integer = 0
+    Public UnpaidFines As Integer = 0
+
     '-- Mark
     Public TouchedKey As Integer = 0
 #End Region
@@ -28,7 +42,7 @@ Public Class Person
 #Region " New "
     Public Sub New()
         '-- Create randomly
-        Name = Namer.GenerateName()
+        Name = Namer.GeneratePersonName()
         Happiness = GetRandom(25, 35)
         Health = GetRandom(40, 50)
         Employment = 0
@@ -42,7 +56,7 @@ Public Class Person
 
     Public Sub New(ByVal isAdult As Boolean)
         '-- Create randomly
-        Name = Namer.GenerateName()
+        Name = Namer.GeneratePersonName()
 
         Happiness = GetRandom(25, 35)
         Health = GetRandom(40, 50)
@@ -68,9 +82,9 @@ Public Class Person
 
     End Sub
 
-    Public Sub New(ByVal Parent As Person)
+    Public Sub New(ByRef Parent As Person)
         '-- Create randomly with heriditary influence
-        Name = Namer.GenerateName()
+        Name = Namer.GeneratePersonName()
         Happiness = GetRandom(20, 30) + (Parent.Happiness / 9.0)
         Health = GetRandom(Math.Min(40, Parent.Health), 50)
         Employment = 0
@@ -82,6 +96,7 @@ Public Class Person
         Age = 1
         ParentName = Parent.Name
         Parent.Children.Add(Name)
+        BirthPlace = Parent.Residence
     End Sub
 
 #End Region
@@ -331,6 +346,14 @@ Public Class Person
         End If
     End Function
 
+    Function Reproduce() As Person
+        Dim child As New Person(Me)
+        child.BirthPlace = Residence
+        child.Residence = Residence
+        Residence.People.Add(child)
+        Return child
+    End Function
+
     Function Die() As Boolean
         'Free dead person's job
         If JobBuilding IsNot Nothing Then
@@ -343,10 +366,15 @@ Public Class Person
         Return True
     End Function
 
-    Function WillEmploy() As Boolean
+    Function WillApply(ByRef newJob As Building) As Boolean
+        '-- If already employed, make sure this other opportunity is better
         If JobBuilding IsNot Nothing Then
-            Return False
-        ElseIf Age >= 13 And Intelligence >= 5 Then
+            If newJob.Cost < JobBuilding.Cost Then '-- Change this to salary in future
+                Return False
+            End If
+        End If
+
+        If Age >= 10 And Intelligence >= 5 Then
             Dim Odds As Double = 20
             Odds = Odds + (15 - Math.Abs(Age - 35.0)) / 5.0
             Odds = Odds + (Health / 9.0)
@@ -362,7 +390,24 @@ Public Class Person
                 Return False
             End If
         End If
+
+        Return False
     End Function
+
+    Sub IssueTicket(ByVal parking As Boolean)
+        If Age < 16 Then
+            Return
+        End If
+
+        If parking Then
+            ParkingTicketCount += 1
+            UnpaidFines += 1
+        Else
+            DrivingTicketCount += 1
+            UnpaidFines += 2
+        End If
+    End Sub
+
 #End Region
 
 #Region " Support "
@@ -375,6 +420,12 @@ Public Class Person
         '-- Print the citizen's name
         Dim PersonString As String = ""
         PersonString += "Name: " + Name.ToString + ControlChars.NewLine
+        If BirthPlace Is Nothing Then
+            PersonString += "Birthplace: Unknown" + ControlChars.NewLine
+        Else
+            PersonString += "Birthplace: " + BirthPlace.GetName() + ControlChars.NewLine
+        End If
+
 
         '-- Print the citizen's stats
         PersonString += "Age: " + Age.ToString + ControlChars.NewLine
@@ -416,7 +467,27 @@ Public Class Person
                 End If
             Next
         End If
+        PersonString += ControlChars.NewLine
 
+        '-- Print the citizen's criminal record
+        If ParkingTicketCount + DrivingTicketCount + RobberyCount + ArsonCount + MurderCount > 0 Then
+            PersonString += "Criminal record: " + ControlChars.NewLine
+            If ParkingTicketCount > 0 Then
+                PersonString += "Parking tickets: " + ParkingTicketCount.ToString + ControlChars.NewLine
+            End If
+            If DrivingTicketCount > 0 Then
+                PersonString += "Traffic tickets: " + DrivingTicketCount.ToString + ControlChars.NewLine
+            End If
+            If RobberyCount > 0 Then
+                PersonString += "Robbery: " + RobberyCount.ToString + ControlChars.NewLine
+            End If
+            If ArsonCount > 0 Then
+                PersonString += "Arson: " + ArsonCount.ToString + ControlChars.NewLine
+            End If
+            If MurderCount > 0 Then
+                PersonString += "Murder: " + MurderCount.ToString + ControlChars.NewLine
+            End If
+        End If
 
 
         Return PersonString
