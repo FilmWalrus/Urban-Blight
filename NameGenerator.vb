@@ -31,6 +31,11 @@ Public Class NameGenerator
         Vowels.Clear()
         VowelsPlus.Clear()
 
+        PersonTitle.Add("King ")
+        PersonTitle.Add("Queen ")
+        PersonTitle.Add("Emperor ")
+        PersonTitle.Add("Empress ")
+        PersonTitle.Add("President ")
         PersonTitle.Add("St. ")
         PersonTitle.Add("Sir ")
         PersonTitle.Add("Dame ")
@@ -47,6 +52,11 @@ Public Class NameGenerator
         PersonTitle.Add("Mdm. ")
         PersonTitle.Add("Dr. ")
         PersonTitle.Add("Prof. ")
+        PersonTitle.Add("")
+
+        'NameStart.Add("O'")
+        'NameStart.Add("Mac")
+        'NameStart.Add("Mc")
 
         '--Vowels
         Vowels.Add("a")
@@ -93,7 +103,6 @@ Public Class NameGenerator
         FirstSyllable.Add("Mc")
         FirstSyllable.Add("Mac")
         FirstSyllable.Add("N")
-        FirstSyllable.Add("O'")
         FirstSyllable.Add("P")
         FirstSyllable.Add("Ph")
         FirstSyllable.Add("Pl")
@@ -217,7 +226,7 @@ Public Class NameGenerator
         TownStart.Add("New ")
         TownStart.Add("New ")
         TownStart.Add("Old ")
-        TownStart.Add("Old ")
+        TownStart.Add("Ol' ")
         TownStart.Add("Republic of ")
         TownStart.Add("Commonwealth of ")
         TownStart.Add("Monarchy of ")
@@ -332,6 +341,7 @@ Public Class NameGenerator
         TownAdjective.Add("Holy ")
         TownAdjective.Add("Blessed ")
         TownAdjective.Add("Ancient ")
+        TownAdjective.Add("Primal ")
         TownAdjective.Add("Royal ")
         TownAdjective.Add("Pure ")
         TownAdjective.Add("Rich ")
@@ -430,6 +440,7 @@ Public Class NameGenerator
         TownPlacePlain.Add("Region")
         TownPlacePlain.Add("Tower")
         TownPlacePlain.Add("Spire")
+        TownPlacePlain.Add("Homestead")
         TownPlaces.Add(TownPlacePlain)
 
         Dim TownPlaceDirt As New ArrayList
@@ -561,10 +572,13 @@ Public Class NameGenerator
         TownPlaceTownship.Add("Zone")
         TownPlaceTownship.Add("Square")
         TownPlaceTownship.Add("Monastery")
+        TownPlaceTownship.Add("Church")
+        TownPlaceTownship.Add("Cathedral")
         TownPlaceTownship.Add("Abbey")
         TownPlaceTownship.Add("Commune")
-        TownPlaceTownship.Add("Ruins")
         TownPlaceTownship.Add("Reservation")
+        TownPlaceTownship.Add("Citadel")
+        TownPlaceTownship.Add("Sanctuary")
         TownPlaces.Add(TownPlaceTownship)
 
         Dim TownPlaceDesert As New ArrayList
@@ -573,10 +587,13 @@ Public Class NameGenerator
         TownPlaceDesert.Add("Dunes")
         TownPlaceDesert.Add("Oasis")
         TownPlaceDesert.Add("Temple")
+        TownPlaceDesert.Add("Shrine")
         TownPlaceDesert.Add("Palms")
         TownPlaceDesert.Add("Wastes")
         TownPlaceDesert.Add("Wasteland")
         TownPlaceDesert.Add("Badland")
+        TownPlaceDesert.Add("Ruins")
+        TownPlaceDesert.Add("Crater")
         TownPlaces.Add(TownPlaceDesert)
 
 
