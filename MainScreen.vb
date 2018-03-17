@@ -730,7 +730,7 @@ Public Class Form1
         '
         'Form1
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.ClientSize = New System.Drawing.Size(810, 678)
         Me.Controls.Add(Me.ubEnd)
         Me.Controls.Add(Me.ubland)
