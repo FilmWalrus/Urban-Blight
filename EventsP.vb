@@ -152,8 +152,8 @@
                 Else
                     'Twins!!
                     EventCountTwins += 1
-                    If EventCount >= EventLimit Then
-                        LocalEventTwins = EventCount.ToString() + " citizens had twins." + ControlChars.NewLine
+                    If EventCountTwins >= EventLimit Then
+                        LocalEventTwins = EventCountTwins.ToString() + " citizens had twins." + ControlChars.NewLine
                     Else
                         LocalEventTwins += thePerson.GetNameAndAddress() + " had twins named " + newChild.Name + " and " + newChild2.Name + "." + ControlChars.NewLine
                     End If
@@ -162,7 +162,7 @@
             End If
         Next
 
-        EventString += LocalEvent + LocalEventTwins
+        EventString += LocalEvent + LocalEventTwins + ControlChars.NewLine
     End Sub
 
     Sub HandleDeaths()
@@ -194,7 +194,7 @@
                     If EventCountNatural >= EventLimit Then
                         LocalEventNatural = EventCountNatural.ToString() + " citizens died of natural causes." + ControlChars.NewLine
                     Else
-                        LocalEventNatural += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural cases." + ControlChars.NewLine
+                        LocalEventNatural += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural causes." + ControlChars.NewLine
                     End If
                 End If
             End If
@@ -242,7 +242,7 @@
 
         PurgeDead()
 
-        EventString += LocalEventNatural + LocalEventIllness + LocalEventAccident
+        EventString += LocalEventNatural + LocalEventIllness + LocalEventAccident + ControlChars.NewLine
     End Sub
 
     Sub Travel()
@@ -380,7 +380,7 @@
             End If
         Next
 
-        EventString += LocalEvent
+        EventString += LocalEvent + ControlChars.NewLine
     End Sub
 
     Sub MajorCrimes()
@@ -562,7 +562,7 @@
         If upkeep > 0 Then
             FinancialString += "You payed $" + upkeep.ToString() + " in upkeep." + ControlChars.NewLine
         End If
-        EventString = FinancialString + EventString '-- Put financial updates at the top of the event string
+        EventString = FinancialString + ControlChars.NewLine + EventString '-- Put financial updates at the top of the event string
 
         '-- Update the player's money
         CurrentPlayer.TotalMoney += revenue + trafficFines - upkeep
