@@ -16,7 +16,6 @@
 
 #End Region
 
-
 #Region " Person Events "
 
     Public Sub New(ByRef thePlayer As Player, ByVal theYear As Integer)
@@ -196,6 +195,8 @@
                     Else
                         LocalEventNatural += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural causes." + ControlChars.NewLine
                     End If
+
+                    Continue For
                 End If
             End If
 
@@ -213,6 +214,8 @@
                     Else
                         LocalEventIllness += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of illness." + ControlChars.NewLine
                     End If
+
+                    Continue For
                 End If
             End If
 
@@ -235,6 +238,8 @@
                     Else
                         LocalEventAccident += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died in a car accident." + ControlChars.NewLine
                     End If
+
+                    Continue For
                 End If
             End If
 
@@ -572,7 +577,6 @@
 
 #End Region
 
-
 #Region " Support "
     Sub GatherCitizens()
 
@@ -580,10 +584,10 @@
 
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayer.ID Then
-                    Dim localPop As Integer = BoxInfo(i, j).getPopulation()
+                If GridArray(i, j).OwnerID = CurrentPlayer.ID Then
+                    Dim localPop As Integer = GridArray(i, j).getPopulation()
                     For k As Integer = 0 To localPop - 1
-                        Dim thePerson As Person = BoxInfo(i, j).People(k)
+                        Dim thePerson As Person = GridArray(i, j).People(k)
                         CitizenList.Add(thePerson)
                     Next
                 End If
@@ -598,8 +602,8 @@
 
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID >= 0 Then
-                    LocationList.Add(BoxInfo(i, j))
+                If GridArray(i, j).OwnerID >= 0 Then
+                    LocationList.Add(GridArray(i, j))
                 End If
             Next
         Next
