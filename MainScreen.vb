@@ -1328,17 +1328,24 @@ Public Class Form1
             Cards.Add(newBuilding)
         End While
 
-        '--Reduce Cost
+        '--Reduce Cost of Available Buildings
         Dim i As Integer
         For i = 0 To CardCount - 1
 
-            If Cards(i).cost = 0 And GetRandom(0, PlayerCount) = 0 Then
-                '-- If no one has bought this building even for free, replace it
-                Dim newBuilding As New Building(-1)
-                Cards.Add(newBuilding)
+            Dim CardBuilding As Building = Cards(i)
+            If CardBuilding.Cost = 0 Then
+                If CardBuilding.RejectionCount >= PlayerCount Then
+                    '-- If no one has bought this building even for free, replace it
+                    Cards.RemoveAt(i)
+                    Dim newBuilding As New Building(-1)
+                    Cards.Add(newBuilding)
+                Else
+                    '-- No one bought this building even though it was free. Escallate its rejection level
+                    CardBuilding.RejectionCount += 1
+                End If
             End If
 
-            Cards(i).cost = Math.Max(Cards(i).cost - 5, 0)
+            CardBuilding.Cost = Math.Max(CardBuilding.Cost - 5, 0)
         Next
 
         '--Update text

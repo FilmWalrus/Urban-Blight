@@ -32,6 +32,9 @@ Public Class Building
     Public Drunkenness_odds As Integer = 0
     Public Criminality_odds As Integer = 0
 
+    '-- Keep track of how many times no one bought this for free
+    Public RejectionCount As Integer = 0
+
     '-- Occurances of effect
     '***********
     ' Occurances will be handled for each person on the square based on total reachable from 
