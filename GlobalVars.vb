@@ -15,11 +15,20 @@ Module GlobalVars
     Public Const YearGame As Integer = 4
     Public Const InfiniteGame As Integer = 5
 
+    '--Player Types
+    Public Const PlayerNone As Integer = 0
+    Public Const PlayerHuman As Integer = 1
+    Public Const PlayerAI As Integer = 2
+
+    '--Players
+    Public Players As New ArrayList
+    Public Const MaxPlayers As Integer = 4
+
     '--Board
     Public Const GridWidth As Integer = 9 '-- 0 to 10
     Public Const GridHeight As Integer = 9 '-- 0 to 10
-    Public TheBoxes(GridWidth, GridHeight) As Label
-    Public BoxInfo(GridWidth, GridHeight) As CitySquare
+    'Public TheBoxes(GridWidth, GridHeight) As Label
+    Public GridArray(GridWidth, GridHeight) As CitySquare
 
     '--Terrain
     Public Const TerrainPlain As Integer = 0
@@ -64,6 +73,12 @@ Module GlobalVars
     Public ColorPlayerSelected As Color = Color.Gold 'Color.LemonChiffon
     Public ColorPlayerUnselected As Color = Color.White
 
+    '--Fonts
+    'Dim newBold As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Bold)
+    'Dim newRegular As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Regular)
+    Public LargeFont As New Font("Franklin Gothic Medium", 12, FontStyle.Regular)
+    Public RegularFont As New Font("Franklin Gothic Medium", 10, FontStyle.Regular)
+
     '--Views
     Public Const PopView As Integer = 0
     Public Const LocView As Integer = 1
@@ -82,6 +97,7 @@ Module GlobalVars
     Public TimeIncrement As Integer = 3
     Public EventLimit As Integer = 5
     Public Namer As New NameGenerator
+    Public Hinter As New HintGenerator
 
     '-- Sort Types
     Public Const PopSort As Integer = 0

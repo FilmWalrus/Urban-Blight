@@ -128,17 +128,26 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="EventsP.vb" />
+    <Compile Include="FancyLabel.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GameOver.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GlobalVars.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Hints.vb" />
     <Compile Include="Intro.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainScreen.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="NameGenerator.vb">
       <SubType>Code</SubType>
@@ -165,6 +174,11 @@
     <EmbeddedResource Include="MainScreen.resx">
       <DependentUpon>MainScreen.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Start.resx">
       <DependentUpon>Start.vb</DependentUpon>
     </EmbeddedResource>
@@ -173,7 +187,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="My Project\" />
+    <Content Include="TerrainImages\Forest.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

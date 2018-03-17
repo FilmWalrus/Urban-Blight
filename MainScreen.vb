@@ -2,23 +2,21 @@ Public Class Form1
     Inherits System.Windows.Forms.Form
 
 #Region " Variables "
-    '-- Location Variables
-    Dim LeftStart As Integer = 16
-    Dim LeftIncrement As Integer = 48
-    Dim TopStart As Integer = 32
-    Dim TopIncrement As Integer = 48
     '--
     Dim Points As New ArrayList
     Dim BigFont As Integer = 12
     Dim SmallFont As Integer = 10
+
     '--
-    Dim LastClickedX As Integer = 0
-    Dim LastClickedY As Integer = 0
+    Dim ClickCity As CitySquare = Nothing
+
     '--
-    Dim Players As ArrayList
-    Dim CurrentPlayer As Player = Nothing
-    Dim CurrentPlayerIndex As Integer = 0
+    Public CurrentPlayer As Player = Nothing
+    Public CurrentPlayerIndex As Integer = 0
+
+    '--
     Dim WinFlag As Boolean = False
+
     '--
     Dim NoCard As Integer = -1
     Dim CardCount As Integer = 4
@@ -27,6 +25,7 @@ Public Class Form1
     Dim LandCard As Integer = RoadCard + 1
     Dim SelectedCard As Integer = NoCard
     Dim RoadCost As Integer = 50
+
     '--
     Dim CurrentPerson As Integer = -1
     Dim CurrentView As Integer = 0
@@ -34,6 +33,7 @@ Public Class Form1
     '--
     Dim theYear As Integer = 1
     Dim StartPop As Integer = 4
+
     '--
     Dim EventString As String = ""
 
@@ -223,11 +223,11 @@ Public Class Form1
         '
         Me.txt_event.AcceptsReturn = True
         Me.txt_event.AcceptsTab = True
-        Me.txt_event.Location = New System.Drawing.Point(16, 16)
+        Me.txt_event.Location = New System.Drawing.Point(13, 15)
         Me.txt_event.Multiline = True
         Me.txt_event.Name = "txt_event"
         Me.txt_event.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_event.Size = New System.Drawing.Size(248, 296)
+        Me.txt_event.Size = New System.Drawing.Size(248, 299)
         Me.txt_event.TabIndex = 1
         '
         'UltraTab2
@@ -252,11 +252,11 @@ Public Class Form1
         '
         Me.txt_card.AcceptsReturn = True
         Me.txt_card.AcceptsTab = True
-        Me.txt_card.Location = New System.Drawing.Point(16, 15)
+        Me.txt_card.Location = New System.Drawing.Point(13, 15)
         Me.txt_card.Multiline = True
         Me.txt_card.Name = "txt_card"
         Me.txt_card.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_card.Size = New System.Drawing.Size(248, 297)
+        Me.txt_card.Size = New System.Drawing.Size(248, 299)
         Me.txt_card.TabIndex = 1
         '
         'UltraTab3
@@ -290,11 +290,11 @@ Public Class Form1
         '
         Me.txt_city.AcceptsReturn = True
         Me.txt_city.AcceptsTab = True
-        Me.txt_city.Location = New System.Drawing.Point(16, 15)
+        Me.txt_city.Location = New System.Drawing.Point(13, 15)
         Me.txt_city.Multiline = True
         Me.txt_city.Name = "txt_city"
         Me.txt_city.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_city.Size = New System.Drawing.Size(248, 297)
+        Me.txt_city.Size = New System.Drawing.Size(248, 299)
         Me.txt_city.TabIndex = 1
         '
         'UltraTab4
@@ -320,7 +320,7 @@ Public Class Form1
         '
         'lblPerson
         '
-        Me.lblPerson.Location = New System.Drawing.Point(16, 296)
+        Me.lblPerson.Location = New System.Drawing.Point(16, 299)
         Me.lblPerson.Name = "lblPerson"
         Me.lblPerson.Size = New System.Drawing.Size(136, 16)
         Me.lblPerson.TabIndex = 4
@@ -346,11 +346,11 @@ Public Class Form1
         '
         Me.txt_person.AcceptsReturn = True
         Me.txt_person.AcceptsTab = True
-        Me.txt_person.Location = New System.Drawing.Point(16, 16)
+        Me.txt_person.Location = New System.Drawing.Point(13, 15)
         Me.txt_person.Multiline = True
         Me.txt_person.Name = "txt_person"
         Me.txt_person.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_person.Size = New System.Drawing.Size(248, 264)
+        Me.txt_person.Size = New System.Drawing.Size(248, 275)
         Me.txt_person.TabIndex = 1
         '
         'UltraTab5
@@ -514,7 +514,7 @@ Public Class Form1
         '
         Me.txtHint.AcceptsReturn = True
         Me.txtHint.AcceptsTab = True
-        Me.txtHint.Location = New System.Drawing.Point(14, 16)
+        Me.txtHint.Location = New System.Drawing.Point(11, 15)
         Me.txtHint.Multiline = True
         Me.txtHint.Name = "txtHint"
         Me.txtHint.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
@@ -601,9 +601,9 @@ Public Class Form1
         'gbP1
         '
         Me.gbP1.Controls.Add(Me.txtP1)
-        Me.gbP1.Location = New System.Drawing.Point(16, 520)
+        Me.gbP1.Location = New System.Drawing.Point(16, 527)
         Me.gbP1.Name = "gbP1"
-        Me.gbP1.Size = New System.Drawing.Size(104, 112)
+        Me.gbP1.Size = New System.Drawing.Size(104, 130)
         Me.gbP1.TabIndex = 11
         Me.gbP1.TabStop = False
         Me.gbP1.Text = "Player 1"
@@ -614,15 +614,15 @@ Public Class Form1
         Me.txtP1.Location = New System.Drawing.Point(8, 16)
         Me.txtP1.Multiline = True
         Me.txtP1.Name = "txtP1"
-        Me.txtP1.Size = New System.Drawing.Size(88, 88)
+        Me.txtP1.Size = New System.Drawing.Size(88, 108)
         Me.txtP1.TabIndex = 2
         '
         'gbP2
         '
         Me.gbP2.Controls.Add(Me.txtP2)
-        Me.gbP2.Location = New System.Drawing.Point(136, 520)
+        Me.gbP2.Location = New System.Drawing.Point(136, 527)
         Me.gbP2.Name = "gbP2"
-        Me.gbP2.Size = New System.Drawing.Size(104, 112)
+        Me.gbP2.Size = New System.Drawing.Size(104, 130)
         Me.gbP2.TabIndex = 12
         Me.gbP2.TabStop = False
         Me.gbP2.Text = "Player 2"
@@ -633,15 +633,15 @@ Public Class Form1
         Me.txtP2.Location = New System.Drawing.Point(8, 16)
         Me.txtP2.Multiline = True
         Me.txtP2.Name = "txtP2"
-        Me.txtP2.Size = New System.Drawing.Size(88, 88)
+        Me.txtP2.Size = New System.Drawing.Size(88, 108)
         Me.txtP2.TabIndex = 3
         '
         'gbP4
         '
         Me.gbP4.Controls.Add(Me.txtP4)
-        Me.gbP4.Location = New System.Drawing.Point(376, 520)
+        Me.gbP4.Location = New System.Drawing.Point(376, 527)
         Me.gbP4.Name = "gbP4"
-        Me.gbP4.Size = New System.Drawing.Size(104, 112)
+        Me.gbP4.Size = New System.Drawing.Size(104, 130)
         Me.gbP4.TabIndex = 13
         Me.gbP4.TabStop = False
         Me.gbP4.Text = "Player 4"
@@ -652,15 +652,15 @@ Public Class Form1
         Me.txtP4.Location = New System.Drawing.Point(8, 16)
         Me.txtP4.Multiline = True
         Me.txtP4.Name = "txtP4"
-        Me.txtP4.Size = New System.Drawing.Size(88, 88)
+        Me.txtP4.Size = New System.Drawing.Size(88, 108)
         Me.txtP4.TabIndex = 3
         '
         'gbP3
         '
         Me.gbP3.Controls.Add(Me.txtP3)
-        Me.gbP3.Location = New System.Drawing.Point(256, 520)
+        Me.gbP3.Location = New System.Drawing.Point(256, 527)
         Me.gbP3.Name = "gbP3"
-        Me.gbP3.Size = New System.Drawing.Size(104, 112)
+        Me.gbP3.Size = New System.Drawing.Size(104, 130)
         Me.gbP3.TabIndex = 14
         Me.gbP3.TabStop = False
         Me.gbP3.Text = "Player 3"
@@ -671,7 +671,7 @@ Public Class Form1
         Me.txtP3.Location = New System.Drawing.Point(8, 16)
         Me.txtP3.Multiline = True
         Me.txtP3.Name = "txtP3"
-        Me.txtP3.Size = New System.Drawing.Size(88, 88)
+        Me.txtP3.Size = New System.Drawing.Size(88, 108)
         Me.txtP3.TabIndex = 3
         '
         'Infotab
@@ -682,7 +682,7 @@ Public Class Form1
         Me.Infotab.Controls.Add(Me.UltraTabPageControl4)
         Me.Infotab.Controls.Add(Me.UltraTabPageControl5)
         Me.Infotab.Controls.Add(Me.UltraTabPageControl6)
-        Me.Infotab.Location = New System.Drawing.Point(512, 280)
+        Me.Infotab.Location = New System.Drawing.Point(512, 305)
         Me.Infotab.Name = "Infotab"
         Me.Infotab.SelectedIndex = 0
         Me.Infotab.Size = New System.Drawing.Size(280, 352)
@@ -698,7 +698,7 @@ Public Class Form1
         '
         'ubEnd
         '
-        Me.ubEnd.Location = New System.Drawing.Point(568, 224)
+        Me.ubEnd.Location = New System.Drawing.Point(568, 256)
         Me.ubEnd.Name = "ubEnd"
         Me.ubEnd.Size = New System.Drawing.Size(168, 32)
         Me.ubEnd.TabIndex = 17
@@ -731,7 +731,7 @@ Public Class Form1
         'Form1
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(810, 648)
+        Me.ClientSize = New System.Drawing.Size(810, 678)
         Me.Controls.Add(Me.ubEnd)
         Me.Controls.Add(Me.ubland)
         Me.Controls.Add(Me.Infotab)
@@ -784,6 +784,7 @@ Public Class Form1
 
 #Region " Initialization "
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        '-- Urban Blight begins HERE
         StartGame()
     End Sub
 
@@ -795,28 +796,31 @@ Public Class Form1
             Me.Close()
         End If
 
-        Players = New ArrayList(PlayerCount)
+        '-- Run setup on the NameGenerator and HintGenerator
         Namer.FillLists()
-        Select Case (GameType)
-            Case ScoreGame
-                lblGoal.Text = "Goal: Score " + GoalNumber.ToString
-            Case TerritoryGame
-                lblGoal.Text = "Goal: Territory " + GoalNumber.ToString
-            Case PopulationGame
-                lblGoal.Text = "Goal: Population " + GoalNumber.ToString
-            Case DevelopmentGame
-                lblGoal.Text = "Goal: Development " + GoalNumber.ToString
-            Case YearGame
-                lblGoal.Text = "Goal: Year " + GoalNumber.ToString
-            Case InfiniteGame
-                lblGoal.Text = "Goal: None"
-        End Select
-        CreateBoxes()
+        Hinter.FillLists()
+
+        '-- Display game goal
+        UpdateGoal()
+
+        '-- Display the starting year
+        UpdateYear()
+
+        '-- Create players
+        CreatePlayers()
+
+        '-- Create the map
+        CreateMapGrid()
         CreateOpeningCities()
+
+        '-- Display initial player info
         UpdatePlayers()
         CurrentPlayerIndex = -1
-        UpdateYear()
+
+        '-- Finish initialization
         init = True
+
+        '-- First player's turn
         NextPlayer()
     End Sub
 
@@ -825,39 +829,117 @@ Public Class Form1
         Me.Close()
     End Sub
 
+    Sub CreatePlayers()
+        Players.Clear()
+
+        '-- Initialize players
+        For i As Integer = 0 To MaxPlayers - 1
+            Dim newPlayer As New Player(i)
+            If i < PlayerCount Then
+                newPlayer.PlayerType = PlayerHuman
+            Else
+                newPlayer.PlayerType = PlayerNone 'PlayerAI
+            End If
+
+            Players.Add(newPlayer)
+        Next
+
+        PlayerCount = MaxPlayers
+
+        '-- Display Player Info GUIs for active players
+        For i As Integer = 0 To Players.Count - 1
+            Dim thisPlayer As Player = Players(i)
+
+            '-- Display player Info GUIs for active players
+            If thisPlayer.PlayerType <> PlayerNone Then
+                If i = 0 Then
+                    Players(i).Flag = Flag1
+                    gbP1.Visible = True
+                    gbP1.Text = thisPlayer.GetPlayerName()
+                    gbP1.BackColor = Players(i).Flag
+                ElseIf i = 1 Then
+                    Players(i).Flag = Flag2
+                    gbP2.Visible = True
+                    gbP2.Text = thisPlayer.GetPlayerName()
+                    gbP2.BackColor = Players(i).Flag
+                ElseIf i = 2 Then
+                    Players(i).Flag = Flag3
+                    gbP3.Visible = True
+                    gbP3.Text = thisPlayer.GetPlayerName()
+                    gbP3.BackColor = Players(i).Flag
+                ElseIf i = 3 Then
+                    Players(i).Flag = Flag4
+                    gbP4.Visible = True
+                    gbP4.Text = thisPlayer.GetPlayerName()
+                    gbP4.BackColor = Players(i).Flag
+                End If
+            End If
+        Next
+
+
+    End Sub
+
+    Sub CreateMapGrid()
+
+        '-- Location Variables
+        Dim LeftStart As Integer = 16
+        Dim LeftIncrement As Integer = 48
+        Dim TopStart As Integer = 32
+        Dim TopIncrement As Integer = 48
+
+        '-- Create grid of colored labels
+        Dim CurrentX As Integer = LeftStart
+        Dim CurrentY As Integer = TopStart
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+
+                Dim newLocation As New CitySquare(i, j)
+                GridArray(i, j) = newLocation
+
+                '-- Set position and size of grid squares
+                Dim gridSquare As Label = newLocation.GridSquare
+                gridSquare.Location = New System.Drawing.Point(CurrentX, CurrentY)
+                gridSquare.Size = New System.Drawing.Size(LeftIncrement, TopIncrement)
+
+                'ClickBox.Appearance.FontData.SizeInPoints = SmallFont
+                'ClickBox.ContextMenu = ctxTerrain 'Return this if context menu is used
+
+                '-- Add handlers
+                'AddHandler ClickBox.Click, AddressOf LabelClick
+                'AddHandler ClickBox.MouseEnter, AddressOf LabelMouseOver
+                AddHandler gridSquare.MouseUp, AddressOf MapMouseUp
+
+                '-- Add this grid square to the main GUI
+                Me.Controls.Add(gridSquare)
+
+                CurrentX += LeftIncrement
+            Next
+            CurrentX = LeftStart
+            CurrentY += TopIncrement
+        Next
+
+        '-- Mark terrain by water
+        UpdateCoastline()
+    End Sub
+
     Sub CreateOpeningCities()
         Dim wallBuffer As Integer = 2
-        Dim i As Integer
-        For i = 0 To PlayerCount - 1
-            '-- Initialize players
-            Dim newPlayer As New Player(i)
-            Players.Add(newPlayer)
-            If i = 0 Then
-                Players(i).Flag = Flag1
-                gbP1.Visible = True
-                gbP1.BackColor = Players(i).Flag
-            ElseIf i = 1 Then
-                Players(i).Flag = Flag2
-                gbP2.Visible = True
-                gbP2.BackColor = Players(i).Flag
-            ElseIf i = 2 Then
-                Players(i).Flag = Flag3
-                gbP3.Visible = True
-                gbP3.BackColor = Players(i).Flag
-            ElseIf i = 3 Then
-                Players(i).Flag = Flag4
-                gbP4.Visible = True
-                gbP4.BackColor = Players(i).Flag
+        For i As Integer = 0 To Players.Count - 1
+
+            '-- Make sure this player exists
+            Dim thisPlayer As Player = Players(i)
+            If thisPlayer.PlayerType = PlayerNone Then
+                Continue For
             End If
 
             '-- Found opening cities
             While (True)
                 Dim startX As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
                 Dim startY As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
-                Dim theLocation As CitySquare = BoxInfo(startX, startY)
+                Dim theLocation As CitySquare = GridArray(startX, startY)
 
                 '-- Starting cities can't be on or adjacent to another city
-                If (theLocation.OwnerID < 0 And BoxInfo(startX + 1, startY).OwnerID < 0 And BoxInfo(startX - 1, startY).OwnerID < 0 And BoxInfo(startX, startY - 1).OwnerID < 0 And BoxInfo(startX, startY + 1).OwnerID < 0) Then
+                If (theLocation.OwnerID < 0 And GridArray(startX + 1, startY).OwnerID < 0 And GridArray(startX - 1, startY).OwnerID < 0 And GridArray(startX, startY - 1).OwnerID < 0 And GridArray(startX, startY + 1).OwnerID < 0) Then
                     theLocation.OwnerID = i
 
                     '-- Starting cities are always on Plain terrain
@@ -870,10 +952,10 @@ Public Class Form1
                     Dim j As Integer
                     For j = 0 To StartPop - 1
                         Dim founder As New Person(True)
-                        BoxInfo(startX, startY).AddPerson(founder)
+                        GridArray(startX, startY).AddPerson(founder)
                     Next
 
-                    TheBoxes(startX, startY).BackColor = Players(i).Flag
+                    GridArray(startX, startY).GridSquare.BackColor = thisPlayer.Flag
                     Exit While
                 End If
             End While
@@ -882,98 +964,44 @@ Public Class Form1
         UpdateGrid()
     End Sub
 
-    Sub CreateBoxes()
-        Dim CurrentX As Integer = LeftStart
-        Dim CurrentY As Integer = TopStart
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                '--Create boxinfo
-                BoxInfo(i, j) = New CitySquare(i, j)
+    Private Sub MapMouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
 
-                Dim NewBox As New Label
-                NewBox.BorderStyle = BorderStyle.FixedSingle
-                NewBox.Location = New System.Drawing.Point(CurrentX, CurrentY)
-                CurrentX += LeftIncrement
-                NewBox.Name = "NewBox"
-                NewBox.Tag = i & "," & j
-                'NewBox.ContextMenu = ctxTerrain 'Return this if context menu is used
-                NewBox.Size = New System.Drawing.Size(LeftIncrement, TopIncrement)
-                NewBox.TabStop = False
-                'NewBox.Appearance.FontData.SizeInPoints = SmallFont
-                Select Case (BoxInfo(i, j).Terrain)
-                    Case TerrainPlain
-                        NewBox.BackColor = ColorPlain
-                    Case TerrainDirt
-                        NewBox.BackColor = ColorDirt
-                    Case TerrainForest
-                        NewBox.BackColor = ColorForest
-                    Case TerrainMountain
-                        NewBox.BackColor = ColorMountain
-                    Case TerrainLake
-                        NewBox.BackColor = ColorOcean
-                    Case TerrainSwamp
-                        NewBox.BackColor = ColorSwamp
-                    Case TerrainTownship
-                        NewBox.BackColor = ColorTownship
-                    Case TerrainDesert
-                        NewBox.BackColor = ColorDesert
-                End Select
-                NewBox.TextAlign = ContentAlignment.MiddleCenter
-                NewBox.Text = "0"
-                'AddHandler NewBox.Click, AddressOf LabelClick
-                'AddHandler NewBox.MouseEnter, AddressOf LabelMouseOver
-                AddHandler NewBox.MouseUp, AddressOf LabelMouseUp
-                TheBoxes(i, j) = NewBox
-                Me.Controls.Add(NewBox)
-            Next
-            CurrentX = LeftStart
-            CurrentY += TopIncrement
-        Next
-
-        UpdateCoastline()
-    End Sub
-
-    Private Sub LabelMouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
-        'Dim TheBox As System.Windows.Forms.Button = CType(sender, System.Windows.Forms.Button)
         Dim TheBox As Label = CType(sender, Label)
         Dim X, Y As Integer
         GetCoords(X, Y, TheBox.Tag)
-        TheBoxes(LastClickedX, LastClickedY).BorderStyle = BorderStyle.FixedSingle
-        LastClickedX = X
-        LastClickedY = Y
-        TheBoxes(LastClickedX, LastClickedY).BorderStyle = BorderStyle.Fixed3D
-        If BoxInfo(LastClickedX, LastClickedY).OwnerID = CurrentPlayerIndex Then
+
+        '-- Deselect the previous grid box
+        If ClickCity IsNot Nothing Then
+            ClickCity.GridSquare.BorderStyle = BorderStyle.FixedSingle
+        End If
+
+        '-- Update the most recently clicked on box and its info
+        ClickCity = GridArray(X, Y)
+
+        '-- Select the newly clicked on grid box
+        ClickCity.GridSquare.BorderStyle = BorderStyle.Fixed3D
+
+        '-- Don't let players rename each other's cities!
+        If ClickCity.OwnerID = CurrentPlayerIndex Then
             ubName.Visible = True
         Else
             ubName.Visible = False
         End If
         '--
         If e.Button = MouseButtons.Left Then
-            'TheBox.Text = BoxInfo(X, Y).ShowID()
+            'TheBox.Text = GridArray(X, Y).ShowID()
             Build()
             UpdateTabs()
             Infotab.SelectedTab = Infotab.TabPages(CityTab)
         ElseIf e.Button = MouseButtons.Right Then
             '-- Currently used for view mode
             UpdateTabs()
-            If BoxInfo(X, Y).OwnerID < 0 Or Infotab.SelectedIndex <> PersonTab Then
+            If GridArray(X, Y).OwnerID < 0 Or Infotab.SelectedIndex <> PersonTab Then
                 Infotab.SelectedTab = Infotab.TabPages(CityTab)
             End If
 
         End If
-        'TheBox.Appearance.BackColor2 = BoxInfo(X, Y).GetTerrainColor
-
-    End Sub
-
-    Sub GetCoords(ByRef TheX As Integer, ByRef TheY As Integer, ByVal TheTag As String)
-        Try
-            Dim TheSections(1) As String
-            TheSections = TheTag.Split(",")
-            TheX = CType(TheSections(0), Integer)
-            TheY = CType(TheSections(1), Integer)
-        Catch ex As Exception
-            MsgBox("Error getting coords.", , "Error")
-        End Try
+        'TheBox.Appearance.BackColor2 = GridArray(X, Y).GetTerrainColor
 
     End Sub
 #End Region
@@ -981,50 +1009,10 @@ Public Class Form1
 #Region " Game Loop "
     Sub NextPlayer()
         '-- Cleanup
-        TheBoxes(LastClickedX, LastClickedY).BorderStyle = BorderStyle.FixedSingle
-        ClearSuccess()
-        SelectedCard = NoCard
-        CurrentPerson = -1
-        EventString = ""
-        txt_event.Text = ""
-        txt_card.Text = ""
-        txt_city.Text = ""
-        txt_person.Text = ""
-        lblPerson.Text = "Displaying 0 of 0"
-        CurrentView = PopView
+        ResetForNewTurn()
 
-        '--Advance to next player
-        CurrentPlayerIndex = CurrentPlayerIndex + 1
-        If CurrentPlayerIndex = Players.Count Then
-            CurrentPlayerIndex = 0
-            theYear += TimeIncrement
-            If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
-                FindWinner()
-            End If
-            UpdateYear()
-        End If
-
-        CurrentPlayer = Players(CurrentPlayerIndex)
-        CurrentPlayer.UpdateCensusData()
-
-        '--Highlight current player
-        txtP1.BackColor = ColorPlayerUnselected
-        txtP2.BackColor = ColorPlayerUnselected
-        txtP3.BackColor = ColorPlayerUnselected
-        txtP4.BackColor = ColorPlayerUnselected
-
-        If CurrentPlayerIndex = 0 Then
-            txtP1.BackColor = ColorPlayerSelected
-        ElseIf CurrentPlayerIndex = 1 Then
-            txtP2.BackColor = ColorPlayerSelected
-        ElseIf CurrentPlayerIndex = 2 Then
-            txtP3.BackColor = ColorPlayerSelected
-        ElseIf CurrentPlayerIndex = 3 Then
-            txtP4.BackColor = ColorPlayerSelected
-        End If
-
-        '-- Display new hint
-        DisplayHint()
+        '--Advance to next player (If last player in round and end condition is met, show Game Over screen)
+        AdvanceToNextPlayer()
 
         '-- Refill Hand and Update Costs
         UpdateCards()
@@ -1039,7 +1027,7 @@ Public Class Form1
         BuildingsExpand()
 
         '-- Display event messages
-        txt_event.Text = EventString
+        UpdateTextBox(txt_event, EventString)
         Infotab.SelectedTab = Infotab.TabPages(EventTab)
 
         '-- Update grid appearence and texts
@@ -1049,66 +1037,32 @@ Public Class Form1
         UpdatePlayers()
     End Sub
 
-    Public Sub FindWinner()
-        Dim WinningString As String = ""
-        Dim i As Integer
-        Select Case GameType
-            Case ScoreGame
-                WinningString += "Scores: " + ControlChars.NewLine
-                For i = 0 To PlayerCount - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalScore.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case TerritoryGame
-                WinningString += "Territory: " + ControlChars.NewLine
-                For i = 0 To PlayerCount - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalTerritory.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case PopulationGame
-                WinningString += "Population: " + ControlChars.NewLine
-                For i = 0 To PlayerCount - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalPopulation.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case DevelopmentGame
-                WinningString += "Development: " + ControlChars.NewLine
-                For i = 0 To PlayerCount - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalDevelopment.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case YearGame
-                Dim max As Integer = 0
-                Dim winningPlayer As Integer = -1
-                WinningString += "Scores: " + ControlChars.NewLine
-                For i = 0 To PlayerCount - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalScore.ToString + ControlChars.NewLine
-                    If Players(i).TotalScore > max Then
-                        max = Players(i).TotalScore
-                        winningPlayer = i + 1
-                    End If
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + winningPlayer.ToString + ControlChars.NewLine
-        End Select
-        Dim EndingScreen As New GameOver(WinningString)
-        If EndingScreen.ShowDialog = DialogResult.Yes Then
-            StartNewGame()
-        ElseIf EndingScreen.DialogResult = DialogResult.No Then
-            Me.DialogResult = DialogResult.No
-            Me.Close()
-        Else
-            WinFlag = False
-            GameType = InfiniteGame
-        End If
+    Sub AdvanceToNextPlayer()
+        '-- Move to next human or AI player. 
+        Do
+            CurrentPlayerIndex += 1
+            If CurrentPlayerIndex = Players.Count Then
+                CurrentPlayerIndex = 0
 
-        'WinningString += ControlChars.NewLine + "Play Again?"
-        'If MsgBox(WinningString, MsgBoxStyle.YesNo, "Game Over!") = MsgBoxResult.Yes Then
-        '    StartNewGame()
-        'Else
-        '    Me.DialogResult = DialogResult.No
-        '    Me.Close()
-        'End If
+                '-- If this was the end of the round, advance the clock
+                theYear += TimeIncrement
+                UpdateYear()
+
+                '-- Check for a winner
+                If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
+                    GameOver()
+                End If
+            End If
+            CurrentPlayer = Players(CurrentPlayerIndex)
+        Loop While CurrentPlayer.PlayerType = PlayerNone
+
+        '-- Highlight current player
+        HighlightCurrentPlayer()
+
+        '-- Update player info
+        CurrentPlayer.UpdateCensusData()
     End Sub
+
 #End Region
 
 #Region " People "
@@ -1126,17 +1080,16 @@ Public Class Form1
     Sub Build()
         Dim UpdateNeeded As Boolean = False
         Dim SpendingMoney As Integer = Players(CurrentPlayerIndex).TotalMoney
-        Dim ClickLocation As CitySquare = BoxInfo(LastClickedX, LastClickedY)
 
         '-- What is the cost of this card?
         Dim CardCost As Integer = 0
         If SelectedCard = RoadCard Then
             CardCost = RoadCost
         ElseIf SelectedCard = LandCard Then
-            If ClickLocation.Terrain = TerrainSwamp Then
+            If ClickCity.Terrain = TerrainSwamp Then
                 CardCost = 0 '-- Swamps are free!
             Else
-                CardCost = GetPlayerLandCost(CurrentPlayerIndex)
+                CardCost = CurrentPlayer.GetPlayerLandCost()
             End If
         ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
             CardCost = Cards(SelectedCard).Cost
@@ -1152,17 +1105,17 @@ Public Class Form1
         '-- Was the selected CitySquare valid?
         If SelectedCard = LandCard Then
             '-- For Land cards they must be unowned, adjacent to land the player already owns, and not a lake
-            If ClickLocation.OwnerID >= 0 Or ClickLocation.Terrain = TerrainLake Or (Not OwnedAdjacent(CurrentPlayerIndex)) Then
+            If ClickCity.OwnerID >= 0 Or ClickCity.Terrain = TerrainLake Or (Not CurrentPlayer.OwnedAdjacent(ClickCity)) Then
                 Return
             End If
         Else
             '-- For Roads and Buildings the player must already own the land
-            If ClickLocation.OwnerID <> CurrentPlayerIndex Then
+            If ClickCity.OwnerID <> CurrentPlayerIndex Then
                 Return
             End If
 
             '-- Roads can't be built if highway is already present
-            If SelectedCard = RoadCard And ClickLocation.Transportation = RoadHighway Then
+            If SelectedCard = RoadCard And ClickCity.Transportation = RoadHighway Then
                 Return
             End If
         End If
@@ -1174,40 +1127,40 @@ Public Class Form1
         '-- Do construction
         If SelectedCard = RoadCard Then
             '-- Upgrade Road
-            ClickLocation.AddRoad()
+            ClickCity.AddRoad()
         ElseIf SelectedCard = LandCard Then
             '-- Expand Territory
-            ClickLocation.OwnerID = CurrentPlayerIndex
+            ClickCity.OwnerID = CurrentPlayerIndex
 
             '-- Generate random name
-            ClickLocation.CityName = Namer.GenerateCityName(ClickLocation)
+            ClickCity.CityName = Namer.GenerateCityName(ClickCity)
 
             '-- Handle special terrain bonuses
-            If ClickLocation.Terrain = TerrainDirt Then
+            If ClickCity.Terrain = TerrainDirt Then
                 '-- Desert effect: rebate
                 Players(CurrentPlayerIndex).TotalMoney += SafeDivide(CardCost, 2)
-            ElseIf ClickLocation.Terrain = TerrainDirt Then
+            ElseIf ClickCity.Terrain = TerrainDirt Then
                 '-- Dirt effect: free road
-                ClickLocation.Transportation = RoadDirt
-            ElseIf ClickLocation.Terrain = TerrainMountain Then
+                ClickCity.Transportation = RoadDirt
+            ElseIf ClickCity.Terrain = TerrainMountain Then
                 '-- Rock effect: free building
                 Dim randNum As Integer = GetRandom(0, CardCount - 1)
                 Dim newBuilding As Building = Cards(randNum)
-                newBuilding.Location = ClickLocation
-                ClickLocation.AddBuilding(newBuilding)
+                newBuilding.Location = ClickCity
+                ClickCity.AddBuilding(newBuilding)
                 Cards.RemoveAt(randNum)
-            ElseIf ClickLocation.Terrain = TerrainTownship Then
+            ElseIf ClickCity.Terrain = TerrainTownship Then
                 '-- Township effect: free population
-                Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(GetPlayerPopulation(CurrentPlayerIndex), 15.0)) + 2)
+                Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(CurrentPlayer.GetPlayerPopulation(), 15.0)) + 2)
                 Dim randNum As Integer = GetRandom(2, maxFreePopulation)
                 For i As Integer = 0 To randNum - 1
                     Dim founder As New Person(True)
-                    ClickLocation.AddPerson(founder)
+                    ClickCity.AddPerson(founder)
                 Next
             End If
         ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
             '-- Create Building
-            ClickLocation.AddBuilding(Cards(SelectedCard))
+            ClickCity.AddBuilding(Cards(SelectedCard))
             Cards.RemoveAt(SelectedCard)
         End If
 
@@ -1226,9 +1179,9 @@ Public Class Form1
     Public Sub ClearSuccess()
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
-                    For k As Integer = 0 To BoxInfo(i, j).Buildings.Count - 1
-                        BoxInfo(i, j).Buildings(k).Success = 0
+                If GridArray(i, j).OwnerID = CurrentPlayerIndex Then
+                    For k As Integer = 0 To GridArray(i, j).Buildings.Count - 1
+                        GridArray(i, j).Buildings(k).Success = 0
                     Next
                 End If
             Next
@@ -1242,9 +1195,9 @@ Public Class Form1
         Dim theBuilding As Building
         For i = 0 To GridWidth
             For j = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
-                    For k = 0 To BoxInfo(i, j).Buildings.Count - 1
-                        theBuilding = BoxInfo(i, j).Buildings(k)
+                If GridArray(i, j).OwnerID = CurrentPlayerIndex Then
+                    For k = 0 To GridArray(i, j).Buildings.Count - 1
+                        theBuilding = GridArray(i, j).Buildings(k)
                         If theBuilding.GetEmployeeCount() = theBuilding.Jobs Then
                             '--Must be full
                             odds = 0
@@ -1261,7 +1214,7 @@ Public Class Form1
                                     LocalEvent += theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString + "." + ControlChars.NewLine
                                 End If
 
-                                BoxInfo(i, j).Buildings(k) = theBuilding
+                                GridArray(i, j).Buildings(k) = theBuilding
                             End If
                         End If
                     Next
@@ -1273,50 +1226,12 @@ Public Class Form1
 
 #End Region
 
-#Region " Support "
-
+#Region " Update Info "
     Sub UpdateGrid()
         Dim i, j As Integer
         For i = 0 To GridWidth
             For j = 0 To GridHeight
-                Dim Owner As Integer = BoxInfo(i, j).OwnerID
-                If Owner >= 0 Or CurrentView = LocView Then
-                    If Owner >= 0 Then
-                        TheBoxes(i, j).BackColor = Players(BoxInfo(i, j).OwnerID).Flag
-                    End If
-                    'TheBoxes(i, j).Appearance.FontData.SizeInPoints = BigFont
-                    Select Case (CurrentView)
-                        Case PopView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).getPopulation().ToString
-                        Case LocView
-                            'TheBoxes(i, j).Appearance.FontData.SizeInPoints = SmallFont
-                            TheBoxes(i, j).Text = (BoxInfo(i, j).ColID + 1).ToString() + "," + (BoxInfo(i, j).RowID + 1).ToString()
-                        Case HappinessView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgHappiness.ToString()
-                        Case HealthView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgHealth.ToString()
-                        Case EmploymentView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgEmployment.ToString()
-                        Case IntelligenceView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgIntelligence.ToString()
-                        Case CreativityView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgCreativity.ToString()
-                        Case MobilityView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgMobility.ToString()
-                        Case DrunkennessView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgDrunkenness.ToString()
-                        Case CriminalityView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).AvgCriminality.ToString()
-                        Case JobView
-                            'TheBoxes(i, j).Appearance.FontData.SizeInPoints = SmallFont
-                            TheBoxes(i, j).Text = BoxInfo(i, j).getJobsFilled().ToString + "/" + BoxInfo(i, j).getJobsTotal.ToString
-                        Case RoadView
-                            TheBoxes(i, j).Text = BoxInfo(i, j).Transportation.ToString
-                    End Select
-                Else
-                    'TheBoxes(i, j).Appearance.BackColor2 = Color.LightGray
-                    TheBoxes(i, j).Text = "0"
-                End If
+                GridArray(i, j).UpdateGridSquare(CurrentView)
             Next
         Next
     End Sub
@@ -1334,7 +1249,7 @@ Public Class Form1
 
             Dim CardBuilding As Building = Cards(i)
             If CardBuilding.Cost = 0 Then
-                If CardBuilding.RejectionCount >= PlayerCount Then
+                If CardBuilding.RejectionCount >= Players.Count Then
                     '-- If no one has bought this building even for free, replace it
                     Cards.RemoveAt(i)
                     Dim newBuilding As New Building(-1)
@@ -1355,22 +1270,19 @@ Public Class Form1
         ubcard4.Text = Cards(3).type + ControlChars.NewLine + "Jobs: " + Cards(3).jobs.ToString() + "  Cost: " + Cards(3).cost.ToString()
 
         '--Land Cost
-        Dim LandCost As Integer = GetPlayerLandCost(CurrentPlayerIndex)
+        Dim LandCost As Integer = CurrentPlayer.GetPlayerLandCost()
         ubland.Text = "Land, Cost: " + LandCost.ToString()
     End Sub
 
     Sub UpdatePlayers()
 
         For i As Integer = 0 To Players.Count - 1
-            RefreshPlayerStats(i)
+            '-- Updates player stats
+            Dim thisPlayer As Player = Players(i)
+            thisPlayer.UpdateCensusData()
 
-            Dim textString As String = ""
-            textString += "Money: " + Players(i).TotalMoney.ToString() + ControlChars.NewLine
-            textString += "Pop: " + Players(i).TotalPopulation.ToString() + ControlChars.NewLine
-            textString += "Jobs: " + Players(i).TotalEmployed.ToString() + "/" + Players(i).TotalJobs.ToString() + ControlChars.NewLine
-            textString += "Territory: " + Players(i).TotalTerritory.ToString() + ControlChars.NewLine
-            textString += "Buildings: " + Players(i).TotalDevelopment.ToString() + ControlChars.NewLine
-            textString += "Score: " + Players(i).TotalScore.ToString() + ControlChars.NewLine
+            '-- Display current player stats
+            Dim textString As String = thisPlayer.toString()
             If i = 0 Then
                 txtP1.Text = textString
             ElseIf i = 1 Then
@@ -1380,260 +1292,216 @@ Public Class Form1
             ElseIf i = 3 Then
                 txtP4.Text = textString
             End If
+
+            '-- Check if player won
+            If GameType = ScoreGame And thisPlayer.TotalScore >= GoalNumber Then
+                WinFlag = True
+            End If
+            If GameType = TerritoryGame And thisPlayer.TotalTerritory >= GoalNumber Then
+                WinFlag = True
+            End If
+            If GameType = PopulationGame And thisPlayer.TotalPopulation >= GoalNumber Then
+                WinFlag = True
+            End If
+            If GameType = DevelopmentGame And thisPlayer.TotalDevelopment >= GoalNumber Then
+                WinFlag = True
+            End If
         Next
     End Sub
 
     Sub UpdateTabs()
-        Dim X As Integer = LastClickedX
-        Dim Y As Integer = LastClickedY
-        txt_city.Text = BoxInfo(X, Y).toString()
-        Dim currentPop As Integer = BoxInfo(X, Y).getPopulation()
+        '-- Update the city tab
+        UpdateTextBox(txt_city, ClickCity.toString())
+
+        Dim personText As String = ""
+        Dim currentPop As Integer = ClickCity.getPopulation()
         If currentPop > 0 Then
             CurrentPerson = 0
-            txt_person.Text = BoxInfo(X, Y).People(0).ToString()
+            personText = ClickCity.People(0).ToString()
             lblPerson.Text = "Displaying 1 of " + currentPop.ToString()
         Else
-            txt_person.Text = ""
+            personText = ""
             lblPerson.Text = "Displaying 0 of 0"
         End If
-
+        UpdateTextBox(txt_person, personText)
     End Sub
 
     Sub UpdateAverages()
         Dim sum As Integer = 0
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = CurrentPlayerIndex Then
+                If GridArray(i, j).OwnerID = CurrentPlayerIndex Then
                     'Also updates success
-                    BoxInfo(i, j).ComputeAverages()
+                    GridArray(i, j).ComputeAverages()
                 End If
             Next
         Next
     End Sub
 
     Sub UpdateYear()
-        'Me.Text = "Urban Blight      Year: " + theYear.ToString
         lblYear.Text = "Year: " + theYear.ToString
     End Sub
 
-    Function GetPlayerPopulation(ByVal thePlayer As Integer) As Integer
-        Dim sum As Integer = 0
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = thePlayer Then
-                    sum = sum + BoxInfo(i, j).getPopulation()
-                End If
-            Next
-        Next
-        Players(thePlayer).TotalPopulation = sum
-        Return sum
-    End Function
-
-    Function GetPlayerTerritory(ByVal thePlayer As Integer) As Integer
-        Dim sum As Integer = 0
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = thePlayer Then
-                    sum = sum + 1
-                End If
-            Next
-        Next
-        Players(thePlayer).TotalTerritory = sum
-        Return sum
-    End Function
-
-    Function GetPlayerDevelopment(ByVal thePlayer As Integer) As Integer
-        Dim sum As Integer = 0
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = thePlayer Then
-                    sum = sum + BoxInfo(i, j).getDevelopment()
-                End If
-            Next
-        Next
-        Players(thePlayer).TotalDevelopment = sum
-        Return sum
-    End Function
-
-    Function GetPlayerScore(ByVal thePlayer As Integer) As Integer
-        '--Must call getplayer territory and development first
-        Dim sum As Double = 0
-        Dim personPoints As Double
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If BoxInfo(i, j).OwnerID = thePlayer Then
-                    For k As Integer = 0 To BoxInfo(i, j).People.Count - 1
-                        '-- Computation of individual's value
-                        personPoints = 0
-                        personPoints += (BoxInfo(i, j).People(k).Happiness * 2.5)
-                        personPoints += BoxInfo(i, j).People(k).Health
-                        personPoints += (BoxInfo(i, j).People(k).Employment * 1.8)
-                        personPoints += BoxInfo(i, j).People(k).Intelligence
-                        personPoints += BoxInfo(i, j).People(k).Creativity
-                        personPoints += (BoxInfo(i, j).People(k).Mobility * 0.5)
-                        personPoints -= (BoxInfo(i, j).People(k).Criminality * 2.0)
-                        personPoints -= (BoxInfo(i, j).People(k).Drunkenness * 1.3)
-                        personPoints = SafeDivide(personPoints, 180.0)
-                        If personPoints > 0 Then
-                            personPoints = personPoints ^ 1.6
-                        End If
-                        sum += personPoints
-                    Next
-                End If
-            Next
-        Next
-        Dim thisPlayer As Player = Players(thePlayer)
-        '-- Computation of total value
-        sum += (thisPlayer.TotalDevelopment * 4.0)
-        sum += (thisPlayer.TotalTerritory * 12.0)
-        sum += (SafeDivide(thisPlayer.TotalEmployed, thisPlayer.TotalPopulation) * sum * 0.2)
-        Players(thePlayer).TotalScore = sum
-        Return sum
-    End Function
-
-    Function GetPlayerLandCost(ByVal thePlayer As Integer) As Integer
-        Dim landCost As Integer = 50
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                Dim theLocation As CitySquare = BoxInfo(i, j)
-                If theLocation.OwnerID = thePlayer Then
-                    If theLocation.Terrain <> TerrainSwamp Then
-                        landCost += 20
-                    End If
-                End If
-            Next
-        Next
-        Return landCost
-    End Function
-
-    Function OwnedAdjacent(ByVal thePlayerID As Integer) As Boolean
-
-        Dim clickLocation As CitySquare = BoxInfo(LastClickedX, LastClickedY)
-
-        '-- Check if the input player owns a neighboring location
-        Dim adjacentList As ArrayList = clickLocation.GetAdjacents()
-        For i As Integer = 0 To adjacentList.Count - 1
-            Dim neighborLocation As CitySquare = adjacentList(i)
-            If neighborLocation.OwnerID = thePlayerID Then
-                Return True
-            End If
-        Next
-        Return False
-    End Function
+    Sub UpdateGoal()
+        Select Case (GameType)
+            Case ScoreGame
+                lblGoal.Text = "Goal: Score " + GoalNumber.ToString
+            Case TerritoryGame
+                lblGoal.Text = "Goal: Territory " + GoalNumber.ToString
+            Case PopulationGame
+                lblGoal.Text = "Goal: Population " + GoalNumber.ToString
+            Case DevelopmentGame
+                lblGoal.Text = "Goal: Development " + GoalNumber.ToString
+            Case YearGame
+                lblGoal.Text = "Goal: Year " + GoalNumber.ToString
+            Case InfiniteGame
+                lblGoal.Text = "Goal: None"
+        End Select
+    End Sub
 
     Sub UpdateCoastline()
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                Dim location As CitySquare = BoxInfo(i, j)
+                Dim location As CitySquare = GridArray(i, j)
                 location.UpdateCoastline()
             Next
         Next
     End Sub
 
+#End Region
+
+#Region " Game Over "
+    Public Sub GameOver()
+        Dim WinningString As String = ""
+        Dim i As Integer
+        Select Case GameType
+            Case ScoreGame
+                WinningString += "Scores: " + ControlChars.NewLine
+                For i = 0 To Players.Count - 1
+                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalScore.ToString + ControlChars.NewLine
+                Next
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
+            Case TerritoryGame
+                WinningString += "Territory: " + ControlChars.NewLine
+                For i = 0 To Players.Count - 1
+                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalTerritory.ToString + ControlChars.NewLine
+                Next
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
+            Case PopulationGame
+                WinningString += "Population: " + ControlChars.NewLine
+                For i = 0 To Players.Count - 1
+                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalPopulation.ToString + ControlChars.NewLine
+                Next
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
+            Case DevelopmentGame
+                WinningString += "Development: " + ControlChars.NewLine
+                For i = 0 To Players.Count - 1
+                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalDevelopment.ToString + ControlChars.NewLine
+                Next
+                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
+            Case YearGame
+                Dim max As Integer = 0
+                Dim winningPlayer As Integer = -1
+                WinningString += "Scores: " + ControlChars.NewLine
+                For i = 0 To Players.Count - 1
+                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalScore.ToString + ControlChars.NewLine
+                    If Players(i).TotalScore > max Then
+                        max = Players(i).TotalScore
+                        winningPlayer = i + 1
+                    End If
+                Next
+                WinningString += ControlChars.NewLine + "The winner is: Player " + winningPlayer.ToString + ControlChars.NewLine
+        End Select
+        Dim EndingScreen As New GameOver(WinningString)
+        If EndingScreen.ShowDialog = DialogResult.Yes Then
+            StartNewGame()
+        ElseIf EndingScreen.DialogResult = DialogResult.No Then
+            Me.DialogResult = DialogResult.No
+            Me.Close()
+        Else
+            WinFlag = False
+            GameType = InfiniteGame
+        End If
+    End Sub
+#End Region
+
+#Region " Support "
+
     Function GetCityName(ByVal i As Integer, ByVal j As Integer) As String
-        If String.Compare(BoxInfo(i, j).CityName, "") = 0 Then
+        If String.Compare(GridArray(i, j).CityName, "") = 0 Then
             Return "(" + (i + 1).ToString + "," + (j + 1).ToString + ")"
         Else
-            Return BoxInfo(i, j).CityName
+            Return GridArray(i, j).CityName
         End If
     End Function
 
-    Sub RefreshPlayerStats(ByVal playerIndex As Integer)
-        '-- Updates player info
-        Dim thisPlayer As Player = Players(playerIndex)
-        thisPlayer.UpdateCensusData()
+    Sub ResetForNewTurn()
+        If ClickCity IsNot Nothing Then
+            ClickCity.GridSquare.BorderStyle = BorderStyle.FixedSingle
+        End If
 
-        If GameType = ScoreGame And thisPlayer.TotalScore >= GoalNumber Then
-            WinFlag = True
+        SelectedCard = NoCard
+        CurrentPerson = -1
+        EventString = ""
+        UpdateTextBox(txt_event, "")
+        UpdateTextBox(txt_card, "")
+        UpdateTextBox(txt_city, "")
+        UpdateTextBox(txt_person, "")
+        lblPerson.Text = "Displaying 0 of 0"
+        CurrentView = PopView
+
+        '-- Display new hint
+        DisplayHint()
+
+        '-- Reset all buildings to success = 0 (not sure why?)
+        ClearSuccess()
+    End Sub
+
+    Sub HighlightCurrentPlayer()
+        txtP1.BackColor = ColorPlayerUnselected
+        txtP2.BackColor = ColorPlayerUnselected
+        txtP3.BackColor = ColorPlayerUnselected
+        txtP4.BackColor = ColorPlayerUnselected
+
+        If CurrentPlayerIndex = 0 Then
+            txtP1.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayerIndex = 1 Then
+            txtP2.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayerIndex = 2 Then
+            txtP3.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayerIndex = 3 Then
+            txtP4.BackColor = ColorPlayerSelected
         End If
-        If GameType = TerritoryGame And thisPlayer.TotalTerritory >= GoalNumber Then
-            WinFlag = True
-        End If
-        If GameType = PopulationGame And thisPlayer.TotalPopulation >= GoalNumber Then
-            WinFlag = True
-        End If
-        If GameType = DevelopmentGame And thisPlayer.TotalDevelopment >= GoalNumber Then
-            WinFlag = True
-        End If
+    End Sub
+
+    Sub GetCoords(ByRef TheX As Integer, ByRef TheY As Integer, ByVal TheTag As String)
+        Try
+            Dim TheSections(1) As String
+            TheSections = TheTag.Split(",")
+            TheX = CType(TheSections(0), Integer)
+            TheY = CType(TheSections(1), Integer)
+        Catch ex As Exception
+            MsgBox("Error getting coords.", , "Error")
+        End Try
+
     End Sub
 
 #End Region
 
 #Region " Text "
+
+    Public Sub UpdateTextBox(ByRef textBox As TextBox, ByVal displayString As String)
+        '-- Update the textbox to display text and then deselect it.
+        textBox.Text = displayString.Trim()
+        textBox.Select(textBox.Text.Length, 0)
+    End Sub
+
     Public Sub DisplayInstructions()
 
     End Sub
 
     Public Sub DisplayHint()
-        Dim Hint As String = ""
-        '-- Citizens
-        Hint += "Many traits are partially hereditary, like intelligence and creativity. Predispositions towards crime and alcohal can also be passed on.@"
-        Hint += "Each turn your citizens go through six phases: (1) Aging, internal changes and possibly death, (2) Reproduction, (3) Travel, (4) Leisure, visiting building and applying for jobs, (5) Crime and accidents, (6) Taxation.@"
-        Hint += "The numbers for all eight citizen trait range from 0 to 100.@"
-        '-- Population
-        Hint += "Dense, crowded cities can be unhygenic and depressing, lowering health and happiness.@"
-        Hint += "Crowded cities encourage crime, in addition to having other detrimental effects. However, kids who grow up in densily populated cities gain extra street smarts.@"
-        '-- Health
-        Hint += "Umemployed citizens with low health will often take the starving artist path and call up creative reserves to survive.@"
-        Hint += "Health is the single most important factor in whether your citizen will reproduce, but many other factors are involved.@"
-        Hint += "Your citizens will die if their health becomes low or their age becomes very high. They can also die for other reasons.@"
-        '-- Intelligence and Creativity
-        Hint += "All citizens attend primary school, but must apply to get higher education. To be accepted, students must have increase their intelligence rapidly while still fairly young. Entrance standards are higher in larger cities. Keep in mind that higher education does not require college buildings.@"
-        '-- Employment
-        Hint += "Your citizens must apply for jobs based on their traits. Once employed, their 'employment' trait will go to 1 and then will gradually increase.@"
-        Hint += "Once employed, citizens will succeed in their jobs based on their intelligence and creativity. If a business is fully staffed and highly successful, it may expand to hire more employees.@"
-        Hint += "Unemployed citizens that are not minors will get ever more depressed and will gradually turn to crime.@"
-        Hint += "Citizens who are very successful at their employment are happier and more fulfilled.@"
-        Hint += "Citizens normally pay $5 in tax (even dependents) but must pay an extra $2 after getting employed.@"
-        '-- Mobility and Transportation
-        Hint += "Babies are born with almost no mobility, but it increases rapidly as they learn to walk, run and bike. At the age of 16 citizens learn to drive and if they already have a job, they'll buy a hotrod and get an extra mobility boost.@"
-        Hint += "Citizens move around within your kingdom for three reasons: (1) To escape urban crowds and crime, (2) To find jobs if unemployed, (3) To seek out culture and fun in highly developed areas.@"
-        Hint += "Citizens with high mobility are more likely to get into car crashes. However, better roads reduce the risk.@"
-        Hint += "The mobility of your citizens increases based on the quality of the roads where they are living.@"
-        Hint += "Better roads allow far ranging movement for your citizens. With highways and highly mobile citizens, movement can be virtually unlimited.@"
-        Hint += "Roads are best improved in centrally located areas, to maximize their use.@"
-        Hint += "The road quality of a destination city does not affect the journey to it, only the journey beyond it.@"
-        '-- Emigration & Rivalry
-        Hint += "Citizens can emigrate between rival kingdoms or visit foreign buildings that are within physical contact.@"
-        Hint += "Happy citizens are more patriotic and are less inclined to emigrate to rival cities. However, nothing stop them from benefitting from a rival's buildings if these are within their mobility range.@"
-        Hint += "Place buildings with negative qualities (like crime rings, bars and factories) just outside the borders of rival players to make sure they share the detrimental effects.@"
-        Hint += "Create job opportunities and highly-developed cultural centers on the borders to rival cities to seduce their citizens into emigrating.@"
-        Hint += "If you are far behind in population, try connecting your kingdom to a crowded rival to nab immigrants.@"
-        '-- Drunkenness
-        Hint += "Drunkenness makes your citizens happier and more sexual free, but it does have negative side-effects. It can make it harder for your citizens to get hired for jobs and increases the chance of car accidents and crimes of passion.@"
-        Hint += "Bars, Stadiums and Colleges increase drunkenness. Police stations, churches, hospitals and coffee shops decrease it.@"
-        Hint += "After drunkenness reaches a certain point, it becomes addictive for a citizen. High amounts of alcohal can be unhealthy for them and lead to depressions. If the addiction becomes life threatening rare citizens have the will power to go cold turkey.@"
-        '-- Criminality
-        Hint += "Citizens steal from the national treasury and commit murder as their criminality increases.@"
-        Hint += "Some murderers develop a taste for crime and become more likely to strike after every kill, especially if the victim was rich and well-employed.@"
-        Hint += "When citizens steal, they always take an amount equal to their current criminality stat.@"
-        '-- Buildings
-        Hint += "Citizens regularly visit buildings in nearby cities and experience their effects if their mobility allows.@"
-        Hint += "Buildings only affect the character traits of your population. They have no special abilities.@"
-        Hint += "All buildings drop in price by $5 after every purchase and at the end of turns. Making all your land and road purchases at the beginning of your turn will save you money on buildings.@"
-        Hint += "If a building reaches a cost of $0 and is still not purchased, it will eventually be replaced.@"
-        '-- Score
-        Hint += "Your score is determined by a combination of population (based on their traits), building development, territory and employment ratio.@"
-        Hint += "Each citizen contributes to your overall score, but not all citizens are counted equally. Increasing the right traits for your citizens will result in better-than-linear improvement.@"
-        Hint += "The happiness of your citizens is the most important aspect of determining their worth for your total score.@"
-        Hint += "A winner is not determined until all players have taken the same number of turns, so don't think that going first has any special advantage.@"
-        '-- Terrain
-        Hint += "Buying rock terrain provides a free building on the plot selected at random from the buildings currently available. Time your expansion wisely to take maximum advantage of this bonus by buying only when expensive, beneficial buildings are available.@"
-        Hint += "Buying dirt terrain is best near the very beginning when roads are highly needed and late in the game when land is very expensive.@"
-        Hint += "Savvy expansion can cut your rivals off from beneficial terrain and room for expansion. Use the lake terrain to your advantage when blocking rivals.@"
-        Hint += "You can not buy land already owned, on lakes or not adjacent to your own territory.@"
-        Hint += "Buildings in cities against edges or lakes are unlikely to be used as often as buildings located in central regions.@"
-        Hint += "You must pay $10 per city in upkeep once you have a territory of four or more. This does not apply if the upkeep would consume more than half your income.@"
-        '-- General
-        Hint += "Use the buttons on the 'View' tab to get a general ideas of your current status and needs.@"
-        Hint += "Right-click on cities or open terrain to see more details in the 'City' tab.@"
-        Hint += "You can give your cities personalized names if you click on them twice and then press the 'Name' button.@"
-        Hint += "Right-click on a city and then go to the 'Person' tab to view the traits for each of the local citizens.@"
-        Hint += "Left-click on a button on the right side of the screen to see more details in the 'Card' tab.@"
-
-        Dim HintArray As Array = Hint.Split("@")
-        Dim i As Integer = GetRandom(0, HintArray.Length - 1)
-        txtHint.text = HintArray(i)
+        txtHint.Text = Hinter.GenerateHint()
     End Sub
 #End Region
 
@@ -1670,13 +1538,16 @@ Public Class Form1
         UpdateCardSelection()
 
         '-- Display the card text
+        Dim cardText As String = ""
         If (SelectedCard >= 0 And SelectedCard < CardCount) Then
-            txt_card.Text = Cards(SelectedCard).Info
+            cardText = Cards(SelectedCard).Info
         ElseIf SelectedCard = RoadCard Then
-            txt_card.Text = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCost.ToString()
+            cardText = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCost.ToString()
         ElseIf SelectedCard = LandCard Then
-            txt_card.Text = "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
+            cardText = "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
         End If
+        UpdateTextBox(txt_card, cardText)
+
         Infotab.SelectedTab = Infotab.TabPages(CardTab)
     End Sub
 
@@ -1717,22 +1588,22 @@ Public Class Form1
 
     '-- Person viewing
     Private Sub ubBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubBack.Click
-        Dim selectedPop As Integer = BoxInfo(LastClickedX, LastClickedY).getPopulation()
+        Dim selectedPop As Integer = ClickCity.getPopulation()
         If selectedPop > 0 And CurrentPerson > 0 Then
             CurrentPerson = CurrentPerson - 1
             lblPerson.Text = "Displaying " + (CurrentPerson + 1).ToString() + " of " + selectedPop.ToString()
             If CurrentPerson < selectedPop Then
-                txt_person.Text = BoxInfo(LastClickedX, LastClickedY).People(CurrentPerson).ToString()
+                txt_person.Text = ClickCity.People(CurrentPerson).ToString()
             End If
         End If
     End Sub
 
     Private Sub ubForward_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubForward.Click
-        Dim selectedPop As Integer = BoxInfo(LastClickedX, LastClickedY).getPopulation()
+        Dim selectedPop As Integer = ClickCity.getPopulation()
         If selectedPop > 0 And CurrentPerson < selectedPop - 1 Then
             CurrentPerson = CurrentPerson + 1
             lblPerson.Text = "Displaying " + (CurrentPerson + 1).ToString() + " of " + selectedPop.ToString()
-            txt_person.Text = BoxInfo(LastClickedX, LastClickedY).People(CurrentPerson).ToString()
+            txt_person.Text = ClickCity.People(CurrentPerson).ToString()
         End If
     End Sub
 
@@ -1835,7 +1706,7 @@ Public Class Form1
     Private Sub ubName_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubName.Click
         Dim CName As New CityNamer
         CName.ShowDialog()
-        BoxInfo(LastClickedX, LastClickedY).CityName = LastCityName
+        ClickCity.CityName = LastCityName
         UpdateTabs()
     End Sub
 
@@ -1843,6 +1714,5 @@ Public Class Form1
         DisplayHint()
     End Sub
 #End Region
-
 
 End Class

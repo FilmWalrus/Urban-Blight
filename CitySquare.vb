@@ -8,6 +8,9 @@ Public Class CitySquare
     Public CityName As String = ""
     Public VisitedKey As Integer = -1
 
+    '--
+    Public GridSquare As Label = Nothing
+
     '-- Info
     Public Buildings As New ArrayList
     Public People As New ArrayList
@@ -34,6 +37,8 @@ Public Class CitySquare
     Public Sub New(ByVal row As Integer, ByVal col As Integer)
         RowID = row
         ColID = col
+
+        '-- Randomly determine the terrain type
         Dim tempNum As Integer = GetRandom(1, 100)
         If tempNum <= 10 Then
             Terrain = TerrainForest
@@ -52,6 +57,35 @@ Public Class CitySquare
         Else
             Terrain = TerrainPlain
         End If
+
+        '-- Create the GUI label/button that represents this citySquare
+        GridSquare = New Label
+
+        Select Case (Terrain)
+            Case TerrainPlain
+                GridSquare.BackColor = ColorPlain
+            Case TerrainDirt
+                GridSquare.BackColor = ColorDirt
+            Case TerrainForest
+                GridSquare.BackColor = ColorForest
+            Case TerrainMountain
+                GridSquare.BackColor = ColorMountain
+            Case TerrainLake
+                GridSquare.BackColor = ColorOcean
+            Case TerrainSwamp
+                GridSquare.BackColor = ColorSwamp
+            Case TerrainTownship
+                GridSquare.BackColor = ColorTownship
+            Case TerrainDesert
+                GridSquare.BackColor = ColorDesert
+        End Select
+
+        GridSquare.Name = "NewBox"
+        GridSquare.Tag = row & "," & col
+        GridSquare.TabStop = False
+        GridSquare.TextAlign = ContentAlignment.MiddleCenter
+        GridSquare.Text = "0"
+        GridSquare.BorderStyle = BorderStyle.FixedSingle
     End Sub
 
 #End Region
@@ -129,16 +163,16 @@ Public Class CitySquare
         Dim AdjacentList As New ArrayList()
 
         If RowID - 1 >= 0 Then
-            AdjacentList.Add(BoxInfo(RowID - 1, ColID))
+            AdjacentList.Add(GridArray(RowID - 1, ColID))
         End If
         If RowID + 1 <= GridWidth Then
-            AdjacentList.Add(BoxInfo(RowID + 1, ColID))
+            AdjacentList.Add(GridArray(RowID + 1, ColID))
         End If
         If ColID - 1 >= 0 Then
-            AdjacentList.Add(BoxInfo(RowID, ColID - 1))
+            AdjacentList.Add(GridArray(RowID, ColID - 1))
         End If
         If ColID + 1 <= GridHeight Then
-            AdjacentList.Add(BoxInfo(RowID, ColID + 1))
+            AdjacentList.Add(GridArray(RowID, ColID + 1))
         End If
 
         Return AdjacentList
@@ -204,6 +238,56 @@ Public Class CitySquare
         AvgMobility = SafeDivide(AvgMobility, currentPop)
         AvgDrunkenness = SafeDivide(AvgDrunkenness, currentPop)
         AvgCriminality = SafeDivide(AvgCriminality, currentPop)
+    End Sub
+
+    Public Sub UpdateGridSquare(ByVal CurrentView As Integer)
+
+        Dim displayText As String = ""
+        If OwnerID >= 0 Or CurrentView = LocView Then
+            If OwnerID >= 0 Then
+                GridSquare.BackColor = Players(OwnerID).Flag
+            End If
+            GridSquare.Font = LargeFont
+            Select Case (CurrentView)
+                Case PopView
+                    displayText = getPopulation().ToString
+                Case LocView
+                    GridSquare.Font = RegularFont
+                    displayText = (ColID + 1).ToString() + "," + (RowID + 1).ToString()
+                Case HappinessView
+                    displayText = AvgHappiness.ToString()
+                Case HealthView
+                    displayText = AvgHealth.ToString()
+                Case EmploymentView
+                    displayText = AvgEmployment.ToString()
+                Case IntelligenceView
+                    displayText = AvgIntelligence.ToString()
+                Case CreativityView
+                    displayText = AvgCreativity.ToString()
+                Case MobilityView
+                    displayText = AvgMobility.ToString()
+                Case DrunkennessView
+                    displayText = AvgDrunkenness.ToString()
+                Case CriminalityView
+                    displayText = AvgCriminality.ToString()
+                Case JobView
+                    GridSquare.Font = RegularFont
+                    displayText = getJobsFilled().ToString + "/" + getJobsTotal.ToString
+                Case RoadView
+                    displayText = Transportation.ToString
+            End Select
+        Else
+            'TheBoxes(i, j).Appearance.BackColor2 = Color.LightGray
+            displayText = ""
+        End If
+
+        'If displayText.Length > 0 Then
+        '    If displayText.Substring(0, 1) = "0" Then
+        '        displayText = ""
+        '    End If
+        'End If
+
+        GridSquare.Text = displayText
     End Sub
 
     Public Overrides Function toString() As String
