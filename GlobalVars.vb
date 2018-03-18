@@ -24,10 +24,12 @@ Module GlobalVars
     Public Players As New ArrayList
     Public Const MaxPlayers As Integer = 4
 
+    '--Cards (Buildings available to buy)
+    Public Cards As New ArrayList
+
     '--Board
     Public Const GridWidth As Integer = 9 '-- 0 to 10
     Public Const GridHeight As Integer = 9 '-- 0 to 10
-    'Public TheBoxes(GridWidth, GridHeight) As Label
     Public GridArray(GridWidth, GridHeight) As CitySquare
 
     '--Terrain
@@ -41,6 +43,7 @@ Module GlobalVars
     Public Const TerrainDesert As Integer = 7
 
     '--Roads
+    Public Const RoadCost As Integer = 50
     Public Const RoadNone As Integer = 0
     Public Const RoadDirt As Integer = 1
     Public Const RoadGravel As Integer = 2
@@ -98,6 +101,15 @@ Module GlobalVars
     Public EventLimit As Integer = 5
     Public Namer As New NameGenerator
     Public Hinter As New HintGenerator
+
+    '-- AI Decisions
+    Public Const AIPass As Integer = -1
+    Public Const AIBuilding1 As Integer = 0
+    Public Const AIBuilding2 As Integer = 1
+    Public Const AIBuilding3 As Integer = 2
+    Public Const AIBuilding4 As Integer = 3
+    Public Const AIRoad As Integer = 4
+    Public Const AILand As Integer = 5
 
     '-- Sort Types
     Public Const PopSort As Integer = 0

@@ -3,11 +3,6 @@ Public Class Form1
 
 #Region " Variables "
     '--
-    Dim Points As New ArrayList
-    Dim BigFont As Integer = 12
-    Dim SmallFont As Integer = 10
-
-    '--
     Dim ClickCity As CitySquare = Nothing
 
     '--
@@ -20,11 +15,9 @@ Public Class Form1
     '--
     Dim NoCard As Integer = -1
     Dim CardCount As Integer = 4
-    Dim Cards As New ArrayList
     Dim RoadCard As Integer = CardCount
     Dim LandCard As Integer = RoadCard + 1
     Dim SelectedCard As Integer = NoCard
-    Dim RoadCost As Integer = 50
 
     '--
     Dim CurrentPerson As Integer = -1
@@ -838,7 +831,7 @@ Public Class Form1
             If i < PlayerCount Then
                 newPlayer.PlayerType = PlayerHuman
             Else
-                newPlayer.PlayerType = PlayerNone 'PlayerAI
+                newPlayer.PlayerType = PlayerAI 'PlayerNone PlayerAI
             End If
 
             Players.Add(newPlayer)
@@ -1026,15 +1019,63 @@ Public Class Form1
         '-- Successful buildings expand
         BuildingsExpand()
 
-        '-- Display event messages
-        UpdateTextBox(txt_event, EventString)
-        Infotab.SelectedTab = Infotab.TabPages(EventTab)
-
         '-- Update grid appearence and texts
         UpdateGrid()
 
         '-- Update player info
         UpdatePlayers()
+
+        '-- Take turn automatically if AI
+        RunAI()
+
+        '-- Display event messages
+        UpdateTextBox(txt_event, EventString)
+        Infotab.SelectedTab = Infotab.TabPages(EventTab)
+
+    End Sub
+
+    Sub RunAI()
+
+        '-- Only run this code for AIs
+        If CurrentPlayer.PlayerType <> PlayerAI Then
+            Return
+        End If
+
+        Dim AIActionEvents As String = ""
+        Dim AIActionCount As Integer = 0
+
+        '-- Loop until the AI does not have enough money for the action they want to take.
+        Dim ActionSuccess As Boolean = False
+        Do
+            '-- Get the AIs decision (the action they chose and where they chose to make it)
+            Dim AIDecision As Integer = CurrentPlayer.ChooseNextAction()
+
+            If AIDecision = AIPass Then
+                ActionSuccess = False
+            Else
+                SelectedCard = AIDecision
+                ClickCity = CurrentPlayer.BestMove
+                ActionSuccess = Build()
+            End If
+
+            If ActionSuccess Then
+                AIActionCount += 1
+                If AIDecision >= 0 And AIDecision < CardCount Then
+                    Dim newBuilding As Building = ClickCity.Buildings(ClickCity.Buildings.Count - 1) '-- Get latest building
+                    AIActionEvents += CurrentPlayer.GetPlayerName() + " bought a " + newBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
+                ElseIf AIDecision = RoadCard Then
+                    AIActionEvents += CurrentPlayer.GetPlayerName() + " upgraded the road at " + ClickCity.GetName() + "." + ControlChars.NewLine
+                ElseIf AIDecision = LandCard Then
+                    AIActionEvents += CurrentPlayer.GetPlayerName() + " founded " + ClickCity.GetName() + " at " + ClickCity.GetLocationText() + "." + ControlChars.NewLine
+                End If
+            ElseIf AIActionCount = 0 Then
+                AIActionEvents += CurrentPlayer.GetPlayerName() + " passed on their turn." + ControlChars.NewLine
+            End If
+
+        Loop While ActionSuccess
+
+        EventString = AIActionEvents + ControlChars.NewLine + EventString
+
     End Sub
 
     Sub AdvanceToNextPlayer()
@@ -1077,7 +1118,7 @@ Public Class Form1
 
 #Region " Buildings "
 
-    Sub Build()
+    Function Build() As Boolean
         Dim UpdateNeeded As Boolean = False
         Dim SpendingMoney As Integer = Players(CurrentPlayerIndex).TotalMoney
 
@@ -1094,29 +1135,29 @@ Public Class Form1
         ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
             CardCost = Cards(SelectedCard).Cost
         Else
-            Return
+            Return False
         End If
 
         '-- Can the player afford it?
         If CardCost > SpendingMoney Then
-            Return
+            Return False
         End If
 
         '-- Was the selected CitySquare valid?
         If SelectedCard = LandCard Then
             '-- For Land cards they must be unowned, adjacent to land the player already owns, and not a lake
             If ClickCity.OwnerID >= 0 Or ClickCity.Terrain = TerrainLake Or (Not CurrentPlayer.OwnedAdjacent(ClickCity)) Then
-                Return
+                Return False
             End If
         Else
             '-- For Roads and Buildings the player must already own the land
             If ClickCity.OwnerID <> CurrentPlayerIndex Then
-                Return
+                Return False
             End If
 
             '-- Roads can't be built if highway is already present
             If SelectedCard = RoadCard And ClickCity.Transportation = RoadHighway Then
-                Return
+                Return False
             End If
         End If
 
@@ -1136,7 +1177,7 @@ Public Class Form1
             ClickCity.CityName = Namer.GenerateCityName(ClickCity)
 
             '-- Handle special terrain bonuses
-            If ClickCity.Terrain = TerrainDirt Then
+            If ClickCity.Terrain = TerrainDesert Then
                 '-- Desert effect: rebate
                 Players(CurrentPlayerIndex).TotalMoney += SafeDivide(CardCost, 2)
             ElseIf ClickCity.Terrain = TerrainDirt Then
@@ -1151,7 +1192,7 @@ Public Class Form1
                 Cards.RemoveAt(randNum)
             ElseIf ClickCity.Terrain = TerrainTownship Then
                 '-- Township effect: free population
-                Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(CurrentPlayer.GetPlayerPopulation(), 15.0)) + 2)
+                Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(CurrentPlayer.GetPlayerPopulationCount(), 15.0)) + 2)
                 Dim randNum As Integer = GetRandom(2, maxFreePopulation)
                 For i As Integer = 0 To randNum - 1
                     Dim founder As New Person(True)
@@ -1174,7 +1215,8 @@ Public Class Form1
             UpdateCardSelection()
         End If
 
-    End Sub
+        Return True
+    End Function
 
     Public Sub ClearSuccess()
         For i As Integer = 0 To GridWidth
@@ -1704,7 +1746,7 @@ Public Class Form1
     End Sub
 
     Private Sub ubName_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubName.Click
-        Dim CName As New CityNamer
+        Dim CName As New RenameCity
         CName.ShowDialog()
         ClickCity.CityName = LastCityName
         UpdateTabs()

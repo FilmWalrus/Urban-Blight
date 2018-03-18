@@ -14,6 +14,9 @@ Public Class Player
     Public TotalTerritory As Integer = 0
     Public TotalDevelopment As Integer = 0
     Public TotalScore As Integer = 0
+
+    '-- 
+    Public BestMove As CitySquare = Nothing
 #End Region
 
 #Region " New "
@@ -96,7 +99,20 @@ Public Class Player
         Return playerName
     End Function
 
-    Function GetPlayerPopulation() As Integer
+    Function GetPlayerPopulation() As ArrayList
+        Dim populationArray As New ArrayList
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim thisLocation As CitySquare = GridArray(i, j)
+                If thisLocation.OwnerID = ID Then
+                    populationArray.AddRange(thisLocation.People)
+                End If
+            Next
+        Next
+        Return populationArray
+    End Function
+
+    Function GetPlayerPopulationCount() As Integer
         Dim sum As Integer = 0
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
@@ -109,7 +125,19 @@ Public Class Player
         Return sum
     End Function
 
-    Function GetPlayerTerritory() As Integer
+    Function GetPlayerTerritory() As ArrayList
+        Dim territoryArray As New ArrayList
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                If GridArray(i, j).OwnerID = ID Then
+                    territoryArray.Add(GridArray(i, j))
+                End If
+            Next
+        Next
+        Return territoryArray
+    End Function
+
+    Function GetPlayerTerritoryCount() As Integer
         Dim sum As Integer = 0
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
@@ -120,6 +148,31 @@ Public Class Player
         Next
         TotalTerritory = sum
         Return sum
+    End Function
+
+    Function GetPlayerAdjacentTerritory() As ArrayList
+        Dim territoryArray As New ArrayList
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim thisLocation As CitySquare = GridArray(i, j)
+
+                '-- No one can already owns this location and it can't be a lake
+                If thisLocation.OwnerID < 0 And thisLocation.Terrain <> TerrainLake Then
+
+                    '-- The current player must own an adjacent location
+                    Dim adjacentList As ArrayList = thisLocation.GetAdjacents()
+                    For k As Integer = 0 To adjacentList.Count - 1
+                        Dim neighborLocation As CitySquare = adjacentList(k)
+                        If neighborLocation.OwnerID = ID Then
+                            territoryArray.Add(thisLocation)
+                            Exit For
+                        End If
+                    Next
+
+                End If
+            Next
+        Next
+        Return territoryArray
     End Function
 
     Function GetPlayerDevelopment() As Integer
@@ -211,6 +264,183 @@ Public Class Player
 
         Return textString
     End Function
+#End Region
+
+#Region " AI "
+
+    Public Function ChooseNextAction() As Integer
+
+        Dim roadNeed As Double = 0.0
+        Dim buildingNeed As Double = 0.0
+        Dim landNeed As Double = 0.0
+
+        Dim citizenList As ArrayList = GetPlayerPopulation()
+        Dim territoryList As ArrayList = GetPlayerTerritory()
+
+        Dim citizensEmployed As Integer = 0
+        Dim citizensUnemployed As Integer = 0
+        Dim roadLevelTotal As Integer = 0
+        For i As Integer = 0 To citizenList.Count - 1
+
+            '-- Add up how many citizens employed and unemployed
+            Dim currentCitizen As Person = citizenList(i)
+            If currentCitizen.JobBuilding Is Nothing Then
+                citizensUnemployed += 1
+            Else
+                citizensEmployed += 1
+            End If
+
+            '-- Add up road level per citizen
+            Dim currentResidence As CitySquare = currentCitizen.Residence
+            roadLevelTotal += currentResidence.Transportation
+        Next
+
+        '-- Calculate the need for more jobs (on a 0 to 100 scale)
+        buildingNeed = 100 * SafeDivide(citizensUnemployed, citizenList.Count)
+
+        '-- Calculate the need for more roads (on a 0 to 100 scale)
+        Dim averageRoadLevel As Double = SafeDivide(roadLevelTotal, citizenList.Count)
+        roadNeed = 100 * SafeDivide(CDbl(RoadHighway) - averageRoadLevel, RoadHighway)
+
+        '-- Calculate the need for more land (on a 0 to 100+ scale with 100)
+        ' 100 being an average population of 20 per square
+        Dim averagePopulation As Double = SafeDivide(citizenList.Count, territoryList.Count)
+        landNeed = 100 * SafeDivide(averagePopulation, 20.0)
+
+
+
+
+        '-- Determine best locations for buildings and roads
+        Dim bestBuildingLocation As CitySquare = Nothing
+        Dim maxUnemployment As Integer = -1
+        Dim bestRoadLocation As CitySquare = Nothing
+        Dim maxRoadUtility As Integer = -1
+        For i As Integer = 0 To territoryList.Count - 1
+            Dim thisLocation As CitySquare = territoryList(i)
+
+            '-- Check if this is the location in most need of jobs
+            Dim thisUnemployment As Integer = thisLocation.getUnemployment() - thisLocation.getJobsEmpty()
+            If thisUnemployment > maxUnemployment Then
+                maxUnemployment = thisUnemployment
+                bestBuildingLocation = thisLocation
+            End If
+
+            '-- Check if this is the location in most need of roads
+            Dim thisRoadUtility As Integer = (RoadHighway - thisLocation.Transportation) / RoadHighway * thisLocation.getPopulation()
+            If thisRoadUtility > maxRoadUtility Then
+                maxRoadUtility = thisRoadUtility
+                bestRoadLocation = thisLocation
+            End If
+        Next
+
+
+        '-- Find the weight of the decision in favor of buying each building
+        '-- Equal to the need for jobs * value of the building / cost of the building
+        Dim cardDecisionWeights(Cards.Count - 1) As Double
+        Dim cardWeightSum As Double = 0
+        For i As Integer = 0 To Cards.Count - 1
+            Dim theBuilding As Building = Cards(i)
+            cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForMoney()
+            cardWeightSum += cardDecisionWeights(i)
+        Next
+        Dim cardWeightAvg As Double = SafeDivide(cardWeightSum, Cards.Count)
+
+        '-- Find the weight of the decision in favor of buying road
+        '-- Equal to the need for roads * value of the road / cost of road
+        Dim roadDecisionWeight As Double = roadNeed * maxRoadUtility / RoadCost
+
+
+
+        '-- Determine best location for land expansion
+        Dim adjLandList As ArrayList = GetPlayerAdjacentTerritory()
+        Dim landCostBase As Integer = GetPlayerLandCost()
+        Dim bestLandLocation As CitySquare = Nothing
+        Dim maxLandUtility As Double = -1.0
+        For i As Integer = 0 To adjLandList.Count - 1
+            Dim thisLocation As CitySquare = adjLandList(i)
+
+            Dim neighboringPopulation As Integer = 0
+            Dim adjacentList As ArrayList = thisLocation.GetAdjacents()
+            For k As Integer = 0 To adjacentList.Count - 1
+                Dim ownedLocation As CitySquare = adjacentList(k)
+                If ownedLocation.OwnerID = ID Then
+                    neighboringPopulation += ownedLocation.getPopulation()
+                End If
+            Next
+
+            Dim landUtility As Double = neighboringPopulation / 2.0
+
+            Dim terrainBonus As Double = 0.0
+            Dim landCostAdj As Double = landCostBase
+            Select Case (thisLocation.Terrain)
+                Case TerrainDirt
+                    landCostAdj -= RoadCost '-- Free road
+                    landUtility *= 0.95 '-- Lower creativity
+                Case TerrainForest
+                    landUtility *= 1.25 '-- People are happier
+                Case TerrainMountain
+                    terrainBonus = cardWeightAvg '-- Card decision weight of average building available
+                    landUtility *= 0.85 '-- Lower mobility
+                Case TerrainSwamp
+                    landCostAdj = 10 '-- Cost is actually 0
+                    landUtility *= 0.5 '-- Unhappy, unhealthy, high upkeep
+                Case TerrainTownship
+                    landUtility *= 0.8 '-- Tax loss
+                    terrainBonus += 2 '-- Free population
+                Case TerrainDesert
+                    landCostAdj *= 0.5 '-- 50% rebate
+                    landUtility *= 0.75 '-- Less chance of drawing population
+            End Select
+
+            If thisLocation.Coastal Then
+                landUtility *= 1.05 '-- People are happier
+            End If
+
+            '-- Check if this is the location that would be the best land purchase
+            Dim thisLandUtility As Double = (buildingNeed * landUtility / landCostAdj) + terrainBonus
+            If thisLandUtility > maxLandUtility Then
+                maxLandUtility = thisLandUtility
+                bestLandLocation = thisLocation
+            End If
+        Next
+
+        '-- Find the weight of the decision in favor of buying land
+        '-- Equal to the need for land * value of the land / cost of land (pre-calculated above)
+        Dim landDecisionWeight As Double = maxLandUtility
+
+
+        Dim decisionWeights As New ArrayList
+        decisionWeights.AddRange(cardDecisionWeights)
+        decisionWeights.Add(roadDecisionWeight)
+        decisionWeights.Add(landDecisionWeight)
+
+        '-- Determine the best action to take by comparing all previous choices
+        Dim bestDecisionWeight As Double = -1.0
+        Dim finalDecision As Integer = AIPass
+        For i As Integer = 0 To decisionWeights.Count - 1
+            If decisionWeights(i) > bestDecisionWeight Then
+                bestDecisionWeight = decisionWeights(i)
+                finalDecision = i
+            End If
+        Next
+
+        '-- Save the location of the best move
+        If finalDecision = AIPass Then
+            BestMove = Nothing
+        ElseIf finalDecision <= AIBuilding4 Then
+            BestMove = bestBuildingLocation
+        ElseIf finalDecision = AIRoad Then
+            BestMove = bestRoadLocation
+        ElseIf finalDecision = AILand Then
+            BestMove = bestLandLocation
+        Else
+            BestMove = Nothing
+        End If
+
+        Return finalDecision
+
+    End Function
+
 #End Region
 
 End Class

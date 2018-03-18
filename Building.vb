@@ -382,6 +382,37 @@ Public Class Building
         Return thePerson
     End Function
 
+    Public Function GetBoosterValue() As Double
+        Dim boosterValue As Double = 0
+
+        boosterValue += (Happiness_odds * Happiness_adj / 200.0)
+        boosterValue += (Health_odds * Health_adj / 200.0)
+        boosterValue += (Intelligence_odds * Intelligence_adj / 200.0)
+        boosterValue += (Creativity_odds * Creativity_adj / 200.0)
+        boosterValue += (Mobility_odds * Mobility_adj / 200.0)
+        boosterValue -= (Drunkenness_odds * Drunkenness_adj / 200.0)
+        boosterValue -= (Criminality_odds * Criminality_adj / 200.0)
+
+        Return boosterValue
+    End Function
+
+    Public Function GetTotalValue() As Double
+        Dim buildingValue As Double = 0
+
+        buildingValue += Jobs
+        buildingValue += GetBoosterValue()
+
+        Return buildingValue
+    End Function
+
+    Public Function GetValueForMoney() As Double
+        If Cost <= 0 Then
+            Return 9999999.9
+        Else
+            Return SafeDivide(GetTotalValue(), Cost)
+        End If
+    End Function
+
     Public Function GetEmployeeCount() As Integer
         Return Employees.Count
     End Function
@@ -403,6 +434,12 @@ Public Class Building
     End Function
 
     Public Sub HireEmployee(ByRef Employee As Person)
+        '-- Quit any previous job
+        If Employee.JobBuilding IsNot Nothing Then
+            Employee.JobBuilding.Employees.Remove(Employee)
+        End If
+
+        '-- Start at your new job
         Employees.Add(Employee)
         Employee.JobBuilding = Me
         Employee.Employment += 1

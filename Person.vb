@@ -369,7 +369,7 @@ Public Class Person
     Function WillApply(ByRef newJob As Building) As Boolean
         '-- If already employed, make sure this other opportunity is better
         If JobBuilding IsNot Nothing Then
-            If newJob.Cost < JobBuilding.Cost Then '-- Change this to salary in future
+            If newJob.Cost <= JobBuilding.Cost Then '-- Change this to salary in future
                 Return False
             End If
         End If
@@ -493,5 +493,7 @@ Public Class Person
         Return PersonString
     End Function
 #End Region
+
+
 
 End Class

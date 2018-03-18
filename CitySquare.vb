@@ -114,6 +114,32 @@ Public Class CitySquare
     Public Function getJobsEmpty() As Integer
         Return getJobsTotal() - getJobsFilled()
     End Function
+
+    Public Function getUnemployment() As Integer
+        '-- We have to actually check every citizen since they might have jobs elsewhere
+        Dim citizensUnemployed As Integer = 0
+        For i As Integer = 0 To People.Count - 1
+            '-- Add up how many citizens unemployed
+            Dim currentCitizen As Person = People(i)
+            If currentCitizen.JobBuilding Is Nothing Then
+                citizensUnemployed += 1
+            End If
+        Next
+        Return citizensUnemployed
+    End Function
+
+    Public Function getEmployment() As Integer
+        '-- We have to actually check every citizen since they might have jobs elsewhere
+        Dim citizensEmployed As Integer = 0
+        For i As Integer = 0 To People.Count - 1
+            '-- Add up how many citizens employed
+            Dim currentCitizen As Person = People(i)
+            If currentCitizen.JobBuilding IsNot Nothing Then
+                citizensEmployed += 1
+            End If
+        Next
+        Return citizensEmployed
+    End Function
 #End Region
 
 #Region " Functions "
@@ -290,6 +316,10 @@ Public Class CitySquare
         GridSquare.Text = displayText
     End Sub
 
+    Public Function GetLocationText() As String
+        Return "(" + (RowID + 1).ToString + "," + (ColID + 1).ToString + ")"
+    End Function
+
     Public Overrides Function toString() As String
         Dim CityString As String = ""
         Dim TerrainString As String = ""
@@ -297,8 +327,8 @@ Public Class CitySquare
         If String.Compare(CityName, "") <> 0 Then
             CityString += "Name: " + CityName + ControlChars.NewLine
         End If
-        CityString += "Location: (" + (RowID + 1).ToString + "," + (ColID + 1).ToString + ")" + ControlChars.NewLine
-        CityString += "Terrain : "
+        CityString += "Location: " + GetLocationText() + ControlChars.NewLine
+        CityString += "Terrain: "
 
         Select Case (Terrain)
             Case TerrainPlain
