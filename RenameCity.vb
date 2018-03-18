@@ -1,4 +1,4 @@
-Public Class CityNamer
+Public Class RenameCity
     Inherits System.Windows.Forms.Form
 
 #Region " Windows Form Designer generated code "
@@ -32,7 +32,7 @@ Public Class CityNamer
     Friend WithEvents txtCityName As System.Windows.Forms.TextBox
     Friend WithEvents ubOK As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(CityNamer))
+        Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(RenameCity))
         Me.txtCityName = New System.Windows.Forms.TextBox
         Me.ubOK = New System.Windows.Forms.Button
         'CType(Me.txtCityName, System.ComponentModel.ISupportInitialize).BeginInit()

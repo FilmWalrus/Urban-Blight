@@ -121,7 +121,7 @@
     <Compile Include="Building.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CityNamer.vb">
+    <Compile Include="RenameCity.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CitySquare.vb">
@@ -161,8 +161,8 @@
     <Compile Include="Start.vb">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="CityNamer.resx">
-      <DependentUpon>CityNamer.vb</DependentUpon>
+    <EmbeddedResource Include="RenameCity.resx">
+      <DependentUpon>RenameCity.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GameOver.resx">
       <DependentUpon>GameOver.vb</DependentUpon>
