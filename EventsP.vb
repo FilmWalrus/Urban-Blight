@@ -182,7 +182,7 @@
             thePerson = CitizenList(i)
 
             '-- Handle deaths by natural causes
-            Dim odds As Integer = 0
+            Dim odds As Double = 0.0
             odds += (thePerson.Age - 20.0) / 4.0
             If thePerson.Health <= 0 Or GetRandom(0, 100) < odds Then
                 If thePerson.Die() Then
@@ -201,7 +201,7 @@
             End If
 
             '-- Handle deaths by illness
-            odds = 0
+            odds = 0.0
             odds += (32 - thePerson.Health) / 4.0
             If GetRandom(0, 100) < odds Then
                 If thePerson.Die() Then
@@ -221,11 +221,15 @@
 
             '-- Handle deaths by car accident
             Dim currentLocation As CitySquare = thePerson.Residence
-            odds = 0
+            odds = 0.0
             odds += thePerson.Mobility / 10.0
             odds += thePerson.Drunkenness / 4.0
             odds += (currentLocation.getPopulation / 5.0)
-            odds -= (currentLocation.Transportation * 2.0)
+            odds -= (currentLocation.Transportation * 2.5)
+            If thePerson.Age < 15 Then
+                odds /= 2.0
+            End If
+
             If GetRandom(0, 100) <= odds Then
                 If thePerson.Die() Then
 
@@ -548,11 +552,12 @@
             End If
         Next
 
-        If CurrentPlayer.TotalTerritory > 3 Then
-            '-- Upkeep never exceeds half your revenue
-            Dim halfRevenue As Integer = SafeDivide(revenue, 2.0)
-            If upkeep > halfRevenue Then
-                upkeep = halfRevenue
+        If CurrentPlayer.TotalTerritory > 1 Then
+            '-- Upkeep never exceeds (territory / 10)% of your revenue
+            Dim maxUpkeepFraction As Double = CurrentPlayer.TotalTerritory / 10
+            Dim revenueFraction As Double = revenue * maxUpkeepFraction
+            If upkeep > revenueFraction Then
+                upkeep = revenueFraction
             End If
         Else
             '-- No upkeep until you have more than 3 territories
@@ -602,7 +607,7 @@
 
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID >= 0 Then
+                If GridArray(i, j).OwnerID = CurrentPlayer.ID Then
                     LocationList.Add(GridArray(i, j))
                 End If
             Next
