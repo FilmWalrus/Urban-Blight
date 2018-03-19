@@ -15,8 +15,12 @@ Public Class Player
     Public TotalDevelopment As Integer = 0
     Public TotalScore As Integer = 0
 
-    '-- 
+    '-- AI stuff
     Public BestMove As CitySquare = Nothing
+    Private PersonalityMain As Integer = -1
+    Private TerrainLike As Integer = -1
+    Private TerrainDislike As Integer = -1
+    Private DifficultyLevel As Integer = 0
 #End Region
 
 #Region " New "
@@ -24,6 +28,16 @@ Public Class Player
         ID = myID
         Score = 0
         TotalMoney = 110
+        PlayerType = PlayerHuman
+    End Sub
+
+    Public Sub GeneratePersonality()
+        DifficultyLevel = GetRandom(0, 2)
+
+        TerrainLike = GetRandom(-2, TerrainMax)
+        TerrainDislike = GetRandom(-2, TerrainMax)
+
+        PersonalityMain = GetRandom(0, 10)
     End Sub
 #End Region
 
@@ -97,6 +111,65 @@ Public Class Player
         End If
 
         Return playerName
+    End Function
+
+    Function GetPlayerPersonality() As String
+
+        '-- Difficulty level
+        Dim personalityText As String = ""
+        If DifficultyLevel = 0 Then
+            personalityText += "Easy"
+        ElseIf DifficultyLevel = 1 Then
+            personalityText += "Medium"
+        ElseIf DifficultyLevel = 2 Then
+            personalityText += "Hard"
+        End If
+        personalityText += ", "
+
+        '-- Personality type
+        Select Case (PersonalityMain)
+            Case 0
+                '-- Standard
+
+            Case 1
+                '-- Builder
+
+            Case 2
+                '-- Expansionist
+
+            Case 3
+                '-- Employer
+
+            Case 4
+                '-- Erratic
+
+            Case 5
+                '-- Aggressive
+
+            Case 6
+                '-- Transporter
+
+            Case 7
+                '-- 
+
+
+        End Select
+
+        '-- Terrain preference
+        If TerrainLike = TerrainLake Then
+            personalityText += "+Coastal, "
+        Else
+            personalityText += "+" + GetTerrainName(TerrainLike) + ", "
+        End If
+        If TerrainLike = TerrainLake Then
+            personalityText += "-Coastal, "
+        Else
+            personalityText += "-" + GetTerrainName(TerrainDislike) + ", "
+        End If
+
+        '-- Stat preference
+
+
     End Function
 
     Function GetPlayerPopulation() As ArrayList

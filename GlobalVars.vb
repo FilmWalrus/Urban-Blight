@@ -41,6 +41,7 @@ Module GlobalVars
     Public Const TerrainSwamp As Integer = 5
     Public Const TerrainTownship As Integer = 6
     Public Const TerrainDesert As Integer = 7
+    Public Const TerrainMax As Integer = 7
 
     '--Roads
     Public Const RoadCost As Integer = 50
@@ -134,6 +135,29 @@ Module GlobalVars
         End If
     End Function
 
+    Function GetTerrainName(ByVal terrainIndex As Integer) As String
+        Select Case (terrainIndex)
+            Case TerrainPlain
+                Return "Plain"
+            Case TerrainDirt
+                Return "Dirt"
+            Case TerrainForest
+                Return "Forest"
+            Case TerrainMountain
+                Return "Mountain"
+            Case TerrainLake
+                Return "Lake"
+            Case TerrainSwamp
+                Return "Swamp"
+            Case TerrainDesert
+                Return "Desert"
+            Case TerrainTownship
+                Return "Township"
+            Case Else
+                Return "None"
+        End Select
+
+    End Function
 
 #End Region
 

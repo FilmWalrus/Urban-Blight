@@ -42,32 +42,62 @@ Public Class Intro
     Friend WithEvents numTerritory As System.Windows.Forms.NumericUpDown
     Friend WithEvents numPopulation As System.Windows.Forms.NumericUpDown
     Friend WithEvents numScore As System.Windows.Forms.NumericUpDown
-    Friend WithEvents rb1 As System.Windows.Forms.RadioButton
-    Friend WithEvents rb2 As System.Windows.Forms.RadioButton
-    Friend WithEvents rb3 As System.Windows.Forms.RadioButton
-    Friend WithEvents rb4 As System.Windows.Forms.RadioButton
     Friend WithEvents numYear As System.Windows.Forms.NumericUpDown
     Friend WithEvents rbBuildings As System.Windows.Forms.RadioButton
+    Friend WithEvents Label1 As Label
+    Friend WithEvents p1_rb_none As RadioButton
+    Friend WithEvents p1_rb_robot As RadioButton
+    Friend WithEvents p1_rb_human As RadioButton
+    Friend WithEvents GroupBox2 As GroupBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents p2_rb_none As RadioButton
+    Friend WithEvents p2_rb_robot As RadioButton
+    Friend WithEvents p2_rb_human As RadioButton
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents p3_rb_none As RadioButton
+    Friend WithEvents p3_rb_robot As RadioButton
+    Friend WithEvents p3_rb_human As RadioButton
+    Friend WithEvents GroupBox4 As GroupBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents p4_rb_none As RadioButton
+    Friend WithEvents p4_rb_robot As RadioButton
+    Friend WithEvents p4_rb_human As RadioButton
     Friend WithEvents numBuildings As System.Windows.Forms.NumericUpDown
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Dim resources As System.Resources.ResourceManager = New System.Resources.ResourceManager(GetType(Intro))
-        Me.gbPlayers = New System.Windows.Forms.GroupBox
-        Me.rb4 = New System.Windows.Forms.RadioButton
-        Me.rb3 = New System.Windows.Forms.RadioButton
-        Me.rb2 = New System.Windows.Forms.RadioButton
-        Me.rb1 = New System.Windows.Forms.RadioButton
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.numYear = New System.Windows.Forms.NumericUpDown
-        Me.rbBuildings = New System.Windows.Forms.RadioButton
-        Me.numBuildings = New System.Windows.Forms.NumericUpDown
-        Me.numScore = New System.Windows.Forms.NumericUpDown
-        Me.numPopulation = New System.Windows.Forms.NumericUpDown
-        Me.numTerritory = New System.Windows.Forms.NumericUpDown
-        Me.rbYear = New System.Windows.Forms.RadioButton
-        Me.rbScore = New System.Windows.Forms.RadioButton
-        Me.rbPopulation = New System.Windows.Forms.RadioButton
-        Me.rbTerritory = New System.Windows.Forms.RadioButton
-        Me.ubBegin = New System.Windows.Forms.Button
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Intro))
+        Me.gbPlayers = New System.Windows.Forms.GroupBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.numYear = New System.Windows.Forms.NumericUpDown()
+        Me.rbBuildings = New System.Windows.Forms.RadioButton()
+        Me.numBuildings = New System.Windows.Forms.NumericUpDown()
+        Me.numScore = New System.Windows.Forms.NumericUpDown()
+        Me.numPopulation = New System.Windows.Forms.NumericUpDown()
+        Me.numTerritory = New System.Windows.Forms.NumericUpDown()
+        Me.rbYear = New System.Windows.Forms.RadioButton()
+        Me.rbScore = New System.Windows.Forms.RadioButton()
+        Me.rbPopulation = New System.Windows.Forms.RadioButton()
+        Me.rbTerritory = New System.Windows.Forms.RadioButton()
+        Me.ubBegin = New System.Windows.Forms.Button()
+        Me.p1_rb_human = New System.Windows.Forms.RadioButton()
+        Me.p1_rb_robot = New System.Windows.Forms.RadioButton()
+        Me.p1_rb_none = New System.Windows.Forms.RadioButton()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.p2_rb_none = New System.Windows.Forms.RadioButton()
+        Me.p2_rb_robot = New System.Windows.Forms.RadioButton()
+        Me.p2_rb_human = New System.Windows.Forms.RadioButton()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.p3_rb_none = New System.Windows.Forms.RadioButton()
+        Me.p3_rb_robot = New System.Windows.Forms.RadioButton()
+        Me.p3_rb_human = New System.Windows.Forms.RadioButton()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.p4_rb_none = New System.Windows.Forms.RadioButton()
+        Me.p4_rb_robot = New System.Windows.Forms.RadioButton()
+        Me.p4_rb_human = New System.Windows.Forms.RadioButton()
         Me.gbPlayers.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.numYear, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -75,53 +105,24 @@ Public Class Intro
         CType(Me.numScore, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numPopulation, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numTerritory, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox2.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
         Me.SuspendLayout()
         '
         'gbPlayers
         '
         Me.gbPlayers.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.gbPlayers.Controls.Add(Me.rb4)
-        Me.gbPlayers.Controls.Add(Me.rb3)
-        Me.gbPlayers.Controls.Add(Me.rb2)
-        Me.gbPlayers.Controls.Add(Me.rb1)
-        Me.gbPlayers.Location = New System.Drawing.Point(216, 16)
+        Me.gbPlayers.Controls.Add(Me.Label1)
+        Me.gbPlayers.Controls.Add(Me.p1_rb_none)
+        Me.gbPlayers.Controls.Add(Me.p1_rb_robot)
+        Me.gbPlayers.Controls.Add(Me.p1_rb_human)
+        Me.gbPlayers.Location = New System.Drawing.Point(12, 12)
         Me.gbPlayers.Name = "gbPlayers"
-        Me.gbPlayers.Size = New System.Drawing.Size(120, 176)
+        Me.gbPlayers.Size = New System.Drawing.Size(250, 61)
         Me.gbPlayers.TabIndex = 0
         Me.gbPlayers.TabStop = False
-        Me.gbPlayers.Text = "Number of Players?"
-        '
-        'rb4
-        '
-        Me.rb4.Location = New System.Drawing.Point(32, 144)
-        Me.rb4.Name = "rb4"
-        Me.rb4.Size = New System.Drawing.Size(64, 16)
-        Me.rb4.TabIndex = 11
-        Me.rb4.Text = "   4"
-        '
-        'rb3
-        '
-        Me.rb3.Location = New System.Drawing.Point(32, 104)
-        Me.rb3.Name = "rb3"
-        Me.rb3.Size = New System.Drawing.Size(64, 16)
-        Me.rb3.TabIndex = 10
-        Me.rb3.Text = "   3"
-        '
-        'rb2
-        '
-        Me.rb2.Location = New System.Drawing.Point(32, 64)
-        Me.rb2.Name = "rb2"
-        Me.rb2.Size = New System.Drawing.Size(64, 16)
-        Me.rb2.TabIndex = 9
-        Me.rb2.Text = "   2"
-        '
-        'rb1
-        '
-        Me.rb1.Location = New System.Drawing.Point(32, 24)
-        Me.rb1.Name = "rb1"
-        Me.rb1.Size = New System.Drawing.Size(64, 16)
-        Me.rb1.TabIndex = 8
-        Me.rb1.Text = "   1"
+        Me.gbPlayers.Text = "Player 1"
         '
         'GroupBox1
         '
@@ -136,17 +137,17 @@ Public Class Intro
         Me.GroupBox1.Controls.Add(Me.rbScore)
         Me.GroupBox1.Controls.Add(Me.rbPopulation)
         Me.GroupBox1.Controls.Add(Me.rbTerritory)
-        Me.GroupBox1.Location = New System.Drawing.Point(16, 16)
+        Me.GroupBox1.Location = New System.Drawing.Point(280, 12)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(184, 224)
+        Me.GroupBox1.Size = New System.Drawing.Size(184, 218)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "End Game Method?"
+        Me.GroupBox1.Text = "Game Goal"
         '
         'numYear
         '
         Me.numYear.Increment = New Decimal(New Integer() {3, 0, 0, 0})
-        Me.numYear.Location = New System.Drawing.Point(96, 184)
+        Me.numYear.Location = New System.Drawing.Point(96, 181)
         Me.numYear.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.numYear.Minimum = New Decimal(New Integer() {15, 0, 0, 0})
         Me.numYear.Name = "numYear"
@@ -157,7 +158,7 @@ Public Class Intro
         '
         'rbBuildings
         '
-        Me.rbBuildings.Location = New System.Drawing.Point(16, 144)
+        Me.rbBuildings.Location = New System.Drawing.Point(16, 141)
         Me.rbBuildings.Name = "rbBuildings"
         Me.rbBuildings.Size = New System.Drawing.Size(72, 24)
         Me.rbBuildings.TabIndex = 8
@@ -166,7 +167,7 @@ Public Class Intro
         'numBuildings
         '
         Me.numBuildings.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.numBuildings.Location = New System.Drawing.Point(96, 144)
+        Me.numBuildings.Location = New System.Drawing.Point(96, 141)
         Me.numBuildings.Maximum = New Decimal(New Integer() {1000, 0, 0, 0})
         Me.numBuildings.Minimum = New Decimal(New Integer() {15, 0, 0, 0})
         Me.numBuildings.Name = "numBuildings"
@@ -178,19 +179,19 @@ Public Class Intro
         'numScore
         '
         Me.numScore.Increment = New Decimal(New Integer() {100, 0, 0, 0})
-        Me.numScore.Location = New System.Drawing.Point(96, 24)
+        Me.numScore.Location = New System.Drawing.Point(96, 21)
         Me.numScore.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
         Me.numScore.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.numScore.Name = "numScore"
         Me.numScore.Size = New System.Drawing.Size(72, 20)
         Me.numScore.TabIndex = 6
         Me.numScore.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.numScore.Value = New Decimal(New Integer() {2000, 0, 0, 0})
+        Me.numScore.Value = New Decimal(New Integer() {1000, 0, 0, 0})
         '
         'numPopulation
         '
         Me.numPopulation.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.numPopulation.Location = New System.Drawing.Point(96, 104)
+        Me.numPopulation.Location = New System.Drawing.Point(96, 101)
         Me.numPopulation.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.numPopulation.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.numPopulation.Name = "numPopulation"
@@ -201,7 +202,7 @@ Public Class Intro
         '
         'numTerritory
         '
-        Me.numTerritory.Location = New System.Drawing.Point(96, 64)
+        Me.numTerritory.Location = New System.Drawing.Point(96, 61)
         Me.numTerritory.Minimum = New Decimal(New Integer() {3, 0, 0, 0})
         Me.numTerritory.Name = "numTerritory"
         Me.numTerritory.Size = New System.Drawing.Size(72, 20)
@@ -211,7 +212,7 @@ Public Class Intro
         '
         'rbYear
         '
-        Me.rbYear.Location = New System.Drawing.Point(16, 184)
+        Me.rbYear.Location = New System.Drawing.Point(16, 181)
         Me.rbYear.Name = "rbYear"
         Me.rbYear.Size = New System.Drawing.Size(64, 24)
         Me.rbYear.TabIndex = 3
@@ -219,7 +220,7 @@ Public Class Intro
         '
         'rbScore
         '
-        Me.rbScore.Location = New System.Drawing.Point(16, 24)
+        Me.rbScore.Location = New System.Drawing.Point(16, 21)
         Me.rbScore.Name = "rbScore"
         Me.rbScore.Size = New System.Drawing.Size(64, 24)
         Me.rbScore.TabIndex = 2
@@ -227,7 +228,7 @@ Public Class Intro
         '
         'rbPopulation
         '
-        Me.rbPopulation.Location = New System.Drawing.Point(16, 104)
+        Me.rbPopulation.Location = New System.Drawing.Point(16, 101)
         Me.rbPopulation.Name = "rbPopulation"
         Me.rbPopulation.Size = New System.Drawing.Size(80, 24)
         Me.rbPopulation.TabIndex = 1
@@ -235,7 +236,7 @@ Public Class Intro
         '
         'rbTerritory
         '
-        Me.rbTerritory.Location = New System.Drawing.Point(16, 64)
+        Me.rbTerritory.Location = New System.Drawing.Point(16, 61)
         Me.rbTerritory.Name = "rbTerritory"
         Me.rbTerritory.Size = New System.Drawing.Size(64, 24)
         Me.rbTerritory.TabIndex = 0
@@ -243,16 +244,229 @@ Public Class Intro
         '
         'ubBegin
         '
-        Me.ubBegin.Location = New System.Drawing.Point(216, 208)
+        Me.ubBegin.Location = New System.Drawing.Point(280, 239)
         Me.ubBegin.Name = "ubBegin"
-        Me.ubBegin.Size = New System.Drawing.Size(120, 32)
+        Me.ubBegin.Size = New System.Drawing.Size(184, 45)
         Me.ubBegin.TabIndex = 4
         Me.ubBegin.Text = "Begin"
+        '
+        'p1_rb_human
+        '
+        Me.p1_rb_human.AutoSize = True
+        Me.p1_rb_human.Location = New System.Drawing.Point(12, 17)
+        Me.p1_rb_human.Name = "p1_rb_human"
+        Me.p1_rb_human.Size = New System.Drawing.Size(59, 17)
+        Me.p1_rb_human.TabIndex = 0
+        Me.p1_rb_human.TabStop = True
+        Me.p1_rb_human.Text = "Human"
+        Me.p1_rb_human.UseVisualStyleBackColor = True
+        '
+        'p1_rb_robot
+        '
+        Me.p1_rb_robot.AutoSize = True
+        Me.p1_rb_robot.Location = New System.Drawing.Point(100, 16)
+        Me.p1_rb_robot.Name = "p1_rb_robot"
+        Me.p1_rb_robot.Size = New System.Drawing.Size(35, 17)
+        Me.p1_rb_robot.TabIndex = 1
+        Me.p1_rb_robot.TabStop = True
+        Me.p1_rb_robot.Text = "AI"
+        Me.p1_rb_robot.UseVisualStyleBackColor = True
+        '
+        'p1_rb_none
+        '
+        Me.p1_rb_none.AutoSize = True
+        Me.p1_rb_none.Location = New System.Drawing.Point(183, 16)
+        Me.p1_rb_none.Name = "p1_rb_none"
+        Me.p1_rb_none.Size = New System.Drawing.Size(51, 17)
+        Me.p1_rb_none.TabIndex = 2
+        Me.p1_rb_none.TabStop = True
+        Me.p1_rb_none.Text = "None"
+        Me.p1_rb_none.UseVisualStyleBackColor = True
+        '
+        'Label1
+        '
+        Me.Label1.Location = New System.Drawing.Point(9, 34)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(235, 24)
+        Me.Label1.TabIndex = 5
+        Me.Label1.Text = "Medium, Expansionist, Hates Mountains"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'GroupBox2
+        '
+        Me.GroupBox2.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.GroupBox2.Controls.Add(Me.Label2)
+        Me.GroupBox2.Controls.Add(Me.p2_rb_none)
+        Me.GroupBox2.Controls.Add(Me.p2_rb_robot)
+        Me.GroupBox2.Controls.Add(Me.p2_rb_human)
+        Me.GroupBox2.Location = New System.Drawing.Point(12, 82)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(250, 61)
+        Me.GroupBox2.TabIndex = 6
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "Player 2"
+        '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(9, 34)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(235, 24)
+        Me.Label2.TabIndex = 5
+        Me.Label2.Text = "Medium, Expansionist, Hates Mountains"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'p2_rb_none
+        '
+        Me.p2_rb_none.AutoSize = True
+        Me.p2_rb_none.Location = New System.Drawing.Point(183, 16)
+        Me.p2_rb_none.Name = "p2_rb_none"
+        Me.p2_rb_none.Size = New System.Drawing.Size(51, 17)
+        Me.p2_rb_none.TabIndex = 2
+        Me.p2_rb_none.TabStop = True
+        Me.p2_rb_none.Text = "None"
+        Me.p2_rb_none.UseVisualStyleBackColor = True
+        '
+        'p2_rb_robot
+        '
+        Me.p2_rb_robot.AutoSize = True
+        Me.p2_rb_robot.Location = New System.Drawing.Point(100, 16)
+        Me.p2_rb_robot.Name = "p2_rb_robot"
+        Me.p2_rb_robot.Size = New System.Drawing.Size(35, 17)
+        Me.p2_rb_robot.TabIndex = 1
+        Me.p2_rb_robot.TabStop = True
+        Me.p2_rb_robot.Text = "AI"
+        Me.p2_rb_robot.UseVisualStyleBackColor = True
+        '
+        'p2_rb_human
+        '
+        Me.p2_rb_human.AutoSize = True
+        Me.p2_rb_human.Location = New System.Drawing.Point(12, 17)
+        Me.p2_rb_human.Name = "p2_rb_human"
+        Me.p2_rb_human.Size = New System.Drawing.Size(59, 17)
+        Me.p2_rb_human.TabIndex = 0
+        Me.p2_rb_human.TabStop = True
+        Me.p2_rb_human.Text = "Human"
+        Me.p2_rb_human.UseVisualStyleBackColor = True
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.GroupBox3.Controls.Add(Me.Label3)
+        Me.GroupBox3.Controls.Add(Me.p3_rb_none)
+        Me.GroupBox3.Controls.Add(Me.p3_rb_robot)
+        Me.GroupBox3.Controls.Add(Me.p3_rb_human)
+        Me.GroupBox3.Location = New System.Drawing.Point(12, 152)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(250, 61)
+        Me.GroupBox3.TabIndex = 7
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Player 3"
+        '
+        'Label3
+        '
+        Me.Label3.Location = New System.Drawing.Point(9, 34)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(235, 24)
+        Me.Label3.TabIndex = 5
+        Me.Label3.Text = "Medium, Expansionist, Hates Mountains"
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'p3_rb_none
+        '
+        Me.p3_rb_none.AutoSize = True
+        Me.p3_rb_none.Location = New System.Drawing.Point(183, 16)
+        Me.p3_rb_none.Name = "p3_rb_none"
+        Me.p3_rb_none.Size = New System.Drawing.Size(51, 17)
+        Me.p3_rb_none.TabIndex = 2
+        Me.p3_rb_none.TabStop = True
+        Me.p3_rb_none.Text = "None"
+        Me.p3_rb_none.UseVisualStyleBackColor = True
+        '
+        'p3_rb_robot
+        '
+        Me.p3_rb_robot.AutoSize = True
+        Me.p3_rb_robot.Location = New System.Drawing.Point(100, 16)
+        Me.p3_rb_robot.Name = "p3_rb_robot"
+        Me.p3_rb_robot.Size = New System.Drawing.Size(35, 17)
+        Me.p3_rb_robot.TabIndex = 1
+        Me.p3_rb_robot.TabStop = True
+        Me.p3_rb_robot.Text = "AI"
+        Me.p3_rb_robot.UseVisualStyleBackColor = True
+        '
+        'p3_rb_human
+        '
+        Me.p3_rb_human.AutoSize = True
+        Me.p3_rb_human.Location = New System.Drawing.Point(12, 17)
+        Me.p3_rb_human.Name = "p3_rb_human"
+        Me.p3_rb_human.Size = New System.Drawing.Size(59, 17)
+        Me.p3_rb_human.TabIndex = 0
+        Me.p3_rb_human.TabStop = True
+        Me.p3_rb_human.Text = "Human"
+        Me.p3_rb_human.UseVisualStyleBackColor = True
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.GroupBox4.Controls.Add(Me.Label4)
+        Me.GroupBox4.Controls.Add(Me.p4_rb_none)
+        Me.GroupBox4.Controls.Add(Me.p4_rb_robot)
+        Me.GroupBox4.Controls.Add(Me.p4_rb_human)
+        Me.GroupBox4.Location = New System.Drawing.Point(12, 222)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(250, 61)
+        Me.GroupBox4.TabIndex = 8
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Player 4"
+        '
+        'Label4
+        '
+        Me.Label4.Location = New System.Drawing.Point(9, 34)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(235, 24)
+        Me.Label4.TabIndex = 5
+        Me.Label4.Text = "Medium, Expansionist, Hates Mountains"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'p4_rb_none
+        '
+        Me.p4_rb_none.AutoSize = True
+        Me.p4_rb_none.Location = New System.Drawing.Point(183, 16)
+        Me.p4_rb_none.Name = "p4_rb_none"
+        Me.p4_rb_none.Size = New System.Drawing.Size(51, 17)
+        Me.p4_rb_none.TabIndex = 2
+        Me.p4_rb_none.TabStop = True
+        Me.p4_rb_none.Text = "None"
+        Me.p4_rb_none.UseVisualStyleBackColor = True
+        '
+        'p4_rb_robot
+        '
+        Me.p4_rb_robot.AutoSize = True
+        Me.p4_rb_robot.Location = New System.Drawing.Point(100, 16)
+        Me.p4_rb_robot.Name = "p4_rb_robot"
+        Me.p4_rb_robot.Size = New System.Drawing.Size(35, 17)
+        Me.p4_rb_robot.TabIndex = 1
+        Me.p4_rb_robot.TabStop = True
+        Me.p4_rb_robot.Text = "AI"
+        Me.p4_rb_robot.UseVisualStyleBackColor = True
+        '
+        'p4_rb_human
+        '
+        Me.p4_rb_human.AutoSize = True
+        Me.p4_rb_human.Location = New System.Drawing.Point(12, 17)
+        Me.p4_rb_human.Name = "p4_rb_human"
+        Me.p4_rb_human.Size = New System.Drawing.Size(59, 17)
+        Me.p4_rb_human.TabIndex = 0
+        Me.p4_rb_human.TabStop = True
+        Me.p4_rb_human.Text = "Human"
+        Me.p4_rb_human.UseVisualStyleBackColor = True
         '
         'Intro
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(352, 254)
+        Me.ClientSize = New System.Drawing.Size(475, 296)
+        Me.Controls.Add(Me.GroupBox4)
+        Me.Controls.Add(Me.GroupBox3)
+        Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.ubBegin)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.gbPlayers)
@@ -263,33 +477,43 @@ Public Class Intro
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Intro"
         Me.gbPlayers.ResumeLayout(False)
+        Me.gbPlayers.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         CType(Me.numYear, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numBuildings, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numScore, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numPopulation, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numTerritory, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
 
 #End Region
 
+#Region " Game Mode "
+
     Private Sub Intro_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        rb1.Checked = True
+
+        '-- Create default player types
+        Players.Clear()
+        For i As Integer = 0 To MaxPlayers - 1
+            Dim newPlayer As New Player(i)
+            Players.Add(newPlayer)
+        Next
+
+        p1_rb_human.Checked = True
+        p2_rb_robot.Checked = True
+        p3_rb_none.Checked = True
+        p4_rb_none.Checked = True
+
         rbScore.Checked = True
-        'Dim test As String
-        'Dim i As Integer
-        'For i = 0 To 20
-        '    test += GetRandom(0, 1).ToString + " "
-        'Next
-        'For i = 0 To 20
-        '    test += GetRandom(5, 5).ToString + " "
-        'Next
-        'For i = 0 To 20
-        '    test += GetRandom(-3, -1).ToString + " "
-        'Next
-        'MsgBox(test, MsgBoxStyle.OKOnly, "Test")
+
     End Sub
 
     Private Sub ubBegin_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubBegin.Click
@@ -307,22 +531,6 @@ Public Class Intro
         End Select
         Me.DialogResult = DialogResult.OK
         Me.Close()
-    End Sub
-
-    Private Sub rb1_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rb1.CheckedChanged
-        PlayerCount = 1
-    End Sub
-
-    Private Sub rb2_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rb2.CheckedChanged
-        PlayerCount = 2
-    End Sub
-
-    Private Sub rb3_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rb3.CheckedChanged
-        PlayerCount = 3
-    End Sub
-
-    Private Sub rb4_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rb4.CheckedChanged
-        PlayerCount = 4
     End Sub
 
     Private Sub rbScore_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rbScore.CheckedChanged
@@ -379,4 +587,83 @@ Public Class Intro
             GoalNumber = numYear.Value
         End If
     End Sub
+
+#End Region
+
+#Region " Player Types "
+
+    Private Sub p1_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p1_rb_human.CheckedChanged
+        UpdatePlayerType(0, PlayerHuman)
+    End Sub
+
+    Private Sub p1_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p1_rb_robot.CheckedChanged
+        UpdatePlayerType(0, PlayerAI)
+    End Sub
+
+    Private Sub p1_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p1_rb_none.CheckedChanged
+        UpdatePlayerType(0, PlayerNone)
+    End Sub
+
+    Private Sub p2_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p2_rb_human.CheckedChanged
+        UpdatePlayerType(1, PlayerHuman)
+    End Sub
+
+    Private Sub p2_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p2_rb_robot.CheckedChanged
+        UpdatePlayerType(1, PlayerAI)
+    End Sub
+
+    Private Sub p2_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p2_rb_none.CheckedChanged
+        UpdatePlayerType(1, PlayerNone)
+    End Sub
+
+    Private Sub p3_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p3_rb_human.CheckedChanged
+        UpdatePlayerType(2, PlayerHuman)
+    End Sub
+
+    Private Sub p3_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p3_rb_robot.CheckedChanged
+        UpdatePlayerType(2, PlayerAI)
+    End Sub
+
+    Private Sub p3_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p3_rb_none.CheckedChanged
+        UpdatePlayerType(2, PlayerNone)
+    End Sub
+
+    Private Sub p4_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p4_rb_human.CheckedChanged
+        UpdatePlayerType(3, PlayerHuman)
+    End Sub
+
+    Private Sub p4_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p4_rb_robot.CheckedChanged
+        UpdatePlayerType(3, PlayerAI)
+    End Sub
+
+    Private Sub p4_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p4_rb_none.CheckedChanged
+        UpdatePlayerType(3, PlayerNone)
+    End Sub
+
+    Private Sub UpdatePlayerType(ByVal playerIndex As Integer, ByVal playerType As Integer)
+
+        Dim currentPlayer As Player = Players(playerIndex)
+        currentPlayer.PlayerType = playerType
+
+        If currentPlayer.PlayerType = PlayerAI Then
+            '-- Generate a new player personality and display
+
+        End If
+
+        '-- Must have at least 1 player to begin
+        Dim playerCount As Integer = 0
+        For i As Integer = 0 To MaxPlayers - 1
+            If Players(i).PlayerType <> PlayerNone Then
+                playerCount += 1
+            End If
+        Next
+        If playerCount > 0 Then
+            ubBegin.Enabled = True
+        Else
+            ubBegin.Enabled = False
+        End If
+    End Sub
+
+#End Region
+
 End Class

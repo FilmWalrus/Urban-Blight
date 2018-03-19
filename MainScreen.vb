@@ -823,21 +823,6 @@ Public Class Form1
     End Sub
 
     Sub CreatePlayers()
-        Players.Clear()
-
-        '-- Initialize players
-        For i As Integer = 0 To MaxPlayers - 1
-            Dim newPlayer As New Player(i)
-            If i < PlayerCount Then
-                newPlayer.PlayerType = PlayerHuman
-            Else
-                newPlayer.PlayerType = PlayerAI 'PlayerNone PlayerAI
-            End If
-
-            Players.Add(newPlayer)
-        Next
-
-        PlayerCount = MaxPlayers
 
         '-- Display Player Info GUIs for active players
         For i As Integer = 0 To Players.Count - 1
@@ -868,7 +853,6 @@ Public Class Form1
                 End If
             End If
         Next
-
 
     End Sub
 
@@ -1036,7 +1020,19 @@ Public Class Form1
 
     Sub RunAI()
 
-        '-- Only run this code for AIs
+        '-- Toggle the buttons so humans can't play for the computer
+        Dim toggleButtons As Boolean = True
+        If CurrentPlayer.PlayerType = PlayerAI Then
+            toggleButtons = False
+        End If
+        ubcard1.Enabled = toggleButtons
+        ubcard2.Enabled = toggleButtons
+        ubcard3.Enabled = toggleButtons
+        ubcard4.Enabled = toggleButtons
+        ubroad.Enabled = toggleButtons
+        ubland.Enabled = toggleButtons
+
+        '-- If not an AI bail at this point
         If CurrentPlayer.PlayerType <> PlayerAI Then
             Return
         End If

@@ -330,30 +330,23 @@ Public Class CitySquare
         CityString += "Location: " + GetLocationText() + ControlChars.NewLine
         CityString += "Terrain: "
 
+        CityString += GetTerrainName(Terrain)
         Select Case (Terrain)
             Case TerrainPlain
-                CityString += "Plain"
                 TerrainString = ControlChars.NewLine + "Plains are the default land type. They have no special effects."
             Case TerrainDirt
-                CityString += "Dirt"
                 TerrainString = ControlChars.NewLine + "Dirt makes for a mind-numbingly boring place to live, but it's low upkeep and you start with free roads."
             Case TerrainForest
-                CityString += "Forest"
                 TerrainString = ControlChars.NewLine + "The natural beauty and fresh air of forests improve the health and happiness of local citizens."
             Case TerrainMountain
-                CityString += "Mountain"
                 TerrainString = ControlChars.NewLine + "Mountains make travel difficult but provide inspiring views. The ready access to construction material mean a free random building."
             Case TerrainLake
-                CityString += "Lake"
                 TerrainString = ControlChars.NewLine + "Swimming and sailing are fun, but lakes can't be built on. Adjacent coastal regions get a boost to happiness."
             Case TerrainSwamp
-                CityString += "Swamp"
                 TerrainString = ControlChars.NewLine + "Swamps are free to buy, but a bit expensive to maintain. The foul-smelling, mosquito-ridden bogs aren't great for your health."
             Case TerrainDesert
-                CityString += "Desert"
                 TerrainString = ControlChars.NewLine + "You can drive as fast as you want in the empty, wind-swept desert. And you get a 50% rebate on the land, but it's hard to convince anyone to move in."
             Case TerrainTownship
-                CityString += "Township"
                 TerrainString = ControlChars.NewLine + "Townships provide free population when you incorporate them, but they also take a cut of the taxes in that location."
         End Select
         If Coastal Then
