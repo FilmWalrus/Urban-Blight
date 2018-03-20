@@ -123,12 +123,16 @@
         Dim LocalEvent As String = ""
         Dim LocalEventTwins As String = ""
 
+        '-- Get the adjustment to reproduction based on AI difficulty level (1.0 if current player is human)
+        Dim ReproduceAdj As Double = CurrentPlayer.GetReproduceAdjustment()
+
         Dim thePerson As Person
         For i As Integer = 0 To CitizenList.Count - 1
             thePerson = CitizenList(i)
-
             thePerson.TouchedKey = 0
-            If thePerson.WillReproduce() Then
+
+            If thePerson.WillReproduce(ReproduceAdj) Then
+
                 Dim homeTown As CitySquare = thePerson.Residence
                 Dim newChild As Person = thePerson.Reproduce()
                 CitizenList.Add(newChild)
@@ -537,6 +541,10 @@
 
             revenue += personalTax
         Next
+
+        '-- Get the adjustment to taxes based on AI difficulty level (1.0 if current player is human)
+        Dim TaxAdj As Double = CurrentPlayer.GetTaxAdjustment()
+        revenue *= TaxAdj
 
         '-- Pay upkeep on the land
         Dim upkeep As Integer = 0

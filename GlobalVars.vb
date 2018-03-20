@@ -51,6 +51,16 @@ Module GlobalVars
     Public Const RoadPaved As Integer = 3
     Public Const RoadHighway As Integer = 4
 
+    '-- Citizen Stats
+    Public Const StatHappiness As Integer = 0
+    Public Const StatHealth As Integer = 1
+    Public Const StatEmployment As Integer = 2
+    Public Const StatIntelligence As Integer = 3
+    Public Const StatCreativity As Integer = 4
+    Public Const StatMobility As Integer = 5
+    Public Const StatDrunkenness As Integer = 6
+    Public Const StatCriminality As Integer = 7
+
     '--Tabs
     Public Const EventTab As Integer = 0
     Public Const CardTab As Integer = 1
@@ -112,6 +122,8 @@ Module GlobalVars
     Public Const AIRoad As Integer = 4
     Public Const AILand As Integer = 5
 
+
+
     '-- Sort Types
     Public Const PopSort As Integer = 0
     Public Const JobSort As Integer = 1
@@ -135,7 +147,7 @@ Module GlobalVars
         End If
     End Function
 
-    Function GetTerrainName(ByVal terrainIndex As Integer) As String
+    Function GetTerrainName(ByVal terrainIndex As Integer, Optional ByVal coastNotLake As Boolean = False) As String
         Select Case (terrainIndex)
             Case TerrainPlain
                 Return "Plain"
@@ -146,7 +158,11 @@ Module GlobalVars
             Case TerrainMountain
                 Return "Mountain"
             Case TerrainLake
-                Return "Lake"
+                If coastNotLake Then
+                    Return "Coastal"
+                Else
+                    Return "Lake"
+                End If
             Case TerrainSwamp
                 Return "Swamp"
             Case TerrainDesert

@@ -413,6 +413,28 @@ Public Class Building
         End If
     End Function
 
+    Public Function GetValueForMoney(ByRef aiBrain As AIPersonality) As Double
+        Dim buildingValue As Double = 0
+
+        '-- Get the value of the building adjusted by the AI's personality
+        buildingValue += (Happiness_odds * Happiness_adj / 200.0 * aiBrain.GetStatAdjustment(StatHappiness))
+        buildingValue += (Health_odds * Health_adj / 200.0 * aiBrain.GetStatAdjustment(StatHealth))
+        buildingValue += (Intelligence_odds * Intelligence_adj / 200.0 * aiBrain.GetStatAdjustment(StatIntelligence))
+        buildingValue += (Creativity_odds * Creativity_adj / 200.0 * aiBrain.GetStatAdjustment(StatCreativity))
+        buildingValue += (Mobility_odds * Mobility_adj / 200.0 * aiBrain.GetStatAdjustment(StatMobility))
+        buildingValue -= (Drunkenness_odds * Drunkenness_adj / 200.0 * aiBrain.GetStatAdjustment(StatDrunkenness))
+        buildingValue -= (Criminality_odds * Criminality_adj / 200.0 * aiBrain.GetStatAdjustment(StatCriminality))
+
+        buildingValue += (Jobs * aiBrain.GetStatAdjustment(StatEmployment))
+
+        If Cost <= 0 Then
+            Return 9999999.9
+        Else
+            Return SafeDivide(buildingValue, Cost)
+        End If
+
+    End Function
+
     Public Function GetEmployeeCount() As Integer
         Return Employees.Count
     End Function

@@ -36,6 +36,10 @@ Public Class Form1
     Friend WithEvents UltraTab4 As TabControl
     Friend WithEvents UltraTab5 As TabControl
     Friend WithEvents UltraTab6 As TabControl
+    Friend WithEvents p1_details As Button
+    Friend WithEvents p2_details As Button
+    Friend WithEvents p4_details As Button
+    Friend WithEvents p3_details As Button
     '--
     Dim init As Boolean = False
 
@@ -167,12 +171,16 @@ Public Class Form1
         Me.ubcard4 = New System.Windows.Forms.Button()
         Me.ubroad = New System.Windows.Forms.Button()
         Me.gbP1 = New System.Windows.Forms.GroupBox()
+        Me.p1_details = New System.Windows.Forms.Button()
         Me.txtP1 = New System.Windows.Forms.TextBox()
         Me.gbP2 = New System.Windows.Forms.GroupBox()
+        Me.p2_details = New System.Windows.Forms.Button()
         Me.txtP2 = New System.Windows.Forms.TextBox()
         Me.gbP4 = New System.Windows.Forms.GroupBox()
+        Me.p4_details = New System.Windows.Forms.Button()
         Me.txtP4 = New System.Windows.Forms.TextBox()
         Me.gbP3 = New System.Windows.Forms.GroupBox()
+        Me.p3_details = New System.Windows.Forms.Button()
         Me.txtP3 = New System.Windows.Forms.TextBox()
         Me.Infotab = New System.Windows.Forms.TabControl()
         Me.ubland = New System.Windows.Forms.Button()
@@ -593,6 +601,7 @@ Public Class Form1
         '
         'gbP1
         '
+        Me.gbP1.Controls.Add(Me.p1_details)
         Me.gbP1.Controls.Add(Me.txtP1)
         Me.gbP1.Location = New System.Drawing.Point(16, 527)
         Me.gbP1.Name = "gbP1"
@@ -601,6 +610,15 @@ Public Class Form1
         Me.gbP1.TabStop = False
         Me.gbP1.Text = "Player 1"
         Me.gbP1.Visible = False
+        '
+        'p1_details
+        '
+        Me.p1_details.Location = New System.Drawing.Point(77, 102)
+        Me.p1_details.Name = "p1_details"
+        Me.p1_details.Size = New System.Drawing.Size(19, 22)
+        Me.p1_details.TabIndex = 3
+        Me.p1_details.Text = "?"
+        Me.p1_details.UseVisualStyleBackColor = True
         '
         'txtP1
         '
@@ -612,6 +630,7 @@ Public Class Form1
         '
         'gbP2
         '
+        Me.gbP2.Controls.Add(Me.p2_details)
         Me.gbP2.Controls.Add(Me.txtP2)
         Me.gbP2.Location = New System.Drawing.Point(136, 527)
         Me.gbP2.Name = "gbP2"
@@ -620,6 +639,15 @@ Public Class Form1
         Me.gbP2.TabStop = False
         Me.gbP2.Text = "Player 2"
         Me.gbP2.Visible = False
+        '
+        'p2_details
+        '
+        Me.p2_details.Location = New System.Drawing.Point(77, 102)
+        Me.p2_details.Name = "p2_details"
+        Me.p2_details.Size = New System.Drawing.Size(19, 22)
+        Me.p2_details.TabIndex = 4
+        Me.p2_details.Text = "?"
+        Me.p2_details.UseVisualStyleBackColor = True
         '
         'txtP2
         '
@@ -631,6 +659,7 @@ Public Class Form1
         '
         'gbP4
         '
+        Me.gbP4.Controls.Add(Me.p4_details)
         Me.gbP4.Controls.Add(Me.txtP4)
         Me.gbP4.Location = New System.Drawing.Point(376, 527)
         Me.gbP4.Name = "gbP4"
@@ -639,6 +668,15 @@ Public Class Form1
         Me.gbP4.TabStop = False
         Me.gbP4.Text = "Player 4"
         Me.gbP4.Visible = False
+        '
+        'p4_details
+        '
+        Me.p4_details.Location = New System.Drawing.Point(77, 102)
+        Me.p4_details.Name = "p4_details"
+        Me.p4_details.Size = New System.Drawing.Size(19, 22)
+        Me.p4_details.TabIndex = 6
+        Me.p4_details.Text = "?"
+        Me.p4_details.UseVisualStyleBackColor = True
         '
         'txtP4
         '
@@ -650,6 +688,7 @@ Public Class Form1
         '
         'gbP3
         '
+        Me.gbP3.Controls.Add(Me.p3_details)
         Me.gbP3.Controls.Add(Me.txtP3)
         Me.gbP3.Location = New System.Drawing.Point(256, 527)
         Me.gbP3.Name = "gbP3"
@@ -658,6 +697,15 @@ Public Class Form1
         Me.gbP3.TabStop = False
         Me.gbP3.Text = "Player 3"
         Me.gbP3.Visible = False
+        '
+        'p3_details
+        '
+        Me.p3_details.Location = New System.Drawing.Point(79, 102)
+        Me.p3_details.Name = "p3_details"
+        Me.p3_details.Size = New System.Drawing.Size(19, 22)
+        Me.p3_details.TabIndex = 5
+        Me.p3_details.Text = "?"
+        Me.p3_details.UseVisualStyleBackColor = True
         '
         'txtP3
         '
@@ -834,22 +882,34 @@ Public Class Form1
                     Players(i).Flag = Flag1
                     gbP1.Visible = True
                     gbP1.Text = thisPlayer.GetPlayerName()
-                    gbP1.BackColor = Players(i).Flag
+                    gbP1.BackColor = thisPlayer.Flag
+                    If thisPlayer.PlayerType = PlayerHuman Then
+                        p1_details.Visible = False
+                    End If
                 ElseIf i = 1 Then
                     Players(i).Flag = Flag2
                     gbP2.Visible = True
                     gbP2.Text = thisPlayer.GetPlayerName()
-                    gbP2.BackColor = Players(i).Flag
+                    gbP2.BackColor = thisPlayer.Flag
+                    If thisPlayer.PlayerType = PlayerHuman Then
+                        p2_details.Visible = False
+                    End If
                 ElseIf i = 2 Then
                     Players(i).Flag = Flag3
                     gbP3.Visible = True
                     gbP3.Text = thisPlayer.GetPlayerName()
-                    gbP3.BackColor = Players(i).Flag
+                    gbP3.BackColor = thisPlayer.Flag
+                    If thisPlayer.PlayerType = PlayerHuman Then
+                        p3_details.Visible = False
+                    End If
                 ElseIf i = 3 Then
                     Players(i).Flag = Flag4
                     gbP4.Visible = True
                     gbP4.Text = thisPlayer.GetPlayerName()
-                    gbP4.BackColor = Players(i).Flag
+                    gbP4.BackColor = thisPlayer.Flag
+                    If thisPlayer.PlayerType = PlayerHuman Then
+                        p4_details.Visible = False
+                    End If
                 End If
             End If
         Next
@@ -894,9 +954,6 @@ Public Class Form1
             CurrentX = LeftStart
             CurrentY += TopIncrement
         Next
-
-        '-- Mark terrain by water
-        UpdateCoastline()
     End Sub
 
     Sub CreateOpeningCities()
@@ -938,6 +995,11 @@ Public Class Form1
             End While
 
         Next
+
+        '-- Mark terrain by water (has to be after opening cities are founded in case they were on a lake)
+        UpdateCoastline()
+
+        '-- Redraw the grid
         UpdateGrid()
     End Sub
 
@@ -1750,6 +1812,35 @@ Public Class Form1
 
     Private Sub ubHint_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubHint.Click
         DisplayHint()
+    End Sub
+
+    Private Sub p1_details_Click(sender As Object, e As EventArgs) Handles p1_details.Click
+        DisplayPlayerInfo(0)
+    End Sub
+
+    Private Sub p2_details_Click(sender As Object, e As EventArgs) Handles p2_details.Click
+        DisplayPlayerInfo(1)
+    End Sub
+
+    Private Sub p3_details_Click(sender As Object, e As EventArgs) Handles p3_details.Click
+        DisplayPlayerInfo(2)
+    End Sub
+
+    Private Sub p4_details_Click(sender As Object, e As EventArgs) Handles p4_details.Click
+        DisplayPlayerInfo(3)
+    End Sub
+
+    Public Sub DisplayPlayerInfo(ByVal playerIndex As Integer)
+
+        Dim thisPlayer As Player = Players(playerIndex)
+
+        Dim playerInfoText As String = ""
+        playerInfoText += thisPlayer.toString() + ControlChars.NewLine
+        If thisPlayer.PlayerType = PlayerAI Then
+            playerInfoText += thisPlayer.Personality.toString()
+        End If
+
+        MsgBox(playerInfoText, MsgBoxStyle.Information, "Player Info")
     End Sub
 #End Region
 

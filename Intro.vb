@@ -44,22 +44,22 @@ Public Class Intro
     Friend WithEvents numScore As System.Windows.Forms.NumericUpDown
     Friend WithEvents numYear As System.Windows.Forms.NumericUpDown
     Friend WithEvents rbBuildings As System.Windows.Forms.RadioButton
-    Friend WithEvents Label1 As Label
+    Friend WithEvents AI_label1 As Label
     Friend WithEvents p1_rb_none As RadioButton
     Friend WithEvents p1_rb_robot As RadioButton
     Friend WithEvents p1_rb_human As RadioButton
     Friend WithEvents GroupBox2 As GroupBox
-    Friend WithEvents Label2 As Label
+    Friend WithEvents AI_label2 As Label
     Friend WithEvents p2_rb_none As RadioButton
     Friend WithEvents p2_rb_robot As RadioButton
     Friend WithEvents p2_rb_human As RadioButton
     Friend WithEvents GroupBox3 As GroupBox
-    Friend WithEvents Label3 As Label
+    Friend WithEvents AI_label3 As Label
     Friend WithEvents p3_rb_none As RadioButton
     Friend WithEvents p3_rb_robot As RadioButton
     Friend WithEvents p3_rb_human As RadioButton
     Friend WithEvents GroupBox4 As GroupBox
-    Friend WithEvents Label4 As Label
+    Friend WithEvents AI_label4 As Label
     Friend WithEvents p4_rb_none As RadioButton
     Friend WithEvents p4_rb_robot As RadioButton
     Friend WithEvents p4_rb_human As RadioButton
@@ -67,6 +67,10 @@ Public Class Intro
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Intro))
         Me.gbPlayers = New System.Windows.Forms.GroupBox()
+        Me.AI_label1 = New System.Windows.Forms.Label()
+        Me.p1_rb_none = New System.Windows.Forms.RadioButton()
+        Me.p1_rb_robot = New System.Windows.Forms.RadioButton()
+        Me.p1_rb_human = New System.Windows.Forms.RadioButton()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.numYear = New System.Windows.Forms.NumericUpDown()
         Me.rbBuildings = New System.Windows.Forms.RadioButton()
@@ -79,22 +83,18 @@ Public Class Intro
         Me.rbPopulation = New System.Windows.Forms.RadioButton()
         Me.rbTerritory = New System.Windows.Forms.RadioButton()
         Me.ubBegin = New System.Windows.Forms.Button()
-        Me.p1_rb_human = New System.Windows.Forms.RadioButton()
-        Me.p1_rb_robot = New System.Windows.Forms.RadioButton()
-        Me.p1_rb_none = New System.Windows.Forms.RadioButton()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.AI_label2 = New System.Windows.Forms.Label()
         Me.p2_rb_none = New System.Windows.Forms.RadioButton()
         Me.p2_rb_robot = New System.Windows.Forms.RadioButton()
         Me.p2_rb_human = New System.Windows.Forms.RadioButton()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.AI_label3 = New System.Windows.Forms.Label()
         Me.p3_rb_none = New System.Windows.Forms.RadioButton()
         Me.p3_rb_robot = New System.Windows.Forms.RadioButton()
         Me.p3_rb_human = New System.Windows.Forms.RadioButton()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
-        Me.Label4 = New System.Windows.Forms.Label()
+        Me.AI_label4 = New System.Windows.Forms.Label()
         Me.p4_rb_none = New System.Windows.Forms.RadioButton()
         Me.p4_rb_robot = New System.Windows.Forms.RadioButton()
         Me.p4_rb_human = New System.Windows.Forms.RadioButton()
@@ -113,7 +113,7 @@ Public Class Intro
         'gbPlayers
         '
         Me.gbPlayers.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.gbPlayers.Controls.Add(Me.Label1)
+        Me.gbPlayers.Controls.Add(Me.AI_label1)
         Me.gbPlayers.Controls.Add(Me.p1_rb_none)
         Me.gbPlayers.Controls.Add(Me.p1_rb_robot)
         Me.gbPlayers.Controls.Add(Me.p1_rb_human)
@@ -123,6 +123,47 @@ Public Class Intro
         Me.gbPlayers.TabIndex = 0
         Me.gbPlayers.TabStop = False
         Me.gbPlayers.Text = "Player 1"
+        '
+        'AI_label1
+        '
+        Me.AI_label1.Location = New System.Drawing.Point(9, 34)
+        Me.AI_label1.Name = "AI_label1"
+        Me.AI_label1.Size = New System.Drawing.Size(235, 24)
+        Me.AI_label1.TabIndex = 5
+        Me.AI_label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'p1_rb_none
+        '
+        Me.p1_rb_none.AutoSize = True
+        Me.p1_rb_none.Location = New System.Drawing.Point(183, 16)
+        Me.p1_rb_none.Name = "p1_rb_none"
+        Me.p1_rb_none.Size = New System.Drawing.Size(51, 17)
+        Me.p1_rb_none.TabIndex = 2
+        Me.p1_rb_none.TabStop = True
+        Me.p1_rb_none.Text = "None"
+        Me.p1_rb_none.UseVisualStyleBackColor = True
+        '
+        'p1_rb_robot
+        '
+        Me.p1_rb_robot.AutoSize = True
+        Me.p1_rb_robot.Location = New System.Drawing.Point(100, 16)
+        Me.p1_rb_robot.Name = "p1_rb_robot"
+        Me.p1_rb_robot.Size = New System.Drawing.Size(35, 17)
+        Me.p1_rb_robot.TabIndex = 1
+        Me.p1_rb_robot.TabStop = True
+        Me.p1_rb_robot.Text = "AI"
+        Me.p1_rb_robot.UseVisualStyleBackColor = True
+        '
+        'p1_rb_human
+        '
+        Me.p1_rb_human.AutoSize = True
+        Me.p1_rb_human.Location = New System.Drawing.Point(12, 17)
+        Me.p1_rb_human.Name = "p1_rb_human"
+        Me.p1_rb_human.Size = New System.Drawing.Size(59, 17)
+        Me.p1_rb_human.TabIndex = 0
+        Me.p1_rb_human.TabStop = True
+        Me.p1_rb_human.Text = "Human"
+        Me.p1_rb_human.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
@@ -250,52 +291,10 @@ Public Class Intro
         Me.ubBegin.TabIndex = 4
         Me.ubBegin.Text = "Begin"
         '
-        'p1_rb_human
-        '
-        Me.p1_rb_human.AutoSize = True
-        Me.p1_rb_human.Location = New System.Drawing.Point(12, 17)
-        Me.p1_rb_human.Name = "p1_rb_human"
-        Me.p1_rb_human.Size = New System.Drawing.Size(59, 17)
-        Me.p1_rb_human.TabIndex = 0
-        Me.p1_rb_human.TabStop = True
-        Me.p1_rb_human.Text = "Human"
-        Me.p1_rb_human.UseVisualStyleBackColor = True
-        '
-        'p1_rb_robot
-        '
-        Me.p1_rb_robot.AutoSize = True
-        Me.p1_rb_robot.Location = New System.Drawing.Point(100, 16)
-        Me.p1_rb_robot.Name = "p1_rb_robot"
-        Me.p1_rb_robot.Size = New System.Drawing.Size(35, 17)
-        Me.p1_rb_robot.TabIndex = 1
-        Me.p1_rb_robot.TabStop = True
-        Me.p1_rb_robot.Text = "AI"
-        Me.p1_rb_robot.UseVisualStyleBackColor = True
-        '
-        'p1_rb_none
-        '
-        Me.p1_rb_none.AutoSize = True
-        Me.p1_rb_none.Location = New System.Drawing.Point(183, 16)
-        Me.p1_rb_none.Name = "p1_rb_none"
-        Me.p1_rb_none.Size = New System.Drawing.Size(51, 17)
-        Me.p1_rb_none.TabIndex = 2
-        Me.p1_rb_none.TabStop = True
-        Me.p1_rb_none.Text = "None"
-        Me.p1_rb_none.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.Location = New System.Drawing.Point(9, 34)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(235, 24)
-        Me.Label1.TabIndex = 5
-        Me.Label1.Text = "Medium, Expansionist, Hates Mountains"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'GroupBox2
         '
         Me.GroupBox2.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.GroupBox2.Controls.Add(Me.Label2)
+        Me.GroupBox2.Controls.Add(Me.AI_label2)
         Me.GroupBox2.Controls.Add(Me.p2_rb_none)
         Me.GroupBox2.Controls.Add(Me.p2_rb_robot)
         Me.GroupBox2.Controls.Add(Me.p2_rb_human)
@@ -306,14 +305,13 @@ Public Class Intro
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Player 2"
         '
-        'Label2
+        'AI_label2
         '
-        Me.Label2.Location = New System.Drawing.Point(9, 34)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(235, 24)
-        Me.Label2.TabIndex = 5
-        Me.Label2.Text = "Medium, Expansionist, Hates Mountains"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.AI_label2.Location = New System.Drawing.Point(9, 34)
+        Me.AI_label2.Name = "AI_label2"
+        Me.AI_label2.Size = New System.Drawing.Size(235, 24)
+        Me.AI_label2.TabIndex = 5
+        Me.AI_label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'p2_rb_none
         '
@@ -351,7 +349,7 @@ Public Class Intro
         'GroupBox3
         '
         Me.GroupBox3.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.GroupBox3.Controls.Add(Me.Label3)
+        Me.GroupBox3.Controls.Add(Me.AI_label3)
         Me.GroupBox3.Controls.Add(Me.p3_rb_none)
         Me.GroupBox3.Controls.Add(Me.p3_rb_robot)
         Me.GroupBox3.Controls.Add(Me.p3_rb_human)
@@ -362,14 +360,13 @@ Public Class Intro
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Player 3"
         '
-        'Label3
+        'AI_label3
         '
-        Me.Label3.Location = New System.Drawing.Point(9, 34)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(235, 24)
-        Me.Label3.TabIndex = 5
-        Me.Label3.Text = "Medium, Expansionist, Hates Mountains"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.AI_label3.Location = New System.Drawing.Point(9, 34)
+        Me.AI_label3.Name = "AI_label3"
+        Me.AI_label3.Size = New System.Drawing.Size(235, 24)
+        Me.AI_label3.TabIndex = 5
+        Me.AI_label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'p3_rb_none
         '
@@ -407,7 +404,7 @@ Public Class Intro
         'GroupBox4
         '
         Me.GroupBox4.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.GroupBox4.Controls.Add(Me.Label4)
+        Me.GroupBox4.Controls.Add(Me.AI_label4)
         Me.GroupBox4.Controls.Add(Me.p4_rb_none)
         Me.GroupBox4.Controls.Add(Me.p4_rb_robot)
         Me.GroupBox4.Controls.Add(Me.p4_rb_human)
@@ -418,14 +415,13 @@ Public Class Intro
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Player 4"
         '
-        'Label4
+        'AI_label4
         '
-        Me.Label4.Location = New System.Drawing.Point(9, 34)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(235, 24)
-        Me.Label4.TabIndex = 5
-        Me.Label4.Text = "Medium, Expansionist, Hates Mountains"
-        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.AI_label4.Location = New System.Drawing.Point(9, 34)
+        Me.AI_label4.Name = "AI_label4"
+        Me.AI_label4.Size = New System.Drawing.Size(235, 24)
+        Me.AI_label4.TabIndex = 5
+        Me.AI_label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'p4_rb_none
         '
@@ -640,6 +636,22 @@ Public Class Intro
         UpdatePlayerType(3, PlayerNone)
     End Sub
 
+    Private Sub AI_label1_Click(sender As Object, e As EventArgs) Handles AI_label1.Click
+        UpdatePlayerAI(0)
+    End Sub
+
+    Private Sub AI_label2_Click(sender As Object, e As EventArgs) Handles AI_label2.Click
+        UpdatePlayerAI(1)
+    End Sub
+
+    Private Sub AI_label3_Click(sender As Object, e As EventArgs) Handles AI_label3.Click
+        UpdatePlayerAI(2)
+    End Sub
+
+    Private Sub AI_label4_Click(sender As Object, e As EventArgs) Handles AI_label4.Click
+        UpdatePlayerAI(3)
+    End Sub
+
     Private Sub UpdatePlayerType(ByVal playerIndex As Integer, ByVal playerType As Integer)
 
         Dim currentPlayer As Player = Players(playerIndex)
@@ -647,7 +659,7 @@ Public Class Intro
 
         If currentPlayer.PlayerType = PlayerAI Then
             '-- Generate a new player personality and display
-
+            UpdatePlayerAI(currentPlayer)
         End If
 
         '-- Must have at least 1 player to begin
@@ -663,6 +675,35 @@ Public Class Intro
             ubBegin.Enabled = False
         End If
     End Sub
+
+    Private Sub UpdatePlayerAI(ByVal playerIndex As Integer)
+        Dim currentPlayer As Player = Players(playerIndex)
+        UpdatePlayerAI(currentPlayer)
+    End Sub
+
+    Private Sub UpdatePlayerAI(ByRef thisPlayer As Player)
+
+        Dim AIText As String = ""
+        If thisPlayer.PlayerType = PlayerAI Then
+            '-- Generate a new player personality and display
+            thisPlayer.SetPersonality()
+            AIText = thisPlayer.Personality.toString()
+        End If
+
+        Select Case thisPlayer.ID
+            Case 0
+                AI_label1.Text = AIText
+            Case 1
+                AI_label2.Text = AIText
+            Case 2
+                AI_label3.Text = AIText
+            Case 3
+                AI_label4.Text = AIText
+        End Select
+
+    End Sub
+
+
 
 #End Region
 

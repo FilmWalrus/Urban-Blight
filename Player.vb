@@ -17,10 +17,8 @@ Public Class Player
 
     '-- AI stuff
     Public BestMove As CitySquare = Nothing
-    Private PersonalityMain As Integer = -1
-    Private TerrainLike As Integer = -1
-    Private TerrainDislike As Integer = -1
-    Private DifficultyLevel As Integer = 0
+    Public Personality As AIPersonality = Nothing
+
 #End Region
 
 #Region " New "
@@ -31,14 +29,12 @@ Public Class Player
         PlayerType = PlayerHuman
     End Sub
 
-    Public Sub GeneratePersonality()
-        DifficultyLevel = GetRandom(0, 2)
-
-        TerrainLike = GetRandom(-2, TerrainMax)
-        TerrainDislike = GetRandom(-2, TerrainMax)
-
-        PersonalityMain = GetRandom(0, 10)
+    Public Sub SetPersonality()
+        If PlayerType = PlayerAI Then
+            Personality = New AIPersonality()
+        End If
     End Sub
+
 #End Region
 
 #Region " Functions "
@@ -111,65 +107,6 @@ Public Class Player
         End If
 
         Return playerName
-    End Function
-
-    Function GetPlayerPersonality() As String
-
-        '-- Difficulty level
-        Dim personalityText As String = ""
-        If DifficultyLevel = 0 Then
-            personalityText += "Easy"
-        ElseIf DifficultyLevel = 1 Then
-            personalityText += "Medium"
-        ElseIf DifficultyLevel = 2 Then
-            personalityText += "Hard"
-        End If
-        personalityText += ", "
-
-        '-- Personality type
-        Select Case (PersonalityMain)
-            Case 0
-                '-- Standard
-
-            Case 1
-                '-- Builder
-
-            Case 2
-                '-- Expansionist
-
-            Case 3
-                '-- Employer
-
-            Case 4
-                '-- Erratic
-
-            Case 5
-                '-- Aggressive
-
-            Case 6
-                '-- Transporter
-
-            Case 7
-                '-- 
-
-
-        End Select
-
-        '-- Terrain preference
-        If TerrainLike = TerrainLake Then
-            personalityText += "+Coastal, "
-        Else
-            personalityText += "+" + GetTerrainName(TerrainLike) + ", "
-        End If
-        If TerrainLike = TerrainLake Then
-            personalityText += "-Coastal, "
-        Else
-            personalityText += "-" + GetTerrainName(TerrainDislike) + ", "
-        End If
-
-        '-- Stat preference
-
-
     End Function
 
     Function GetPlayerPopulation() As ArrayList
@@ -343,6 +280,11 @@ Public Class Player
 
     Public Function ChooseNextAction() As Integer
 
+        '-- Misers often just hoard their money
+        If Personality.BeMiserly() Then
+            Return AIPass
+        End If
+
         Dim roadNeed As Double = 0.0
         Dim buildingNeed As Double = 0.0
         Dim landNeed As Double = 0.0
@@ -350,6 +292,7 @@ Public Class Player
         Dim citizenList As ArrayList = GetPlayerPopulation()
         Dim territoryList As ArrayList = GetPlayerTerritory()
 
+        '-- Collect some basic info on employment and transport levels
         Dim citizensEmployed As Integer = 0
         Dim citizensUnemployed As Integer = 0
         Dim roadLevelTotal As Integer = 0
@@ -369,37 +312,39 @@ Public Class Player
         Next
 
         '-- Calculate the need for more jobs (on a 0 to 100 scale)
-        buildingNeed = 100 * SafeDivide(citizensUnemployed, citizenList.Count)
+        buildingNeed = 100 * SafeDivide(citizensUnemployed, citizenList.Count) * Personality.GetBuildingAdjustment()
 
         '-- Calculate the need for more roads (on a 0 to 100 scale)
         Dim averageRoadLevel As Double = SafeDivide(roadLevelTotal, citizenList.Count)
-        roadNeed = 100 * SafeDivide(CDbl(RoadHighway) - averageRoadLevel, RoadHighway)
+        roadNeed = 100 * SafeDivide(CDbl(RoadHighway) - averageRoadLevel, RoadHighway) * Personality.GetRoadAdjustment()
 
         '-- Calculate the need for more land (on a 0 to 100+ scale with 100)
         ' 100 being an average population of 20 per square
         Dim averagePopulation As Double = SafeDivide(citizenList.Count, territoryList.Count)
-        landNeed = 100 * SafeDivide(averagePopulation, 20.0)
+        landNeed = 100 * SafeDivide(averagePopulation, 20.0) * Personality.GetLandAdjustment()
 
 
 
 
         '-- Determine best locations for buildings and roads
         Dim bestBuildingLocation As CitySquare = Nothing
-        Dim maxUnemployment As Integer = -1
+        Dim maxBuildingUtility As Double = -1
         Dim bestRoadLocation As CitySquare = Nothing
-        Dim maxRoadUtility As Integer = -1
+        Dim maxRoadUtility As Double = -1
         For i As Integer = 0 To territoryList.Count - 1
             Dim thisLocation As CitySquare = territoryList(i)
 
             '-- Check if this is the location in most need of jobs
-            Dim thisUnemployment As Integer = thisLocation.getUnemployment() - thisLocation.getJobsEmpty()
-            If thisUnemployment > maxUnemployment Then
-                maxUnemployment = thisUnemployment
+            Dim thisBuildingUtility As Double = (thisLocation.getUnemployment() - thisLocation.getJobsEmpty())
+            thisBuildingUtility *= Personality.GetDecisionAdjustment()
+            If thisBuildingUtility > maxBuildingUtility Then
+                maxBuildingUtility = thisBuildingUtility
                 bestBuildingLocation = thisLocation
             End If
 
             '-- Check if this is the location in most need of roads
-            Dim thisRoadUtility As Integer = (RoadHighway - thisLocation.Transportation) / RoadHighway * thisLocation.getPopulation()
+            Dim thisRoadUtility As Double = ((RoadHighway - thisLocation.Transportation) / RoadHighway * thisLocation.getPopulation())
+            thisRoadUtility *= Personality.GetDecisionAdjustment()
             If thisRoadUtility > maxRoadUtility Then
                 maxRoadUtility = thisRoadUtility
                 bestRoadLocation = thisLocation
@@ -413,7 +358,7 @@ Public Class Player
         Dim cardWeightSum As Double = 0
         For i As Integer = 0 To Cards.Count - 1
             Dim theBuilding As Building = Cards(i)
-            cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForMoney()
+            cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForMoney(Personality)
             cardWeightSum += cardDecisionWeights(i)
         Next
         Dim cardWeightAvg As Double = SafeDivide(cardWeightSum, Cards.Count)
@@ -427,6 +372,7 @@ Public Class Player
         '-- Determine best location for land expansion
         Dim adjLandList As ArrayList = GetPlayerAdjacentTerritory()
         Dim landCostBase As Integer = GetPlayerLandCost()
+        Dim bestLandCost As Integer = landCostBase
         Dim bestLandLocation As CitySquare = Nothing
         Dim maxLandUtility As Double = -1.0
         For i As Integer = 0 To adjLandList.Count - 1
@@ -469,11 +415,25 @@ Public Class Player
                 landUtility *= 1.05 '-- People are happier
             End If
 
-            '-- Check if this is the location that would be the best land purchase
+            '-- Get the overall utility of this land
             Dim thisLandUtility As Double = (buildingNeed * landUtility / landCostAdj) + terrainBonus
+
+            '-- Adjust the desirability of this terrain based on the AI's personality
+            thisLandUtility *= Personality.GetTerrainAdjustment(thisLocation.Terrain)
+            If thisLocation.Coastal Then
+                thisLandUtility *= Personality.GetTerrainAdjustment(TerrainLake)
+            End If
+            thisLandUtility *= Personality.GetDecisionAdjustment()
+
+            '-- Check if this is the location that would be the best land purchase
             If thisLandUtility > maxLandUtility Then
                 maxLandUtility = thisLandUtility
                 bestLandLocation = thisLocation
+                If thisLocation.Terrain = TerrainSwamp Then
+                    bestLandCost = 0
+                Else
+                    bestLandCost = landCostAdj
+                End If
             End If
         Next
 
@@ -491,6 +451,12 @@ Public Class Player
         Dim bestDecisionWeight As Double = -1.0
         Dim finalDecision As Integer = AIPass
         For i As Integer = 0 To decisionWeights.Count - 1
+
+            '-- Spendthrifts won't consciously choose an action that will result in a pass
+            If Personality.BeSpendthrifty(i, TotalMoney, bestLandCost) Then
+                Continue For
+            End If
+
             If decisionWeights(i) > bestDecisionWeight Then
                 bestDecisionWeight = decisionWeights(i)
                 finalDecision = i
@@ -512,6 +478,22 @@ Public Class Player
 
         Return finalDecision
 
+    End Function
+
+    Public Function GetReproduceAdjustment() As Double
+        If PlayerType = PlayerAI Then
+            Return Personality.GetReproduceAdjustment()
+        Else
+            Return 1.0
+        End If
+    End Function
+
+    Public Function GetTaxAdjustment() As Double
+        If PlayerType = PlayerAI Then
+            Return Personality.GetTaxAdjustment()
+        Else
+            Return 1.0
+        End If
     End Function
 
 #End Region

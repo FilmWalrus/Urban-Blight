@@ -235,8 +235,9 @@ Public Class NameGenerator
         TownStart.Add("City of ")
         TownStart.Add("Rio de ")
         TownStart.Add("Casa de ")
-        TownStart.Add("Mt. ")
         TownStart.Add("Fort ")
+        'TownStart.Add("Mt. ")
+        'TownStart.Add("Port ")
 
 
         TownAdjective.Add("Black ")
@@ -348,6 +349,7 @@ Public Class NameGenerator
         TownAdjective.Add("Brave ")
         TownAdjective.Add("True ")
         TownAdjective.Add("Festive ")
+        TownAdjective.Add("Prosperous ")
 
         TownAdjective.Add("Grim ")
         TownAdjective.Add("Dire ")
@@ -375,6 +377,7 @@ Public Class NameGenerator
         TownAdjective.Add("Wicked ")
         TownAdjective.Add("Blighted ")
         TownAdjective.Add("Unworthy ")
+        TownAdjective.Add("Squalid ")
 
 
 
@@ -386,6 +389,8 @@ Public Class NameGenerator
         TownEnding.Add("let")
         TownEnding.Add("land")
         TownEnding.Add("burg")
+        TownEnding.Add("shire")
+        TownEnding.Add("ham")
 
         '  TerrainPlain As Integer = 0
         '  TerrainDirt As Integer = 1
@@ -420,6 +425,8 @@ Public Class NameGenerator
         TownPlacePlain.Add("Realm")
         TownPlacePlain.Add("Territory")
         TownPlacePlain.Add("Province")
+        TownPlacePlain.Add("Distrct")
+        TownPlacePlain.Add("Oblast")
         TownPlacePlain.Add("Manor")
         TownPlacePlain.Add("Castle")
         TownPlacePlain.Add("Keep")
@@ -441,6 +448,7 @@ Public Class NameGenerator
         TownPlacePlain.Add("Tower")
         TownPlacePlain.Add("Spire")
         TownPlacePlain.Add("Homestead")
+        TownPlacePlain.Add("Zone")
         TownPlaces.Add(TownPlacePlain)
 
         Dim TownPlaceDirt As New ArrayList
@@ -466,6 +474,7 @@ Public Class NameGenerator
         TownPlaceForest.Add("Wood")
         TownPlaceForest.Add("Woods")
         TownPlaceForest.Add("Pines")
+        TownPlaceForest.Add("Evergreens")
         TownPlaceForest.Add("Forest")
         TownPlaceForest.Add("Glade")
         TownPlaceForest.Add("Grotto")
@@ -484,6 +493,9 @@ Public Class NameGenerator
         TownPlaceForest.Add("Weald")
         TownPlaceForest.Add("Jungle")
         TownPlaceForest.Add("Rainforest")
+        TownPlaceForest.Add("Orchard")
+        TownPlaceForest.Add("Arboretum")
+        TownPlaceForest.Add("Canopy")
         TownPlaces.Add(TownPlaceForest)
 
         Dim TownPlaceMountain As New ArrayList
@@ -492,6 +504,7 @@ Public Class NameGenerator
         TownPlaceMountain.Add("Mount")
         TownPlaceMountain.Add("Peaks")
         TownPlaceMountain.Add("Ridge")
+        TownPlaceMountain.Add("Crest")
         TownPlaceMountain.Add("View")
         TownPlaceMountain.Add("Deep")
         TownPlaceMountain.Add("Leap")
@@ -505,6 +518,7 @@ Public Class NameGenerator
         TownPlaceMountain.Add("Chasm")
         TownPlaceMountain.Add("Snowcaps")
         TownPlaceMountain.Add("Bluff")
+        TownPlaceMountain.Add("Mesa")
         TownPlaces.Add(TownPlaceMountain)
 
         Dim TownPlaceLake As New ArrayList
@@ -536,12 +550,14 @@ Public Class NameGenerator
         TownPlaceLake.Add("Strait")
         TownPlaceLake.Add("Pools")
         TownPlaceLake.Add("Bridge")
+        TownPlaceLake.Add("Delta")
         TownPlaces.Add(TownPlaceLake)
 
         Dim TownPlaceSwamp As New ArrayList
         TownPlaceSwamp.Add("Folly")
         TownPlaceSwamp.Add("Swamp")
         TownPlaceSwamp.Add("Marsh")
+        TownPlaceSwamp.Add("Bayou")
         TownPlaceSwamp.Add("Pit")
         TownPlaceSwamp.Add("Bog")
         TownPlaceSwamp.Add("End")
@@ -568,12 +584,13 @@ Public Class NameGenerator
         TownPlaceTownship.Add("Market")
         TownPlaceTownship.Add("Bazaar")
         TownPlaceTownship.Add("Inn")
+        TownPlaceTownship.Add("Hall")
         TownPlaceTownship.Add("Grounds")
-        TownPlaceTownship.Add("Zone")
         TownPlaceTownship.Add("Square")
         TownPlaceTownship.Add("Monastery")
         TownPlaceTownship.Add("Church")
         TownPlaceTownship.Add("Cathedral")
+        TownPlaceTownship.Add("Cloister")
         TownPlaceTownship.Add("Abbey")
         TownPlaceTownship.Add("Commune")
         TownPlaceTownship.Add("Reservation")
@@ -605,7 +622,7 @@ Public Class NameGenerator
         Dim nameStr As String = ""
 
         '-- Front text
-        If GetRandom(0, 7) = 0 Then
+        If GetRandom(0, 9) = 0 Then
             nameStr += TownStart(GetRandom(0, TownStart.Count - 1))
         End If
 

@@ -291,17 +291,21 @@ Public Class Person
 
         '-- Population
         If thePop >= 5 Then
-            maxBonus = SafeDivide(thePop, 3.0)
-            Dim switchman As Integer = GetRandom(0, 2)
-            '-- Crowded areas reduces health and happiness and increased crime
-            '-- Is only 1 of these options getting off too easy?
-            If switchman = 0 Then
-                Criminality += GetRandom(0, maxBonus)
-            ElseIf switchman = 1 Then
-                Happiness -= GetRandom(0, maxBonus)
-            Else
-                Health -= GetRandom(0, maxBonus)
-            End If
+            '-- A person suffers from urban blight once per 5 population
+            Dim numberOfBlights As Integer = Math.Floor(SafeDivide(thePop, 5.0))
+
+            For i As Integer = 0 To numberOfBlights - 1
+                maxBonus = SafeDivide(thePop, 5.0)
+                Dim switchman As Integer = GetRandom(0, 2)
+                '-- Crowded areas reduces health, happiness and increased crime
+                If switchman = 0 Then
+                    Criminality += GetRandom(0, maxBonus)
+                ElseIf switchman = 1 Then
+                    Happiness -= GetRandom(0, maxBonus)
+                Else
+                    Health -= GetRandom(0, maxBonus)
+                End If
+            Next
         End If
 
         '-- Terrain
@@ -329,15 +333,18 @@ Public Class Person
 
     End Sub
 
-    Function WillReproduce() As Boolean
+    Function WillReproduce(Optional ByVal Adjustment As Double = 1.0) As Boolean
         'Remove happiness constraint?
         If Age >= 16 And Age <= 49 And Health > 20 And Happiness > 10 Then
-            Dim Odds As Double = 0
+            Dim Odds As Double = 0.0
             Odds += (25.0 - Math.Abs(25.0 - Age))
             Odds += (Health / 7.0)
             Odds += (Happiness / 10.0)
             Odds += Math.Min(5, Drunkenness / 6.0)
             Odds += (Employment / 20.0)
+
+            Odds *= Adjustment
+
             If GetRandom(0, 100) <= Odds Then
                 Return True
             Else
@@ -367,9 +374,15 @@ Public Class Person
     End Function
 
     Function WillApply(ByRef newJob As Building) As Boolean
-        '-- If already employed, make sure this other opportunity is better
+
         If JobBuilding IsNot Nothing Then
+            '-- If already employed, make sure this other opportunity is better
             If newJob.Cost <= JobBuilding.Cost Then '-- Change this to salary in future
+                Return False
+            End If
+
+            '-- Even if the opportunity is better, stick with your current job most of the time
+            If GetRandom(0, 100) < 85 Then
                 Return False
             End If
         End If
