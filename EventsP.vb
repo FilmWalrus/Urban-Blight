@@ -402,6 +402,8 @@
             Return
         End If
 
+        Dim TotalBuildings As Integer = CurrentPlayer.GetPlayerDevelopment()
+
         Dim EventCount As Integer = 0
         Dim LocalEvent As String = ""
 
@@ -453,8 +455,8 @@
             '-- Arson
             odds = 0
             odds += thePerson.Criminality / 8.0
-            odds -= (thePerson.Happiness - 25) / 5.0
-            If GetRandom(0, 150) < odds And buildingCount > 0 Then
+            odds -= (thePerson.Happiness - 20) / 10.0
+            If GetRandom(0, 150) < odds And buildingCount > 0 And GetRandom(0, 9) < TotalBuildings Then
                 thePerson.ArsonCount += 1
                 Dim targetBuilding As Building = currentLocation.Buildings(GetRandom(0, buildingCount - 1))
                 targetBuilding.Destroy()
