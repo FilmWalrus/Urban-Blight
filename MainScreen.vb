@@ -40,6 +40,7 @@ Public Class Form1
     Friend WithEvents p2_details As Button
     Friend WithEvents p4_details As Button
     Friend WithEvents p3_details As Button
+    Friend WithEvents ubWipe As Button
     '--
     Dim init As Boolean = False
 
@@ -84,10 +85,10 @@ Public Class Form1
     Friend WithEvents gbP4 As GroupBox
     Friend WithEvents UltraTabSharedControlsPage1 As TabPage
     Friend WithEvents Infotab As TabControl
-    Friend WithEvents UltraTabPageControl1 As TabPage
-    Friend WithEvents UltraTabPageControl2 As TabPage
-    Friend WithEvents UltraTabPageControl3 As TabPage
-    Friend WithEvents UltraTabPageControl4 As TabPage
+    Friend WithEvents TabPageEvents As TabPage
+    Friend WithEvents TabPageCard As TabPage
+    Friend WithEvents TabPageCity As TabPage
+    Friend WithEvents TabPagePerson As TabPage
     Friend WithEvents txt_event As System.Windows.Forms.TextBox
     Friend WithEvents txt_card As System.Windows.Forms.TextBox
     Friend WithEvents txt_person As System.Windows.Forms.TextBox
@@ -102,7 +103,7 @@ Public Class Form1
     Friend WithEvents ubroad As System.Windows.Forms.Button
     Friend WithEvents ubland As System.Windows.Forms.Button
     Friend WithEvents ubEnd As System.Windows.Forms.Button
-    Friend WithEvents UltraTabPageControl5 As TabPage
+    Friend WithEvents TabPageView As TabPage
     Friend WithEvents ubPopView As System.Windows.Forms.Button
     Friend WithEvents ubLocView As System.Windows.Forms.Button
     Friend WithEvents ubCriminality As System.Windows.Forms.Button
@@ -120,7 +121,7 @@ Public Class Form1
     Friend WithEvents lblView As Label
     Friend WithEvents lblGoal As Label
     Friend WithEvents ubName As System.Windows.Forms.Button
-    Friend WithEvents UltraTabPageControl6 As TabPage
+    Friend WithEvents TabPageGame As TabPage
     Friend WithEvents ubNew As System.Windows.Forms.Button
     Friend WithEvents ubQuit As System.Windows.Forms.Button
     Friend WithEvents ubHint As System.Windows.Forms.Button
@@ -128,23 +129,23 @@ Public Class Form1
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.UltraTab1 = New System.Windows.Forms.TabControl()
-        Me.UltraTabPageControl1 = New System.Windows.Forms.TabPage()
+        Me.TabPageEvents = New System.Windows.Forms.TabPage()
         Me.txt_event = New System.Windows.Forms.TextBox()
         Me.UltraTab2 = New System.Windows.Forms.TabControl()
-        Me.UltraTabPageControl2 = New System.Windows.Forms.TabPage()
+        Me.TabPageCard = New System.Windows.Forms.TabPage()
         Me.txt_card = New System.Windows.Forms.TextBox()
         Me.UltraTab3 = New System.Windows.Forms.TabControl()
-        Me.UltraTabPageControl3 = New System.Windows.Forms.TabPage()
+        Me.TabPageCity = New System.Windows.Forms.TabPage()
         Me.ubName = New System.Windows.Forms.Button()
         Me.txt_city = New System.Windows.Forms.TextBox()
         Me.UltraTab4 = New System.Windows.Forms.TabControl()
-        Me.UltraTabPageControl4 = New System.Windows.Forms.TabPage()
+        Me.TabPagePerson = New System.Windows.Forms.TabPage()
         Me.lblPerson = New System.Windows.Forms.Label()
         Me.ubForward = New System.Windows.Forms.Button()
         Me.ubBack = New System.Windows.Forms.Button()
         Me.txt_person = New System.Windows.Forms.TextBox()
         Me.UltraTab5 = New System.Windows.Forms.TabControl()
-        Me.UltraTabPageControl5 = New System.Windows.Forms.TabPage()
+        Me.TabPageView = New System.Windows.Forms.TabPage()
         Me.ubRoads = New System.Windows.Forms.Button()
         Me.ubJobView = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -159,7 +160,7 @@ Public Class Form1
         Me.ubLocView = New System.Windows.Forms.Button()
         Me.ubPopView = New System.Windows.Forms.Button()
         Me.UltraTab6 = New System.Windows.Forms.TabControl()
-        Me.UltraTabPageControl6 = New System.Windows.Forms.TabPage()
+        Me.TabPageGame = New System.Windows.Forms.TabPage()
         Me.txtHint = New System.Windows.Forms.TextBox()
         Me.ubHint = New System.Windows.Forms.Button()
         Me.ubQuit = New System.Windows.Forms.Button()
@@ -188,13 +189,14 @@ Public Class Form1
         Me.lblYear = New System.Windows.Forms.Label()
         Me.lblView = New System.Windows.Forms.Label()
         Me.lblGoal = New System.Windows.Forms.Label()
-        Me.UltraTabPageControl1.SuspendLayout()
-        Me.UltraTabPageControl2.SuspendLayout()
-        Me.UltraTabPageControl3.SuspendLayout()
-        Me.UltraTabPageControl4.SuspendLayout()
-        Me.UltraTabPageControl5.SuspendLayout()
+        Me.ubWipe = New System.Windows.Forms.Button()
+        Me.TabPageEvents.SuspendLayout()
+        Me.TabPageCard.SuspendLayout()
+        Me.TabPageCity.SuspendLayout()
+        Me.TabPagePerson.SuspendLayout()
+        Me.TabPageView.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        Me.UltraTabPageControl6.SuspendLayout()
+        Me.TabPageGame.SuspendLayout()
         Me.gbP1.SuspendLayout()
         Me.gbP2.SuspendLayout()
         Me.gbP4.SuspendLayout()
@@ -211,14 +213,14 @@ Public Class Form1
         Me.UltraTab1.TabIndex = 0
         Me.UltraTab1.Text = "Events"
         '
-        'UltraTabPageControl1
+        'TabPageEvents
         '
-        Me.UltraTabPageControl1.Controls.Add(Me.txt_event)
-        Me.UltraTabPageControl1.Location = New System.Drawing.Point(4, 22)
-        Me.UltraTabPageControl1.Name = "UltraTabPageControl1"
-        Me.UltraTabPageControl1.Size = New System.Drawing.Size(272, 326)
-        Me.UltraTabPageControl1.TabIndex = 0
-        Me.UltraTabPageControl1.Text = "Events"
+        Me.TabPageEvents.Controls.Add(Me.txt_event)
+        Me.TabPageEvents.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageEvents.Name = "TabPageEvents"
+        Me.TabPageEvents.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageEvents.TabIndex = 0
+        Me.TabPageEvents.Text = "Events"
         '
         'txt_event
         '
@@ -240,14 +242,14 @@ Public Class Form1
         Me.UltraTab2.TabIndex = 0
         Me.UltraTab2.Text = "Card"
         '
-        'UltraTabPageControl2
+        'TabPageCard
         '
-        Me.UltraTabPageControl2.Controls.Add(Me.txt_card)
-        Me.UltraTabPageControl2.Location = New System.Drawing.Point(4, 22)
-        Me.UltraTabPageControl2.Name = "UltraTabPageControl2"
-        Me.UltraTabPageControl2.Size = New System.Drawing.Size(272, 326)
-        Me.UltraTabPageControl2.TabIndex = 0
-        Me.UltraTabPageControl2.Text = "Card"
+        Me.TabPageCard.Controls.Add(Me.txt_card)
+        Me.TabPageCard.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageCard.Name = "TabPageCard"
+        Me.TabPageCard.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageCard.TabIndex = 0
+        Me.TabPageCard.Text = "Card"
         '
         'txt_card
         '
@@ -269,15 +271,15 @@ Public Class Form1
         Me.UltraTab3.TabIndex = 0
         Me.UltraTab3.Text = "City"
         '
-        'UltraTabPageControl3
+        'TabPageCity
         '
-        Me.UltraTabPageControl3.Controls.Add(Me.ubName)
-        Me.UltraTabPageControl3.Controls.Add(Me.txt_city)
-        Me.UltraTabPageControl3.Location = New System.Drawing.Point(4, 22)
-        Me.UltraTabPageControl3.Name = "UltraTabPageControl3"
-        Me.UltraTabPageControl3.Size = New System.Drawing.Size(272, 326)
-        Me.UltraTabPageControl3.TabIndex = 0
-        Me.UltraTabPageControl3.Text = "City"
+        Me.TabPageCity.Controls.Add(Me.ubName)
+        Me.TabPageCity.Controls.Add(Me.txt_city)
+        Me.TabPageCity.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageCity.Name = "TabPageCity"
+        Me.TabPageCity.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageCity.TabIndex = 0
+        Me.TabPageCity.Text = "City"
         '
         'ubName
         '
@@ -307,17 +309,17 @@ Public Class Form1
         Me.UltraTab4.TabIndex = 0
         Me.UltraTab4.Text = "Person"
         '
-        'UltraTabPageControl4
+        'TabPagePerson
         '
-        Me.UltraTabPageControl4.Controls.Add(Me.lblPerson)
-        Me.UltraTabPageControl4.Controls.Add(Me.ubForward)
-        Me.UltraTabPageControl4.Controls.Add(Me.ubBack)
-        Me.UltraTabPageControl4.Controls.Add(Me.txt_person)
-        Me.UltraTabPageControl4.Location = New System.Drawing.Point(4, 22)
-        Me.UltraTabPageControl4.Name = "UltraTabPageControl4"
-        Me.UltraTabPageControl4.Size = New System.Drawing.Size(272, 326)
-        Me.UltraTabPageControl4.TabIndex = 0
-        Me.UltraTabPageControl4.Text = "Person"
+        Me.TabPagePerson.Controls.Add(Me.lblPerson)
+        Me.TabPagePerson.Controls.Add(Me.ubForward)
+        Me.TabPagePerson.Controls.Add(Me.ubBack)
+        Me.TabPagePerson.Controls.Add(Me.txt_person)
+        Me.TabPagePerson.Location = New System.Drawing.Point(4, 22)
+        Me.TabPagePerson.Name = "TabPagePerson"
+        Me.TabPagePerson.Size = New System.Drawing.Size(272, 326)
+        Me.TabPagePerson.TabIndex = 0
+        Me.TabPagePerson.Text = "Person"
         '
         'lblPerson
         '
@@ -363,18 +365,18 @@ Public Class Form1
         Me.UltraTab5.TabIndex = 0
         Me.UltraTab5.Text = "View"
         '
-        'UltraTabPageControl5
+        'TabPageView
         '
-        Me.UltraTabPageControl5.Controls.Add(Me.ubRoads)
-        Me.UltraTabPageControl5.Controls.Add(Me.ubJobView)
-        Me.UltraTabPageControl5.Controls.Add(Me.GroupBox1)
-        Me.UltraTabPageControl5.Controls.Add(Me.ubLocView)
-        Me.UltraTabPageControl5.Controls.Add(Me.ubPopView)
-        Me.UltraTabPageControl5.Location = New System.Drawing.Point(4, 22)
-        Me.UltraTabPageControl5.Name = "UltraTabPageControl5"
-        Me.UltraTabPageControl5.Size = New System.Drawing.Size(272, 326)
-        Me.UltraTabPageControl5.TabIndex = 0
-        Me.UltraTabPageControl5.Text = "View"
+        Me.TabPageView.Controls.Add(Me.ubRoads)
+        Me.TabPageView.Controls.Add(Me.ubJobView)
+        Me.TabPageView.Controls.Add(Me.GroupBox1)
+        Me.TabPageView.Controls.Add(Me.ubLocView)
+        Me.TabPageView.Controls.Add(Me.ubPopView)
+        Me.TabPageView.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageView.Name = "TabPageView"
+        Me.TabPageView.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageView.TabIndex = 0
+        Me.TabPageView.Text = "View"
         '
         'ubRoads
         '
@@ -499,17 +501,17 @@ Public Class Form1
         Me.UltraTab6.TabIndex = 0
         Me.UltraTab6.Text = "Game"
         '
-        'UltraTabPageControl6
+        'TabPageGame
         '
-        Me.UltraTabPageControl6.Controls.Add(Me.txtHint)
-        Me.UltraTabPageControl6.Controls.Add(Me.ubHint)
-        Me.UltraTabPageControl6.Controls.Add(Me.ubQuit)
-        Me.UltraTabPageControl6.Controls.Add(Me.ubNew)
-        Me.UltraTabPageControl6.Location = New System.Drawing.Point(4, 22)
-        Me.UltraTabPageControl6.Name = "UltraTabPageControl6"
-        Me.UltraTabPageControl6.Size = New System.Drawing.Size(272, 326)
-        Me.UltraTabPageControl6.TabIndex = 0
-        Me.UltraTabPageControl6.Text = "Game"
+        Me.TabPageGame.Controls.Add(Me.txtHint)
+        Me.TabPageGame.Controls.Add(Me.ubHint)
+        Me.TabPageGame.Controls.Add(Me.ubQuit)
+        Me.TabPageGame.Controls.Add(Me.ubNew)
+        Me.TabPageGame.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageGame.Name = "TabPageGame"
+        Me.TabPageGame.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageGame.TabIndex = 0
+        Me.TabPageGame.Text = "Game"
         '
         'txtHint
         '
@@ -593,7 +595,7 @@ Public Class Form1
         '
         'ubroad
         '
-        Me.ubroad.Location = New System.Drawing.Point(512, 168)
+        Me.ubroad.Location = New System.Drawing.Point(512, 163)
         Me.ubroad.Name = "ubroad"
         Me.ubroad.Size = New System.Drawing.Size(136, 32)
         Me.ubroad.TabIndex = 5
@@ -717,12 +719,12 @@ Public Class Form1
         '
         'Infotab
         '
-        Me.Infotab.Controls.Add(Me.UltraTabPageControl1)
-        Me.Infotab.Controls.Add(Me.UltraTabPageControl2)
-        Me.Infotab.Controls.Add(Me.UltraTabPageControl3)
-        Me.Infotab.Controls.Add(Me.UltraTabPageControl4)
-        Me.Infotab.Controls.Add(Me.UltraTabPageControl5)
-        Me.Infotab.Controls.Add(Me.UltraTabPageControl6)
+        Me.Infotab.Controls.Add(Me.TabPageEvents)
+        Me.Infotab.Controls.Add(Me.TabPageCard)
+        Me.Infotab.Controls.Add(Me.TabPageCity)
+        Me.Infotab.Controls.Add(Me.TabPagePerson)
+        Me.Infotab.Controls.Add(Me.TabPageView)
+        Me.Infotab.Controls.Add(Me.TabPageGame)
         Me.Infotab.Location = New System.Drawing.Point(512, 305)
         Me.Infotab.Name = "Infotab"
         Me.Infotab.SelectedIndex = 0
@@ -731,7 +733,7 @@ Public Class Form1
         '
         'ubland
         '
-        Me.ubland.Location = New System.Drawing.Point(656, 168)
+        Me.ubland.Location = New System.Drawing.Point(656, 163)
         Me.ubland.Name = "ubland"
         Me.ubland.Size = New System.Drawing.Size(136, 32)
         Me.ubland.TabIndex = 16
@@ -769,10 +771,19 @@ Public Class Form1
         Me.lblGoal.TabIndex = 20
         Me.lblGoal.Text = "Goal:"
         '
+        'ubWipe
+        '
+        Me.ubWipe.Location = New System.Drawing.Point(512, 206)
+        Me.ubWipe.Name = "ubWipe"
+        Me.ubWipe.Size = New System.Drawing.Size(136, 32)
+        Me.ubWipe.TabIndex = 21
+        Me.ubWipe.Text = "Wipe Buildings"
+        '
         'Form1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.ClientSize = New System.Drawing.Size(810, 678)
+        Me.Controls.Add(Me.ubWipe)
         Me.Controls.Add(Me.ubEnd)
         Me.Controls.Add(Me.ubland)
         Me.Controls.Add(Me.Infotab)
@@ -796,18 +807,18 @@ Public Class Form1
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Urban Blight"
-        Me.UltraTabPageControl1.ResumeLayout(False)
-        Me.UltraTabPageControl1.PerformLayout()
-        Me.UltraTabPageControl2.ResumeLayout(False)
-        Me.UltraTabPageControl2.PerformLayout()
-        Me.UltraTabPageControl3.ResumeLayout(False)
-        Me.UltraTabPageControl3.PerformLayout()
-        Me.UltraTabPageControl4.ResumeLayout(False)
-        Me.UltraTabPageControl4.PerformLayout()
-        Me.UltraTabPageControl5.ResumeLayout(False)
+        Me.TabPageEvents.ResumeLayout(False)
+        Me.TabPageEvents.PerformLayout()
+        Me.TabPageCard.ResumeLayout(False)
+        Me.TabPageCard.PerformLayout()
+        Me.TabPageCity.ResumeLayout(False)
+        Me.TabPageCity.PerformLayout()
+        Me.TabPagePerson.ResumeLayout(False)
+        Me.TabPagePerson.PerformLayout()
+        Me.TabPageView.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
-        Me.UltraTabPageControl6.ResumeLayout(False)
-        Me.UltraTabPageControl6.PerformLayout()
+        Me.TabPageGame.ResumeLayout(False)
+        Me.TabPageGame.PerformLayout()
         Me.gbP1.ResumeLayout(False)
         Me.gbP1.PerformLayout()
         Me.gbP2.ResumeLayout(False)
@@ -1010,8 +1021,12 @@ Public Class Form1
         GetCoords(X, Y, TheBox.Tag)
 
         '-- Deselect the previous grid box
+        Dim DoubleClick As Boolean = False
         If ClickCity IsNot Nothing Then
             ClickCity.GridSquare.BorderStyle = BorderStyle.FixedSingle
+            If ClickCity.Equals(GridArray(X, Y)) Then
+                DoubleClick = True
+            End If
         End If
 
         '-- Update the most recently clicked on box and its info
@@ -1028,19 +1043,19 @@ Public Class Form1
         End If
         '--
         If e.Button = MouseButtons.Left Then
-            'TheBox.Text = GridArray(X, Y).ShowID()
-            Build()
+            Dim BuildSuccess As Boolean = Build()
             UpdateTabs()
-            Infotab.SelectedTab = Infotab.TabPages(CityTab)
+            If DoubleClick Or BuildSuccess Or Infotab.SelectedIndex <> PersonTab Then
+                Infotab.SelectedTab = Infotab.TabPages(CityTab)
+            End If
         ElseIf e.Button = MouseButtons.Right Then
-            '-- Currently used for view mode
-            UpdateTabs()
+                '-- Currently used for view mode
+                UpdateTabs()
             If GridArray(X, Y).OwnerID < 0 Or Infotab.SelectedIndex <> PersonTab Then
                 Infotab.SelectedTab = Infotab.TabPages(CityTab)
             End If
 
         End If
-        'TheBox.Appearance.BackColor2 = GridArray(X, Y).GetTerrainColor
 
     End Sub
 #End Region
