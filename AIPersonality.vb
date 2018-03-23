@@ -128,7 +128,7 @@
                 Return True
             End If
         ElseIf finalDecision = AIRoad Then
-            If money < RoadCost Then
+            If money < RoadCostBase Then
                 Return True
             End If
         ElseIf finalDecision = AILand Then

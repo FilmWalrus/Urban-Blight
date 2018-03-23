@@ -26,6 +26,9 @@ Module GlobalVars
 
     '--Cards (Buildings available to buy)
     Public Cards As New ArrayList
+    Public Const RoadCostBase As Integer = 50
+    Public Const WipeCostBase As Integer = 100
+    Public Const DropCostBase As Integer = 5
 
     '--Board
     Public Const GridWidth As Integer = 9 '-- 0 to 10
@@ -44,7 +47,6 @@ Module GlobalVars
     Public Const TerrainMax As Integer = 7
 
     '--Roads
-    Public Const RoadCost As Integer = 50
     Public Const RoadNone As Integer = 0
     Public Const RoadDirt As Integer = 1
     Public Const RoadGravel As Integer = 2

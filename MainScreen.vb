@@ -17,6 +17,7 @@ Public Class Form1
     Dim CardCount As Integer = 4
     Dim RoadCard As Integer = CardCount
     Dim LandCard As Integer = RoadCard + 1
+    Dim WipeCard As Integer = LandCard + 1
     Dim SelectedCard As Integer = NoCard
 
     '--
@@ -562,6 +563,7 @@ Public Class Form1
         '
         Me.ubcard1.BackColor = System.Drawing.SystemColors.Control
         Me.ubcard1.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubcard1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ubcard1.Location = New System.Drawing.Point(512, 32)
         Me.ubcard1.Name = "ubcard1"
         Me.ubcard1.Size = New System.Drawing.Size(136, 48)
@@ -571,6 +573,7 @@ Public Class Form1
         '
         'ubcard2
         '
+        Me.ubcard2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ubcard2.Location = New System.Drawing.Point(656, 32)
         Me.ubcard2.Name = "ubcard2"
         Me.ubcard2.Size = New System.Drawing.Size(136, 48)
@@ -579,6 +582,7 @@ Public Class Form1
         '
         'ubcard3
         '
+        Me.ubcard3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ubcard3.Location = New System.Drawing.Point(512, 96)
         Me.ubcard3.Name = "ubcard3"
         Me.ubcard3.Size = New System.Drawing.Size(136, 48)
@@ -587,6 +591,7 @@ Public Class Form1
         '
         'ubcard4
         '
+        Me.ubcard4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ubcard4.Location = New System.Drawing.Point(656, 96)
         Me.ubcard4.Name = "ubcard4"
         Me.ubcard4.Size = New System.Drawing.Size(136, 48)
@@ -595,7 +600,8 @@ Public Class Form1
         '
         'ubroad
         '
-        Me.ubroad.Location = New System.Drawing.Point(512, 163)
+        Me.ubroad.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubroad.Location = New System.Drawing.Point(512, 206)
         Me.ubroad.Name = "ubroad"
         Me.ubroad.Size = New System.Drawing.Size(136, 32)
         Me.ubroad.TabIndex = 5
@@ -733,7 +739,8 @@ Public Class Form1
         '
         'ubland
         '
-        Me.ubland.Location = New System.Drawing.Point(656, 163)
+        Me.ubland.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubland.Location = New System.Drawing.Point(656, 206)
         Me.ubland.Name = "ubland"
         Me.ubland.Size = New System.Drawing.Size(136, 32)
         Me.ubland.TabIndex = 16
@@ -741,6 +748,7 @@ Public Class Form1
         '
         'ubEnd
         '
+        Me.ubEnd.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ubEnd.Location = New System.Drawing.Point(568, 256)
         Me.ubEnd.Name = "ubEnd"
         Me.ubEnd.Size = New System.Drawing.Size(168, 32)
@@ -773,11 +781,12 @@ Public Class Form1
         '
         'ubWipe
         '
-        Me.ubWipe.Location = New System.Drawing.Point(512, 206)
+        Me.ubWipe.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubWipe.Location = New System.Drawing.Point(512, 159)
         Me.ubWipe.Name = "ubWipe"
         Me.ubWipe.Size = New System.Drawing.Size(136, 32)
         Me.ubWipe.TabIndex = 21
-        Me.ubWipe.Text = "Wipe Buildings"
+        Me.ubWipe.Text = "Clear Above"
         '
         'Form1
         '
@@ -1049,8 +1058,8 @@ Public Class Form1
                 Infotab.SelectedTab = Infotab.TabPages(CityTab)
             End If
         ElseIf e.Button = MouseButtons.Right Then
-                '-- Currently used for view mode
-                UpdateTabs()
+            '-- Currently used for view mode
+            UpdateTabs()
             If GridArray(X, Y).OwnerID < 0 Or Infotab.SelectedIndex <> PersonTab Then
                 Infotab.SelectedTab = Infotab.TabPages(CityTab)
             End If
@@ -1198,13 +1207,15 @@ Public Class Form1
         '-- What is the cost of this card?
         Dim CardCost As Integer = 0
         If SelectedCard = RoadCard Then
-            CardCost = RoadCost
+            CardCost = RoadCostBase
         ElseIf SelectedCard = LandCard Then
             If ClickCity.Terrain = TerrainSwamp Then
                 CardCost = 0 '-- Swamps are free!
             Else
                 CardCost = CurrentPlayer.GetPlayerLandCost()
             End If
+        ElseIf SelectedCard = WipeCard Then
+            CardCost = CurrentPlayer.GetPlayerWipeCost()
         ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
             CardCost = Cards(SelectedCard).Cost
         Else
@@ -1222,7 +1233,7 @@ Public Class Form1
             If ClickCity.OwnerID >= 0 Or ClickCity.Terrain = TerrainLake Or (Not CurrentPlayer.OwnedAdjacent(ClickCity)) Then
                 Return False
             End If
-        Else
+        ElseIf SelectedCard <> WipeCard Then
             '-- For Roads and Buildings the player must already own the land
             If ClickCity.OwnerID <> CurrentPlayerIndex Then
                 Return False
@@ -1276,6 +1287,9 @@ Public Class Form1
             '-- Create Building
             ClickCity.AddBuilding(Cards(SelectedCard))
             Cards.RemoveAt(SelectedCard)
+        ElseIf SelectedCard = WipeCard Then
+            Cards.Clear()
+            CurrentPlayer.WipeCost = WipeCostBase + 5
         End If
 
         '-- Update grid, cards, and players
@@ -1365,7 +1379,7 @@ Public Class Form1
             Dim CardBuilding As Building = Cards(i)
             If CardBuilding.Cost = 0 Then
                 If CardBuilding.RejectionCount >= Players.Count Then
-                    '-- If no one has bought this building even for free, replace it
+                    '-- If the rejection level of a free building hit the player count, replace it
                     Cards.RemoveAt(i)
                     Dim newBuilding As New Building(-1)
                     Cards.Add(newBuilding)
@@ -1375,18 +1389,51 @@ Public Class Form1
                 End If
             End If
 
-            CardBuilding.Cost = Math.Max(CardBuilding.Cost - 5, 0)
+            '-- Reduce cost of available buildings by 5
+            CardBuilding.Cost = Math.Max(CardBuilding.Cost - DropCostBase, 0)
         Next
 
-        '--Update text
-        ubcard1.Text = Cards(0).type + ControlChars.NewLine + "Jobs: " + Cards(0).jobs.ToString() + "  Cost: " + Cards(0).cost.ToString()
-        ubcard2.Text = Cards(1).type + ControlChars.NewLine + "Jobs: " + Cards(1).jobs.ToString() + "  Cost: " + Cards(1).cost.ToString()
-        ubcard3.Text = Cards(2).type + ControlChars.NewLine + "Jobs: " + Cards(2).jobs.ToString() + "  Cost: " + Cards(2).cost.ToString()
-        ubcard4.Text = Cards(3).type + ControlChars.NewLine + "Jobs: " + Cards(3).jobs.ToString() + "  Cost: " + Cards(3).cost.ToString()
+        '-- Reduce cost for this player to wipe the buildings cards by 5 (no lower limit)
+        CurrentPlayer.WipeCost -= DropCostBase
 
-        '--Land Cost
+        '--Update building card text
+        For i = 0 To CardCount - 1
+
+            Dim CardBuilding As Building = Cards(i)
+
+            Dim cardText As String = CardBuilding.Type + ControlChars.NewLine
+            cardText += "$" + CardBuilding.Cost.ToString() + " - "
+            cardText += CardBuilding.Jobs.ToString() + " jobs"
+
+            Select Case i
+                Case 0
+                    ubcard1.Text = cardText
+                Case 1
+                    ubcard2.Text = cardText
+                Case 2
+                    ubcard3.Text = cardText
+                Case 3
+                    ubcard4.Text = cardText
+            End Select
+        Next
+
+        'ubcard1.Text = Cards(0).type + ControlChars.NewLine + "Jobs: " + Cards(0).jobs.ToString() + "  $" + Cards(0).cost.ToString()
+        'ubcard2.Text = Cards(1).type + ControlChars.NewLine + "Jobs: " + Cards(1).jobs.ToString() + "  $" + Cards(1).cost.ToString()
+        'ubcard3.Text = Cards(2).type + ControlChars.NewLine + "Jobs: " + Cards(2).jobs.ToString() + "  $" + Cards(2).cost.ToString()
+        'ubcard4.Text = Cards(3).type + ControlChars.NewLine + "Jobs: " + Cards(3).jobs.ToString() + "  $" + Cards(3).cost.ToString()
+
+        '--Update wipe card text
+        Dim WipeCost As Integer = CurrentPlayer.GetPlayerWipeCost()
+
+        ubWipe.Text = "$" + WipeCost.ToString() + " - Redraw"
+        '--Update land card text
+        Dim RoadCost As Integer = RoadCostBase
+        ubroad.Text = "$" + RoadCost.ToString() + " - Road"
+
+        '--Update land card text
         Dim LandCost As Integer = CurrentPlayer.GetPlayerLandCost()
-        ubland.Text = "Land, Cost: " + LandCost.ToString()
+        ubland.Text = "$" + LandCost.ToString() + " - Land"
+
     End Sub
 
     Sub UpdatePlayers()
@@ -1487,46 +1534,41 @@ Public Class Form1
 
 #Region " Game Over "
     Public Sub GameOver()
+        Dim GameTypeText As String = ""
         Dim WinningString As String = ""
-        Dim i As Integer
-        Select Case GameType
-            Case ScoreGame
-                WinningString += "Scores: " + ControlChars.NewLine
-                For i = 0 To Players.Count - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalScore.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case TerritoryGame
-                WinningString += "Territory: " + ControlChars.NewLine
-                For i = 0 To Players.Count - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalTerritory.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case PopulationGame
-                WinningString += "Population: " + ControlChars.NewLine
-                For i = 0 To Players.Count - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalPopulation.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case DevelopmentGame
-                WinningString += "Development: " + ControlChars.NewLine
-                For i = 0 To Players.Count - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalDevelopment.ToString + ControlChars.NewLine
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + (CurrentPlayerIndex + 1).ToString + ControlChars.NewLine
-            Case YearGame
-                Dim max As Integer = 0
-                Dim winningPlayer As Integer = -1
-                WinningString += "Scores: " + ControlChars.NewLine
-                For i = 0 To Players.Count - 1
-                    WinningString += "Player " + (i + 1).ToString + ": " + Players(i).TotalScore.ToString + ControlChars.NewLine
-                    If Players(i).TotalScore > max Then
-                        max = Players(i).TotalScore
-                        winningPlayer = i + 1
-                    End If
-                Next
-                WinningString += ControlChars.NewLine + "The winner is: Player " + winningPlayer.ToString + ControlChars.NewLine
-        End Select
+        Dim maxValue As Integer = 0
+        Dim currentValue As Integer = 0
+        Dim winningPlayer As Integer = -1
+        For i As Integer = 0 To Players.Count - 1
+            Dim currentPlayer As Player = Players(i)
+
+            Select Case GameType
+                Case ScoreGame
+                    GameTypeText = "Score"
+                    currentValue = currentPlayer.GetPlayerScore()
+                Case TerritoryGame
+                    GameTypeText = "Territory"
+                    currentValue = currentPlayer.GetPlayerTerritoryCount()
+                Case PopulationGame
+                    GameTypeText = "Population"
+                    currentValue = currentPlayer.GetPlayerPopulationCount()
+                Case DevelopmentGame
+                    GameTypeText = "Development"
+                    currentValue = currentPlayer.GetPlayerDevelopment()
+                Case YearGame
+                    GameTypeText = "Score"
+                    currentValue = currentPlayer.GetPlayerScore()
+            End Select
+
+            WinningString += "Player " + (i + 1).ToString + " " + GameTypeText + ": " + currentValue.ToString + ControlChars.NewLine
+            If currentValue > maxValue Then
+                maxValue = currentValue
+                winningPlayer = i + 1
+            End If
+        Next
+        WinningString += ControlChars.NewLine + "The winner is: Player " + winningPlayer.ToString + ControlChars.NewLine
+
+
         Dim EndingScreen As New GameOver(WinningString)
         If EndingScreen.ShowDialog = DialogResult.Yes Then
             StartNewGame()
@@ -1641,6 +1683,10 @@ Public Class Form1
         CardClick(LandCard)
     End Sub
 
+    Private Sub ubWipe_Click(sender As Object, e As EventArgs) Handles ubWipe.Click
+        CardClick(WipeCard)
+    End Sub
+
     Public Sub CardClick(ByVal CardNumber As Integer)
 
         '-- Select the clicked card. If they click on it a second time, deselect it.
@@ -1657,9 +1703,13 @@ Public Class Form1
         If (SelectedCard >= 0 And SelectedCard < CardCount) Then
             cardText = Cards(SelectedCard).Info
         ElseIf SelectedCard = RoadCard Then
-            cardText = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCost.ToString()
+            cardText = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCostBase.ToString()
         ElseIf SelectedCard = LandCard Then
             cardText = "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
+        ElseIf SelectedCard = WipeCard Then
+            cardText = "Redraw discards the currently available buildings and draws new ones, for the base price of $100. Click anywhere on the map to confirm." + ControlChars.NewLine + ControlChars.NewLine
+            cardText += "Like with buildings, the cost drops $5 after every action you take." + ControlChars.NewLine + ControlChars.NewLine
+            cardText += "Unlike buildings, the cost is unique to each player and can go below $0."
         End If
         UpdateTextBox(txt_card, cardText)
 
@@ -1668,8 +1718,8 @@ Public Class Form1
 
     Public Sub UpdateCardSelection()
 
-        Dim newBold As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Bold)
-        Dim newRegular As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Regular)
+        Dim newBold As New Font(ubEnd.Font.FontFamily, 10, FontStyle.Bold)
+        Dim newRegular As New Font(ubEnd.Font.FontFamily, 10, FontStyle.Regular)
 
         ubcard1.Font = newRegular
         ubcard2.Font = newRegular
@@ -1677,6 +1727,7 @@ Public Class Form1
         ubcard4.Font = newRegular
         ubroad.Font = newRegular
         ubland.Font = newRegular
+        ubWipe.Font = newRegular
 
         Select Case SelectedCard
             Case 0
@@ -1691,6 +1742,8 @@ Public Class Form1
                 ubroad.Font = newBold
             Case LandCard
                 ubland.Font = newBold
+            Case WipeCard
+                ubWipe.Font = newBold
         End Select
 
     End Sub
@@ -1857,6 +1910,7 @@ Public Class Form1
 
         MsgBox(playerInfoText, MsgBoxStyle.Information, "Player Info")
     End Sub
+
 #End Region
 
 End Class

@@ -15,6 +15,9 @@ Public Class Player
     Public TotalDevelopment As Integer = 0
     Public TotalScore As Integer = 0
 
+    '--
+    Public WipeCost As Integer = WipeCostBase
+
     '-- AI stuff
     Public BestMove As CitySquare = Nothing
     Public Personality As AIPersonality = Nothing
@@ -249,6 +252,10 @@ Public Class Player
         Return landCost
     End Function
 
+    Function GetPlayerWipeCost() As Integer
+        Return WipeCost
+    End Function
+
     Function OwnedAdjacent(ByVal theLocation As CitySquare) As Boolean
 
         '-- Check if this player owns a neighboring location
@@ -365,7 +372,7 @@ Public Class Player
 
         '-- Find the weight of the decision in favor of buying road
         '-- Equal to the need for roads * value of the road / cost of road
-        Dim roadDecisionWeight As Double = roadNeed * maxRoadUtility / RoadCost
+        Dim roadDecisionWeight As Double = roadNeed * maxRoadUtility / RoadCostBase
 
 
 
@@ -393,7 +400,7 @@ Public Class Player
             Dim landCostAdj As Double = landCostBase
             Select Case (thisLocation.Terrain)
                 Case TerrainDirt
-                    landCostAdj -= RoadCost '-- Free road
+                    landCostAdj -= RoadCostBase '-- Free road
                     landUtility *= 0.95 '-- Lower creativity
                 Case TerrainForest
                     landUtility *= 1.25 '-- People are happier

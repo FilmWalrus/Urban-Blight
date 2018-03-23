@@ -188,7 +188,7 @@ Public Class Intro
         'numYear
         '
         Me.numYear.Increment = New Decimal(New Integer() {3, 0, 0, 0})
-        Me.numYear.Location = New System.Drawing.Point(96, 181)
+        Me.numYear.Location = New System.Drawing.Point(96, 19)
         Me.numYear.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.numYear.Minimum = New Decimal(New Integer() {15, 0, 0, 0})
         Me.numYear.Name = "numYear"
@@ -199,7 +199,7 @@ Public Class Intro
         '
         'rbBuildings
         '
-        Me.rbBuildings.Location = New System.Drawing.Point(16, 141)
+        Me.rbBuildings.Location = New System.Drawing.Point(16, 174)
         Me.rbBuildings.Name = "rbBuildings"
         Me.rbBuildings.Size = New System.Drawing.Size(72, 24)
         Me.rbBuildings.TabIndex = 8
@@ -208,7 +208,7 @@ Public Class Intro
         'numBuildings
         '
         Me.numBuildings.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        Me.numBuildings.Location = New System.Drawing.Point(96, 141)
+        Me.numBuildings.Location = New System.Drawing.Point(96, 174)
         Me.numBuildings.Maximum = New Decimal(New Integer() {1000, 0, 0, 0})
         Me.numBuildings.Minimum = New Decimal(New Integer() {15, 0, 0, 0})
         Me.numBuildings.Name = "numBuildings"
@@ -220,7 +220,7 @@ Public Class Intro
         'numScore
         '
         Me.numScore.Increment = New Decimal(New Integer() {100, 0, 0, 0})
-        Me.numScore.Location = New System.Drawing.Point(96, 21)
+        Me.numScore.Location = New System.Drawing.Point(96, 56)
         Me.numScore.Maximum = New Decimal(New Integer() {100000, 0, 0, 0})
         Me.numScore.Minimum = New Decimal(New Integer() {100, 0, 0, 0})
         Me.numScore.Name = "numScore"
@@ -232,7 +232,7 @@ Public Class Intro
         'numPopulation
         '
         Me.numPopulation.Increment = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.numPopulation.Location = New System.Drawing.Point(96, 101)
+        Me.numPopulation.Location = New System.Drawing.Point(96, 134)
         Me.numPopulation.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.numPopulation.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.numPopulation.Name = "numPopulation"
@@ -243,7 +243,7 @@ Public Class Intro
         '
         'numTerritory
         '
-        Me.numTerritory.Location = New System.Drawing.Point(96, 61)
+        Me.numTerritory.Location = New System.Drawing.Point(96, 94)
         Me.numTerritory.Minimum = New Decimal(New Integer() {3, 0, 0, 0})
         Me.numTerritory.Name = "numTerritory"
         Me.numTerritory.Size = New System.Drawing.Size(72, 20)
@@ -253,7 +253,7 @@ Public Class Intro
         '
         'rbYear
         '
-        Me.rbYear.Location = New System.Drawing.Point(16, 181)
+        Me.rbYear.Location = New System.Drawing.Point(16, 19)
         Me.rbYear.Name = "rbYear"
         Me.rbYear.Size = New System.Drawing.Size(64, 24)
         Me.rbYear.TabIndex = 3
@@ -261,7 +261,7 @@ Public Class Intro
         '
         'rbScore
         '
-        Me.rbScore.Location = New System.Drawing.Point(16, 21)
+        Me.rbScore.Location = New System.Drawing.Point(16, 56)
         Me.rbScore.Name = "rbScore"
         Me.rbScore.Size = New System.Drawing.Size(64, 24)
         Me.rbScore.TabIndex = 2
@@ -269,7 +269,7 @@ Public Class Intro
         '
         'rbPopulation
         '
-        Me.rbPopulation.Location = New System.Drawing.Point(16, 101)
+        Me.rbPopulation.Location = New System.Drawing.Point(16, 134)
         Me.rbPopulation.Name = "rbPopulation"
         Me.rbPopulation.Size = New System.Drawing.Size(80, 24)
         Me.rbPopulation.TabIndex = 1
@@ -277,7 +277,7 @@ Public Class Intro
         '
         'rbTerritory
         '
-        Me.rbTerritory.Location = New System.Drawing.Point(16, 61)
+        Me.rbTerritory.Location = New System.Drawing.Point(16, 94)
         Me.rbTerritory.Name = "rbTerritory"
         Me.rbTerritory.Size = New System.Drawing.Size(64, 24)
         Me.rbTerritory.TabIndex = 0
@@ -508,7 +508,8 @@ Public Class Intro
         p3_rb_none.Checked = True
         p4_rb_none.Checked = True
 
-        rbScore.Checked = True
+        rbYear.Checked = True
+        'rbScore.Checked = True
 
     End Sub
 
