@@ -476,7 +476,7 @@
             odds += thePerson.Drunkenness / 9.0
             If GetRandom(0, 100) < odds And localPop > 1 Then
                 Dim theVictim As Person = thePerson
-                While (theVictim.Name = thePerson.Name) '-- Could loop forever if only 2 people and they have the same name
+                While (theVictim.Equals(thePerson))
                     theVictim = currentLocation.People(GetRandom(0, localPop - 1))
                 End While
 
