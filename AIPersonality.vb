@@ -57,7 +57,10 @@
         AI_Spendthrift
         AI_Error
     End Enum
-    '-- Confrontational 
+    '-- Confrontational - Seek out other players
+    '-- Shy - Avoid other players
+    '-- Schizophrenic - 33% chance of changing personalities each round
+    '-- ??? - Expansion not based on adj populations
 
 #End Region
 
