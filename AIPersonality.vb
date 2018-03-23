@@ -55,11 +55,13 @@
         AI_Erratic
         AI_Miser
         AI_Spendthrift
+        AI_Compulsive
         AI_Error
     End Enum
     '-- Confrontational - Seek out other players
     '-- Shy - Avoid other players
     '-- Schizophrenic - 33% chance of changing personalities each round
+    '-- Compulsive - Can not resist likes/dislikes
     '-- ??? - Expansion not based on adj populations
 
 #End Region
@@ -172,6 +174,12 @@
         Dim StatLiked As Double = 5.0
         Dim StatDisliked As Double = -3.0
 
+        If PreferenceList.Contains(AIType.AI_Compulsive) Then
+            '-- Compulsive AIs can not overcome their preferences
+            StatLiked = 999999999.9
+            StatDisliked = -999999999.9
+        End If
+
         Select Case StatType
             Case StatHappiness
                 If PreferenceList.Contains(AIType.AI_ProHappiness) Then
@@ -247,6 +255,13 @@
         Dim TerrainDisliked As Double = 0.5
         Dim TerrainStrongDisliked As Double = 0.2
 
+        If PreferenceList.Contains(AIType.AI_Compulsive) Then
+            '-- Compulsive AIs can not overcome their preferences
+            TerrainLiked = 999999999.9
+            TerrainDisliked = -999999999.9
+            TerrainStrongDisliked = -999999999.9
+        End If
+
         Select Case TerrainType
             Case TerrainPlain
                 If PreferenceList.Contains(AIType.AI_ProPlain) Then
@@ -316,11 +331,29 @@
         Return 1.0
     End Function
 
+    Public Function GetProAdjustment() As Double
+        If PreferenceList.Contains(AIType.AI_Compulsive) Then
+            '-- Compulsive AIs can not overcome their preferences
+            Return 999999999.9
+        Else
+            Return 1.5
+        End If
+    End Function
+
+    Public Function GetAntiAdjustment() As Double
+        If PreferenceList.Contains(AIType.AI_Compulsive) Then
+            '-- Compulsive AIs can not overcome their preferences
+            Return -1.0
+        Else
+            Return 0.5
+        End If
+    End Function
+
     Public Function GetRoadAdjustment() As Double
         If PreferenceList.Contains(AIType.AI_ProRoad) Then
-            Return 1.5
+            Return GetProAdjustment()
         ElseIf PreferenceList.Contains(AIType.AI_AntiRoad) Then
-            Return 0.5
+            Return GetAntiAdjustment()
         Else
             Return 1.0
         End If
@@ -328,9 +361,9 @@
 
     Public Function GetBuildingAdjustment() As Double
         If PreferenceList.Contains(AIType.AI_ProBuilding) Then
-            Return 1.5
+            Return GetProAdjustment()
         ElseIf PreferenceList.Contains(AIType.AI_AntiBuilding) Then
-            Return 0.5
+            Return GetAntiAdjustment()
         Else
             Return 1.0
         End If
@@ -338,9 +371,9 @@
 
     Public Function GetLandAdjustment() As Double
         If PreferenceList.Contains(AIType.AI_ProLand) Then
-            Return 1.5
+            Return GetProAdjustment()
         ElseIf PreferenceList.Contains(AIType.AI_AntiLand) Then
-            Return 0.5
+            Return GetAntiAdjustment()
         Else
             Return 1.0
         End If
@@ -452,6 +485,8 @@
                     personalityText += "Miser"
                 Case AIType.AI_Spendthrift
                     personalityText += "Spendthrift"
+                Case AIType.AI_Compulsive
+                    personalityText += "Compulsive"
                 Case AIType.AI_Error
                     personalityText += "Error"
             End Select
