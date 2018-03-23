@@ -1117,6 +1117,7 @@ Public Class Form1
         ubcard4.Enabled = toggleButtons
         ubroad.Enabled = toggleButtons
         ubland.Enabled = toggleButtons
+        ubWipe.Enabled = toggleButtons
 
         '-- If not an AI bail at this point
         If CurrentPlayer.PlayerType <> PlayerAI Then
@@ -1416,11 +1417,6 @@ Public Class Form1
                     ubcard4.Text = cardText
             End Select
         Next
-
-        'ubcard1.Text = Cards(0).type + ControlChars.NewLine + "Jobs: " + Cards(0).jobs.ToString() + "  $" + Cards(0).cost.ToString()
-        'ubcard2.Text = Cards(1).type + ControlChars.NewLine + "Jobs: " + Cards(1).jobs.ToString() + "  $" + Cards(1).cost.ToString()
-        'ubcard3.Text = Cards(2).type + ControlChars.NewLine + "Jobs: " + Cards(2).jobs.ToString() + "  $" + Cards(2).cost.ToString()
-        'ubcard4.Text = Cards(3).type + ControlChars.NewLine + "Jobs: " + Cards(3).jobs.ToString() + "  $" + Cards(3).cost.ToString()
 
         '--Update wipe card text
         Dim WipeCost As Integer = CurrentPlayer.GetPlayerWipeCost()
