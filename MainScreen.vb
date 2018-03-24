@@ -1369,7 +1369,7 @@ Public Class Form1
     Sub UpdateCards()
         '--Increase hand to full
         While (Cards.Count < 4)
-            Dim newBuilding As New Building(-1)
+            Dim newBuilding As New Building()
             Cards.Add(newBuilding)
         End While
 
@@ -1382,7 +1382,7 @@ Public Class Form1
                 If CardBuilding.RejectionCount >= Players.Count Then
                     '-- If the rejection level of a free building hit the player count, replace it
                     Cards.RemoveAt(i)
-                    Dim newBuilding As New Building(-1)
+                    Dim newBuilding As New Building()
                     Cards.Add(newBuilding)
                 Else
                     '-- No one bought this building even though it was free. Escallate its rejection level
@@ -1402,7 +1402,7 @@ Public Class Form1
 
             Dim CardBuilding As Building = Cards(i)
 
-            Dim cardText As String = CardBuilding.Type + ControlChars.NewLine
+            Dim cardText As String = CardBuilding.GetName() + ControlChars.NewLine
             cardText += "$" + CardBuilding.Cost.ToString() + " - "
             cardText += CardBuilding.Jobs.ToString() + " jobs"
 

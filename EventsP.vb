@@ -280,10 +280,13 @@
                 '-- Sort the movement options based on preference for space, culture or jobs
                 Dim localPop As Integer = originalHome.getPopulation()
                 If thePerson.Employment = 0 And thePerson.Age >= 16 And GetRandom(0, 30 + thePerson.Mobility) < (38 - localPop) Then
+                    '-- Unemployed adults mostly look for jobs
                     SortType = JobSort
                 ElseIf GetRandom(0, 80 + thePerson.Mobility) < (30 - localPop) Then
+                    '-- If population isn't a problem head towards the most culture
                     SortType = CultureSort
                 Else
+                    '-- If local population is high, head to lower population area
                     SortType = PopSort
                 End If
 

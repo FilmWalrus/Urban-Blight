@@ -365,7 +365,7 @@ Public Class Player
         Dim cardWeightSum As Double = 0
         For i As Integer = 0 To Cards.Count - 1
             Dim theBuilding As Building = Cards(i)
-            cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForMoney(Personality)
+            cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForAI(Personality)
             cardWeightSum += cardDecisionWeights(i)
         Next
         Dim cardWeightAvg As Double = SafeDivide(cardWeightSum, Cards.Count)

@@ -124,8 +124,6 @@ Module GlobalVars
     Public Const AIRoad As Integer = 4
     Public Const AILand As Integer = 5
 
-
-
     '-- Sort Types
     Public Const PopSort As Integer = 0
     Public Const JobSort As Integer = 1

@@ -3,6 +3,7 @@
 #Region " Variables "
     Dim HintList As New ArrayList
 
+    Dim BuildList As New ArrayList
 #End Region
 
 #Region " Functions "
@@ -75,9 +76,56 @@
     End Sub
 
     Public Function GenerateHint() As String
-        Dim hintString As String = HintList(GetRandom(0, HintList.Count - 1))
+        Dim hintString As String = ""
+        hintString += HintList(GetRandom(0, HintList.Count - 1))
         Return hintString
+
+        'Dim aMan1 As New AirportMan()
+        'Dim bMan1 As New BuildMan()
+        'Dim hMan1 As New HotelMan()
+
+        'BuildList.Add(aMan1)
+        'BuildList.Add(bMan1)
+        'BuildList.Add(hMan1)
+
+        'For i As Integer = 0 To BuildList.Count - 1
+        '    Dim xMan As BuildMan = BuildList(i)
+        '    hintString += xMan.GetName()
+        'Next
+
+        'Return hintString
+
     End Function
+
+
 #End Region
 
 End Class
+
+'Public Class BuildMan
+
+'    Public Function GetName() As String
+'        Return "My name is " + GetAirportName()
+'    End Function
+
+'    Public Overridable Function GetAirportName() As String
+'        Return "Base"
+'    End Function
+'End Class
+
+'Public Class AirportMan
+'    Inherits BuildMan
+
+'    Public Overrides Function GetAirportName() As String
+'        Return "Airport"
+'    End Function
+
+'End Class
+
+'Public Class HotelMan
+'    Inherits BuildMan
+
+'    Public Overrides Function GetAirportName() As String
+'        Return "Hotel"
+'    End Function
+'End Class

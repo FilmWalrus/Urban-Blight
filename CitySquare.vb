@@ -94,23 +94,38 @@ Public Class CitySquare
     Public Function getPopulation() As Integer
         Return People.Count
     End Function
+
     Public Function getDevelopment() As Integer
         Return Buildings.Count
     End Function
+
+    Public Function getCulture() As Double
+        Dim cultureValue As Double = 0.0
+        For i As Integer = 0 To Buildings.Count - 1
+            Dim thisBuilding As Building = Buildings(i)
+            cultureValue += thisBuilding.GetValueForCitizen()
+        Next
+        Return cultureValue
+    End Function
+
     Public Function getJobsTotal() As Integer
         Dim jobTotal As Integer = 0
         For i As Integer = 0 To Buildings.Count - 1
-            jobTotal = jobTotal + Buildings(i).jobs
+            Dim thisBuilding As Building = Buildings(i)
+            jobTotal += thisBuilding.Jobs
         Next
         Return jobTotal
     End Function
+
     Public Function getJobsFilled() As Integer
         Dim jobFilled As Integer = 0
         For i As Integer = 0 To Buildings.Count - 1
-            jobFilled = jobFilled + Buildings(i).GetEmployeeCount()
+            Dim thisBuilding As Building = Buildings(i)
+            jobFilled += thisBuilding.GetEmployeeCount()
         Next
         Return jobFilled
     End Function
+
     Public Function getJobsEmpty() As Integer
         Return getJobsTotal() - getJobsFilled()
     End Function
@@ -404,8 +419,8 @@ Public Class CitySquare
 
         ElseIf SortType = CultureSort Then
             '-- Head for most developed region (choose randomly if tied)
-            city1 = -getDevelopment()
-            city2 = -temp.getDevelopment()
+            city1 = -getCulture()
+            city2 = -temp.getCulture()
         Else
             '--Head for area with most free jobs if unemployed (choose randomly if tied)
             city1 = -getJobsEmpty()

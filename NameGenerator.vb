@@ -208,6 +208,7 @@ Public Class NameGenerator
         Ending.Add("st")
         Ending.Add("son")
         Ending.Add("sh")
+        'Ending.Add("ski")
         Ending.Add("t")
         Ending.Add("tt")
         Ending.Add("tch")

@@ -122,6 +122,7 @@
     <Compile Include="Building.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BuildingGen.vb" />
     <Compile Include="RenameCity.vb">
       <SubType>Form</SubType>
     </Compile>
