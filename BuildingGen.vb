@@ -599,7 +599,7 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Sidewalks
-                    Dim newBuilding As New Building(bType, "Sidewalks", 25, 0)
+                    Dim newBuilding As New Building(bType, "Sidewalks", 215, 0)
                     newBuilding.SetHappiness(8, 1)
                     newBuilding.SetMobility(40, 1)
                     newBuilding.SetInfo("Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians.")

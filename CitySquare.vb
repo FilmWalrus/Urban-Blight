@@ -394,7 +394,8 @@ Public Class CitySquare
             CityString += ControlChars.NewLine + "Development:" + ControlChars.NewLine
             Dim i As Integer
             For i = 0 To Buildings.Count - 1
-                CityString += Buildings(i).type.ToString() + ": " + Buildings(i).GetEmployeeCount().ToString() + "/" + Buildings(i).Jobs.ToString() + "   Success: " + Buildings(i).Success.ToString() + ControlChars.NewLine
+                Dim thisBuilding As Building = Buildings(i)
+                CityString += thisBuilding.Name.ToString() + ": " + thisBuilding.GetEmployeeCount().ToString() + "/" + thisBuilding.Jobs.ToString() + "   Success: " + thisBuilding.Success.ToString() + ControlChars.NewLine
             Next
         End If
 
