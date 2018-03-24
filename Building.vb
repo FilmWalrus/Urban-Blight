@@ -200,7 +200,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Function AffectPerson(ByRef thePerson As Person) As Person
+    Public Sub AffectPerson(ByRef thePerson As Person)
         AffectHappiness(thePerson)
         AffectHealth(thePerson)
         AffectIntelligence(thePerson)
@@ -208,7 +208,7 @@ Public Class Building
         AffectMobility(thePerson)
         AffectDrunkenness(thePerson)
         AffectCriminality(thePerson)
-    End Function
+    End Sub
 
 
 #End Region
@@ -298,5 +298,65 @@ Public Class Building
 
     End Function
 #End Region
+
+    Public Overrides Function toString() As String
+        Dim BuildingString As String = ""
+
+        BuildingString += "Name: " + Name + ControlChars.NewLine
+
+        If Location IsNot Nothing Then
+            BuildingString += "Location: " + Location.GetName() + ControlChars.NewLine
+        End If
+
+        '-- Show job info
+        BuildingString += "Jobs: " + GetEmployeeCount.ToString + "/" + Jobs.ToString + ControlChars.NewLine
+        If Employees.Count > 0 Then
+            BuildingString += "Employees: "
+            For i As Integer = 0 To Employees.Count - 1
+                Dim Employee As Person = Employees(i)
+                BuildingString += Employee.Name
+
+                If i <> Employees.Count - 1 Then
+                    BuildingString += ", "
+                Else
+                    BuildingString += ControlChars.NewLine
+                End If
+            Next
+        End If
+        BuildingString += ControlChars.NewLine
+
+        '-- Show stat info
+        Dim ShowStats As Boolean = True
+        If ShowStats Then
+            If Happiness_odds > 0 Then
+                BuildingString += "Happiness: " + Happiness_odds.ToString + "% chance boosts up to " + Happiness_adj.ToString + ControlChars.NewLine
+            End If
+            If Health_odds > 0 Then
+                BuildingString += "Health: " + Health_odds.ToString + "% chance boosts up to " + Health_adj.ToString + ControlChars.NewLine
+            End If
+            If Intelligence_odds > 0 Then
+                BuildingString += "Intelligence: " + Intelligence_odds.ToString + "% chance boosts up to " + Intelligence_adj.ToString + ControlChars.NewLine
+            End If
+            If Creativity_odds > 0 Then
+                BuildingString += "Creativity: " + Creativity_odds.ToString + "% chance boosts up to " + Creativity_adj.ToString + ControlChars.NewLine
+            End If
+            If Mobility_odds > 0 Then
+                BuildingString += "Mobility: " + Mobility_odds.ToString + "% chance boosts up to " + Mobility_adj.ToString + ControlChars.NewLine
+            End If
+            If Drunkenness_odds > 0 Then
+                BuildingString += "Drunkenness: " + Drunkenness_odds.ToString + "% chance boosts up to " + Drunkenness_adj.ToString + ControlChars.NewLine
+            End If
+            If Criminality_odds > 0 Then
+                BuildingString += "Criminality: " + Criminality_odds.ToString + "% chance boosts up to " + Criminality_adj.ToString + ControlChars.NewLine
+            End If
+        End If
+
+        '-- Show flavor text
+        BuildingString += ControlChars.NewLine
+
+        BuildingString += Info
+
+        Return BuildingString
+    End Function
 
 End Class

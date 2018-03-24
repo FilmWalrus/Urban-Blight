@@ -129,6 +129,9 @@ Module GlobalVars
     Public Const JobSort As Integer = 1
     Public Const CultureSort As Integer = 2
     Public SortType As Integer = 0
+
+    '-- Building Stuff
+    Public BuildingGenerator As New BuildingGen()
 #End Region
 
 #Region " Global Functions "

@@ -380,220 +380,314 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Harbor
+                    Dim newBuilding As New Building(bType, "Harbor", 80, 2)
+                    newBuilding.SetMobility(12, 2)
+                    newBuilding.SetCriminality(12, 2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Hospital_Cancer
+                    Dim newBuilding As New Building(bType, "Hospital - Cancer", 270, 3)
+                    newBuilding.SetHealth(30, 5)
+                    newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
+                    Return newBuilding
                 Case BuildingEnum.Hospital_Emergency
+                    Dim newBuilding As New Building(bType, "Hospital - Emergency", 240, 3)
+                    newBuilding.SetHealth(30, 5)
+                    newBuilding.SetDrunkenness(12, -3)
+                    newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
+                    Return newBuilding
                 Case BuildingEnum.Hospital_Geriatric
+                    Dim newBuilding As New Building(bType, "Hospital - Geriatric", 200, 3)
+                    newBuilding.SetHealth(30, 3)
+                    newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
+                    Return newBuilding
                 Case BuildingEnum.Hospital_Maternity
+                    Dim newBuilding As New Building(bType, "Hospital - Maternity", 250, 3)
+                    newBuilding.SetHealth(30, 3)
+                    newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
+                    Return newBuilding
                 Case BuildingEnum.Hospital_Pediatric
+                    Dim newBuilding As New Building(bType, "Hospital - Pediatric", 190, 3)
+                    newBuilding.SetHealth(30, 4)
+                    newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
+                    Return newBuilding
                 Case BuildingEnum.Hospital_Research
+                    Dim newBuilding As New Building(bType, "Hospital - Research", 260, 3)
+                    newBuilding.SetHealth(5, 10)
+                    newBuilding.SetIntelligence(40, 5)
+                    newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
+                    Return newBuilding
                 Case BuildingEnum.Hotel
+                    Dim newBuilding As New Building(bType, "Hotel", 275, 3)
+                    newBuilding.SetCreativity(15, 2)
+                    newBuilding.SetMobility(20, 2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Laboratory
+                    Dim newBuilding As New Building(bType, "Laboratory", 205, 2)
+                    newBuilding.SetHealth(20, -2)
+                    newBuilding.SetIntelligence(16, 8)
+                    newBuilding.SetInfo("Laboratories are a key source of research and intellectual advancement, but their chemicals and experiments can be unhealthy.")
+                    Return newBuilding
                 Case BuildingEnum.Land_Developer
+                    Dim newBuilding As New Building(bType, "Land Developer", 350, 5)
+                    newBuilding.SetCreativity(10, 1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Landfill
                 Case BuildingEnum.Law_Firm
+                    Dim newBuilding As New Building(bType, "Law Firm", 280, 3)
+                    newBuilding.SetHappiness(20, -2)
+                    newBuilding.SetIntelligence(20, 3)
+                    newBuilding.SetCriminality(20, -2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Library
+                    Dim newBuilding As New Building(bType, "Library", 105, 2)
+                    newBuilding.SetHappiness(14, 1)
+                    newBuilding.SetIntelligence(15, 4)
+                    newBuilding.SetCreativity(10, 1)
+                    newBuilding.SetInfo("Libraries are a nice quiet place for citizens to read, relax and learn at their own pace.")
+                    Return newBuilding
                 Case BuildingEnum.Lottery
+
                 Case BuildingEnum.Lumber_Mill
+                    Dim newBuilding As New Building(bType, "Lumber Mill", 130, 2)
+                    newBuilding.SetHealth(15, -2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Mall
+                    Dim newBuilding As New Building(bType, "Mall", 385, 5)
+                    newBuilding.SetHappiness(45, 3)
+                    newBuilding.SetCreativity(20, -3)
+                    newBuilding.SetInfo("A mall provides a tiny bit of happiness for nearly everyone, but can tend to stifle creativity and local flavor.")
+                    Return newBuilding
                 Case BuildingEnum.Mass_Transit
+                    Dim newBuilding As New Building(bType, "Mass Transit", 175, 1)
+                    newBuilding.SetMobility(32, 5)
+                    newBuilding.SetInfo("Mass Transit allows many of your citizens to gain mobility they never would have had without it.")
+                    Return newBuilding
                 Case BuildingEnum.Mine
+                    Dim newBuilding As New Building(bType, "Mine", 55, 2)
+                    newBuilding.SetHappiness(10, -2)
+                    newBuilding.SetHealth(50, -3)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Monument
+                    Dim newBuilding As New Building(bType, "Monument", 85, 0)
+                    newBuilding.SetHappiness(10, 1)
+                    newBuilding.SetCreativity(16, 3)
+                    newBuilding.SetInfo("A bold impressive monument that makes citizen proud, happy and inspired to new creative heights... if only slightly.")
+                    Return newBuilding
                 Case BuildingEnum.Military_Base
+                    Dim newBuilding As New Building(bType, "Military Base", 260, 5)
+                    newBuilding.SetHappiness(15, -1)
+                    newBuilding.SetHealth(15, 1)
+                    newBuilding.SetCreativity(30, -2)
+                    newBuilding.SetDrunkenness(14, 7)
+                    newBuilding.SetCriminality(30, -3)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Museum
+                    Dim newBuilding As New Building(bType, "Museum", 150, 1)
+                    newBuilding.SetIntelligence(32, 2)
+                    newBuilding.SetCreativity(22, 10)
+                    newBuilding.SetInfo("Museums may be stodgy and boring to some, but they can help increase the intelligence and creativity of those occasional visitors.")
+                    Return newBuilding
                 Case BuildingEnum.Observatory
+                    Dim newBuilding As New Building(bType, "Observatory", 95, 1)
+                    newBuilding.SetIntelligence(20, 4)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Oil_Well
+                    Dim newBuilding As New Building(bType, "Oil Well", 445, 4)
+                    newBuilding.SetHealth(35, -4)
+                    newBuilding.SetMobility(75, 1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Office
+                    Dim newBuilding As New Building(bType, "Office", 145, 4)
+                    newBuilding.SetCreativity(30, -2)
+                    newBuilding.SetInfo("Offices are a simple source of jobs and infrastructure that tends not to affect citizens noticably.")
+                    Return newBuilding
                 Case BuildingEnum.Park
+                    Dim newBuilding As New Building(bType, "Park", 125, 1)
+                    newBuilding.SetHappiness(15, 2)
+                    newBuilding.SetHealth(40, 2)
+                    newBuilding.SetCreativity(20, 2)
+                    newBuilding.SetInfo("Attractive parks allow the casual stroller to engage in happy, healthy and creative exercise and meditation.")
+                    Return newBuilding
                 Case BuildingEnum.Parking_Garage
+                    Dim newBuilding As New Building(bType, "Parking Garage", 155, 1)
+                    newBuilding.SetCreativity(20, -1)
+                    newBuilding.SetMobility(40, 1)
+                    newBuilding.SetCriminality(20, 2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Parking_Lot
+                    Dim newBuilding As New Building(bType, "Parking Lot", 50, 0)
+                    newBuilding.SetCreativity(10, -1)
+                    newBuilding.SetMobility(20, 1)
+                    newBuilding.SetCriminality(10, 1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Pharmacy
+                    Dim newBuilding As New Building(bType, "Pharmacy", 70, 1)
+                    newBuilding.SetHealth(50, 1)
+                    newBuilding.SetDrunkenness(5, 5)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Police_Station
+                    Dim newBuilding As New Building(bType, "Police Station", 155, 2)
+                    newBuilding.SetHappiness(15, -1)
+                    newBuilding.SetCriminality(50, -3)
+                    newBuilding.SetInfo("Police stations are the best way to crack down on crime, even if every once in a while they spoil some harmless fun.")
+                    Return newBuilding
                 Case BuildingEnum.Post_Office
+
                 Case BuildingEnum.Power_Plant
+                    Dim newBuilding As New Building(bType, "Power Plant", 455, 3)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Private_Security_Company
+                    Dim newBuilding As New Building(bType, "Private Security Company", 300, 2)
+                    newBuilding.SetCriminality(12, -5)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Real_Estate_Developer
+
                 Case BuildingEnum.Recycling_Center
+
                 Case BuildingEnum.Refugee_Camp
+                    Dim newBuilding As New Building(bType, "Refugee Camp", 80, 1)
+                    newBuilding.SetHappiness(20, -2)
+                    newBuilding.SetHealth(25, -2)
+                    newBuilding.SetCriminality(25, 3)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Rehab_Clinic
+                    Dim newBuilding As New Building(bType, "Rehab Clinic", 145, 1)
+                    newBuilding.SetHealth(10, 4)
+                    newBuilding.SetDrunkenness(50, -2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Restaurant
+                    Dim newBuilding As New Building(bType, "Restaurant", 105, 2)
+                    newBuilding.SetHappiness(40, 1)
+                    newBuilding.SetHealth(26, 1)
+                    newBuilding.SetDrunkenness(5, 1)
+                    newBuilding.SetInfo("Restaurants provide a charming setting for healthy meals and happy dates.")
+                    Return newBuilding
                 Case BuildingEnum.Retirement_Home
+                    Dim newBuilding As New Building(bType, "Retirement Home", 130, 1)
+                    newBuilding.SetHappiness(20, 4)
+                    newBuilding.SetHealth(18, 3)
+                    newBuilding.SetMobility(20, -3)
+                    newBuilding.SetDrunkenness(20, -2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.School
+                    Dim newBuilding As New Building(bType, "School", 160, 2)
+                    newBuilding.SetHappiness(33, -1)
+                    newBuilding.SetIntelligence(50, 4)
+                    newBuilding.SetCreativity(33, 1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Shipping_Center
+                    Dim newBuilding As New Building(bType, "Shipping Center", 175, 1)
+                    newBuilding.SetMobility(12, 2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Sidewalks
+                    Dim newBuilding As New Building(bType, "Sidewalks", 25, 0)
+                    newBuilding.SetHappiness(8, 1)
+                    newBuilding.SetMobility(40, 1)
+                    newBuilding.SetInfo("Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians.")
+                    Return newBuilding
                 Case BuildingEnum.Ski_Resort
+                    Dim newBuilding As New Building(bType, "Ski Resort", 25, 0)
+                    newBuilding.SetHappiness(8, 1)
+                    newBuilding.SetMobility(40, 1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Skyscraper
+                    Dim newBuilding As New Building(bType, "Skyscraper", 325, 6)
+                    newBuilding.SetIntelligence(30, 1)
+                    newBuilding.SetInfo("Skyscrapers provide tons of jobs and a place for smart minds and ambitious career climbers to collaborate.")
+                    Return newBuilding
                 Case BuildingEnum.Stadium
+                    Dim newBuilding As New Building(bType, "Stadium", 310, 4)
+                    newBuilding.SetHappiness(24, 4)
+                    newBuilding.SetHealth(5, 5)
+                    newBuilding.SetDrunkenness(20, 3)
+                    newBuilding.SetInfo("Stadiums bring fun, especially when the home team wins, and a little friendly competition. The players get exercise and the audience gets entertainment and overpriced beer.")
+                    Return newBuilding
                 Case BuildingEnum.Startup_Incubator
+                    Dim newBuilding As New Building(bType, "Startup Incubator", 325, 1)
+                    newBuilding.SetHappiness(12, 2)
+                    newBuilding.SetCreativity(10, 5)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Suburb
+
                 Case BuildingEnum.Taxi_Service
+
                 Case BuildingEnum.Temp_Agency
+                    Dim newBuilding As New Building(bType, "Temp Agency", 135, 1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Textile_Mill
+                    Dim newBuilding As New Building(bType, "Textile Mill", 295, 2)
+                    newBuilding.SetHappiness(22, -2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Theater
+                    Dim newBuilding As New Building(bType, "Theater", 180, 2)
+                    newBuilding.SetHappiness(30, 3)
+                    newBuilding.SetCreativity(25, 3)
+                    newBuilding.SetInfo("Theaters bring movies of all different types that increase happiness and often possess creative artistic merit too.")
+                    Return newBuilding
                 Case BuildingEnum.Think_Tank
+                    Dim newBuilding As New Building(bType, "Think Tank", 275, 1)
+                    newBuilding.SetIntelligence(12, 7)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Toll_Booth
+                    Dim newBuilding As New Building(bType, "Toll Booth", 40, 1)
+                    newBuilding.SetHappiness(25, -1)
+                    newBuilding.SetMobility(25, -1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Tourism_Agency
+                    Dim newBuilding As New Building(bType, "Tourism Agency", 70, 1)
+                    newBuilding.SetHappiness(5, 5)
+                    newBuilding.SetHealth(5, 1)
+                    newBuilding.SetIntelligence(5, 3)
+                    newBuilding.SetCreativity(5, 4)
+                    newBuilding.SetMobility(5, 8)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.TV_Station
+                    Dim newBuilding As New Building(bType, "TV Station", 250, 3)
+                    newBuilding.SetHappiness(70, 2)
+                    newBuilding.SetCreativity(50, -1)
+                    newBuilding.SetInfo("The TV station reaches almost house In a city, subtly boosting happiness And equally subtly stifling creativity.")
                 Case BuildingEnum.Welfare_Service
+                    Dim newBuilding As New Building(bType, "Welfare Service", 100, 1)
+                    newBuilding.SetHealth(10, 2)
+                    newBuilding.SetIntelligence(10, -2)
+                    newBuilding.SetCreativity(10, -2)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Zoo
+                    Dim newBuilding As New Building(bType, "Zoo", 410, 3)
+                    newBuilding.SetHappiness(50, 3)
+                    newBuilding.SetHealth(50, 3)
+                    newBuilding.SetIntelligence(50, 2)
+                    newBuilding.SetCreativity(30, 1)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
 
-
-
-                    'Case 6
-                    '    '--Museum
-                    '    Type = "Museum"
-                    '    Cost = 150
-                    '    Jobs = 1
-                    '    Intelligence_adj = 2
-                    '    Intelligence_odds = 32
-                    '    Creativity_adj = 10
-                    '    Creativity_odds = 22
-                    '    Info = "Museums may be stodgy and boring to some, but they can help increase the intelligence and creativity of those occasional visitors."
-                    'Case 7
-                    '    '--Hospital
-                    '    Type = "Hospital"
-                    '    Cost = 240
-                    '    Jobs = 3
-                    '    Health_adj = 5
-                    '    Health_odds = 35
-                    '    Drunkenness_adj = -3
-                    '    Drunkenness_odds = 12
-                    '    Info = "Hospitals are an excellent way of ensuring the health and well-being of your citizens. The doctors advise moderation of fatty foods and strong drinks, but few listen."
-                    'Case 8
-                    '    '--Library
-                    '    Type = "Library"
-                    '    Cost = 105
-                    '    Jobs = 2
-                    '    Intelligence_adj = 4
-                    '    Intelligence_odds = 25
-                    '    Happiness_adj = 2
-                    '    Happiness_odds = 14
-                    '    Info = "Libraries are a nice quiet place for citizens to read, relax and learn at their own pace."
-                    'Case 9
-                    '    '--Mall
-                    '    Type = "Mall"
-                    '    Cost = 385
-                    '    Jobs = 5
-                    '    Happiness_adj = 3
-                    '    Happiness_odds = 45
-                    '    Creativity_adj = -3
-                    '    Creativity_odds = 20
-                    '    Info = "A mall provides a tiny bit of happiness for nearly everyone, but can tend to stifle creativity and local flavor."
-                    'Case 10
-                    '    '--Memorial
-                    '    Type = "Monument"
-                    '    Cost = 85
-                    '    Jobs = 0
-                    '    Happiness_adj = 3
-                    '    Happiness_odds = 16
-                    '    Creativity_adj = 3
-                    '    Creativity_odds = 16
-                    '    Info = "A bold impressive monument that makes citizen proud, happy and inspired to new creative heights... if only slightly."
-                    'Case 11
-                    '    '--Office
-                    '    Type = "Office"
-                    '    Cost = 145
-                    '    Jobs = 4
-                    '    Creativity_adj = -2
-                    '    Creativity_odds = 30
-                    '    Info = "Offices are a simple source of jobs and infrastructure that tends not to affect citizens noticably."
-                    'Case 12
-                    '    '--Park
-                    '    Type = "Park"
-                    '    Cost = 145
-                    '    Jobs = 1
-                    '    Happiness_adj = 3
-                    '    Happiness_odds = 15
-                    '    Creativity_adj = 3
-                    '    Creativity_odds = 20
-                    '    Health_adj = 3
-                    '    Health_odds = 40
-                    '    Info = "Attractive parks allow the casual stroller to engage in happy, healthy and creative exercise and meditation."
-                    'Case 13
-                    '    '--Police Station
-                    '    Type = "Police Station"
-                    '    Cost = 155
-                    '    Jobs = 2
-                    '    Criminality_adj = -2
-                    '    Criminality_odds = 50
-                    '    Happiness_adj = -1
-                    '    Happiness_odds = 15
-                    '    Info = "Police stations are the best way to crack down on crime, even if every once in a while they spoil some harmless fun."
-                    'Case 14
-                    '    '--Sidewalks
-                    '    Type = "Sidewalks"
-                    '    Cost = 80
-                    '    Jobs = 0
-                    '    Mobility_adj = 2
-                    '    Mobility_odds = 40
-                    '    Happiness_adj = 1
-                    '    Happiness_odds = 18
-                    '    Info = "Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians."
-                    'Case 15
-                    '    '--Skyscaper
-                    '    Type = "Skyscaper"
-                    '    Cost = 275
-                    '    Jobs = 6
-                    '    Info = "Skyscrapers provide tons of jobs but have little other effect."
-                    'Case 16
-                    '    '--Stadium
-                    '    Type = "Stadium"
-                    '    Cost = 220
-                    '    Jobs = 3
-                    '    Happiness_adj = 6
-                    '    Happiness_odds = 24
-                    '    Health_adj = 5
-                    '    Health_odds = 5
-                    '    Drunkenness_adj = 3
-                    '    Drunkenness_odds = 20
-                    '    Info = "Stadiums can bring lots of fun and happiness, especially when the home team wins. The players get exercise and the audience gets entertainment and overpriced beer."
-                    'Case 17
-                    '    '--Mass Transit
-                    '    Type = "Mass Transit"
-                    '    Cost = 175
-                    '    Jobs = 1
-                    '    Mobility_adj = 5
-                    '    Mobility_odds = 32
-                    '    Info = "Mass Transit allows many of your citizens to gain mobility they never would have had without it."
-                    'Case 18
-                    '    '--Restaurant
-                    '    Type = "Restaurant"
-                    '    Cost = 120
-                    '    Jobs = 2
-                    '    Happiness_adj = 1
-                    '    Happiness_odds = 40
-                    '    Health_adj = 3
-                    '    Health_odds = 26
-                    '    Info = "Restaurants provide a charming setting for healthy meals and happy dates."
-                    'Case 19
-                    '    '--Theater
-                    '    Type = "Theater"
-                    '    Cost = 200
-                    '    Jobs = 2
-                    '    Happiness_adj = 4
-                    '    Happiness_odds = 30
-                    '    Creativity_adj = 2
-                    '    Creativity_odds = 25
-                    '    Info = "Theaters bring movies of all different types that increase happiness and often possess creative artistic merit too."
-                    'Case 20
-                    '    '--TV Station
-                    '    Type = "TV Station"
-                    '    Cost = 250
-                    '    Jobs = 3
-                    '    Happiness_adj = 2
-                    '    Happiness_odds = 70
-                    '    Creativity_adj = -1
-                    '    Creativity_odds = 50
-                    '    Info = "The TV station reaches almost house in a city, subtly boosting happiness and equally subtly stifling creativity."
-                    'Case 22
-                    '    '--Laboratory
-                    '    Type = "Laboratory"
-                    '    Cost = 205
-                    '    Jobs = 2
-                    '    Intelligence_adj = 8
-                    '    Intelligence_odds = 16
-                    '    Health_adj = -2
-                    '    Health_odds = 20
-                    '    Info = "Laboratories are a key source of research and intellectual advancement, but their chemicals and experiments can be unhealthy."
             End Select
 
             bType = -1
@@ -605,4 +699,5 @@
     End Function
 
 #End Region
+
 End Class

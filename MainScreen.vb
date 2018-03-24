@@ -21,7 +21,8 @@ Public Class Form1
     Dim SelectedCard As Integer = NoCard
 
     '--
-    Dim CurrentPerson As Integer = -1
+    Dim SelectedPerson As Integer = -1
+    Dim SelectedBuilding As Integer = -1
     Dim CurrentView As Integer = 0
 
     '--
@@ -42,6 +43,11 @@ Public Class Form1
     Friend WithEvents p4_details As Button
     Friend WithEvents p3_details As Button
     Friend WithEvents ubWipe As Button
+    Friend WithEvents TabPageBuilding As TabPage
+    Friend WithEvents lblBuilding As Label
+    Friend WithEvents ubBForward As Button
+    Friend WithEvents ubBBack As Button
+    Friend WithEvents txt_building As TextBox
     '--
     Dim init As Boolean = False
 
@@ -94,8 +100,8 @@ Public Class Form1
     Friend WithEvents txt_card As System.Windows.Forms.TextBox
     Friend WithEvents txt_person As System.Windows.Forms.TextBox
     Friend WithEvents txt_city As System.Windows.Forms.TextBox
-    Friend WithEvents ubBack As System.Windows.Forms.Button
-    Friend WithEvents ubForward As System.Windows.Forms.Button
+    Friend WithEvents ubPBack As System.Windows.Forms.Button
+    Friend WithEvents ubPForward As System.Windows.Forms.Button
     Friend WithEvents lblPerson As Label
     Friend WithEvents txtP1 As System.Windows.Forms.TextBox
     Friend WithEvents txtP2 As System.Windows.Forms.TextBox
@@ -142,8 +148,8 @@ Public Class Form1
         Me.UltraTab4 = New System.Windows.Forms.TabControl()
         Me.TabPagePerson = New System.Windows.Forms.TabPage()
         Me.lblPerson = New System.Windows.Forms.Label()
-        Me.ubForward = New System.Windows.Forms.Button()
-        Me.ubBack = New System.Windows.Forms.Button()
+        Me.ubPForward = New System.Windows.Forms.Button()
+        Me.ubPBack = New System.Windows.Forms.Button()
         Me.txt_person = New System.Windows.Forms.TextBox()
         Me.UltraTab5 = New System.Windows.Forms.TabControl()
         Me.TabPageView = New System.Windows.Forms.TabPage()
@@ -191,6 +197,11 @@ Public Class Form1
         Me.lblView = New System.Windows.Forms.Label()
         Me.lblGoal = New System.Windows.Forms.Label()
         Me.ubWipe = New System.Windows.Forms.Button()
+        Me.TabPageBuilding = New System.Windows.Forms.TabPage()
+        Me.lblBuilding = New System.Windows.Forms.Label()
+        Me.ubBForward = New System.Windows.Forms.Button()
+        Me.ubBBack = New System.Windows.Forms.Button()
+        Me.txt_building = New System.Windows.Forms.TextBox()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCard.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
@@ -203,6 +214,7 @@ Public Class Form1
         Me.gbP4.SuspendLayout()
         Me.gbP3.SuspendLayout()
         Me.Infotab.SuspendLayout()
+        Me.TabPageBuilding.SuspendLayout()
         Me.SuspendLayout()
         '
         'UltraTab1
@@ -313,8 +325,8 @@ Public Class Form1
         'TabPagePerson
         '
         Me.TabPagePerson.Controls.Add(Me.lblPerson)
-        Me.TabPagePerson.Controls.Add(Me.ubForward)
-        Me.TabPagePerson.Controls.Add(Me.ubBack)
+        Me.TabPagePerson.Controls.Add(Me.ubPForward)
+        Me.TabPagePerson.Controls.Add(Me.ubPBack)
         Me.TabPagePerson.Controls.Add(Me.txt_person)
         Me.TabPagePerson.Location = New System.Drawing.Point(4, 22)
         Me.TabPagePerson.Name = "TabPagePerson"
@@ -330,21 +342,21 @@ Public Class Form1
         Me.lblPerson.TabIndex = 4
         Me.lblPerson.Text = "Displaying X of Y"
         '
-        'ubForward
+        'ubPForward
         '
-        Me.ubForward.Location = New System.Drawing.Point(216, 296)
-        Me.ubForward.Name = "ubForward"
-        Me.ubForward.Size = New System.Drawing.Size(48, 23)
-        Me.ubForward.TabIndex = 3
-        Me.ubForward.Text = ">>>"
+        Me.ubPForward.Location = New System.Drawing.Point(216, 296)
+        Me.ubPForward.Name = "ubPForward"
+        Me.ubPForward.Size = New System.Drawing.Size(48, 23)
+        Me.ubPForward.TabIndex = 3
+        Me.ubPForward.Text = ">>>"
         '
-        'ubBack
+        'ubPBack
         '
-        Me.ubBack.Location = New System.Drawing.Point(160, 296)
-        Me.ubBack.Name = "ubBack"
-        Me.ubBack.Size = New System.Drawing.Size(48, 23)
-        Me.ubBack.TabIndex = 2
-        Me.ubBack.Text = "<<<"
+        Me.ubPBack.Location = New System.Drawing.Point(160, 296)
+        Me.ubPBack.Name = "ubPBack"
+        Me.ubPBack.Size = New System.Drawing.Size(48, 23)
+        Me.ubPBack.TabIndex = 2
+        Me.ubPBack.Text = "<<<"
         '
         'txt_person
         '
@@ -729,6 +741,7 @@ Public Class Form1
         Me.Infotab.Controls.Add(Me.TabPageCard)
         Me.Infotab.Controls.Add(Me.TabPageCity)
         Me.Infotab.Controls.Add(Me.TabPagePerson)
+        Me.Infotab.Controls.Add(Me.TabPageBuilding)
         Me.Infotab.Controls.Add(Me.TabPageView)
         Me.Infotab.Controls.Add(Me.TabPageGame)
         Me.Infotab.Location = New System.Drawing.Point(512, 305)
@@ -788,6 +801,53 @@ Public Class Form1
         Me.ubWipe.TabIndex = 21
         Me.ubWipe.Text = "Clear Above"
         '
+        'TabPageBuilding
+        '
+        Me.TabPageBuilding.Controls.Add(Me.lblBuilding)
+        Me.TabPageBuilding.Controls.Add(Me.ubBForward)
+        Me.TabPageBuilding.Controls.Add(Me.ubBBack)
+        Me.TabPageBuilding.Controls.Add(Me.txt_building)
+        Me.TabPageBuilding.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageBuilding.Name = "TabPageBuilding"
+        Me.TabPageBuilding.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageBuilding.TabIndex = 1
+        Me.TabPageBuilding.Text = "Building"
+        '
+        'lblBuilding
+        '
+        Me.lblBuilding.Location = New System.Drawing.Point(16, 299)
+        Me.lblBuilding.Name = "lblBuilding"
+        Me.lblBuilding.Size = New System.Drawing.Size(136, 16)
+        Me.lblBuilding.TabIndex = 8
+        Me.lblBuilding.Text = "Displaying X of Y"
+        '
+        'ubBForward
+        '
+        Me.ubBForward.Location = New System.Drawing.Point(216, 296)
+        Me.ubBForward.Name = "ubBForward"
+        Me.ubBForward.Size = New System.Drawing.Size(48, 23)
+        Me.ubBForward.TabIndex = 7
+        Me.ubBForward.Text = ">>>"
+        '
+        'ubBBack
+        '
+        Me.ubBBack.Location = New System.Drawing.Point(160, 296)
+        Me.ubBBack.Name = "ubBBack"
+        Me.ubBBack.Size = New System.Drawing.Size(48, 23)
+        Me.ubBBack.TabIndex = 6
+        Me.ubBBack.Text = "<<<"
+        '
+        'txt_building
+        '
+        Me.txt_building.AcceptsReturn = True
+        Me.txt_building.AcceptsTab = True
+        Me.txt_building.Location = New System.Drawing.Point(13, 15)
+        Me.txt_building.Multiline = True
+        Me.txt_building.Name = "txt_building"
+        Me.txt_building.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txt_building.Size = New System.Drawing.Size(248, 275)
+        Me.txt_building.TabIndex = 5
+        '
         'Form1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -837,6 +897,8 @@ Public Class Form1
         Me.gbP3.ResumeLayout(False)
         Me.gbP3.PerformLayout()
         Me.Infotab.ResumeLayout(False)
+        Me.TabPageBuilding.ResumeLayout(False)
+        Me.TabPageBuilding.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1369,7 +1431,7 @@ Public Class Form1
     Sub UpdateCards()
         '--Increase hand to full
         While (Cards.Count < 4)
-            Dim newBuilding As New Building()
+            Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
             Cards.Add(newBuilding)
         End While
 
@@ -1382,7 +1444,7 @@ Public Class Form1
                 If CardBuilding.RejectionCount >= Players.Count Then
                     '-- If the rejection level of a free building hit the player count, replace it
                     Cards.RemoveAt(i)
-                    Dim newBuilding As New Building()
+                    Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
                     Cards.Add(newBuilding)
                 Else
                     '-- No one bought this building even though it was free. Escallate its rejection level
@@ -1471,10 +1533,11 @@ Public Class Form1
         '-- Update the city tab
         UpdateTextBox(txt_city, ClickCity.toString())
 
+        '-- Update the person tab
         Dim personText As String = ""
         Dim currentPop As Integer = ClickCity.getPopulation()
         If currentPop > 0 Then
-            CurrentPerson = 0
+            SelectedPerson = 0
             personText = ClickCity.People(0).ToString()
             lblPerson.Text = "Displaying 1 of " + currentPop.ToString()
         Else
@@ -1482,6 +1545,19 @@ Public Class Form1
             lblPerson.Text = "Displaying 0 of 0"
         End If
         UpdateTextBox(txt_person, personText)
+
+        '-- Update the building tab
+        Dim buildingText As String = ""
+        Dim currentDev As Integer = ClickCity.getDevelopment()
+        If currentDev > 0 Then
+            SelectedBuilding = 0
+            buildingText = ClickCity.Buildings(0).ToString()
+            lblBuilding.Text = "Displaying 1 of " + currentDev.ToString()
+        Else
+            buildingText = ""
+            lblBuilding.Text = "Displaying 0 of 0"
+        End If
+        UpdateTextBox(txt_building, buildingText)
     End Sub
 
     Sub UpdateAverages()
@@ -1594,7 +1670,8 @@ Public Class Form1
         End If
 
         SelectedCard = NoCard
-        CurrentPerson = -1
+        SelectedPerson = -1
+        SelectedBuilding = -1
         EventString = ""
         UpdateTextBox(txt_event, "")
         UpdateTextBox(txt_card, "")
@@ -1697,7 +1774,7 @@ Public Class Form1
         '-- Display the card text
         Dim cardText As String = ""
         If (SelectedCard >= 0 And SelectedCard < CardCount) Then
-            cardText = Cards(SelectedCard).Info
+            cardText = Cards(SelectedCard).ToString()
         ElseIf SelectedCard = RoadCard Then
             cardText = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCostBase.ToString()
         ElseIf SelectedCard = LandCard Then
@@ -1751,23 +1828,44 @@ Public Class Form1
     End Sub
 
     '-- Person viewing
-    Private Sub ubBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubBack.Click
+    Private Sub ubPBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPBack.Click
         Dim selectedPop As Integer = ClickCity.getPopulation()
-        If selectedPop > 0 And CurrentPerson > 0 Then
-            CurrentPerson = CurrentPerson - 1
-            lblPerson.Text = "Displaying " + (CurrentPerson + 1).ToString() + " of " + selectedPop.ToString()
-            If CurrentPerson < selectedPop Then
-                txt_person.Text = ClickCity.People(CurrentPerson).ToString()
+        If selectedPop > 0 And SelectedPerson > 0 Then
+            SelectedPerson -= 1
+            lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + selectedPop.ToString()
+            If SelectedPerson < selectedPop Then
+                UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).ToString())
             End If
         End If
     End Sub
 
-    Private Sub ubForward_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubForward.Click
+    Private Sub ubPForward_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPForward.Click
         Dim selectedPop As Integer = ClickCity.getPopulation()
-        If selectedPop > 0 And CurrentPerson < selectedPop - 1 Then
-            CurrentPerson = CurrentPerson + 1
-            lblPerson.Text = "Displaying " + (CurrentPerson + 1).ToString() + " of " + selectedPop.ToString()
-            txt_person.Text = ClickCity.People(CurrentPerson).ToString()
+        If selectedPop > 0 And SelectedPerson < selectedPop - 1 Then
+            SelectedPerson += 1
+            lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + selectedPop.ToString()
+            UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).ToString())
+        End If
+    End Sub
+
+    '-- Building viewing
+    Private Sub ubBBack_Click(sender As Object, e As EventArgs) Handles ubBBack.Click
+        Dim selectedDev As Integer = ClickCity.getDevelopment()
+        If selectedDev > 0 And SelectedBuilding > 0 Then
+            SelectedBuilding -= 1
+            lblPerson.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + selectedDev.ToString()
+            If SelectedBuilding < selectedDev Then
+                UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).ToString())
+            End If
+        End If
+    End Sub
+
+    Private Sub ubBForward_Click(sender As Object, e As EventArgs) Handles ubBForward.Click
+        Dim selectedDev As Integer = ClickCity.getDevelopment()
+        If selectedDev > 0 And SelectedBuilding < selectedDev - 1 Then
+            SelectedBuilding += 1
+            lblBuilding.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + selectedDev.ToString()
+            UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).ToString())
         End If
     End Sub
 
@@ -1906,6 +2004,8 @@ Public Class Form1
 
         MsgBox(playerInfoText, MsgBoxStyle.Information, "Player Info")
     End Sub
+
+
 
 #End Region
 
