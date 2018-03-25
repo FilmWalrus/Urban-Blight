@@ -35,6 +35,9 @@ Public Class Person
     Public Wealth As Integer = 0
     Public UnpaidFines As Integer = 0
 
+    '-- Life Events
+    Public JourneyString As String = ""
+
     '-- Mark
     Public TouchedKey As Integer = 0
 #End Region
@@ -158,8 +161,25 @@ Public Class Person
         End If
     End Sub
 
+    Public Sub AddEvent(ByVal eString As String)
+        JourneyString += eString + ControlChars.NewLine
+    End Sub
+
+    Public Sub AddEvent(ByVal eString As String, ByVal eStat As Integer)
+        '-- Add an event that changed a stat
+        If eStat <> 0 Then
+            If eStat > 0 Then
+                JourneyString += "+"
+            End If
+            JourneyString += eStat.ToString + " " + eString + ControlChars.NewLine
+        End If
+    End Sub
+
+
     Public Sub UpdateInternal()
         Dim maxBonus, maxLoss As Double
+        Dim statChange As Integer = 0
+        Dim statChange2 As Integer = 0
 
         Dim thePop As Integer = Residence.getPopulation()
         Dim theRoad As Integer = Residence.Transportation
@@ -176,16 +196,22 @@ Public Class Person
             If maxLoss < 0 Then
                 maxLoss = 0
             End If
-            Health -= GetRandom(maxLoss, maxLoss + 2)
+            statChange = GetRandom(maxLoss, maxLoss + 2)
+            Health -= statChange
+            AddEvent("health due to aging", -statChange)
         End If
 
         '--Health
         If Health < 15 Then
             '-- Deteriation
             Health -= 1
+            AddEvent("health due to sickness", -1)
+
             If Employment = 0 Then
                 '-- Starving artist
-                Creativity += GetRandom(0, 3)
+                statChange = GetRandom(0, 3)
+                Creativity += statChange
+                AddEvent("creativity struggling for survival", statChange)
             End If
         End If
 
@@ -193,59 +219,96 @@ Public Class Person
         If Happiness >= 70 Then
             '-- Happiness improves health
             maxBonus = (Happiness - 60.0) / 10.0
-            Health += GetRandom(0, maxBonus)
-        End If
-        If Happiness <= 10 Then
+            statChange = GetRandom(0, maxBonus)
+            Health += statChange
+            AddEvent("health from happiness", statChange)
+        ElseIf Happiness <= 10 Then
             '-- Depression sickness
-            Health -= GetRandom(1, 3)
+            statChange = GetRandom(1, 3)
+            Health -= statChange
+            AddEvent("health due to depression", -statChange)
         End If
         If Happiness <= 15 Then
             '-- Unhappy people lash out at society
-            Criminality += GetRandom(0, 2)
+            statChange = GetRandom(0, 2)
+            Criminality += statChange
+            AddEvent("criminality due to anger & bitterness", statChange)
         End If
 
         '--Employment
         If Employment > 0 Then
             '-- Success leads to promotions
-            maxBonus = (Intelligence / 8.0) + (Creativity / 9.0)
-            Employment += GetRandom(0, maxBonus)
+            maxBonus = (Intelligence / 8.0) + (Creativity / 9.0) ' - 5 (allow work performance to be bad and employee to be fired
+            statChange = GetRandom(0, maxBonus)
+            Employment += statChange
+            AddEvent("employment for solid work performance", statChange)
 
             '-- Criminality drops
-            Criminality -= GetRandom(0, 1)
+            statChange = GetRandom(0, 1)
+            Criminality -= statChange
+            AddEvent("criminality b/c of steady employment", -statChange)
         Else
             If Age >= 16 Then
                 '-- Unemployment is depressing and encourages a life of crime
-                Happiness -= GetRandom(0, 3)
-                Criminality += GetRandom(0, 2)
+                statChange = GetRandom(0, 3)
+                Happiness -= statChange
+                AddEvent("happiness due to unemployment frustration", -statChange)
+
+                statChange = GetRandom(0, 2)
+                Criminality += statChange
+                AddEvent("criminality from unemployment desperation", statChange)
             End If
         End If
         If Employment > 50 Then
             '-- Fast track
             maxBonus = ((Employment - 40.0) / 10.0)
-            Happiness += GetRandom(0, maxBonus)
+            statChange = GetRandom(0, maxBonus)
+            Happiness += statChange
+            AddEvent("happiness due to satisfying job", statChange)
         End If
 
         '--Intelligence and Creativity
         If Age <= 35 Then '-- Occurs 11 times
             '-- Personal drive
-            Intelligence += GetRandom(0, SafeDivide(Intelligence, 15.0))
-            Creativity += GetRandom(0, SafeDivide(Creativity, 15.0))
+            statChange = GetRandom(0, SafeDivide(Intelligence, 15.0))
+            Intelligence += statChange
+            AddEvent("intelligence due to youthful drive", statChange)
+
+            statChange = GetRandom(0, SafeDivide(Creativity, 15.0))
+            Creativity += statChange
+            AddEvent("creativity due to youthful drive", statChange)
         End If
         If Age <= 18 Then '-- Occurs 5 times
             '-- Street smarts
             maxBonus = GetRandom(0, thePop / 8.0)
+
             '-- Primary school
-            Intelligence += GetRandom(2, 5 + maxBonus)
-            Creativity += GetRandom(2, 4 + maxBonus)
+            statChange = GetRandom(2, 5 + maxBonus)
+            Intelligence += statChange
+            AddEvent("intelligence at primary school", statChange)
+
+            statChange = GetRandom(2, 4 + maxBonus)
+            Creativity += statChange
+            AddEvent("creativity at primary school", statChange)
         End If
         If Age >= 18 And Age <= 25 Then '-- Occurs 3 times
             If Intelligence >= 30 + (thePop / 5.0) Then
                 '-- Higher education. Gets more competitive with population.
-                Intelligence += GetRandom(1, 5)
-                Creativity += GetRandom(1, 5)
+                statChange = GetRandom(1, 5)
+                Intelligence += statChange
+                AddEvent("intelligence from community college", statChange)
+
+                statChange = GetRandom(1, 5)
+                Creativity += statChange
+                AddEvent("creativity from community college", statChange)
             Else
-                Intelligence += GetRandom(0, 2)
-                Creativity += GetRandom(0, 2)
+                statChange = GetRandom(0, 2)
+                Intelligence += statChange
+                AddEvent("intelligence (not attending college)", statChange)
+
+                statChange = GetRandom(0, 2)
+                Creativity += statChange
+                AddEvent("creativity (not attending college)", statChange)
             End If
         End If
 
@@ -253,15 +316,21 @@ Public Class Person
         maxBonus += GetRandom(theRoad / 2.0, theRoad)
         If Age <= 19 Then
             '-- Learn to walk, then to run
-            Mobility += GetRandom(1, 3)
+            statChange = GetRandom(1, 3)
+            Mobility += statChange
+            AddEvent("mobility from learning to walk/run", statChange)
         ElseIf Age >= 50 Then
             '-- Arthritis
             maxLoss = (Age - 40.0) / 8.5
-            Mobility -= GetRandom(0, maxLoss)
+            statChange = GetRandom(0, maxLoss)
+            Mobility -= statChange
+            AddEvent("mobility from aging/arthritis", -statChange)
         End If
         If Age = 16 Then
             '-- Learn to drive
-            Mobility += GetRandom(3, 8)
+            statChange = GetRandom(3, 8)
+            Mobility += statChange
+            AddEvent("mobility from learning to drive", statChange)
         End If
 
 
@@ -269,24 +338,32 @@ Public Class Person
         If Drunkenness >= 10 Then
             '-- Addiction
             maxBonus = Drunkenness / 10.0
-            Drunkenness += GetRandom(0, maxBonus)
+            statChange = GetRandom(0, maxBonus)
+            Drunkenness += statChange
+            AddEvent("substance abuse from dependence", statChange)
         End If
-        If Drunkenness >= 2 And Drunkenness <= 30 Then
+        If Drunkenness >= 2 And Drunkenness <= 20 Then
             '-- Pleasant buzz
-            Happiness += GetRandom(0, 2)
+            statChange = GetRandom(0, 2)
+            Happiness += statChange
+            AddEvent("happiness from being pleasantly buzzed", statChange)
         End If
         If Drunkenness >= 25 Then
             '-- Liver damage
             maxLoss = Drunkenness / 13.0
-            Health -= GetRandom(0, maxLoss)
+            statChange = GetRandom(0, maxLoss)
+            Health -= statChange
+            AddEvent("health from liver damage", -statChange)
         End If
-        If Drunkenness >= 40 Then
+        If Drunkenness >= 30 Then
             '-- Destructive lifestyle
             Happiness -= GetRandom(0, 2)
+            AddEvent("happiness from destructive lifestyle", -statChange)
         End If
         If Drunkenness >= 40 And Health <= 12 And GetRandom(0, 100) <= 15 Then
             '-- Go cold turkey
             Drunkenness = 0
+            AddEvent("=0 drunkenness; went cold turkey to stay alive")
         End If
 
         '-- Population
@@ -299,11 +376,17 @@ Public Class Person
                 Dim switchman As Integer = GetRandom(0, 2)
                 '-- Crowded areas reduces health, happiness and increased crime
                 If switchman = 0 Then
-                    Criminality += GetRandom(0, maxBonus)
+                    statChange = GetRandom(0, maxBonus)
+                    Criminality += statChange
+                    AddEvent("criminality from overpopulation", statChange)
                 ElseIf switchman = 1 Then
-                    Happiness -= GetRandom(0, maxBonus)
+                    statChange = GetRandom(0, maxBonus)
+                    Happiness -= statChange
+                    AddEvent("happiness from overpopulation", -statChange)
                 Else
-                    Health -= GetRandom(0, maxBonus)
+                    statChange = GetRandom(0, maxBonus)
+                    Health -= statChange
+                    AddEvent("health from overpopulation", -statChange)
                 End If
             Next
         End If
@@ -311,21 +394,39 @@ Public Class Person
         '-- Terrain
         Select Case (Residence.Terrain)
             Case TerrainForest
-                Happiness += GetRandom(1, 3)
-                Health += GetRandom(1, 3)
+                statChange = GetRandom(1, 3)
+                Happiness += statChange
+                AddEvent("happiness from forest", statChange)
+
+                statChange = GetRandom(1, 3)
+                Health += statChange
+                AddEvent("health from forest", statChange)
             Case TerrainMountain
-                Creativity += GetRandom(1, 3)
-                Mobility -= GetRandom(0, 2)
+                statChange = GetRandom(1, 3)
+                Creativity += statChange
+                AddEvent("creativity from mountain", statChange)
+
+                statChange = GetRandom(0, 2)
+                Mobility -= statChange
+                AddEvent("mobility from mountain", -statChange)
             Case TerrainSwamp
-                Health -= GetRandom(2, 4)
+                statChange = GetRandom(2, 4)
+                Health -= statChange
+                AddEvent("health from swawmp", -statChange)
             Case TerrainDirt
-                Creativity -= GetRandom(0, 2)
+                statChange = GetRandom(0, 2)
+                Creativity -= statChange
+                AddEvent("creativity from boring ol' dirt", -statChange)
             Case TerrainDesert
-                Mobility += GetRandom(1, 3)
+                statChange = GetRandom(1, 3)
+                Mobility += statChange
+                AddEvent("mobility from wide open desert", statChange)
         End Select
         If Residence.Coastal Then
             '-- Coastal areas make people happier
-            Happiness += GetRandom(1, 2)
+            statChange = GetRandom(1, 2)
+            Happiness += statChange
+            AddEvent("happiness from coastal life", statChange)
         End If
 
         '-- Cap all values between 0 and 100
@@ -434,9 +535,12 @@ Public Class Person
         Dim PersonString As String = ""
         PersonString += "Name: " + Name.ToString + ControlChars.NewLine
         If BirthPlace Is Nothing Then
-            PersonString += "Birthplace: Unknown" + ControlChars.NewLine
+            'PersonString += "Birthplace: Unknown" + ControlChars.NewLine
         Else
             PersonString += "Birthplace: " + BirthPlace.GetName() + ControlChars.NewLine
+        End If
+        If Residence IsNot Nothing Then
+            PersonString += "Residence: " + Residence.GetName() + ControlChars.NewLine
         End If
 
 
@@ -479,8 +583,8 @@ Public Class Person
                     PersonString += ", "
                 End If
             Next
+            PersonString += ControlChars.NewLine
         End If
-        PersonString += ControlChars.NewLine
 
         '-- Print the citizen's criminal record
         If ParkingTicketCount + DrivingTicketCount + RobberyCount + ArsonCount + MurderCount > 0 Then
@@ -500,6 +604,12 @@ Public Class Person
             If MurderCount > 0 Then
                 PersonString += "Murder: " + MurderCount.ToString + ControlChars.NewLine
             End If
+        End If
+
+        Dim showJourney As Boolean = True
+        If showJourney Then
+            PersonString += ControlChars.NewLine
+            PersonString += JourneyString
         End If
 
 

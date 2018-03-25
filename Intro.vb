@@ -658,10 +658,8 @@ Public Class Intro
         Dim currentPlayer As Player = Players(playerIndex)
         currentPlayer.PlayerType = playerType
 
-        If currentPlayer.PlayerType = PlayerAI Then
-            '-- Generate a new player personality and display
-            UpdatePlayerAI(currentPlayer)
-        End If
+        '-- Generate a new player personality and display
+        UpdatePlayerAI(currentPlayer)
 
         '-- Must have at least 1 player to begin
         Dim playerCount As Integer = 0
