@@ -530,45 +530,52 @@
                     newBuilding.SetSpecialAbility("Customs Houses generate revenue for the owner and are more effective for each unique player with an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Daycare_Center
-                    Dim newBuilding As New DayCareBuilding(bType, 90, 1)
+                    Dim newBuilding As New DayCareBuilding(bType, 90, 1) 'Daycare Centers traditionally serve younger kids who aren't going to school yet.  Maybe under 7?
                     newBuilding.SetHappiness(20, 5)
                     newBuilding.SetHealth(18, 2)
                     newBuilding.SetCriminality(20, -2)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Daycare Centers give the little ones a place to go while the adults are at work.  They are excellent places for children to learn interpersonal skills while they play.")
+					newBuilding.SetSpecialAbility("The Daycare Center effects only minors.")
                     Return newBuilding
                 Case BuildingEnum.Department_Store
                     Dim newBuilding As New Building(bType, 115, 3)
                     newBuilding.SetHappiness(8, 1)
-                    newBuilding.SetCriminality(12, -1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetCreativity(12, -1)
+                    newBuilding.SetInfo("Make errands eazy and fun at the Department Store - the one-stop shop for all your home and clothing needs.")
+					newBuilding.SetSpecialAbility("Department Stores have a small chance of opening another of their chain on an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Detective_Agency
                     Dim newBuilding As New Building(bType, 80, 1)
                     newBuilding.SetCriminality(8, -8)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Suspicious of a co-worker? Want to know the whereabouts of your lover? Some cases aren't meant for the police. That's where the Detective Agency comes in to play.")
+					newBuilding.SetSpecialAbility("The Detective Agency lets you see where your citizens have been and what they've done on their last turn. This only applies to citizens living on the square with the Detective Agency.")
                     Return newBuilding
                 Case BuildingEnum.Exurb
-                    Dim newBuilding As New Building(bType, 435, 0)
+                    Dim newBuilding As New Building(bType, 435, 0) 'Check phrasing of Exurb special ability text.
                     newBuilding.SetMobility(15, 2)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Sometimes you just need to escape the city.  Exurbs let you get away, but still remain close to the hustle and bustle of your metropolis.")
+					newBuilding.SetSpecialAbility("After purchasing an Exurbs, the next piece of land you buy can be any unoccupied square on the board. This square will be considered adjacent to the tile where you placed the Exurb.")
                     Return newBuilding
                 Case BuildingEnum.Factory
                     Dim newBuilding As New ManufacturingBuilding(bType, 125, 5)
                     newBuilding.SetHappiness(16, -3)
                     newBuilding.SetHealth(33, -6)
-                    newBuilding.SetInfo("Factories provide many needed jobs but their monotony can be depressing and their pollution is unhealthy.")
+                    newBuilding.SetInfo("Factories provide many needed jobs but their monotony can be depressing and their pollution harmful.")
+					newBuilding.SetSpecialAbility("The effects of a Factory are worse for every 10 population sharing its square.")
                     Return newBuilding
                 Case BuildingEnum.Farm
                     Dim newBuilding As New Building(bType, 80, 1)
                     newBuilding.SetHealth(65, 2)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Farms are the backbone of any society. They provide fresh produce and fibers to the local community.")
+					newBuilding.SetSpecialAbility("Farms double the effect of any Food buildings on the same square.  Farms expand faster on a Dirt tile.")
                     Return newBuilding
                 Case BuildingEnum.Fast_Food_Chain
                     Dim newBuilding As New Building(bType, 50, 1)
                     newBuilding.SetHappiness(65, 1)
                     newBuilding.SetHealth(65, -2)
                     newBuilding.SetMobility(15, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Quick and convenient with a side order of grease, Fast Food Chains help satisfy your food cravings and fuel you up for the day to come.")
+					newBuilding.SetSpecialAbility("Fast Food Chains have a small chance of opening another location on an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Fire_Station
                     Dim newBuilding As New Building(bType, 100, 2)
