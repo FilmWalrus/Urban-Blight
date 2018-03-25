@@ -112,6 +112,217 @@
 
 #Region " Functions "
 
+    Public Function GetName(ByVal bType As Integer) As String
+        Select Case bType
+            Case BuildingEnum.Ad_Agency
+                Return "Ad Agency"
+            Case BuildingEnum.Activism_Organization
+                Return "Activism Organization"
+            Case BuildingEnum.Airport
+                Return "Airport"
+            Case BuildingEnum.Ambulance_Service
+                Return "Ambulance Service"
+            Case BuildingEnum.Amusement_Park
+                Return "Amusement Park"
+            Case BuildingEnum.Apartments
+                Return "Apartments"
+            Case BuildingEnum.Architecture_Firm
+                Return "Architecture Firm"
+            Case BuildingEnum.Art_Gallery
+                Return "Art Gallery"
+            Case BuildingEnum.Bank
+                Return "Bank"
+            Case BuildingEnum.Bar
+                Return "Bar"
+            Case BuildingEnum.Black_Market
+                Return "Black Market"
+            Case BuildingEnum.Botanical_Garden
+                Return "Botanical Garden"
+            Case BuildingEnum.Campsite
+                Return "Campsite"
+            Case BuildingEnum.Cartel
+                Return "Cartel"
+            Case BuildingEnum.Casino
+                Return "Casino"
+            Case BuildingEnum.Church
+                Return "Church"
+            Case BuildingEnum.City_Wall
+                Return "City Wall"
+            Case BuildingEnum.Civic_Center
+                Return "Civic Center"
+            Case BuildingEnum.Coffee_Shop
+                Return "Coffee Shop"
+            Case BuildingEnum.College
+                Return "College"
+            Case BuildingEnum.Community_Center
+                Return "Community Center"
+            Case BuildingEnum.Concert_Venue
+                Return "Concert Venue"
+            Case BuildingEnum.Conservation_Area
+                Return "Conservation Area"
+            Case BuildingEnum.Construction_Site
+                Return "Construction Site"
+            Case BuildingEnum.Correctional_Facility
+                Return "Correctional Facility"
+            Case BuildingEnum.Courthouse
+                Return "Courthouse"
+            Case BuildingEnum.Crime_Ring
+                Return "Crime Ring"
+            Case BuildingEnum.Cult
+                Return "Cult"
+            Case BuildingEnum.Customs_House
+                Return "Customs House"
+            Case BuildingEnum.Daycare_Center
+                Return "Daycare Center"
+            Case BuildingEnum.Department_Store
+                Return "Department Store"
+            Case BuildingEnum.Detective_Agency
+                Return "Detective Agency"
+            Case BuildingEnum.Exurb
+                Return "Exurb"
+            Case BuildingEnum.Factory
+                Return "Factory"
+            Case BuildingEnum.Farm
+                Return "Farm"
+            Case BuildingEnum.Fast_Food_Chain
+                Return "Fast Food Chain"
+            Case BuildingEnum.Fire_Station
+                Return "Fire Station"
+            Case BuildingEnum.Fishery
+                Return "Fishery"
+            Case BuildingEnum.Freeway
+                Return "Freeway"
+            Case BuildingEnum.Gas_Station
+                Return "Gas Station"
+            Case BuildingEnum.Golf_Course
+                Return "Golf Course"
+            Case BuildingEnum.Government_Bureau
+                Return "Government Bureau"
+            Case BuildingEnum.Graveyard
+                Return "Graveyard"
+            Case BuildingEnum.Grocery_Store
+                Return "Grocery Store"
+            Case BuildingEnum.Gym
+                Return "Gym"
+            Case BuildingEnum.Harbor
+                Return "Harbor"
+            Case BuildingEnum.Hospital_Cancer
+                Return "Hospital - Cancer"
+            Case BuildingEnum.Hospital_Emergency
+                Return "Hospital - Emergency"
+            Case BuildingEnum.Hospital_Geriatric
+                Return "Hospital - Geriatric"
+            Case BuildingEnum.Hospital_Maternity
+                Return "Hospital - Maternity"
+            Case BuildingEnum.Hospital_Pediatric
+                Return "Hospital - Pediatric"
+            Case BuildingEnum.Hospital_Research
+                Return "Hospital - Research"
+            Case BuildingEnum.Hotel
+                Return "Hotel"
+            Case BuildingEnum.Laboratory
+                Return "Laboratory"
+            Case BuildingEnum.Land_Developer
+                Return "Land Developer"
+            Case BuildingEnum.Landfill
+                Return "Landfill"
+            Case BuildingEnum.Law_Firm
+                Return "Law Firm"
+            Case BuildingEnum.Library
+                Return "Library"
+            Case BuildingEnum.Lottery
+                Return "Lottery"
+            Case BuildingEnum.Lumber_Mill
+                Return "Lumber Mill"
+            Case BuildingEnum.Mall
+                Return "Mall"
+            Case BuildingEnum.Mass_Transit
+                Return "Mass Transit"
+            Case BuildingEnum.Mine
+                Return "Mine"
+            Case BuildingEnum.Monument
+                Return "Monument"
+            Case BuildingEnum.Military_Base
+                Return "Military Base"
+            Case BuildingEnum.Museum
+                Return "Museum"
+            Case BuildingEnum.Observatory
+                Return "Observatory"
+            Case BuildingEnum.Oil_Well
+                Return "Oil_Well"
+            Case BuildingEnum.Office
+                Return "Office"
+            Case BuildingEnum.Park
+                Return "Park"
+            Case BuildingEnum.Parking_Garage
+                Return "Parking Garage"
+            Case BuildingEnum.Parking_Lot
+                Return "Parking Lot"
+            Case BuildingEnum.Pharmacy
+                Return "Pharmacy"
+            Case BuildingEnum.Police_Station
+                Return "Police Station"
+            Case BuildingEnum.Post_Office
+                Return "Post Office"
+            Case BuildingEnum.Power_Plant
+                Return "Power Plant"
+            Case BuildingEnum.Private_Security_Company
+                Return "Private Security Company"
+            Case BuildingEnum.Real_Estate_Developer
+                Return "Real Estate Developer"
+            Case BuildingEnum.Recycling_Center
+                Return "Recycling_Center"
+            Case BuildingEnum.Refugee_Camp
+                Return "Refugee Camp"
+            Case BuildingEnum.Rehab_Clinic
+                Return "Rehab Clinic"
+            Case BuildingEnum.Restaurant
+                Return "Restaurant"
+            Case BuildingEnum.Retirement_Home
+                Return "Retirement Home"
+            Case BuildingEnum.School
+                Return "School"
+            Case BuildingEnum.Shipping_Center
+                Return "Shipping Center"
+            Case BuildingEnum.Sidewalks
+                Return "Sidewalks"
+            Case BuildingEnum.Ski_Resort
+                Return "Ski Resort"
+            Case BuildingEnum.Skyscraper
+                Return "Skyscraper"
+            Case BuildingEnum.Stadium
+                Return "Stadium"
+            Case BuildingEnum.Startup_Incubator
+                Return "Startup Incubator"
+            Case BuildingEnum.Steel_Mill
+                Return "Steel Mill"
+            Case BuildingEnum.Suburb
+                Return "Suburb"
+            Case BuildingEnum.Taxi_Service
+                Return "Taxi Service"
+            Case BuildingEnum.Temp_Agency
+                Return "Temp Agency"
+            Case BuildingEnum.Textile_Mill
+                Return "Textile Mill"
+            Case BuildingEnum.Theater
+                Return "Theater"
+            Case BuildingEnum.Think_Tank
+                Return "Think Tank"
+            Case BuildingEnum.Toll_Booth
+                Return "Toll Booth"
+            Case BuildingEnum.Tourism_Agency
+                Return "Tourism Agency"
+            Case BuildingEnum.TV_Station
+                Return "TV Station"
+            Case BuildingEnum.Welfare_Service
+                Return "Welfare Service"
+            Case BuildingEnum.Zoo
+                Return "Zoo"
+            Case Else
+                Return ""
+        End Select
+    End Function
+
     Public Function CreateBuilding(ByVal bType As Integer) As Building
 
         Do
@@ -279,7 +490,7 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Construction_Site
-                    Dim newBuilding As New Building(bType, "Construction Site", 160, 3)
+                    Dim newBuilding As New ConstructionSiteBuilding(bType, "Construction Site", 165, 3)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Correctional_Facility
