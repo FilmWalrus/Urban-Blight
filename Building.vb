@@ -3,11 +3,15 @@ Public Class Building
 #Region " Variables "
     Public Name As String = ""
     Public Type As Integer = -1
+
     Public Cost As Integer = 0
     Public Jobs As Integer = 0
     Public Success As Integer = 0
+
     Public Info As String = ""
     Public SpecialAbility As String = ""
+    Public Tags As New ArrayList
+
     Public Location As CitySquare = Nothing
     Public Employees As New ArrayList
 
@@ -97,6 +101,7 @@ Public Class Building
     Public Sub SetSpecialAbility(ByVal bSpecial As String)
         SpecialAbility = bSpecial
     End Sub
+
 #End Region
 
 #Region " Gets "
@@ -166,6 +171,16 @@ Public Class Building
         Return Criminality_adj
     End Function
 
+#End Region
+
+#Region " Tags "
+    Public Sub AddTag(ByVal newTag As String)
+        Tags.Add(newTag)
+    End Sub
+
+    Public Function HasTag(ByVal newTag As String) As Boolean
+        Return Tags.Contains(newTag)
+    End Function
 #End Region
 
 #Region " Affect Person "
@@ -258,10 +273,9 @@ Public Class Building
         AffectCriminality(thePerson)
     End Sub
 
-
 #End Region
 
-#Region " Hiring "
+#Region " Job Functions "
 
     Public Overridable Function WillHire(ByRef Candidate As Person) As Boolean
 
@@ -288,6 +302,10 @@ Public Class Building
         Employees.Add(Employee)
         Employee.JobBuilding = Me
         Employee.Employment += 1
+    End Sub
+
+    Public Overridable Sub ConstructionEffects()
+        '-- Base building type has no construction effects
     End Sub
 
 #End Region

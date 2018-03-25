@@ -155,6 +155,39 @@ Public Class CitySquare
         Next
         Return citizensEmployed
     End Function
+
+    Public Function CountBuildingsByType(ByVal bType As Integer) As Integer
+        Dim buildingCount As Integer = 0
+        For i As Integer = 0 To Buildings.Count - 1
+            Dim thisBuilding As Building = Buildings(i)
+            If thisBuilding.Type = bType Then
+                buildingCount += 1
+            End If
+        Next
+        Return buildingCount
+    End Function
+
+    Public Function GetBuildingsByType(ByVal bType As Integer) As ArrayList
+        Dim buildingList As New ArrayList
+        For i As Integer = 0 To Buildings.Count - 1
+            Dim thisBuilding As Building = Buildings(i)
+            If thisBuilding.Type = bType Then
+                buildingList.Add(thisBuilding)
+            End If
+        Next
+        Return buildingList
+    End Function
+
+    Public Function GetBuildingsByTag(ByVal bTag As String) As ArrayList
+        Dim buildingList As New ArrayList
+        For i As Integer = 0 To Buildings.Count - 1
+            Dim thisBuilding As Building = Buildings(i)
+            If thisBuilding.HasTag(bTag) Then
+                buildingList.Add(thisBuilding)
+            End If
+        Next
+        Return buildingList
+    End Function
 #End Region
 
 #Region " Functions "
@@ -171,8 +204,9 @@ Public Class CitySquare
     End Function
 
     Public Sub AddBuilding(ByVal NewBuilding As Building)
-        Buildings.Add(NewBuilding)
         NewBuilding.Location = Me
+        NewBuilding.ConstructionEffects()
+        Buildings.Add(NewBuilding)
     End Sub
 
     Public Sub AddRoad()

@@ -248,7 +248,7 @@ Public Class Person
             Criminality -= statChange
             AddEvent("criminality b/c of steady employment", -statChange)
         Else
-            If Age >= 16 Then
+            If Not IsMinor() Then
                 '-- Unemployment is depressing and encourages a life of crime
                 statChange = GetRandom(0, 3)
                 Happiness -= statChange
@@ -530,6 +530,14 @@ Public Class Person
         Return Name.ToString() + " of " + Residence.GetName()
     End Function
 
+    Public Function IsMinor() As Boolean
+        If Age < 16 Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
     Public Overrides Function toString() As String
         '-- Print the citizen's name
         Dim PersonString As String = ""
@@ -557,7 +565,7 @@ Public Class Person
         PersonString += ControlChars.NewLine
 
         '-- Print the citizen's age and employment status
-        If Age < 16 Then
+        If IsMinor() Then
             PersonString += "Minor." + ControlChars.NewLine
         End If
         If JobBuilding Is Nothing Then

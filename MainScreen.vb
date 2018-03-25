@@ -1121,7 +1121,7 @@ Public Class Form1
             End If
         End If
 
-        '--
+        '-- Switch to the city tab when the user clicks on a grid square
         If e.Button = MouseButtons.Left Then
             Dim BuildSuccess As Boolean = Build()
             UpdateTabs()
@@ -1129,12 +1129,7 @@ Public Class Form1
                 Infotab.SelectedTab = Infotab.TabPages(CityTab)
             End If
         ElseIf e.Button = MouseButtons.Right Then
-            '-- Currently used for view mode
-            UpdateTabs()
-            If GridArray(X, Y).OwnerID < 0 Or Infotab.SelectedIndex <> PersonTab Then
-                Infotab.SelectedTab = Infotab.TabPages(CityTab)
-            End If
-
+            '-- Use for view mode?
         End If
 
     End Sub
