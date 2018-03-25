@@ -124,44 +124,52 @@
                     Dim newBuilding As New Building(bType, "Ad Agency", 110, 2)
                     newBuilding.SetIntelligence(20, -2)
                     newBuilding.SetCreativity(10, 2)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Want to boost the effects of local commercial businesses?  Hire an Ad Agency to get those creative juices flowing.")
+					newBuilding.SetSpecialAbility("")
                     Return newBuilding
-                Case BuildingEnum.Activism_Organization
+                Case BuildingEnum.Activism_Organization 'Brian to fill in the brackets under Special Ability
                     Dim newBuilding As New Building(bType, "Activism Organization", 105, 1)
                     newBuilding.SetHappiness(20, 1)
                     newBuilding.SetHealth(30, 4)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("It is our mission to improve the wellbeing of the community, one person at a time.")
+					newBuilding.SetSpecialAbility("Permanently bans the user from building [] ")
                     Return newBuilding
                 Case BuildingEnum.Airport
                     Dim newBuilding As New Building(bType, "Airport", 635, 5)
                     newBuilding.SetMobility(18, 10)
-                    newBuilding.SetInfo("Airports are not used frequently by people but vastly increase mobility when visited.")
+                    newBuilding.SetInfo("Though a more expensive option, Airports allow for travel to far-reaching destinations.")
+					newBuilding.SetSpecialAbility("Cities containing Airports are considered adjacent to other citiies containing Airports - both yours and those belonging to other players.")
                     Return newBuilding
                 Case BuildingEnum.Ambulance_Service
                     Dim newBuilding As New Building(bType, "Ambulance Service", 280, 2)
                     newBuilding.SetHealth(10, 4)
                     newBuilding.SetMobility(10, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("In a medical emergency, the Ambulance Service provides treatment and transport to afflicted individuals.")
+					newBuilding.SetSpecialAbility("The Ambulance Service boosts the effects of all medical buildings within a radius of two adjacent squares.")
                     Return newBuilding
                 Case BuildingEnum.Amusement_Park
                     Dim newBuilding As New Building(bType, "Amusement Park", 515, 4)
                     newBuilding.SetHappiness(16, 7)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Remember the excitement (mixed with a little terror) that coursed through you at the top of your first roller coaster?  Relive those experiences at the Amusement Park!")
+					newBuilding.SetSpecialAbility("Positive effects are doubled for minors.")
                     Return newBuilding
-                Case BuildingEnum.Apartments
+                Case BuildingEnum.Apartments 'I'm also going to let you write this Special Ability.  I get what you mean but can't figure out a way to phrase it.
                     Dim newBuilding As New Building(bType, "Apartments", 360, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Everyone needs a place to call home.  Apartment-living is cheap and puts you in the middle of the action.")
+					newBuilding.SetSpecialAbility("")
                     Return newBuilding
-                Case BuildingEnum.Architecture_Firm
+                Case BuildingEnum.Architecture_Firm 
                     Dim newBuilding As New Building(bType, "Architecture Firm", 210, 2)
                     newBuilding.SetIntelligence(10, 2)
                     newBuilding.SetCreativity(18, 4)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Paris. New York. Dubai. Three cities full of culture and architectural wonders.  Should your city join them?")
+					newBuilding.SetSpecialAbility("The Architecture Firm increases the chances that the 'Wipe Cards' action will cost $0.")
                     Return newBuilding
                 Case BuildingEnum.Art_Gallery
                     Dim newBuilding As New Building(bType, "Art Gallery", 120, 1)
                     newBuilding.SetCreativity(33, 4)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Feel inspired by the works of the great paintings, drawings, sculptures, and photography that surround you at the Art Gallery.")
+					newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Bank
 
@@ -169,19 +177,22 @@
                     Dim newBuilding As New Building(bType, "Bar", 60, 1)
                     newBuilding.SetHappiness(30, 4)
                     newBuilding.SetDrunkenness(30, 6)
-                    newBuilding.SetInfo("Bars provide a social atmosphere to cheer people up but can cause a serious upsurge in drunkenness.")
+                    newBuilding.SetInfo("Bars provide a social atmosphere to cheer people up but can result in overindulgence.")
+					newBuilding.SetSpecialAbility("Bars double the effect of Stadiums and Colleges on the same square.")
                     Return newBuilding
                 Case BuildingEnum.Black_Market
                     Dim newBuilding As New Building(bType, "Black Market", 305, 2)
                     newBuilding.SetCriminality(50, 3)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Though dubious in nature, the Black Market can get you what you want.")
+					newBuilding.SetSpecialAbility("Gives owner a permanent 10% cost reduction to a randomly-selected building card (i.e. top right, top left, bottom right, bottom left).")
                     Return newBuilding
                 Case BuildingEnum.Botanical_Garden
                     Dim newBuilding As New Building(bType, "Botanical Garden", 260, 2)
                     newBuilding.SetHappiness(30, 3)
                     newBuilding.SetHealth(60, 3)
                     newBuilding.SetCreativity(20, 2)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Stretch your legs and see what nature has to offer at the Botanical Garden.  Wander around the flowers, trees, and hedges and feel the tranquility set in.")
+					newBuilding.SetSpecialAbility("Botanical Gardens are more effective if built on a Forest tile.")
                     Return newBuilding
                 Case BuildingEnum.Campsite
 
@@ -191,48 +202,55 @@
                     newBuilding.SetHealth(12, -7)
                     newBuilding.SetDrunkenness(30, 10)
                     newBuilding.SetCriminality(30, 4)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Drugs, sex, and rock 'n' roll. Or at least the drugs... The Cartel can give you the temporary euphoria you crave, but there many be a few consequences.")
+					newBuilding.SetSpecialAbility("The Cartel starts with twice the number of jobs if built on a Dirt tile.")
                     Return newBuilding
                 Case BuildingEnum.Casino
-                    Dim newBuilding As New Building(bType, "Casino", 395, 4)
+                    Dim newBuilding As New Building(bType, "Casino", 395, 4) 'Check my Special Ability wording on this one.
                     newBuilding.SetHappiness(50, 3)
                     newBuilding.SetDrunkenness(50, 3)
                     newBuilding.SetCriminality(22, 3)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Roll the dice at the Casino!  Will you hit it big and leave happy or lose it all and drown your sorrows?")
+					newBuilding.SetSpecialAbility("The player will receive a payout for each person that visits the Casino.")
                     Return newBuilding
                 Case BuildingEnum.Church
                     Dim newBuilding As New Building(bType, "Church", 180, 1)
                     newBuilding.SetHappiness(14, 7)
                     newBuilding.SetDrunkenness(35, -4)
                     newBuilding.SetCriminality(16, -3)
-                    newBuilding.SetInfo("While not attended by everyone, churches can have a noticable effect on increasing inner peace and harshly discouraging criminality and drunkenness.")
+                    newBuilding.SetInfo("While not attended by everyone, Churches can have a noticable effect on increasing inner peace and decreasing destructive traits.")
+					newBuilding.SetSpecialAbility("Churches have a slight chance of reducing Criminality and Drunkenness to 0.")
                     Return newBuilding
                 Case BuildingEnum.City_Wall
-                    Dim newBuilding As New Building(bType, "City Wall", 160, 0)
+                    Dim newBuilding As New Building(bType, "City Wall", 160, 0) 'Check the phrasing of Special Ability.
                     newBuilding.SetMobility(15, -3)
                     newBuilding.SetCriminality(15, -3)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("City Walls have been used for centuries as a way to contain and protect inhabitants from unwanted intruders.")
+					newBuilding.SetSpecialAbility("For each adjacent square that is unoccupied, the City Wall will provide one job and boost odds by a multiplier of one.  For each adjacent square that is occupied by an opponent, the City Wall will provide two jobs and boost odds by a multiplier of two.")
                     Return newBuilding
                 Case BuildingEnum.Civic_Center
                     Dim newBuilding As New Building(bType, "Civic Center", 555, 7)
                     newBuilding.SetHappiness(25, 5)
                     newBuilding.SetIntelligence(25, 3)
                     newBuilding.SetCreativity(25, 3)
-                    newBuilding.SetInfo("Civic centers provide a vast expanse of public buildings and shared landscapes for the free flow of commerce, art, and culture.")
+                    newBuilding.SetInfo("Civic Centers provide public spaces and shared landscapes for the free flow of commerce, art, and culture.")
+					newBuilding.SetSpecialAbility("The Civic Center provides the owner with increased odds of positive random events.")
                     Return newBuilding
                 Case BuildingEnum.Coffee_Shop
                     Dim newBuilding As New Building(bType, "Coffee Shop", 75, 1)
                     newBuilding.SetHappiness(20, 1)
                     newBuilding.SetMobility(20, 1)
                     newBuilding.SetDrunkenness(40, -1)
-                    newBuilding.SetInfo("Coffee shops provide an alternative to alcohol that still cheers one up a notch and increases vigor and on-the-run mobility.")
+                    newBuilding.SetInfo("Coffee Shops perk you up and put a spring in your step. Though caffeine can be addictive, it's not as bad as alcohol.")
+					newBuilding.SetSpecialAbility("Coffee Shops are more effective on Libraries, Offices, Skyscrapers, and at Colleges.")
                     Return newBuilding
                 Case BuildingEnum.College
                     Dim newBuilding As New Building(bType, "College", 370, 3)
                     newBuilding.SetIntelligence(30, 8)
                     newBuilding.SetCreativity(25, 3)
                     newBuilding.SetDrunkenness(40, 2)
-                    newBuilding.SetInfo("Colleges are important bastions of intelligence and creativity but also hosts to wild drunken parties.")
+                    newBuilding.SetInfo("Colleges are important bastions of academic learning and discovery but are also known for their wild drunken parties.")
+					newBuilding.SetSpecialAbility("The presence of a College increases chances of employment on the square.")
                     Return newBuilding
                 Case BuildingEnum.Community_Center
                     Dim newBuilding As New Building(bType, "Community Center", 210, 2)
@@ -243,7 +261,8 @@
                     newBuilding.SetMobility(10, 2)
                     newBuilding.SetDrunkenness(10, -2)
                     newBuilding.SetCriminality(10, -2)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Community Centers allow for people of different walks of life to come together and benefit society.")
+					newBuilding.SetSpecialAbility("Nullifies the negative effects of Refugee Camps, Correctional Facilities, and Rehab Clinics.  Upkeep costs are required for each visitor.")
                     Return newBuilding
                 Case BuildingEnum.Concert_Venue
                     Dim newBuilding As New Building(bType, "Concert Venue", 385, 3)
