@@ -7,6 +7,7 @@ Public Class Building
     Public Jobs As Integer = 0
     Public Success As Integer = 0
     Public Info As String = ""
+    Public SpecialAbility As String = ""
     Public Location As CitySquare = Nothing
     Public Employees As New ArrayList
 
@@ -92,6 +93,10 @@ Public Class Building
     Public Sub SetInfo(ByVal bInfo As String)
         Info = bInfo
     End Sub
+
+    Public Sub SetSpecialAbility(ByVal bSpecial As String)
+        SpecialAbility = bSpecial
+    End Sub
 #End Region
 
 #Region " Gets "
@@ -108,99 +113,142 @@ Public Class Building
         Return Employees.Count
     End Function
 
-    Public Overridable Function GetCostt() As Integer
+    Public Overridable Function GetCost() As Integer
         Return Cost
+    End Function
+
+    Public Overridable Function GetHappinessOdds() As Integer
+        Return Happiness_odds
+    End Function
+    Public Overridable Function GetHappinessAdj() As Integer
+        Return Happiness_adj
+    End Function
+
+    Public Overridable Function GetHealthOdds() As Integer
+        Return Health_odds
+    End Function
+    Public Overridable Function GetHealthAdj() As Integer
+        Return Health_adj
+    End Function
+
+    Public Overridable Function GetIntelligenceOdds() As Integer
+        Return Intelligence_odds
+    End Function
+    Public Overridable Function GetIntelligenceAdj() As Integer
+        Return Intelligence_adj
+    End Function
+
+    Public Overridable Function GetCreativityOdds() As Integer
+        Return Creativity_odds
+    End Function
+    Public Overridable Function GetCreativityAdj() As Integer
+        Return Creativity_adj
+    End Function
+
+    Public Overridable Function GetMobilityOdds() As Integer
+        Return Mobility_odds
+    End Function
+    Public Overridable Function GetMobilityAdj() As Integer
+        Return Mobility_adj
+    End Function
+
+    Public Overridable Function GetDrunkennessOdds() As Integer
+        Return Drunkenness_odds
+    End Function
+    Public Overridable Function GetDrunkennessAdj() As Integer
+        Return Drunkenness_adj
+    End Function
+
+    Public Overridable Function GetCriminalityOdds() As Integer
+        Return Criminality_odds
+    End Function
+    Public Overridable Function GetCriminalityAdj() As Integer
+        Return Criminality_adj
     End Function
 
 #End Region
 
 #Region " Affect Person "
 
+    Public Function GetStatChange(ByVal adj As Integer) As Integer
+        If adj < 0 Then
+            Return GetRandom(adj, -1)
+        Else
+            Return GetRandom(1, adj)
+        End If
+    End Function
+
     Public Overridable Sub AffectHappiness(ByRef thePerson As Person)
-        If Happiness_odds > 0 Then
-            If GetRandom(0, 100) <= Happiness_odds Then
-                If Happiness_adj < 0 Then
-                    thePerson.Happiness -= GetRandom(Happiness_adj, -1)
-                Else
-                    thePerson.Happiness += GetRandom(1, Happiness_adj)
-                End If
+        If GetHappinessOdds() > 0 Then
+            If GetRandom(0, 100) <= GetHappinessOdds() Then
+                Dim statChange As Integer = GetStatChange(GetHappinessAdj())
+                thePerson.Happiness += statChange
+                thePerson.AddEvent("happiness from visiting " + Name, statChange)
             End If
         End If
     End Sub
 
     Public Overridable Sub AffectHealth(ByRef thePerson As Person)
-        If Health_odds > 0 Then
-            If GetRandom(0, 100) <= Health_odds Then
-                If Health_adj < 0 Then
-                    thePerson.Health += GetRandom(Health_adj, -1)
-                Else
-                    thePerson.Health += GetRandom(1, Health_adj)
-                End If
+        If GetHealthOdds() > 0 Then
+            If GetRandom(0, 100) <= GetHealthOdds() Then
+                Dim statChange As Integer = GetStatChange(GetHealthAdj())
+                thePerson.Health += statChange
+                thePerson.AddEvent("health from visiting " + Name, statChange)
             End If
         End If
     End Sub
 
     Public Overridable Sub AffectIntelligence(ByRef thePerson As Person)
-        If Intelligence_odds > 0 Then
-            If GetRandom(0, 100) <= Intelligence_odds Then
-                If Intelligence_adj < 0 Then
-                    thePerson.Intelligence += GetRandom(Intelligence_adj, -1)
-                Else
-                    thePerson.Intelligence += GetRandom(1, Intelligence_adj)
-                End If
+        If GetIntelligenceOdds() > 0 Then
+            If GetRandom(0, 100) <= GetIntelligenceOdds() Then
+                Dim statChange As Integer = GetStatChange(GetIntelligenceAdj())
+                thePerson.Intelligence += statChange
+                thePerson.AddEvent("intelligence from visiting " + Name, statChange)
             End If
         End If
     End Sub
 
     Public Overridable Sub AffectCreativity(ByRef thePerson As Person)
-        If Creativity_odds > 0 Then
-            If GetRandom(0, 100) <= Creativity_odds Then
-                If Creativity_adj < 0 Then
-                    thePerson.Creativity += GetRandom(Creativity_adj, -1)
-                Else
-                    thePerson.Creativity += GetRandom(1, Creativity_adj)
-                End If
+        If GetCreativityOdds() > 0 Then
+            If GetRandom(0, 100) <= GetCreativityOdds() Then
+                Dim statChange As Integer = GetStatChange(GetCreativityAdj())
+                thePerson.Creativity += statChange
+                thePerson.AddEvent("creativity from visiting " + Name, statChange)
             End If
         End If
     End Sub
 
     Public Overridable Sub AffectMobility(ByRef thePerson As Person)
-        If Mobility_odds > 0 Then
-            If GetRandom(0, 100) <= Mobility_odds Then
-                If Mobility_adj < 0 Then
-                    thePerson.Creativity += GetRandom(Mobility_adj, -1)
-                Else
-                    thePerson.Creativity += GetRandom(1, Mobility_adj)
-                End If
+        If GetMobilityOdds() > 0 Then
+            If GetRandom(0, 100) <= GetMobilityOdds() Then
+                Dim statChange As Integer = GetStatChange(GetMobilityAdj())
+                thePerson.Mobility += statChange
+                thePerson.AddEvent("mobility from visiting " + Name, statChange)
             End If
         End If
     End Sub
 
     Public Overridable Sub AffectDrunkenness(ByRef thePerson As Person)
-        If Drunkenness_odds > 0 Then
-            If GetRandom(0, 100) <= Drunkenness_odds Then
-                If Drunkenness_adj < 0 Then
-                    thePerson.Drunkenness += GetRandom(Drunkenness_adj, -1)
-                Else
-                    thePerson.Drunkenness += GetRandom(1, Drunkenness_adj)
-                End If
+        If GetDrunkennessOdds() > 0 Then
+            If GetRandom(0, 100) <= GetDrunkennessOdds() Then
+                Dim statChange As Integer = GetStatChange(GetDrunkennessAdj())
+                thePerson.Drunkenness += statChange
+                thePerson.AddEvent("drunkenness from visiting " + Name, statChange)
             End If
         End If
     End Sub
 
     Public Overridable Sub AffectCriminality(ByRef thePerson As Person)
-        If Criminality_odds > 0 Then
-            If GetRandom(0, 100) <= Criminality_odds Then
-                If Criminality_adj < 0 Then
-                    thePerson.Criminality += GetRandom(Criminality_adj, -1)
-                Else
-                    thePerson.Criminality += GetRandom(1, Criminality_adj)
-                End If
+        If GetCriminalityOdds() > 0 Then
+            If GetRandom(0, 100) <= GetCriminalityOdds() Then
+                Dim statChange As Integer = GetStatChange(GetCriminalityAdj())
+                thePerson.Criminality += statChange
+                thePerson.AddEvent("criminality from visiting " + Name, statChange)
             End If
         End If
     End Sub
 
-    Public Sub AffectPerson(ByRef thePerson As Person)
+    Public Overridable Sub AffectPerson(ByRef thePerson As Person)
         AffectHappiness(thePerson)
         AffectHealth(thePerson)
         AffectIntelligence(thePerson)
@@ -355,6 +403,13 @@ Public Class Building
         BuildingString += ControlChars.NewLine
 
         BuildingString += Info
+
+        '-- Show special ability text
+        If SpecialAbility.Length > 0 Then
+            BuildingString += ControlChars.NewLine + ControlChars.NewLine
+
+            BuildingString += SpecialAbility
+        End If
 
         Return BuildingString
     End Function

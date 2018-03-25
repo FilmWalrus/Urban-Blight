@@ -93,6 +93,8 @@
 
             ' Visit each location in range
             For j As Integer = 0 To locationsInRange.Count - 1
+                Dim currentLocation As CitySquare = locationsInRange(j)
+                thePerson.AddEvent("Visited " + currentLocation.CityName)
 
                 '-- Issue speeding ticket
                 If GetRandom(0, 200) < drivingOdds Then
@@ -100,7 +102,6 @@
                 End If
 
                 '-- Visit each building at this location
-                Dim currentLocation As CitySquare = locationsInRange(j)
                 For n As Integer = 0 To currentLocation.Buildings.Count - 1
 
                     '-- Issue parking ticket
@@ -606,6 +607,7 @@
                     Dim localPop As Integer = GridArray(i, j).getPopulation()
                     For k As Integer = 0 To localPop - 1
                         Dim thePerson As Person = GridArray(i, j).People(k)
+                        thePerson.JourneyString = "" '-- Clear their journey string
                         CitizenList.Add(thePerson)
                     Next
                 End If

@@ -68,7 +68,8 @@ Module GlobalVars
     Public Const CardTab As Integer = 1
     Public Const CityTab As Integer = 2
     Public Const PersonTab As Integer = 3
-    Public Const ViewTab As Integer = 4
+    Public Const BuildingTab As Integer = 4
+    Public Const ViewTab As Integer = 5
 
     '--Colors
     Public Flag1 As Color = Color.Red 'Color.IndianRed

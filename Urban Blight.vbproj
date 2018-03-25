@@ -160,6 +160,7 @@
     <Compile Include="Player.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SpecialBuildings.vb" />
     <Compile Include="Start.vb">
       <SubType>Form</SubType>
     </Compile>

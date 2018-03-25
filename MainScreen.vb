@@ -1112,11 +1112,20 @@ Public Class Form1
         Else
             ubName.Visible = False
         End If
+
+        '-- Don't switch to the city tab by default if user was looking at people or buildings
+        Dim DontSwitch As Boolean = False
+        If ClickCity.OwnerID >= 0 Then
+            If Infotab.SelectedIndex = PersonTab Or Infotab.SelectedIndex = BuildingTab Then
+                DontSwitch = True
+            End If
+        End If
+
         '--
         If e.Button = MouseButtons.Left Then
             Dim BuildSuccess As Boolean = Build()
             UpdateTabs()
-            If DoubleClick Or BuildSuccess Or Infotab.SelectedIndex <> PersonTab Then
+            If DoubleClick Or BuildSuccess Or (Not DontSwitch) Then
                 Infotab.SelectedTab = Infotab.TabPages(CityTab)
             End If
         ElseIf e.Button = MouseButtons.Right Then
