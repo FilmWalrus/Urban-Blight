@@ -1,3 +1,5 @@
+Imports System.Drawing
+
 Public Class Form1
     Inherits System.Windows.Forms.Form
 
@@ -29,9 +31,6 @@ Public Class Form1
     Dim theYear As Integer = 1
     Dim StartPop As Integer = 4
 
-    '--
-    Dim EventString As String = ""
-
     Friend WithEvents UltraTab1 As TabControl
     Friend WithEvents UltraTab2 As TabControl
     Friend WithEvents UltraTab3 As TabControl
@@ -48,6 +47,8 @@ Public Class Form1
     Friend WithEvents ubBForward As Button
     Friend WithEvents ubBBack As Button
     Friend WithEvents txt_building As TextBox
+    Friend WithEvents BuildingDropdown As ComboBox
+    Friend WithEvents btnCheat As Button
     '--
     Dim init As Boolean = False
 
@@ -191,17 +192,19 @@ Public Class Form1
         Me.p3_details = New System.Windows.Forms.Button()
         Me.txtP3 = New System.Windows.Forms.TextBox()
         Me.Infotab = New System.Windows.Forms.TabControl()
+        Me.TabPageBuilding = New System.Windows.Forms.TabPage()
+        Me.lblBuilding = New System.Windows.Forms.Label()
+        Me.ubBForward = New System.Windows.Forms.Button()
+        Me.ubBBack = New System.Windows.Forms.Button()
+        Me.txt_building = New System.Windows.Forms.TextBox()
         Me.ubland = New System.Windows.Forms.Button()
         Me.ubEnd = New System.Windows.Forms.Button()
         Me.lblYear = New System.Windows.Forms.Label()
         Me.lblView = New System.Windows.Forms.Label()
         Me.lblGoal = New System.Windows.Forms.Label()
         Me.ubWipe = New System.Windows.Forms.Button()
-        Me.TabPageBuilding = New System.Windows.Forms.TabPage()
-        Me.lblBuilding = New System.Windows.Forms.Label()
-        Me.ubBForward = New System.Windows.Forms.Button()
-        Me.ubBBack = New System.Windows.Forms.Button()
-        Me.txt_building = New System.Windows.Forms.TextBox()
+        Me.BuildingDropdown = New System.Windows.Forms.ComboBox()
+        Me.btnCheat = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCard.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
@@ -750,6 +753,53 @@ Public Class Form1
         Me.Infotab.Size = New System.Drawing.Size(280, 352)
         Me.Infotab.TabIndex = 15
         '
+        'TabPageBuilding
+        '
+        Me.TabPageBuilding.Controls.Add(Me.lblBuilding)
+        Me.TabPageBuilding.Controls.Add(Me.ubBForward)
+        Me.TabPageBuilding.Controls.Add(Me.ubBBack)
+        Me.TabPageBuilding.Controls.Add(Me.txt_building)
+        Me.TabPageBuilding.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageBuilding.Name = "TabPageBuilding"
+        Me.TabPageBuilding.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageBuilding.TabIndex = 1
+        Me.TabPageBuilding.Text = "Building"
+        '
+        'lblBuilding
+        '
+        Me.lblBuilding.Location = New System.Drawing.Point(16, 299)
+        Me.lblBuilding.Name = "lblBuilding"
+        Me.lblBuilding.Size = New System.Drawing.Size(136, 16)
+        Me.lblBuilding.TabIndex = 8
+        Me.lblBuilding.Text = "Displaying X of Y"
+        '
+        'ubBForward
+        '
+        Me.ubBForward.Location = New System.Drawing.Point(216, 296)
+        Me.ubBForward.Name = "ubBForward"
+        Me.ubBForward.Size = New System.Drawing.Size(48, 23)
+        Me.ubBForward.TabIndex = 7
+        Me.ubBForward.Text = ">>>"
+        '
+        'ubBBack
+        '
+        Me.ubBBack.Location = New System.Drawing.Point(160, 296)
+        Me.ubBBack.Name = "ubBBack"
+        Me.ubBBack.Size = New System.Drawing.Size(48, 23)
+        Me.ubBBack.TabIndex = 6
+        Me.ubBBack.Text = "<<<"
+        '
+        'txt_building
+        '
+        Me.txt_building.AcceptsReturn = True
+        Me.txt_building.AcceptsTab = True
+        Me.txt_building.Location = New System.Drawing.Point(13, 15)
+        Me.txt_building.Multiline = True
+        Me.txt_building.Name = "txt_building"
+        Me.txt_building.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txt_building.Size = New System.Drawing.Size(248, 275)
+        Me.txt_building.TabIndex = 5
+        '
         'ubland
         '
         Me.ubland.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -801,57 +851,29 @@ Public Class Form1
         Me.ubWipe.TabIndex = 21
         Me.ubWipe.Text = "Clear Above"
         '
-        'TabPageBuilding
+        'BuildingDropdown
         '
-        Me.TabPageBuilding.Controls.Add(Me.lblBuilding)
-        Me.TabPageBuilding.Controls.Add(Me.ubBForward)
-        Me.TabPageBuilding.Controls.Add(Me.ubBBack)
-        Me.TabPageBuilding.Controls.Add(Me.txt_building)
-        Me.TabPageBuilding.Location = New System.Drawing.Point(4, 22)
-        Me.TabPageBuilding.Name = "TabPageBuilding"
-        Me.TabPageBuilding.Size = New System.Drawing.Size(272, 326)
-        Me.TabPageBuilding.TabIndex = 1
-        Me.TabPageBuilding.Text = "Building"
+        Me.BuildingDropdown.FormattingEnabled = True
+        Me.BuildingDropdown.Location = New System.Drawing.Point(656, 159)
+        Me.BuildingDropdown.Name = "BuildingDropdown"
+        Me.BuildingDropdown.Size = New System.Drawing.Size(136, 21)
+        Me.BuildingDropdown.TabIndex = 22
         '
-        'lblBuilding
+        'btnCheat
         '
-        Me.lblBuilding.Location = New System.Drawing.Point(16, 299)
-        Me.lblBuilding.Name = "lblBuilding"
-        Me.lblBuilding.Size = New System.Drawing.Size(136, 16)
-        Me.lblBuilding.TabIndex = 8
-        Me.lblBuilding.Text = "Displaying X of Y"
-        '
-        'ubBForward
-        '
-        Me.ubBForward.Location = New System.Drawing.Point(216, 296)
-        Me.ubBForward.Name = "ubBForward"
-        Me.ubBForward.Size = New System.Drawing.Size(48, 23)
-        Me.ubBForward.TabIndex = 7
-        Me.ubBForward.Text = ">>>"
-        '
-        'ubBBack
-        '
-        Me.ubBBack.Location = New System.Drawing.Point(160, 296)
-        Me.ubBBack.Name = "ubBBack"
-        Me.ubBBack.Size = New System.Drawing.Size(48, 23)
-        Me.ubBBack.TabIndex = 6
-        Me.ubBBack.Text = "<<<"
-        '
-        'txt_building
-        '
-        Me.txt_building.AcceptsReturn = True
-        Me.txt_building.AcceptsTab = True
-        Me.txt_building.Location = New System.Drawing.Point(13, 15)
-        Me.txt_building.Multiline = True
-        Me.txt_building.Name = "txt_building"
-        Me.txt_building.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_building.Size = New System.Drawing.Size(248, 275)
-        Me.txt_building.TabIndex = 5
+        Me.btnCheat.Location = New System.Drawing.Point(747, 256)
+        Me.btnCheat.Name = "btnCheat"
+        Me.btnCheat.Size = New System.Drawing.Size(45, 23)
+        Me.btnCheat.TabIndex = 23
+        Me.btnCheat.Text = "Cheat"
+        Me.btnCheat.UseVisualStyleBackColor = True
         '
         'Form1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.ClientSize = New System.Drawing.Size(810, 678)
+        Me.Controls.Add(Me.btnCheat)
+        Me.Controls.Add(Me.BuildingDropdown)
         Me.Controls.Add(Me.ubWipe)
         Me.Controls.Add(Me.ubEnd)
         Me.Controls.Add(Me.ubland)
@@ -908,6 +930,8 @@ Public Class Form1
 #Region " Initialization "
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         '-- Urban Blight begins HERE
+        SetDebugMode(True)
+
         StartGame()
     End Sub
 
@@ -922,6 +946,9 @@ Public Class Form1
         '-- Run setup on the NameGenerator and HintGenerator
         Namer.FillLists()
         Hinter.FillLists()
+
+        '-- Fill building dropdown
+        FillBuildingDropdown()
 
         '-- Display game goal
         UpdateGoal()
@@ -1085,6 +1112,10 @@ Public Class Form1
         UpdateGrid()
     End Sub
 
+#End Region
+
+#Region " Player Actions "
+
     Private Sub MapMouseUp(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs)
 
         Dim TheBox As Label = CType(sender, Label)
@@ -1133,139 +1164,6 @@ Public Class Form1
         End If
 
     End Sub
-#End Region
-
-#Region " Game Loop "
-    Sub NextPlayer()
-        '-- Cleanup
-        ResetForNewTurn()
-
-        '--Advance to next player (If last player in round and end condition is met, show Game Over screen)
-        AdvanceToNextPlayer()
-
-        '-- Refill Hand and Update Costs
-        UpdateCards()
-
-        '-- Handle Population growth, movement, employment and taxation
-        UpdatePeople()
-
-        '-- Update averages for views and successes for businesses
-        UpdateAverages()
-
-        '-- Successful buildings expand
-        BuildingsExpand()
-
-        '-- Update grid appearence and texts
-        UpdateGrid()
-
-        '-- Update player info
-        UpdatePlayers()
-
-        '-- Take turn automatically if AI
-        RunAI()
-
-        '-- Display event messages
-        UpdateTextBox(txt_event, EventString)
-        Infotab.SelectedTab = Infotab.TabPages(EventTab)
-
-    End Sub
-
-    Sub RunAI()
-
-        '-- Toggle the buttons so humans can't play for the computer
-        Dim toggleButtons As Boolean = True
-        If CurrentPlayer.PlayerType = PlayerAI Then
-            toggleButtons = False
-        End If
-        ubcard1.Enabled = toggleButtons
-        ubcard2.Enabled = toggleButtons
-        ubcard3.Enabled = toggleButtons
-        ubcard4.Enabled = toggleButtons
-        ubroad.Enabled = toggleButtons
-        ubland.Enabled = toggleButtons
-        ubWipe.Enabled = toggleButtons
-
-        '-- If not an AI bail at this point
-        If CurrentPlayer.PlayerType <> PlayerAI Then
-            Return
-        End If
-
-        Dim AIActionEvents As String = ""
-        Dim AIActionCount As Integer = 0
-
-        '-- Loop until the AI does not have enough money for the action they want to take.
-        Dim ActionSuccess As Boolean = False
-        Do
-            '-- Get the AIs decision (the action they chose and where they chose to make it)
-            Dim AIDecision As Integer = CurrentPlayer.ChooseNextAction()
-
-            If AIDecision = AIPass Then
-                ActionSuccess = False
-            Else
-                SelectedCard = AIDecision
-                ClickCity = CurrentPlayer.BestMove
-                ActionSuccess = Build()
-            End If
-
-            If ActionSuccess Then
-                AIActionCount += 1
-                If AIDecision >= 0 And AIDecision < CardCount Then
-                    Dim newBuilding As Building = ClickCity.Buildings(ClickCity.Buildings.Count - 1) '-- Get latest building
-                    AIActionEvents += CurrentPlayer.GetPlayerName() + " bought a " + newBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
-                ElseIf AIDecision = RoadCard Then
-                    AIActionEvents += CurrentPlayer.GetPlayerName() + " upgraded the road at " + ClickCity.GetName() + "." + ControlChars.NewLine
-                ElseIf AIDecision = LandCard Then
-                    AIActionEvents += CurrentPlayer.GetPlayerName() + " founded " + ClickCity.GetName() + " at " + ClickCity.GetLocationText() + "." + ControlChars.NewLine
-                End If
-            ElseIf AIActionCount = 0 Then
-                AIActionEvents += CurrentPlayer.GetPlayerName() + " passed on their turn." + ControlChars.NewLine
-            End If
-
-        Loop While ActionSuccess
-
-        EventString = AIActionEvents + ControlChars.NewLine + EventString
-
-    End Sub
-
-    Sub AdvanceToNextPlayer()
-        '-- Move to next human or AI player. 
-        Do
-            CurrentPlayerIndex += 1
-            If CurrentPlayerIndex = Players.Count Then
-                CurrentPlayerIndex = 0
-
-                '-- If this was the end of the round, advance the clock
-                theYear += TimeIncrement
-                UpdateYear()
-
-                '-- Check for a winner
-                If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
-                    GameOver()
-                End If
-            End If
-            CurrentPlayer = Players(CurrentPlayerIndex)
-        Loop While CurrentPlayer.PlayerType = PlayerNone
-
-        '-- Highlight current player
-        HighlightCurrentPlayer()
-
-        '-- Update player info
-        CurrentPlayer.UpdateCensusData()
-    End Sub
-
-#End Region
-
-#Region " People "
-    Sub UpdatePeople()
-
-        Dim PersonEvents As New EventsP(CurrentPlayer, theYear)
-
-        EventString += PersonEvents.UpdatePeople()
-    End Sub
-
-#End Region
-
-#Region " Buildings "
 
     Function Build() As Boolean
         Dim UpdateNeeded As Boolean = False
@@ -1372,52 +1270,126 @@ Public Class Form1
         Return True
     End Function
 
-    Public Sub ClearSuccess()
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = CurrentPlayerIndex Then
-                    For k As Integer = 0 To GridArray(i, j).Buildings.Count - 1
-                        GridArray(i, j).Buildings(k).Success = 0
-                    Next
-                End If
-            Next
-        Next
+#End Region
+
+#Region " Game Loop "
+    Sub NextPlayer()
+        '-- Cleanup
+        ResetForNewTurn()
+
+        '--Advance to next player (If last player in round and end condition is met, show Game Over screen)
+        AdvanceToNextPlayer()
+
+        '-- Refill Hand and Update Costs
+        UpdateCards()
+
+        '-- Handle events: births, deaths, movement, employment, crime, taxation, and business expansion
+        EventsHappen()
+
+        '-- Update averages for views and successes for businesses
+        UpdateAverages()
+
+        '-- Update grid appearence and texts
+        UpdateGrid()
+
+        '-- Update player info
+        UpdatePlayers()
+
+        '-- Take turn automatically if AI
+        RunAI()
+
+        '-- Display event messages
+        UpdateTextBox(txt_event, Diary.toString())
+        Infotab.SelectedTab = Infotab.TabPages(EventTab)
+
     End Sub
 
-    Sub BuildingsExpand()
-        Dim EventCount As Integer = 0
-        Dim LocalEvent As String = ""
-        Dim i, j, k, odds As Integer
-        Dim theBuilding As Building
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                If GridArray(i, j).OwnerID = CurrentPlayerIndex Then
-                    For k = 0 To GridArray(i, j).Buildings.Count - 1
-                        theBuilding = GridArray(i, j).Buildings(k)
-                        If theBuilding.GetEmployeeCount() = theBuilding.Jobs Then
-                            '--Must be full
-                            odds = 0
-                            odds += SafeDivide(theBuilding.Success, theBuilding.GetEmployeeCount() * 2)
-                            If GetRandom(0, 100) <= odds Then
-                                '--Buildings expand
-                                theBuilding.Jobs += 1
+    Sub RunAI()
 
-                                '--Post Event
-                                EventCount += 1
-                                If EventCount >= EventLimit Then
-                                    LocalEvent = EventCount.ToString() + " businesses expanded." + ControlChars.NewLine
-                                Else
-                                    LocalEvent += theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString + "." + ControlChars.NewLine
-                                End If
+        '-- Toggle the buttons so humans can't play for the computer
+        Dim toggleButtons As Boolean = True
+        If CurrentPlayer.PlayerType = PlayerAI Then
+            toggleButtons = False
+        End If
+        ubcard1.Enabled = toggleButtons
+        ubcard2.Enabled = toggleButtons
+        ubcard3.Enabled = toggleButtons
+        ubcard4.Enabled = toggleButtons
+        ubroad.Enabled = toggleButtons
+        ubland.Enabled = toggleButtons
+        ubWipe.Enabled = toggleButtons
 
-                                GridArray(i, j).Buildings(k) = theBuilding
-                            End If
-                        End If
-                    Next
+        '-- If not an AI bail at this point
+        If CurrentPlayer.PlayerType <> PlayerAI Then
+            Return
+        End If
+
+        Dim AIActionEvents As String = ""
+        Dim AIActionCount As Integer = 0
+
+        '-- Loop until the AI does not have enough money for the action they want to take.
+        Dim ActionSuccess As Boolean = False
+        Do
+            '-- Get the AIs decision (the action they chose and where they chose to make it)
+            Dim AIDecision As Integer = CurrentPlayer.ChooseNextAction()
+
+            If AIDecision = AIPass Then
+                ActionSuccess = False
+            Else
+                SelectedCard = AIDecision
+                ClickCity = CurrentPlayer.BestMove
+                ActionSuccess = Build()
+            End If
+
+            If ActionSuccess Then
+                AIActionCount += 1
+                If AIDecision >= 0 And AIDecision < CardCount Then
+                    Dim newBuilding As Building = ClickCity.Buildings(ClickCity.Buildings.Count - 1) '-- Get latest building
+                    AIActionEvents += CurrentPlayer.GetPlayerName() + " bought a " + newBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
+                ElseIf AIDecision = RoadCard Then
+                    AIActionEvents += CurrentPlayer.GetPlayerName() + " upgraded the road at " + ClickCity.GetName() + "." + ControlChars.NewLine
+                ElseIf AIDecision = LandCard Then
+                    AIActionEvents += CurrentPlayer.GetPlayerName() + " founded " + ClickCity.GetName() + " at " + ClickCity.GetLocationText() + "." + ControlChars.NewLine
                 End If
-            Next
-        Next
-        EventString += LocalEvent
+            ElseIf AIActionCount = 0 Then
+                AIActionEvents += CurrentPlayer.GetPlayerName() + " passed on their turn." + ControlChars.NewLine
+            End If
+
+        Loop While ActionSuccess
+
+        Diary.AIEvents += AIActionEvents
+
+    End Sub
+
+    Sub AdvanceToNextPlayer()
+        '-- Move to next human or AI player. 
+        Do
+            CurrentPlayerIndex += 1
+            If CurrentPlayerIndex = Players.Count Then
+                CurrentPlayerIndex = 0
+
+                '-- If this was the end of the round, advance the clock
+                theYear += TimeIncrement
+                UpdateYear()
+
+                '-- Check for a winner
+                If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
+                    GameOver()
+                End If
+            End If
+            CurrentPlayer = Players(CurrentPlayerIndex)
+        Loop While CurrentPlayer.PlayerType = PlayerNone
+
+        '-- Highlight current player
+        HighlightCurrentPlayer()
+
+        '-- Update player info
+        CurrentPlayer.UpdateCensusData()
+    End Sub
+
+    Sub EventsHappen()
+        Dim TurnEvents As New Turn(CurrentPlayer, theYear)
+        TurnEvents.UpdatePeople()
     End Sub
 
 #End Region
@@ -1676,7 +1648,7 @@ Public Class Form1
         SelectedCard = NoCard
         SelectedPerson = -1
         SelectedBuilding = -1
-        EventString = ""
+        Diary.ClearEvents()
         UpdateTextBox(txt_event, "")
         UpdateTextBox(txt_card, "")
         UpdateTextBox(txt_city, "")
@@ -1686,9 +1658,6 @@ Public Class Form1
 
         '-- Display new hint
         DisplayHint()
-
-        '-- Reset all buildings to success = 0 (not sure why?)
-        ClearSuccess()
     End Sub
 
     Sub HighlightCurrentPlayer()
@@ -2009,8 +1978,36 @@ Public Class Form1
         MsgBox(playerInfoText, MsgBoxStyle.Information, "Player Info")
     End Sub
 
+#End Region
 
+#Region " Debug Stuff "
 
+    Public Sub SetDebugMode(ByVal debugBool As Boolean)
+        DebugMode = debugBool
+        BuildingDropdown.Visible = DebugMode
+        btnCheat.Visible = DebugMode
+    End Sub
+
+    Public Sub FillBuildingDropdown()
+        For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
+            BuildingDropdown.Items.Add(BuildingGenerator.GetName(i))
+        Next
+    End Sub
+
+    Private Sub BuildingDropdown_SelectedIndexChanged(sender As Object, e As EventArgs) Handles BuildingDropdown.SelectedIndexChanged
+        '-- Add the building of the type selected to the dropdown
+        Dim newBuildingType As Integer = BuildingDropdown.SelectedIndex
+
+        Cards.RemoveAt(0)
+        Dim newBuilding As Building = BuildingGenerator.CreateBuilding(newBuildingType)
+        Cards.Add(newBuilding)
+        UpdateCards()
+    End Sub
+
+    Private Sub btnCheat_Click(sender As Object, e As EventArgs) Handles btnCheat.Click
+        CurrentPlayer.TotalMoney += 1000000
+        UpdatePlayers()
+    End Sub
 #End Region
 
 End Class

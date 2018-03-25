@@ -83,7 +83,7 @@ Public Class CitySquare
         GridSquare.Name = "NewBox"
         GridSquare.Tag = row & "," & col
         GridSquare.TabStop = False
-        GridSquare.TextAlign = ContentAlignment.MiddleCenter
+        GridSquare.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         GridSquare.Text = "0"
         GridSquare.BorderStyle = BorderStyle.FixedSingle
     End Sub
@@ -286,7 +286,6 @@ Public Class CitySquare
         AvgDrunkenness = 0
         AvgCriminality = 0
 
-        Dim tempPerson As Person
         Dim i As Integer
         For i = 0 To currentPop - 1
             People(i).Cap()
@@ -298,11 +297,6 @@ Public Class CitySquare
             AvgMobility += People(i).Mobility
             AvgDrunkenness += People(i).Drunkenness
             AvgCriminality += People(i).Criminality
-            If People(i).JobBuilding IsNot Nothing Then
-                'Update success of job
-                tempPerson = People(i)
-                tempPerson.JobBuilding.Success += tempPerson.Employment
-            End If
         Next
 
         AvgHappiness = SafeDivide(AvgHappiness, currentPop)
@@ -429,7 +423,7 @@ Public Class CitySquare
             Dim i As Integer
             For i = 0 To Buildings.Count - 1
                 Dim thisBuilding As Building = Buildings(i)
-                CityString += thisBuilding.Name.ToString() + ": " + thisBuilding.GetEmployeeCount().ToString() + "/" + thisBuilding.Jobs.ToString() + "   Success: " + thisBuilding.Success.ToString() + ControlChars.NewLine
+                CityString += thisBuilding.GetName() + ": " + thisBuilding.GetEmployeeCount().ToString() + "/" + thisBuilding.Jobs.ToString() + "   Success: " + thisBuilding.Success.ToString() + ControlChars.NewLine
             Next
         End If
 

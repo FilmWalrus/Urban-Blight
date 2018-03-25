@@ -185,7 +185,7 @@ Public Class Person
         Dim theRoad As Integer = Residence.Transportation
 
         '-- Age
-        Age = Age + 3
+        Age = Age + TimeIncrement
         If Age <= 28 Then
             '-- Upslope
             Health += 1
@@ -614,8 +614,7 @@ Public Class Person
             End If
         End If
 
-        Dim showJourney As Boolean = True
-        If showJourney Then
+        If Residence.CountBuildingsByType(BuildingGen.BuildingEnum.Detective_Agency) > 0 Or DebugMode Then
             PersonString += ControlChars.NewLine
             PersonString += JourneyString
         End If

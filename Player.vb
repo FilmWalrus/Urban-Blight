@@ -4,7 +4,7 @@ Public Class Player
     Public PlayerType As Integer = PlayerHuman
     Public ID As Integer = 0
     Public Score As Integer = 0
-    Public Flag As Color = Color.Black
+    Public Flag As System.Drawing.Color = System.Drawing.Color.Black
 
     '--
     Public TotalMoney As Integer = 0

@@ -1,3 +1,5 @@
+Imports System.Drawing
+
 Module GlobalVars
 
 #Region " Global Variables "
@@ -6,6 +8,7 @@ Module GlobalVars
     Public GameType As Integer = 1
     Public GoalNumber As Integer = 0
     Public LastCityName As String = ""
+    Public DebugMode As Boolean = False
 
     '--GameTypes
     Public Const ScoreGame As Integer = 0
@@ -115,6 +118,7 @@ Module GlobalVars
     Public EventLimit As Integer = 5
     Public Namer As New NameGenerator
     Public Hinter As New HintGenerator
+    Public Diary As New EventDiary
 
     '-- AI Decisions
     Public Const AIPass As Integer = -1

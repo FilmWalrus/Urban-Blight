@@ -1,5 +1,6 @@
 ﻿
 Imports System.ComponentModel
+Imports System.Drawing
 Imports System.Drawing.Drawing2D
 
 Public Class FancyLabel

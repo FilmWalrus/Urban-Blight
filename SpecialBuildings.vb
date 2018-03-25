@@ -1,8 +1,29 @@
-﻿Public Class DayCareBuilding
+﻿Public Class ConstructionSiteBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bName As String, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bName, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Function UpdateInternal() As Boolean
+        MyBase.UpdateInternal()
+
+        If GetRandom(1, 5) = 1 Then
+            Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
+            Location.AddBuilding(newBuilding)
+            Destroy()
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+End Class
+
+Public Class DayCareBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Person)
@@ -15,8 +36,8 @@ End Class
 Public Class ManufacturingBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bName As String, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bName, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -44,8 +65,8 @@ End Class
 Public Class RetirementBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bName As String, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bName, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Person)
@@ -58,8 +79,8 @@ End Class
 Public Class SchoolBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bName As String, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bName, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Person)
@@ -74,8 +95,8 @@ End Class
 Public Class ShippingBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bName As String, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bName, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
     End Sub
 
     Public Overrides Sub ConstructionEffects()

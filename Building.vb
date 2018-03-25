@@ -1,12 +1,12 @@
 Public Class Building
 
 #Region " Variables "
-    Public Name As String = ""
     Public Type As Integer = -1
 
     Public Cost As Integer = 0
     Public Jobs As Integer = 0
     Public Success As Integer = 0
+    Public Age As Integer = 0
 
     Public Info As String = ""
     Public SpecialAbility As String = ""
@@ -49,9 +49,8 @@ Public Class Building
 
     End Sub
 
-    Sub New(ByVal bType As Integer, ByVal bName As String, ByVal bCost As Integer, ByVal bJobs As Integer)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         Type = bType
-        Name = bName
         Cost = bCost
         Jobs = bJobs
     End Sub
@@ -107,7 +106,7 @@ Public Class Building
 #Region " Gets "
 
     Public Function GetName() As String
-        Return Name.ToString()
+        Return BuildingGenerator.GetName(Type)
     End Function
 
     Public Function GetNameAndAddress() As String
@@ -198,7 +197,7 @@ Public Class Building
             If GetRandom(0, 100) <= GetHappinessOdds() Then
                 Dim statChange As Integer = GetStatChange(GetHappinessAdj())
                 thePerson.Happiness += statChange
-                thePerson.AddEvent("happiness from visiting " + Name, statChange)
+                thePerson.AddEvent("happiness from visiting " + GetName(), statChange)
             End If
         End If
     End Sub
@@ -208,7 +207,7 @@ Public Class Building
             If GetRandom(0, 100) <= GetHealthOdds() Then
                 Dim statChange As Integer = GetStatChange(GetHealthAdj())
                 thePerson.Health += statChange
-                thePerson.AddEvent("health from visiting " + Name, statChange)
+                thePerson.AddEvent("health from visiting " + GetName(), statChange)
             End If
         End If
     End Sub
@@ -218,7 +217,7 @@ Public Class Building
             If GetRandom(0, 100) <= GetIntelligenceOdds() Then
                 Dim statChange As Integer = GetStatChange(GetIntelligenceAdj())
                 thePerson.Intelligence += statChange
-                thePerson.AddEvent("intelligence from visiting " + Name, statChange)
+                thePerson.AddEvent("intelligence from visiting " + GetName(), statChange)
             End If
         End If
     End Sub
@@ -228,7 +227,7 @@ Public Class Building
             If GetRandom(0, 100) <= GetCreativityOdds() Then
                 Dim statChange As Integer = GetStatChange(GetCreativityAdj())
                 thePerson.Creativity += statChange
-                thePerson.AddEvent("creativity from visiting " + Name, statChange)
+                thePerson.AddEvent("creativity from visiting " + GetName(), statChange)
             End If
         End If
     End Sub
@@ -238,7 +237,7 @@ Public Class Building
             If GetRandom(0, 100) <= GetMobilityOdds() Then
                 Dim statChange As Integer = GetStatChange(GetMobilityAdj())
                 thePerson.Mobility += statChange
-                thePerson.AddEvent("mobility from visiting " + Name, statChange)
+                thePerson.AddEvent("mobility from visiting " + GetName(), statChange)
             End If
         End If
     End Sub
@@ -248,7 +247,7 @@ Public Class Building
             If GetRandom(0, 100) <= GetDrunkennessOdds() Then
                 Dim statChange As Integer = GetStatChange(GetDrunkennessAdj())
                 thePerson.Drunkenness += statChange
-                thePerson.AddEvent("drunkenness from visiting " + Name, statChange)
+                thePerson.AddEvent("drunkenness from visiting " + GetName(), statChange)
             End If
         End If
     End Sub
@@ -258,7 +257,7 @@ Public Class Building
             If GetRandom(0, 100) <= GetCriminalityOdds() Then
                 Dim statChange As Integer = GetStatChange(GetCriminalityAdj())
                 thePerson.Criminality += statChange
-                thePerson.AddEvent("criminality from visiting " + Name, statChange)
+                thePerson.AddEvent("criminality from visiting " + GetName(), statChange)
             End If
         End If
     End Sub
@@ -307,6 +306,38 @@ Public Class Building
     Public Overridable Sub ConstructionEffects()
         '-- Base building type has no construction effects
     End Sub
+
+    Public Overridable Sub ExpandBuilding()
+        Jobs += 1
+    End Sub
+
+    Public Overridable Function CheckSuccess() As Boolean
+
+        '-- Building must be at max employment
+        If GetEmployeeCount() = Jobs Then
+
+            '-- Odds of expanding = half the average employment score of employees
+            Dim odds As Double = 0.0
+            odds += SafeDivide(Success, GetEmployeeCount() * 2.0)
+
+            '-- Odds of expanding go down as you get larger
+            Dim oddsRange As Integer = 100 + (10 * Jobs)
+
+            If GetRandom(0, oddsRange) <= odds Then '-- Remove equal sign to prevent 0 job businesses from expanding?
+                '--Buildings expand
+                ExpandBuilding()
+                Return True
+            Else
+                Return False
+            End If
+        End If
+
+    End Function
+
+    Public Overridable Function UpdateInternal() As Boolean
+        Age = Age + TimeIncrement
+        Return True
+    End Function
 
 #End Region
 
@@ -368,7 +399,7 @@ Public Class Building
     Public Overrides Function toString() As String
         Dim BuildingString As String = ""
 
-        BuildingString += "Name: " + Name + ControlChars.NewLine
+        BuildingString += "Name: " + GetName() + ControlChars.NewLine
 
         If Location IsNot Nothing Then
             BuildingString += "Location: " + Location.GetName() + ControlChars.NewLine
@@ -392,8 +423,7 @@ Public Class Building
         BuildingString += ControlChars.NewLine
 
         '-- Show stat info
-        Dim ShowStats As Boolean = True
-        If ShowStats Then
+        If DebugMode Then
             If Happiness_odds > 0 Then
                 BuildingString += "Happiness: " + Happiness_odds.ToString + "% chance boosts up to " + Happiness_adj.ToString + ControlChars.NewLine
             End If

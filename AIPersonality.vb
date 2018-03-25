@@ -3,7 +3,7 @@
 #Region " Variables "
     Public DifficultyLevel As Integer = 0
 
-    Public PreferenceList As New ArrayList
+    Public PreferenceList As New List(Of AIDifficulty)
 
     Public Enum AIDifficulty
         AI_Easy
@@ -121,19 +121,23 @@
         Return False
     End Function
 
-    Public Function BeSpendthrifty(ByVal finalDecision As Integer, ByVal money As Integer, ByVal landCost As Integer) As Boolean
+    Public Function BeSpendthrifty(ByVal potentialDecision As Integer, ByVal money As Integer, ByVal landCost As Integer) As Boolean
 
-        If finalDecision = AIPass Then
+        If Not PreferenceList.Contains(AIType.AI_Spendthrift) Then
             Return False
-        ElseIf finalDecision <= AIBuilding4 Then
-            If money < Cards(finalDecision).Cost Then
+        End If
+
+        If potentialDecision = AIPass Then
+            Return False
+        ElseIf potentialDecision <= AIBuilding4 Then
+            If money < Cards(potentialDecision).Cost Then
                 Return True
             End If
-        ElseIf finalDecision = AIRoad Then
+        ElseIf potentialDecision = AIRoad Then
             If money < RoadCostBase Then
                 Return True
             End If
-        ElseIf finalDecision = AILand Then
+        ElseIf potentialDecision = AILand Then
             If money < landCost Then
                 Return True
             End If

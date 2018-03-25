@@ -1,8 +1,6 @@
-﻿Public Class EventsP
+﻿Public Class Turn
 
 #Region " Variables "
-    Public EventString As String = ""
-
     Public CurrentPlayer As Player = Nothing
 
     Public CitizenList As New ArrayList
@@ -32,15 +30,16 @@
         End If
     End Sub
 
-    Function UpdatePeople() As String
-
-        EventString = ""
+    Sub UpdatePeople()
 
         '-- Gather all the current player's people
         GatherCitizens()
 
         '-- Gather all the occupied territory (all players)
         GatherTerritory()
+
+        '-- Handle business expansions
+        BuildingsExpand()
 
         '-- Grow, live, and learn
         LiveYourLife()
@@ -63,9 +62,7 @@
         '-- Collect taxes from citizens and pay for upkeep of land
         Taxation()
 
-        Return EventString
-
-    End Function
+    End Sub
 
 
     Sub LiveYourLife()
@@ -166,7 +163,7 @@
             End If
         Next
 
-        EventString += LocalEvent + LocalEventTwins + ControlChars.NewLine
+        Diary.BirthEvents += LocalEvent + LocalEventTwins
     End Sub
 
     Sub HandleDeaths()
@@ -256,7 +253,7 @@
 
         PurgeDead()
 
-        EventString += LocalEventNatural + LocalEventIllness + LocalEventAccident + ControlChars.NewLine
+        Diary.DeathEvents += LocalEventNatural + LocalEventIllness + LocalEventAccident
     End Sub
 
     Sub Travel()
@@ -343,7 +340,7 @@
             End If
         Next
 
-        EventString += InternalMove + ExternalMove
+        Diary.MoveEvents += InternalMove + ExternalMove
 
     End Sub
 
@@ -397,7 +394,7 @@
             End If
         Next
 
-        EventString += LocalEvent + ControlChars.NewLine
+        Diary.HireEvents += LocalEvent
     End Sub
 
     Sub MajorCrimes()
@@ -508,7 +505,7 @@
 
         PurgeDead()
 
-        EventString += LocalEventTheft + LocalEventArson + LocalEventMurder + LocalEventAccident
+        Diary.CrimeEvents += LocalEventTheft + LocalEventArson + LocalEventMurder + LocalEventAccident
     End Sub
 
     Sub Taxation()
@@ -586,13 +583,63 @@
         If upkeep > 0 Then
             FinancialString += "You payed $" + upkeep.ToString() + " in upkeep." + ControlChars.NewLine
         End If
-        EventString = FinancialString + ControlChars.NewLine + EventString '-- Put financial updates at the top of the event string
+        Diary.TaxEvents = FinancialString
 
         '-- Update the player's money
         CurrentPlayer.TotalMoney += revenue + trafficFines - upkeep
     End Sub
 
 
+
+#End Region
+
+#Region " Building Events "
+
+    Sub BuildingsExpand()
+        Dim EventCount As Integer = 0
+        Dim LocalEvent As String = ""
+
+        '-- The success rate of a building is current = to the sum of the employment stat of employees
+        For i As Integer = 0 To CitizenList.Count - 1
+            Dim thePerson As Person = CitizenList(i)
+
+            If thePerson.JobBuilding IsNot Nothing Then
+                'Update success of job
+                thePerson.JobBuilding.Success += thePerson.Employment
+            End If
+        Next
+
+        '-- Expanding buildings that are successful
+        '-- Currently based on employee quality. Eventually should take into account number of visitors
+        For i As Integer = 0 To LocationList.Count - 1
+            Dim theLocation As CitySquare = LocationList(i)
+
+            For k As Integer = 0 To theLocation.Buildings.Count - 1
+                Dim theBuilding As Building = theLocation.Buildings(k)
+
+                '-- Update the buildings age and other info
+                If Not theBuilding.UpdateInternal() Then
+                    Continue For
+                End If
+
+                '-- Check if the building expanded
+                If theBuilding.CheckSuccess() Then
+                    '--Post Event
+                    EventCount += 1
+                    If EventCount >= EventLimit Then
+                        LocalEvent = EventCount.ToString() + " businesses expanded." + ControlChars.NewLine
+                    Else
+                        LocalEvent += theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString + "." + ControlChars.NewLine
+                    End If
+                End If
+
+                '-- Clear success at the end
+                theBuilding.Success = 0
+            Next
+        Next
+
+        Diary.ExpansionEvents += LocalEvent
+    End Sub
 
 #End Region
 
