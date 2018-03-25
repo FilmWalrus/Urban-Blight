@@ -93,6 +93,7 @@
         Skyscraper
         Stadium
         Startup_Incubator
+        Steel_Mill
         Suburb
         Taxi_Service
         Temp_Agency
@@ -605,7 +606,7 @@
                     newBuilding.SetInfo("Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians.")
                     Return newBuilding
                 Case BuildingEnum.Ski_Resort
-                    Dim newBuilding As New Building(bType, "Ski Resort", 25, 0)
+                    Dim newBuilding As New Building(bType, "Ski Resort", 215, 0)
                     newBuilding.SetHappiness(8, 1)
                     newBuilding.SetMobility(40, 1)
                     newBuilding.SetInfo("")
@@ -622,6 +623,8 @@
                     newBuilding.SetDrunkenness(20, 3)
                     newBuilding.SetInfo("Stadiums bring fun, especially when the home team wins, and a little friendly competition. The players get exercise and the audience gets entertainment and overpriced beer.")
                     Return newBuilding
+                Case BuildingEnum.Steel_Mill
+
                 Case BuildingEnum.Startup_Incubator
                     Dim newBuilding As New Building(bType, "Startup Incubator", 325, 1)
                     newBuilding.SetHappiness(12, 2)
