@@ -586,19 +586,21 @@ Public Class Person
         PersonString += ControlChars.NewLine
 
         '-- Print the citizen's parents and children
-        If ParentName.Length > 0 Then
-            PersonString += "Parent: " + ParentName + ControlChars.NewLine
-        End If
-        If Children.Count > 0 Then
-            PersonString += "Children: "
-            For i As Integer = 0 To Children.Count - 1
-                PersonString += Children(i)
-                If i = Children.Count - 1 Then
-                    PersonString += ControlChars.NewLine
-                Else
-                    PersonString += ", "
-                End If
-            Next
+        If ParentName.Length > 0 Or Children.Count > 0 Then
+            If ParentName.Length > 0 Then
+                PersonString += "Parent: " + ParentName + ControlChars.NewLine
+            End If
+            If Children.Count > 0 Then
+                PersonString += "Children: "
+                For i As Integer = 0 To Children.Count - 1
+                    PersonString += Children(i)
+                    If i = Children.Count - 1 Then
+                        PersonString += ControlChars.NewLine
+                    Else
+                        PersonString += ", "
+                    End If
+                Next
+            End If
             PersonString += ControlChars.NewLine
         End If
 
