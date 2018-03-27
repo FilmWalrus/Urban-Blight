@@ -11,7 +11,7 @@ Public Class Person
 
     '-- Family
     Public ParentName As String = "Unknown"
-    Public Children As New ArrayList
+    Public Children As New List(Of String)
 
     '-- Traits
     Public Happiness As Integer = 0
@@ -538,6 +538,14 @@ Public Class Person
         End If
     End Function
 
+    Public Function IsElderly() As Boolean
+        If Age > 50 Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
     Public Overrides Function toString() As String
         '-- Print the citizen's name
         Dim PersonString As String = ""
@@ -612,11 +620,11 @@ Public Class Person
             If MurderCount > 0 Then
                 PersonString += "Murder: " + MurderCount.ToString + ControlChars.NewLine
             End If
+            PersonString += ControlChars.NewLine
         End If
 
         If Residence.CountBuildingsByType(BuildingGen.BuildingEnum.Detective_Agency) > 0 Or DebugMode Then
-            PersonString += ControlChars.NewLine
-            PersonString += JourneyString
+            PersonString += JourneyString + ControlChars.NewLine
         End If
 
 

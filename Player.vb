@@ -112,8 +112,8 @@ Public Class Player
         Return playerName
     End Function
 
-    Function GetPlayerPopulation() As ArrayList
-        Dim populationArray As New ArrayList
+    Function GetPlayerPopulation() As List(Of Person)
+        Dim populationArray As New List(Of Person)
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
@@ -138,8 +138,8 @@ Public Class Player
         Return sum
     End Function
 
-    Function GetPlayerTerritory() As ArrayList
-        Dim territoryArray As New ArrayList
+    Function GetPlayerTerritory() As List(Of CitySquare)
+        Dim territoryArray As New List(Of CitySquare)
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 If GridArray(i, j).OwnerID = ID Then
@@ -163,8 +163,8 @@ Public Class Player
         Return sum
     End Function
 
-    Function GetPlayerAdjacentTerritory() As ArrayList
-        Dim territoryArray As New ArrayList
+    Function GetPlayerAdjacentTerritory() As List(Of CitySquare)
+        Dim territoryArray As New List(Of CitySquare)
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
@@ -173,7 +173,7 @@ Public Class Player
                 If thisLocation.OwnerID < 0 And thisLocation.Terrain <> TerrainLake Then
 
                     '-- The current player must own an adjacent location
-                    Dim adjacentList As ArrayList = thisLocation.GetAdjacents()
+                    Dim adjacentList As List(Of CitySquare) = thisLocation.GetAdjacents()
                     For k As Integer = 0 To adjacentList.Count - 1
                         Dim neighborLocation As CitySquare = adjacentList(k)
                         If neighborLocation.OwnerID = ID Then
@@ -259,7 +259,7 @@ Public Class Player
     Function OwnedAdjacent(ByVal theLocation As CitySquare) As Boolean
 
         '-- Check if this player owns a neighboring location
-        Dim adjacentList As ArrayList = theLocation.GetAdjacents()
+        Dim adjacentList As List(Of CitySquare) = theLocation.GetAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
             Dim neighborLocation As CitySquare = adjacentList(i)
             If neighborLocation.OwnerID = ID Then
@@ -296,8 +296,8 @@ Public Class Player
         Dim buildingNeed As Double = 0.0
         Dim landNeed As Double = 0.0
 
-        Dim citizenList As ArrayList = GetPlayerPopulation()
-        Dim territoryList As ArrayList = GetPlayerTerritory()
+        Dim citizenList As List(Of Person) = GetPlayerPopulation()
+        Dim territoryList As List(Of CitySquare) = GetPlayerTerritory()
 
         '-- Collect some basic info on employment and transport levels
         Dim citizensEmployed As Integer = 0
@@ -377,7 +377,7 @@ Public Class Player
 
 
         '-- Determine best location for land expansion
-        Dim adjLandList As ArrayList = GetPlayerAdjacentTerritory()
+        Dim adjLandList As List(Of CitySquare) = GetPlayerAdjacentTerritory()
         Dim landCostBase As Integer = GetPlayerLandCost()
         Dim bestLandCost As Integer = landCostBase
         Dim bestLandLocation As CitySquare = Nothing
@@ -386,7 +386,7 @@ Public Class Player
             Dim thisLocation As CitySquare = adjLandList(i)
 
             Dim neighboringPopulation As Integer = 0
-            Dim adjacentList As ArrayList = thisLocation.GetAdjacents()
+            Dim adjacentList As List(Of CitySquare) = thisLocation.GetAdjacents()
             For k As Integer = 0 To adjacentList.Count - 1
                 Dim ownedLocation As CitySquare = adjacentList(k)
                 If ownedLocation.OwnerID = ID Then
@@ -449,7 +449,7 @@ Public Class Player
         Dim landDecisionWeight As Double = maxLandUtility
 
 
-        Dim decisionWeights As New ArrayList
+        Dim decisionWeights As New List(Of Double)
         decisionWeights.AddRange(cardDecisionWeights)
         decisionWeights.Add(roadDecisionWeight)
         decisionWeights.Add(landDecisionWeight)

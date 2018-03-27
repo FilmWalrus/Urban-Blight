@@ -1643,6 +1643,7 @@ Public Class Form1
     Sub ResetForNewTurn()
         If ClickCity IsNot Nothing Then
             ClickCity.GridSquare.BorderStyle = BorderStyle.FixedSingle
+            ClickCity = Nothing
         End If
 
         SelectedCard = NoCard

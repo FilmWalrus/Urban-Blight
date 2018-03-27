@@ -50,10 +50,11 @@
 
         PrintEvent(BirthEvents, True)
 
-        PrintEvent(DeathEvents)
-        PrintEvent(CrimeEvents, True)
+        PrintEvent(DeathEvents, True)
 
         PrintEvent(MoveEvents, True)
+
+        PrintEvent(CrimeEvents, True)
 
         PrintEvent(HireEvents)
         PrintEvent(ExpansionEvents)

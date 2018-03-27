@@ -3,14 +3,23 @@
 #Region " Variables "
     Public CurrentPlayer As Player = Nothing
 
-    Public CitizenList As New ArrayList
-    Public LocationList As New ArrayList
+    Public CitizenList As New List(Of Person)
+    Public LocationList As New List(Of CitySquare)
 
-    Public DeadCitizens As New ArrayList
+    Public HospitalList As New List(Of Building)
+
+    Public DeadCitizens As New List(Of Person)
 
     Public NoDeath As Boolean = False
     Public NoEmigration As Boolean = False
     Public NoCrime As Boolean = False
+
+    Public Enum DeathHazard
+        NaturalCauses
+        Illness
+        TrafficAccident
+        Murder
+    End Enum
 
 #End Region
 
@@ -37,6 +46,9 @@
 
         '-- Gather all the occupied territory (all players)
         GatherTerritory()
+
+        '-- Gather hospitals (effects births and deaths)
+        GatherHospitals()
 
         '-- Handle business expansions
         BuildingsExpand()
@@ -85,7 +97,7 @@
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             ClearVisited()
-            Dim locationsInRange As New ArrayList
+            Dim locationsInRange As New List(Of CitySquare)
             RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
 
             ' Visit each location in range
@@ -129,6 +141,10 @@
             thePerson = CitizenList(i)
             thePerson.TouchedKey = 0
 
+            '-- Check if nearby buildings (like the maternity ward) affect the birthrate
+            Dim MaternityWardAdj As Double = GetMaternityWardAdjust(thePerson)
+            ReproduceAdj *= MaternityWardAdj
+
             If thePerson.WillReproduce(ReproduceAdj) Then
 
                 Dim homeTown As CitySquare = thePerson.Residence
@@ -137,7 +153,8 @@
 
                 'Check for twins (very rare)
                 Dim newChild2 As Person = Nothing
-                If (GetRandom(0, 1000) < 14) Then
+                Dim TwinOdds As Double = 14 * MaternityWardAdj
+                If (GetRandom(0, 1000) < TwinOdds) Then
                     newChild2 = thePerson.Reproduce()
                     CitizenList.Add(newChild2)
                 End If
@@ -173,32 +190,45 @@
         Dim LocalEventIllness As String = ""
         Dim EventCountAccident As Integer = 0
         Dim LocalEventAccident As String = ""
+        Dim LocalCountSaves As Integer = 0
+        Dim LocalEventSaves As String = ""
 
         If NoDeath Then
             Return
         End If
 
-        Dim thePerson As Person
-        Dim citizenCount As Integer = CitizenList.Count
-        For i As Integer = 0 To citizenCount - 1
-            thePerson = CitizenList(i)
+        For i As Integer = 0 To CitizenList.Count - 1
+            Dim thePerson As Person = CitizenList(i)
 
             '-- Handle deaths by natural causes
             Dim odds As Double = 0.0
             odds += (thePerson.Age - 20.0) / 4.0
             If thePerson.Health <= 0 Or GetRandom(0, 100) < odds Then
-                If thePerson.Die() Then
-                    DeadCitizens.Add(thePerson)
-
-                    '--Post Event
-                    EventCountNatural += 1
-                    If EventCountNatural >= EventLimit Then
-                        LocalEventNatural = EventCountNatural.ToString() + " citizens died of natural causes." + ControlChars.NewLine
+                '-- Attempt to save the life of this citizen
+                Dim Rescuer As Building = AttemptToSave(thePerson, DeathHazard.NaturalCauses)
+                If Rescuer IsNot Nothing Then
+                    '-- Citizen was saved!
+                    LocalCountSaves += 1
+                    If LocalCountSaves >= EventLimit Then
+                        LocalEventSaves = LocalCountSaves.ToString() + " lives were saved by hospitals." + ControlChars.NewLine
                     Else
-                        LocalEventNatural += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural causes." + ControlChars.NewLine
+                        LocalEventSaves += Rescuer.GetNameAndAddress() + " saved the life of " + thePerson.GetNameAndAddress() + "." + ControlChars.NewLine
                     End If
 
-                    Continue For
+                Else
+                    If thePerson.Die() Then
+                        DeadCitizens.Add(thePerson)
+
+                        '--Post Event
+                        EventCountNatural += 1
+                        If EventCountNatural >= EventLimit Then
+                            LocalEventNatural = EventCountNatural.ToString() + " citizens died of natural causes." + ControlChars.NewLine
+                        Else
+                            LocalEventNatural += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural causes." + ControlChars.NewLine
+                        End If
+
+                        Continue For
+                    End If
                 End If
             End If
 
@@ -206,18 +236,34 @@
             odds = 0.0
             odds += (32 - thePerson.Health) / 4.0
             If GetRandom(0, 100) < odds Then
-                If thePerson.Die() Then
-                    DeadCitizens.Add(thePerson)
 
-                    '--Post Event
-                    EventCountIllness += 1
-                    If EventCountIllness >= EventLimit Then
-                        LocalEventIllness = EventCountIllness.ToString() + " citizens died of illness." + ControlChars.NewLine
+                '-- Attempt to save the life of this citizen
+                Dim Rescuer As Building = AttemptToSave(thePerson, DeathHazard.Illness)
+                If Rescuer IsNot Nothing Then
+                    '-- Citizen was saved!
+                    LocalCountSaves += 1
+                    If LocalCountSaves >= EventLimit Then
+                        LocalEventSaves = LocalCountSaves.ToString() + " lives were saved by hospitals." + ControlChars.NewLine
                     Else
-                        LocalEventIllness += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of illness." + ControlChars.NewLine
+                        LocalEventSaves += Rescuer.GetNameAndAddress() + " saved the life of " + thePerson.GetNameAndAddress() + "." + ControlChars.NewLine
                     End If
 
-                    Continue For
+                Else
+                    If thePerson.Die() Then
+                        '-- Citizen died
+                        DeadCitizens.Add(thePerson)
+
+                        '--Post Event
+                        EventCountIllness += 1
+                        If EventCountIllness >= EventLimit Then
+                            LocalEventIllness = EventCountIllness.ToString() + " citizens died of illness." + ControlChars.NewLine
+                        Else
+                            LocalEventIllness += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of illness." + ControlChars.NewLine
+                        End If
+
+                        '-- Can only die once
+                        Continue For
+                    End If
                 End If
             End If
 
@@ -233,19 +279,32 @@
             End If
 
             If GetRandom(0, 100) <= odds Then
-                If thePerson.Die() Then
-
-                    DeadCitizens.Add(thePerson)
-
-                    '--Post Event
-                    EventCountAccident += 1
-                    If EventCountAccident >= EventLimit Then
-                        LocalEventAccident = EventCountAccident.ToString() + " citizens died in traffic accidents." + ControlChars.NewLine
+                '-- Attempt to save the life of this citizen
+                Dim Rescuer As Building = AttemptToSave(thePerson, DeathHazard.TrafficAccident)
+                If Rescuer IsNot Nothing Then
+                    '-- Citizen was saved!
+                    LocalCountSaves += 1
+                    If LocalCountSaves >= EventLimit Then
+                        LocalEventSaves = LocalCountSaves.ToString() + " lives were saved by hospitals." + ControlChars.NewLine
                     Else
-                        LocalEventAccident += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died in a car accident." + ControlChars.NewLine
+                        LocalEventSaves += Rescuer.GetNameAndAddress() + " saved the life of " + thePerson.GetNameAndAddress() + "." + ControlChars.NewLine
                     End If
 
-                    Continue For
+                Else
+                    If thePerson.Die() Then
+
+                        DeadCitizens.Add(thePerson)
+
+                        '--Post Event
+                        EventCountAccident += 1
+                        If EventCountAccident >= EventLimit Then
+                            LocalEventAccident = EventCountAccident.ToString() + " citizens died in traffic accidents." + ControlChars.NewLine
+                        Else
+                            LocalEventAccident += thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died in a car accident." + ControlChars.NewLine
+                        End If
+
+                        Continue For
+                    End If
                 End If
             End If
 
@@ -253,7 +312,7 @@
 
         PurgeDead()
 
-        Diary.DeathEvents += LocalEventNatural + LocalEventIllness + LocalEventAccident
+        Diary.DeathEvents += LocalEventSaves + LocalEventNatural + LocalEventIllness + LocalEventAccident
     End Sub
 
     Sub Travel()
@@ -270,7 +329,7 @@
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             ClearVisited()
-            Dim locationsInRange As New ArrayList
+            Dim locationsInRange As New List(Of CitySquare)
             RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
 
             If locationsInRange.Count > 0 And GetRandom(0, 1) = 1 Then '-- 50% chance of moving if the option presents itself. Seems a little high?
@@ -356,7 +415,7 @@
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             ClearVisited()
-            Dim locationsInRange As New ArrayList
+            Dim locationsInRange As New List(Of CitySquare)
             RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
             Dim foundJob As Boolean = False
 
@@ -411,7 +470,6 @@
         Dim LocalEventTheft As String = ""
         Dim LocalEventArson As String = ""
         Dim LocalEventMurder As String = ""
-        Dim LocalEventAccident As String = ""
 
         Dim TheftSum As Integer = 0
         Dim CountTheft As Integer = 0
@@ -505,7 +563,8 @@
 
         PurgeDead()
 
-        Diary.CrimeEvents += LocalEventTheft + LocalEventArson + LocalEventMurder + LocalEventAccident
+        Diary.DeathEvents += LocalEventMurder
+        Diary.CrimeEvents += LocalEventTheft + LocalEventArson
     End Sub
 
     Sub Taxation()
@@ -643,6 +702,46 @@
 
 #End Region
 
+#Region " Hospital Stuff "
+
+    Sub GatherHospitals()
+
+        HospitalList.Clear()
+
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim thisLocation As CitySquare = GridArray(i, j)
+
+                '-- Add all medical buildings at this location
+                HospitalList.AddRange(thisLocation.GetBuildingsByTag(BuildingGen.TagEnum.Medical))
+            Next
+        Next
+
+    End Sub
+
+    Function AttemptToSave(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Building
+
+        For i As Integer = 0 To HospitalList.Count - 1
+            If HospitalList(i).SavePatient(thePerson, causeOfDeath) Then
+                Return HospitalList(i)
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
+    Function GetMaternityWardAdjust(ByRef thePerson As Person) As Double
+
+        Dim BirthrateAdjust As Double = 1.0
+        For i As Integer = 0 To HospitalList.Count - 1
+            BirthrateAdjust *= HospitalList(i).GetBirthrateAdjust(thePerson)
+        Next
+
+        Return BirthrateAdjust
+    End Function
+
+#End Region
+
 #Region " Support "
     Sub GatherCitizens()
 
@@ -692,7 +791,7 @@
         Next
     End Sub
 
-    Function RangeChecker(ByRef location As CitySquare, ByVal Mobility As Integer, ByRef visitList As ArrayList) As Integer
+    Function RangeChecker(ByRef location As CitySquare, ByVal Mobility As Integer, ByRef visitList As List(Of CitySquare)) As Integer
         If location.VisitedKey > Mobility Or location.OwnerID < 0 Then
             Return 0
         End If
@@ -719,7 +818,7 @@
         End If
 
         '-- Continue moving to locations adjacent to this location
-        Dim adjacentList As ArrayList = location.GetAdjacents()
+        Dim adjacentList As List(Of CitySquare) = location.GetAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
             RangeChecker(adjacentList(i), Mobility, visitList)
         Next

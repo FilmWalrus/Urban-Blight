@@ -12,8 +12,8 @@ Public Class CitySquare
     Public GridSquare As Label = Nothing
 
     '-- Info
-    Public Buildings As New ArrayList
-    Public People As New ArrayList
+    Public Buildings As New List(Of Building)
+    Public People As New List(Of Person)
     Public Transportation As Integer = 0
     Public Terrain As Integer = TerrainPlain
     Public Coastal As Boolean = False
@@ -167,8 +167,19 @@ Public Class CitySquare
         Return buildingCount
     End Function
 
-    Public Function GetBuildingsByType(ByVal bType As Integer) As ArrayList
-        Dim buildingList As New ArrayList
+    Public Function CountBuildingsByTag(ByVal bTag As Integer) As Integer
+        Dim buildingCount As Integer = 0
+        For i As Integer = 0 To Buildings.Count - 1
+            Dim thisBuilding As Building = Buildings(i)
+            If thisBuilding.HasTag(bTag) Then
+                buildingCount += 1
+            End If
+        Next
+        Return buildingCount
+    End Function
+
+    Public Function GetBuildingsByType(ByVal bType As Integer) As List(Of Building)
+        Dim buildingList As New List(Of Building)
         For i As Integer = 0 To Buildings.Count - 1
             Dim thisBuilding As Building = Buildings(i)
             If thisBuilding.Type = bType Then
@@ -178,8 +189,8 @@ Public Class CitySquare
         Return buildingList
     End Function
 
-    Public Function GetBuildingsByTag(ByVal bTag As String) As ArrayList
-        Dim buildingList As New ArrayList
+    Public Function GetBuildingsByTag(ByVal bTag As Integer) As List(Of Building)
+        Dim buildingList As New List(Of Building)
         For i As Integer = 0 To Buildings.Count - 1
             Dim thisBuilding As Building = Buildings(i)
             If thisBuilding.HasTag(bTag) Then
@@ -234,8 +245,8 @@ Public Class CitySquare
         End If
     End Function
 
-    Function GetAdjacents() As ArrayList
-        Dim AdjacentList As New ArrayList()
+    Function GetAdjacents() As List(Of CitySquare)
+        Dim AdjacentList As New List(Of CitySquare)
 
         If RowID - 1 >= 0 Then
             AdjacentList.Add(GridArray(RowID - 1, ColID))
@@ -254,6 +265,24 @@ Public Class CitySquare
 
     End Function
 
+    Sub GetLocationsInRange(ByVal Range As Integer, ByRef visitList As List(Of CitySquare))
+        visitList.Add(Me)
+
+        If Range > 0 Then
+            '-- Continue moving to locations adjacent to this location
+            Dim adjacentList As List(Of CitySquare) = GetAdjacents()
+            For i As Integer = 0 To adjacentList.Count - 1
+                If Not visitList.Contains(adjacentList(i)) Then
+                    adjacentList(i).GetLocationsInRange(Range - 1, visitList)
+                End If
+            Next
+        End If
+    End Sub
+
+    Function GetDistance(ByRef OtherSquare As CitySquare) As Integer
+        Return Math.Abs(RowID - OtherSquare.RowID) + Math.Abs(ColID - OtherSquare.ColID)
+    End Function
+
     Sub UpdateCoastline()
 
         '-- Lakes can't be coastal
@@ -263,7 +292,7 @@ Public Class CitySquare
         End If
 
         '-- Any other terrain next to a lake is coastal
-        Dim adjacentList As ArrayList = GetAdjacents()
+        Dim adjacentList As List(Of CitySquare) = GetAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
             Dim neighborLocation As CitySquare = adjacentList(i)
             If neighborLocation.Terrain = TerrainLake Then

@@ -24,11 +24,11 @@ Module GlobalVars
     Public Const PlayerAI As Integer = 2
 
     '--Players
-    Public Players As New ArrayList
+    Public Players As New List(Of Player)
     Public Const MaxPlayers As Integer = 4
 
     '--Cards (Buildings available to buy)
-    Public Cards As New ArrayList
+    Public Cards As New List(Of Building)
     Public Const RoadCostBase As Integer = 50
     Public Const WipeCostBase As Integer = 100
     Public Const DropCostBase As Integer = 5

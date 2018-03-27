@@ -128,6 +128,8 @@
     </Compile>
     <Compile Include="BuildingGen.vb" />
     <Compile Include="EventDiary.vb" />
+    <Compile Include="Hospitals.vb" />
+    <Compile Include="Manufacturing.vb" />
     <Compile Include="RenameCity.vb">
       <SubType>Form</SubType>
     </Compile>

@@ -27,13 +27,14 @@ Public Class DayCareBuilding
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Person)
-        If thePerson.Age <= 16 Then
+        '-- Only affect citizens under the age of 17
+        If thePerson.IsMinor() Then
             MyBase.AffectPerson(thePerson)
         End If
     End Sub
 End Class
 
-Public Class ManufacturingBuilding
+Public Class MonumentBuilding
     Inherits Building
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
@@ -41,24 +42,33 @@ Public Class ManufacturingBuilding
     End Sub
 
     Public Overrides Sub ConstructionEffects()
-        Dim JobMultiplier As Integer = 1
-        If Type = BuildingGen.BuildingEnum.Cartel And Location.Terrain = TerrainDirt Then
-            JobMultiplier *= 2
-        ElseIf Type = BuildingGen.BuildingEnum.Fishery And Location.Coastal Then
-            JobMultiplier *= 2
-        ElseIf Type = BuildingGen.BuildingEnum.Lumber_Mill And Location.Terrain = TerrainForest Then
-            JobMultiplier *= 2
-        ElseIf Type = BuildingGen.BuildingEnum.Steel_Mill And Location.Terrain = TerrainMountain Then
-            JobMultiplier *= 2
-        ElseIf Type = BuildingGen.BuildingEnum.Textile_Mill And Location.Terrain = TerrainPlain Then
-            JobMultiplier *= 2
+        '-- Make sure there isn't already a monument here
+        If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) > 0 Then
+            Return
         End If
 
-        If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Shipping_Center) > 0 Then
-            JobMultiplier *= 2
+        '-- Double the odds of visitors
+        Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Monument)
+        For i As Integer = 0 To BuildingList.Count - 1
+            Dim thisBuilding As Building = BuildingList(i)
+            thisBuilding.UpdateAllOdds(2.0, True)
+        Next
+    End Sub
+
+    Public Overrides Sub Destroy()
+        '-- Make sure there isn't another monument here
+        If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) > 1 Then
+            Return
         End If
 
-        Jobs *= JobMultiplier
+        '-- Half the odds of visitors
+        Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Manufacturing)
+        For i As Integer = 0 To BuildingList.Count - 1
+            Dim thisBuilding As Building = BuildingList(i)
+            thisBuilding.UpdateAllOdds(0.5, True)
+        Next
+
+        MyBase.Destroy()
     End Sub
 End Class
 
@@ -70,7 +80,8 @@ Public Class RetirementBuilding
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Person)
-        If thePerson.Age > 50 Then
+        '-- Only affect citizens over the age of 50
+        If thePerson.IsElderly() Then
             MyBase.AffectPerson(thePerson)
         End If
     End Sub
@@ -89,24 +100,6 @@ Public Class SchoolBuilding
         If thePerson.IsMinor() Then
             MyBase.AffectPerson(thePerson)
         End If
-    End Sub
-End Class
-
-Public Class ShippingBuilding
-    Inherits Building
-
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
-    End Sub
-
-    Public Overrides Sub ConstructionEffects()
-
-        Dim mfgBuildingList As ArrayList = Location.GetBuildingsByTag("Manufacturing")
-
-        For i As Integer = 0 To mfgBuildingList.Count - 1
-            Dim thisBuilding As Building = mfgBuildingList(i)
-            thisBuilding.Jobs *= 2
-        Next
     End Sub
 End Class
 

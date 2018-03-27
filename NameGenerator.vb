@@ -1,18 +1,18 @@
 Public Class NameGenerator
 
 #Region " Variables "
-    Dim PersonTitle As New ArrayList
+    Dim PersonTitle As New List(Of String)
 
-    Dim FirstSyllable As New ArrayList
-    Dim Middle As New ArrayList
-    Dim Ending As New ArrayList
-    Dim Vowels As New ArrayList
-    Dim VowelsPlus As New ArrayList
+    Dim FirstSyllable As New List(Of String)
+    Dim Middle As New List(Of String)
+    Dim Ending As New List(Of String)
+    Dim Vowels As New List(Of String)
+    Dim VowelsPlus As New List(Of String)
 
-    Dim TownStart As New ArrayList
-    Dim TownEnding As New ArrayList
-    Dim TownAdjective As New ArrayList
-    Dim TownPlaces As New ArrayList
+    Dim TownStart As New List(Of String)
+    Dim TownEnding As New List(Of String)
+    Dim TownAdjective As New List(Of String)
+    Dim TownPlaces As New List(Of List(Of String))
 
 #End Region
 
@@ -402,7 +402,7 @@ Public Class NameGenerator
         '  TerrainTownship As Integer = 6
         '  TerrainDesert As Integer = 7
 
-        Dim TownPlacePlain As New ArrayList
+        Dim TownPlacePlain As New List(Of String)
         For i As Integer = 0 To 8
             TownPlacePlain.Add("City")
         Next
@@ -452,7 +452,7 @@ Public Class NameGenerator
         TownPlacePlain.Add("Zone")
         TownPlaces.Add(TownPlacePlain)
 
-        Dim TownPlaceDirt As New ArrayList
+        Dim TownPlaceDirt As New List(Of String)
         TownPlaceDirt.Add("Downs")
         TownPlaceDirt.Add("Mound")
         TownPlaceDirt.Add("Hills")
@@ -471,7 +471,7 @@ Public Class NameGenerator
         TownPlaceDirt.Add("Knoll")
         TownPlaces.Add(TownPlaceDirt)
 
-        Dim TownPlaceForest As New ArrayList
+        Dim TownPlaceForest As New List(Of String)
         TownPlaceForest.Add("Wood")
         TownPlaceForest.Add("Woods")
         TownPlaceForest.Add("Pines")
@@ -499,7 +499,7 @@ Public Class NameGenerator
         TownPlaceForest.Add("Canopy")
         TownPlaces.Add(TownPlaceForest)
 
-        Dim TownPlaceMountain As New ArrayList
+        Dim TownPlaceMountain As New List(Of String)
         TownPlaceMountain.Add("Cliffs")
         TownPlaceMountain.Add("Mountain")
         TownPlaceMountain.Add("Mount")
@@ -522,7 +522,7 @@ Public Class NameGenerator
         TownPlaceMountain.Add("Mesa")
         TownPlaces.Add(TownPlaceMountain)
 
-        Dim TownPlaceLake As New ArrayList
+        Dim TownPlaceLake As New List(Of String)
         TownPlaceLake.Add("Lake")
         TownPlaceLake.Add("Beach")
         TownPlaceLake.Add("Shore")
@@ -554,7 +554,7 @@ Public Class NameGenerator
         TownPlaceLake.Add("Delta")
         TownPlaces.Add(TownPlaceLake)
 
-        Dim TownPlaceSwamp As New ArrayList
+        Dim TownPlaceSwamp As New List(Of String)
         TownPlaceSwamp.Add("Folly")
         TownPlaceSwamp.Add("Swamp")
         TownPlaceSwamp.Add("Marsh")
@@ -575,7 +575,7 @@ Public Class NameGenerator
         TownPlaceSwamp.Add("Morass")
         TownPlaces.Add(TownPlaceSwamp)
 
-        Dim TownPlaceTownship As New ArrayList
+        Dim TownPlaceTownship As New List(Of String)
         TownPlaceTownship.Add("Township")
         TownPlaceTownship.Add("Subdivision")
         TownPlaceTownship.Add("Plantation")
@@ -599,7 +599,7 @@ Public Class NameGenerator
         TownPlaceTownship.Add("Sanctuary")
         TownPlaces.Add(TownPlaceTownship)
 
-        Dim TownPlaceDesert As New ArrayList
+        Dim TownPlaceDesert As New List(Of String)
         TownPlaceDesert.Add("Desert")
         TownPlaceDesert.Add("Sands")
         TownPlaceDesert.Add("Dunes")
@@ -670,7 +670,7 @@ Public Class NameGenerator
                 End If
             End If
 
-            Dim placeList As ArrayList = TownPlaces(terrainIndex)
+            Dim placeList As List(Of String) = TownPlaces(terrainIndex)
             nameStr += placeList(GetRandom(0, placeList.Count - 1))
 
         End If

@@ -35,6 +35,7 @@
         Daycare_Center
         Department_Store
         Detective_Agency
+        Embassy
         Exurb
         Factory
         Farm
@@ -77,6 +78,7 @@
         Parking_Lot
         Pharmacy
         Police_Station
+        Polling_Place
         Post_Office
         Power_Plant
         Private_Security_Company
@@ -106,6 +108,17 @@
         Welfare_Service
         Zoo
         BuildingCount
+    End Enum
+
+    Public Enum TagEnum
+        Ad
+        Athletic
+        Coffee
+        Food
+        Government
+        Manufacturing
+        Medical
+        Monument
     End Enum
 
 #End Region
@@ -178,6 +191,8 @@
                 Return "Department Store"
             Case BuildingEnum.Detective_Agency
                 Return "Detective Agency"
+            Case BuildingEnum.Embassy
+                Return "Embassy"
             Case BuildingEnum.Exurb
                 Return "Exurb"
             Case BuildingEnum.Factory
@@ -207,17 +222,17 @@
             Case BuildingEnum.Harbor
                 Return "Harbor"
             Case BuildingEnum.Hospital_Cancer
-                Return "Hospital - Cancer"
+                Return "Cancer Hospital"
             Case BuildingEnum.Hospital_Emergency
-                Return "Hospital - Emergency"
+                Return "Emergency Hospital"
             Case BuildingEnum.Hospital_Geriatric
-                Return "Hospital - Geriatric"
+                Return "Geriatric Hospital"
             Case BuildingEnum.Hospital_Maternity
-                Return "Hospital - Maternity"
+                Return "Maternity Hospital"
             Case BuildingEnum.Hospital_Pediatric
-                Return "Hospital - Pediatric"
+                Return "Pediatric Hospital"
             Case BuildingEnum.Hospital_Research
-                Return "Hospital - Research"
+                Return "Research Hospital"
             Case BuildingEnum.Hotel
                 Return "Hotel"
             Case BuildingEnum.Laboratory
@@ -262,6 +277,8 @@
                 Return "Pharmacy"
             Case BuildingEnum.Police_Station
                 Return "Police Station"
+            Case BuildingEnum.Polling_Place
+                Return "Polling Place"
             Case BuildingEnum.Post_Office
                 Return "Post Office"
             Case BuildingEnum.Power_Plant
@@ -323,6 +340,29 @@
         End Select
     End Function
 
+    Public Function GetTagName(ByVal Tag As Integer) As String
+        Select Case Tag
+            Case TagEnum.Ad
+                Return "Advertises"
+            Case TagEnum.Athletic
+                Return "Athletic"
+            Case TagEnum.Coffee
+                Return "Coffee"
+            Case TagEnum.Food
+                Return "Food"
+            Case TagEnum.Government
+                Return "Government"
+            Case TagEnum.Manufacturing
+                Return "Manufacturing"
+            Case TagEnum.Medical
+                Return "Medical"
+            Case TagEnum.Monument
+                Return "Monument"
+            Case Else
+                Return ""
+        End Select
+    End Function
+
     Public Function CreateBuilding(ByVal bType As Integer) As Building
 
         Do
@@ -347,15 +387,16 @@
                     newBuilding.SetSpecialAbility("Permanently bans the user from building [] ")
                     Return newBuilding
                 Case BuildingEnum.Airport
-                    Dim newBuilding As New Building(bType, 635, 5)
+                    Dim newBuilding As New Building(bType, 560, 5)
                     newBuilding.SetMobility(18, 10)
                     newBuilding.SetInfo("Though a more expensive option, Airports allow for travel to far-reaching destinations.")
                     newBuilding.SetSpecialAbility("Cities containing Airports are considered adjacent to other citiies containing Airports - both yours and those belonging to other players.")
                     Return newBuilding
                 Case BuildingEnum.Ambulance_Service
-                    Dim newBuilding As New Building(bType, 280, 2)
+                    Dim newBuilding As New AmbulanceBuilding(bType, 280, 2)
                     newBuilding.SetHealth(10, 4)
                     newBuilding.SetMobility(10, 1)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("In a medical emergency, the Ambulance Service provides treatment and transport to afflicted individuals.")
                     newBuilding.SetSpecialAbility("The Ambulance Service boosts the effects of all medical buildings within a radius of two adjacent squares.")
                     Return newBuilding
@@ -414,7 +455,7 @@
                     newBuilding.SetHealth(12, -7)
                     newBuilding.SetDrunkenness(30, 10)
                     newBuilding.SetCriminality(30, 4)
-                    newBuilding.AddTag("Manufacturing")
+                    newBuilding.AddTag(TagEnum.Manufacturing)
                     newBuilding.SetInfo("Drugs, sex, and rock 'n' roll. Or at least the drugs... The Cartel can give you the temporary euphoria you crave, but there many be a few consequences.")
                     newBuilding.SetSpecialAbility("The Cartel starts with twice the number of jobs if built on a Dirt tile.")
                     Return newBuilding
@@ -442,7 +483,7 @@
                     newBuilding.SetSpecialAbility("For each adjacent square that is unoccupied, the City Wall will provide one job and boost odds by a multiplier of one.  For each adjacent square that is occupied by an opponent, the City Wall will provide two jobs and boost odds by a multiplier of two.")
                     Return newBuilding
                 Case BuildingEnum.Civic_Center
-                    Dim newBuilding As New Building(bType, 555, 7)
+                    Dim newBuilding As New Building(bType, 635, 8)
                     newBuilding.SetHappiness(25, 5)
                     newBuilding.SetIntelligence(25, 3)
                     newBuilding.SetCreativity(25, 3)
@@ -505,8 +546,10 @@
                 Case BuildingEnum.Courthouse
                     Dim newBuilding As New Building(bType, 130, 2)
                     newBuilding.SetHappiness(12, -5)
+                    newBuilding.SetIntelligence(15, 1)
                     newBuilding.SetCriminality(25, -3)
-                    newBuilding.SetInfo("A link in the chain of local bureaucracy, Courthouses lay down the law of the land and provide a place to pay those pesky parking tickets.")
+                    newBuilding.AddTag(TagEnum.Monument)
+                    newBuilding.SetInfo("It's usually a bad day if you end up there, but Courthouses serve a purpose: settling tricky matters of justice, laying down the law of the land, and providing a place to pay those pesky parking tickets.")
                     newBuilding.SetSpecialAbility("Courthouses let the owner collect double the money from fines within a two-square adjacency of the building. If the Courthouse is built on a Swamp tile, fines are tripled.")
                     Return newBuilding
                 Case BuildingEnum.Crime_Ring
@@ -535,39 +578,46 @@
                     newBuilding.SetHealth(18, 2)
                     newBuilding.SetCriminality(20, -2)
                     newBuilding.SetInfo("Daycare Centers give the little ones a place to go while the adults are at work.  They are excellent places for children to learn interpersonal skills while they play.")
-					newBuilding.SetSpecialAbility("The Daycare Center effects only minors.")
+                    newBuilding.SetSpecialAbility("The Daycare Center effects only minors.")
                     Return newBuilding
                 Case BuildingEnum.Department_Store
                     Dim newBuilding As New Building(bType, 115, 3)
                     newBuilding.SetHappiness(8, 1)
                     newBuilding.SetCreativity(12, -1)
                     newBuilding.SetInfo("Make errands eazy and fun at the Department Store - the one-stop shop for all your home and clothing needs.")
-					newBuilding.SetSpecialAbility("Department Stores have a small chance of opening another of their chain on an adjacent square.")
+                    newBuilding.SetSpecialAbility("Department Stores have a small chance of opening another of their chain on an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Detective_Agency
                     Dim newBuilding As New Building(bType, 80, 1)
                     newBuilding.SetCriminality(8, -8)
                     newBuilding.SetInfo("Suspicious of a co-worker? Want to know the whereabouts of your lover? Some cases aren't meant for the police. That's where the Detective Agency comes in to play.")
-					newBuilding.SetSpecialAbility("The Detective Agency lets you see where your citizens have been and what they've done on their last turn. This only applies to citizens living on the square with the Detective Agency.")
+                    newBuilding.SetSpecialAbility("The Detective Agency lets you see where your citizens have been and what they've done on their last turn. This only applies to citizens living on the square with the Detective Agency.")
+                    Return newBuilding
+                Case BuildingEnum.Embassy
+                    Dim newBuilding As New Building(bType, 215, 2)
+                    newBuilding.SetIntelligence(10, 8)
+                    newBuilding.SetCriminality(10, 7)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Exurb
                     Dim newBuilding As New Building(bType, 435, 0) 'Check phrasing of Exurb special ability text.
                     newBuilding.SetMobility(15, 2)
                     newBuilding.SetInfo("Sometimes you just need to escape the city.  Exurbs let you get away, but still remain close to the hustle and bustle of your metropolis.")
-					newBuilding.SetSpecialAbility("After purchasing an Exurbs, the next piece of land you buy can be any unoccupied square on the board. This square will be considered adjacent to the tile where you placed the Exurb.")
+                    newBuilding.SetSpecialAbility("After purchasing an Exurbs, the next piece of land you buy can be any unoccupied square on the board. This square will be considered adjacent to the tile where you placed the Exurb.")
                     Return newBuilding
                 Case BuildingEnum.Factory
                     Dim newBuilding As New ManufacturingBuilding(bType, 125, 5)
                     newBuilding.SetHappiness(16, -3)
                     newBuilding.SetHealth(33, -6)
                     newBuilding.SetInfo("Factories provide many needed jobs but their monotony can be depressing and their pollution harmful.")
-					newBuilding.SetSpecialAbility("The effects of a Factory are worse for every 10 population sharing its square.")
+                    newBuilding.SetSpecialAbility("The effects of a Factory are worse for every 10 population sharing its square.")
                     Return newBuilding
                 Case BuildingEnum.Farm
                     Dim newBuilding As New Building(bType, 80, 1)
                     newBuilding.SetHealth(65, 2)
                     newBuilding.SetInfo("Farms are the backbone of any society. They provide fresh produce and fibers to the local community.")
-					newBuilding.SetSpecialAbility("Farms double the effect of any Food buildings on the same square.  Farms expand faster on a Dirt tile.")
+                    newBuilding.SetSpecialAbility("Farms double the effect of any Food buildings on the same square.  Farms expand faster on a Dirt tile.")
                     Return newBuilding
                 Case BuildingEnum.Fast_Food_Chain
                     Dim newBuilding As New Building(bType, 50, 1)
@@ -575,7 +625,7 @@
                     newBuilding.SetHealth(65, -2)
                     newBuilding.SetMobility(15, 1)
                     newBuilding.SetInfo("Quick and convenient with a side order of grease, Fast Food Chains help satisfy your food cravings and fuel you up for the day to come.")
-					newBuilding.SetSpecialAbility("Fast Food Chains have a small chance of opening another location on an adjacent square.")
+                    newBuilding.SetSpecialAbility("Fast Food Chains have a small chance of opening another location on an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Fire_Station
                     Dim newBuilding As New Building(bType, 100, 2)
@@ -585,7 +635,7 @@
                 Case BuildingEnum.Fishery
                     Dim newBuilding As New ManufacturingBuilding(bType, 165, 2)
                     newBuilding.SetHappiness(10, -2)
-                    newBuilding.AddTag("Manufacturing")
+                    newBuilding.AddTag(TagEnum.Manufacturing)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Freeway
@@ -613,7 +663,7 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Graveyard
-
+                    'newBuilding.AddTag(TagEnum.Monument)
                 Case BuildingEnum.Grocery_Store
                     Dim newBuilding As New Building(bType, 95, 2)
                     newBuilding.SetHealth(80, 1)
@@ -633,35 +683,41 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Cancer
-                    Dim newBuilding As New Building(bType, 270, 3)
+                    Dim newBuilding As New HospitalCancerBuilding(bType, 270, 3)
                     newBuilding.SetHealth(30, 5)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Emergency
-                    Dim newBuilding As New Building(bType, 240, 3)
+                    Dim newBuilding As New HospitalEmergencyBuilding(bType, 240, 3)
                     newBuilding.SetHealth(30, 5)
                     newBuilding.SetDrunkenness(12, -3)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Geriatric
-                    Dim newBuilding As New Building(bType, 200, 3)
+                    Dim newBuilding As New HospitalGeriatricBuilding(bType, 200, 3)
                     newBuilding.SetHealth(30, 3)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Maternity
-                    Dim newBuilding As New Building(bType, 250, 3)
+                    Dim newBuilding As New HospitalMaternityBuilding(bType, 250, 3)
                     newBuilding.SetHealth(30, 3)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Pediatric
                     Dim newBuilding As New Building(bType, 190, 3)
                     newBuilding.SetHealth(30, 4)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Research
-                    Dim newBuilding As New Building(bType, 260, 3)
+                    Dim newBuilding As New HospitalPediatricBuilding(bType, 260, 3)
                     newBuilding.SetHealth(5, 10)
                     newBuilding.SetIntelligence(40, 5)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hotel
@@ -701,7 +757,7 @@
                 Case BuildingEnum.Lumber_Mill
                     Dim newBuilding As New ManufacturingBuilding(bType, 130, 2)
                     newBuilding.SetHealth(15, -2)
-                    newBuilding.AddTag("Manufacturing")
+                    newBuilding.AddTag(TagEnum.Manufacturing)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Mall
@@ -715,18 +771,6 @@
                     newBuilding.SetMobility(32, 5)
                     newBuilding.SetInfo("Mass Transit allows many of your citizens to gain mobility they never would have had without it.")
                     Return newBuilding
-                Case BuildingEnum.Mine
-                    Dim newBuilding As New Building(bType, 55, 2)
-                    newBuilding.SetHappiness(10, -2)
-                    newBuilding.SetHealth(50, -3)
-                    newBuilding.SetInfo("")
-                    Return newBuilding
-                Case BuildingEnum.Monument
-                    Dim newBuilding As New Building(bType, 85, 0)
-                    newBuilding.SetHappiness(10, 1)
-                    newBuilding.SetCreativity(16, 3)
-                    newBuilding.SetInfo("A bold impressive monument that makes citizen proud, happy and inspired to new creative heights... if only slightly.")
-                    Return newBuilding
                 Case BuildingEnum.Military_Base
                     Dim newBuilding As New Building(bType, 260, 5)
                     newBuilding.SetHappiness(15, -1)
@@ -734,12 +778,27 @@
                     newBuilding.SetCreativity(30, -2)
                     newBuilding.SetDrunkenness(14, 7)
                     newBuilding.SetCriminality(30, -3)
+                    newBuilding.AddTag(TagEnum.Monument)
                     newBuilding.SetInfo("")
+                    Return newBuilding
+                Case BuildingEnum.Mine
+                    Dim newBuilding As New Building(bType, 55, 2)
+                    newBuilding.SetHappiness(10, -2)
+                    newBuilding.SetHealth(50, -3)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
+                Case BuildingEnum.Monument
+                    Dim newBuilding As New MonumentBuilding(bType, 85, 0)
+                    newBuilding.SetHappiness(10, 1)
+                    newBuilding.SetCreativity(16, 3)
+                    newBuilding.SetInfo("A bold impressive monument that makes citizen proud, happy and inspired to new creative heights... if only slightly.")
+                    newBuilding.SetSpecialAbility("Buildings at the same location and with the ""Monument"" tag are 2x likelier to be visited.")
                     Return newBuilding
                 Case BuildingEnum.Museum
                     Dim newBuilding As New Building(bType, 150, 1)
                     newBuilding.SetIntelligence(32, 2)
                     newBuilding.SetCreativity(22, 10)
+                    newBuilding.AddTag(TagEnum.Monument)
                     newBuilding.SetInfo("Museums may be stodgy and boring to some, but they can help increase the intelligence and creativity of those occasional visitors.")
                     Return newBuilding
                 Case BuildingEnum.Observatory
@@ -763,6 +822,7 @@
                     newBuilding.SetHappiness(15, 2)
                     newBuilding.SetHealth(40, 2)
                     newBuilding.SetCreativity(20, 2)
+                    newBuilding.AddTag(TagEnum.Monument)
                     newBuilding.SetInfo("Attractive parks allow the casual stroller to engage in happy, healthy and creative exercise and meditation.")
                     Return newBuilding
                 Case BuildingEnum.Parking_Garage
@@ -790,6 +850,13 @@
                     newBuilding.SetHappiness(15, -1)
                     newBuilding.SetCriminality(50, -3)
                     newBuilding.SetInfo("Police stations are the best way to crack down on crime, even if every once in a while they spoil some harmless fun.")
+                    Return newBuilding
+                Case BuildingEnum.Polling_Place
+                    Dim newBuilding As New Building(bType, 255, 1)
+                    newBuilding.SetHappiness(25, 2)
+                    newBuilding.SetIntelligence(25, 1)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Post_Office
 
@@ -873,7 +940,7 @@
                 Case BuildingEnum.Steel_Mill
                     Dim newBuilding As New ManufacturingBuilding(bType, 505, 3)
                     newBuilding.SetHealth(36, -3)
-                    newBuilding.AddTag("Manufacturing")
+                    newBuilding.AddTag(TagEnum.Manufacturing)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Startup_Incubator
@@ -888,12 +955,14 @@
 
                 Case BuildingEnum.Temp_Agency
                     Dim newBuilding As New Building(bType, 135, 1)
+                    newBuilding.SetHappiness(15, -1)
+                    newBuilding.SetIntelligence(15, -1)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Textile_Mill
                     Dim newBuilding As New ManufacturingBuilding(bType, 295, 2)
                     newBuilding.SetHappiness(22, -2)
-                    newBuilding.AddTag("Manufacturing")
+                    newBuilding.AddTag(TagEnum.Manufacturing)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Theater

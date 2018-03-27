@@ -6,14 +6,16 @@ Public Class Building
     Public Cost As Integer = 0
     Public Jobs As Integer = 0
     Public Success As Integer = 0
+
     Public Age As Integer = 0
+    Public Range As Integer = 0
 
     Public Info As String = ""
     Public SpecialAbility As String = ""
-    Public Tags As New ArrayList
+    Public Tags As New List(Of Integer)
 
     Public Location As CitySquare = Nothing
-    Public Employees As New ArrayList
+    Public Employees As New List(Of Person)
 
     '-- Keep track of how many times no one bought this for free
     Public RejectionCount As Integer = 0
@@ -93,12 +95,148 @@ Public Class Building
         Criminality_odds = odds
     End Sub
 
+    Public Sub SetRange(ByVal bRange As Integer)
+        Range = bRange
+    End Sub
+
     Public Sub SetInfo(ByVal bInfo As String)
         Info = bInfo
     End Sub
 
     Public Sub SetSpecialAbility(ByVal bSpecial As String)
         SpecialAbility = bSpecial
+    End Sub
+
+    Public Overridable Sub UpdateHappinessOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Happiness_odds *= changeValue
+        Else
+            Happiness_odds += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateHappinessAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Happiness_adj *= changeValue
+        Else
+            Happiness_adj += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateHealthOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Health_odds *= changeValue
+        Else
+            Health_odds += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateHealthAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Health_adj *= changeValue
+        Else
+            Health_adj += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateIntelligenceOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Intelligence_odds *= changeValue
+        Else
+            Intelligence_odds += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateIntelligenceAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Intelligence_adj *= changeValue
+        Else
+            Intelligence_adj += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateCreativityOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Creativity_odds *= changeValue
+        Else
+            Creativity_odds += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateCreativityAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Creativity_adj *= changeValue
+        Else
+            Creativity_adj += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateMobilityOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Mobility_odds *= changeValue
+        Else
+            Mobility_odds += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateMobilityAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Mobility_adj *= changeValue
+        Else
+            Mobility_adj += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateDrunkennessOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Drunkenness_odds *= changeValue
+        Else
+            Drunkenness_odds += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateDrunkennessAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Drunkenness_adj *= changeValue
+        Else
+            Drunkenness_adj += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateCriminalityOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Criminality_odds *= changeValue
+        Else
+            Criminality_odds += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateCriminalityAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        If multiplier Then
+            Criminality_adj *= changeValue
+        Else
+            Criminality_adj += changeValue
+        End If
+    End Sub
+
+    Public Overridable Sub UpdateAllOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        UpdateHappinessOdds(changeValue, multiplier)
+        UpdateHealthOdds(changeValue, multiplier)
+        UpdateIntelligenceOdds(changeValue, multiplier)
+        UpdateCreativityOdds(changeValue, multiplier)
+        UpdateMobilityOdds(changeValue, multiplier)
+        UpdateDrunkennessOdds(changeValue, multiplier)
+        UpdateCriminalityOdds(changeValue, multiplier)
+    End Sub
+
+    Public Overridable Sub UpdateAllAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+        UpdateHappinessAdj(changeValue, multiplier)
+        UpdateHealthAdj(changeValue, multiplier)
+        UpdateIntelligenceAdj(changeValue, multiplier)
+        UpdateCreativityAdj(changeValue, multiplier)
+        UpdateMobilityAdj(changeValue, multiplier)
+        UpdateDrunkennessAdj(changeValue, multiplier)
+        UpdateCriminalityAdj(changeValue, multiplier)
     End Sub
 
 #End Region
@@ -119,6 +257,10 @@ Public Class Building
 
     Public Overridable Function GetCost() As Integer
         Return Cost
+    End Function
+
+    Public Overridable Function GetRange() As Integer
+        Return Range
     End Function
 
     Public Overridable Function GetHappinessOdds() As Integer
@@ -173,11 +315,11 @@ Public Class Building
 #End Region
 
 #Region " Tags "
-    Public Sub AddTag(ByVal newTag As String)
+    Public Sub AddTag(ByVal newTag As Integer)
         Tags.Add(newTag)
     End Sub
 
-    Public Function HasTag(ByVal newTag As String) As Boolean
+    Public Function HasTag(ByVal newTag As Integer) As Boolean
         Return Tags.Contains(newTag)
     End Function
 #End Region
@@ -303,10 +445,6 @@ Public Class Building
         Employee.Employment += 1
     End Sub
 
-    Public Overridable Sub ConstructionEffects()
-        '-- Base building type has no construction effects
-    End Sub
-
     Public Overridable Sub ExpandBuilding()
         Jobs += 1
     End Sub
@@ -341,9 +479,36 @@ Public Class Building
 
 #End Region
 
+#Region " Building Effects "
+
+    Public Overridable Sub ConstructionEffects()
+        If Location Is Nothing Then
+            Return
+        End If
+
+        '-- Buildings with the "Monument" tag get twice the visitor odds if a monument is present
+        If HasTag(BuildingGen.TagEnum.Monument) Then
+            If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) Then
+                UpdateAllOdds(2.0, True)
+            End If
+        End If
+    End Sub
+
+    Public Overridable Function SavePatient(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+        '-- Most buildings can not save patients
+        Return False
+    End Function
+
+    Public Overridable Function GetBirthrateAdjust(ByRef thePerson As Person) As Double
+        '-- Most buildings do not affect the birthrate
+        Return 1.0
+    End Function
+
+#End Region
+
 #Region " Destruction "
 
-    Public Sub Destroy()
+    Public Overridable Sub Destroy()
         '-- All the employees are back on the street
         For i As Integer = 0 To Employees.Count - 1
             Dim theEmployee As Person = Employees(i)
@@ -405,6 +570,10 @@ Public Class Building
             BuildingString += "Location: " + Location.GetName() + ControlChars.NewLine
         End If
 
+        If Range > 0 Then
+            BuildingString += "Range: " + GetRange().ToString() + ControlChars.NewLine
+        End If
+
         '-- Show job info
         BuildingString += "Jobs: " + GetEmployeeCount.ToString + "/" + Jobs.ToString + ControlChars.NewLine
         If Employees.Count > 0 Then
@@ -421,6 +590,21 @@ Public Class Building
             Next
         End If
         BuildingString += ControlChars.NewLine
+
+        '-- Show tags
+        If Tags.Count > 0 Then
+            BuildingString += "Tags: "
+            For i As Integer = 0 To Tags.Count - 1
+                BuildingString += BuildingGenerator.GetTagName(Tags(i))
+
+                If i <> Tags.Count - 1 Then
+                    BuildingString += ", "
+                Else
+                    BuildingString += ControlChars.NewLine
+                End If
+            Next
+            BuildingString += ControlChars.NewLine
+        End If
 
         '-- Show stat info
         If DebugMode Then
