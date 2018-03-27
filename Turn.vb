@@ -785,27 +785,56 @@
     End Sub
 
     Sub ClearVisited()
-        For i As Integer = 0 To LocationList.Count - 1
-            Dim thisLocation As CitySquare = LocationList(i)
-            thisLocation.VisitedKey = 0
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim thisLocation As CitySquare = GridArray(i, j)
+                If thisLocation.OwnerID >= 0 Then
+                    thisLocation.VisitedKey = 0
+                    thisLocation.DragLoss = -1
+                End If
+            Next
         Next
     End Sub
 
-    Function RangeChecker(ByRef location As CitySquare, ByVal Mobility As Integer, ByRef visitList As List(Of CitySquare)) As Integer
+    Sub RangeChecker(ByRef location As CitySquare, ByVal Mobility As Integer, ByRef visitList As List(Of CitySquare))
+        ClearVisited()
+
+        '-- Travel outward from this location
+        TravelOnward(location, Mobility)
+
+        '-- Add every location that was visited during the travel to the visitList
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim thisLocation As CitySquare = GridArray(i, j)
+                If thisLocation.OwnerID >= 0 And thisLocation.VisitedKey > 0 Then
+                    visitList.Add(thisLocation)
+
+                    '-- Clear the visit info while we are here
+                    thisLocation.VisitedKey = 0
+                    thisLocation.DragLoss = -1
+                End If
+            Next
+        Next
+    End Sub
+
+    Sub TravelOnward(ByRef location As CitySquare, ByVal Mobility As Integer)
+        '-- Make sure this location is habited and that we didn't already reach here some faster way
         If location.VisitedKey > Mobility Or location.OwnerID < 0 Then
-            Return 0
+            Return
         End If
 
         '-- Mark
         location.VisitedKey = Mobility
 
-        '-- Add to potential candidates
-        visitList.Add(location)
+        '-- (Don't recalculate the drag loss if we've been here already)
+        If location.DragLoss < 0 Then
+            '-- Poor roads make travel difficult
+            Dim DragLoss1 As Integer = (5 - GetRandom(0, location.Transportation))
+            Dim DragLoss2 As Integer = (5 - GetRandom(0, location.Transportation))
+            location.DragLoss = (DragLoss1 * DragLoss2)
+        End If
 
-        '-- Poor roads make travel difficult
-        Dim DragLoss1 As Integer = (5 - GetRandom(0, location.Transportation))
-        Dim DragLoss2 As Integer = (5 - GetRandom(0, location.Transportation))
-        Mobility -= (DragLoss1 * DragLoss2)
+        Mobility -= location.DragLoss
 
         '-- Mountains also slow travel
         If location.Terrain = TerrainMountain Then
@@ -814,15 +843,15 @@
 
         '-- Check to see if you have enough mobility to continue onward
         If Mobility < 0 Then
-            Return 0
+            Return
         End If
 
-        '-- Continue moving to locations adjacent to this location
+        '-- Continue traveling to locations adjacent to this location
         Dim adjacentList As List(Of CitySquare) = location.GetAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
-            RangeChecker(adjacentList(i), Mobility, visitList)
+            TravelOnward(adjacentList(i), Mobility)
         Next
-    End Function
+    End Sub
 
 #End Region
 

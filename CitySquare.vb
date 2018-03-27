@@ -7,6 +7,7 @@ Public Class CitySquare
     Public OwnerID As Integer = -1
     Public CityName As String = ""
     Public VisitedKey As Integer = -1
+    Public DragLoss As Integer = -1
 
     '--
     Public GridSquare As Label = Nothing
