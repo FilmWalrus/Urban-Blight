@@ -105,7 +105,7 @@ Public Class HospitalMaternityBuilding
         '-- Check if hospital is in range
         Dim Distance As Integer = Location.GetDistance(thePerson.Residence)
         If Distance > Range Then
-            Return False
+            Return 1.0
         End If
 
         '-- Get the odds of saving a patient at this range
