@@ -483,6 +483,11 @@ Public Class Player
             BestMove = Nothing
         End If
 
+        '-- If for any reason no best move was selected, make sure the action is set to Pass
+        If BestMove Is Nothing Then
+            finalDecision = AIPass
+        End If
+
         Return finalDecision
 
     End Function
