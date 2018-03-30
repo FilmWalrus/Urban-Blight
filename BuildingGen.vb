@@ -627,12 +627,13 @@
                     newBuilding.SetInfo("Quick and convenient with a side order of grease, Fast Food Chains help satisfy your food cravings and fuel you up for the day to come.")
                     newBuilding.SetSpecialAbility("Fast Food Chains have a small chance of opening another location on an adjacent square.")
                     Return newBuilding
-                Case BuildingEnum.Fire_Station
+                Case BuildingEnum.Fire_Station 'What range for the special ability?  Clarify in Special Ability text.
                     Dim newBuilding As New Building(bType, 100, 2)
                     newBuilding.SetHealth(5, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("An important part of any society, Fire Stations help stop the spread of local fires and improve general wellbeing.")
+					newBuilding.SetSpecialAbility("Fire Stations reduce the chance of arson and fires.")
                     Return newBuilding
-                Case BuildingEnum.Fishery
+                Case BuildingEnum.Fishery 'I can't come up with anything here.
                     Dim newBuilding As New ManufacturingBuilding(bType, 165, 2)
                     newBuilding.SetHappiness(10, -2)
                     newBuilding.AddTag(TagEnum.Manufacturing)
@@ -641,26 +642,30 @@
                 Case BuildingEnum.Freeway
                     Dim newBuilding As New Building(bType, 275, 0)
                     newBuilding.SetMobility(20, 6)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Nothing is quite as freeing as a Freeway.")
+					newBuilding.SetSpecialAbility("Upgrades all roads within a two square adjacency by one level.")
                     Return newBuilding
                 Case BuildingEnum.Gas_Station
                     Dim newBuilding As New Building(bType, 70, 1)
                     newBuilding.SetHealth(30, -1)
                     newBuilding.SetMobility(38, 3)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Gas Stations let your citizens drive futher and explore more.  If only vehicles didn't give off pollution.")
+					newBuilding.SetSpecialAbility("When your citizens travel to the Gas Station, their mobility increases by 8. However, fires on the same square as the Gas Station are worse.")
                     Return newBuilding
                 Case BuildingEnum.Golf_Course
                     Dim newBuilding As New Building(bType, 140, 1)
                     newBuilding.SetHappiness(10, 2)
                     newBuilding.SetHealth(22, 2)
                     newBuilding.SetDrunkenness(10, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Trees. Grass. Water. Sand. Why go to a park when you can visit a Golf Course? Enjoy the great outdoors and try not to let the beverage cart keep you down.")
+					newBuilding.SetSpecialAbility("All effects of the Golf Course are doubled if built on a Plain tile.")
                     Return newBuilding
-                Case BuildingEnum.Government_Bureau
+                Case BuildingEnum.Government_Bureau 'Does special ability just effect owner or does it effect all players?  Can this 10% stack with other Govt. Bureaus?
                     Dim newBuilding As New Building(bType, 240, 5)
                     newBuilding.SetHealth(20, 1)
                     newBuilding.SetCriminality(10, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("When navigating the Department of Red Tape, try not to get bogged down in bribes.")
+					newBuilding.SetSpecialAbility("Buildings with a Government tag cost 10% more.")
                     Return newBuilding
                 Case BuildingEnum.Graveyard
                     'newBuilding.AddTag(TagEnum.Monument)
@@ -668,13 +673,15 @@
                     Dim newBuilding As New Building(bType, 95, 2)
                     newBuilding.SetHealth(80, 1)
                     newBuilding.SetDrunkenness(15, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Grocery Stores provide access to fresh meat, vegetables, fruit, dairy, alcohol, and those boxes of almost-instant mac'n'cheese that are so addictive.")
+					newBuilding.SetSpecialAbility("The effect of the Grocery Store increases with the population.")
                     Return newBuilding
-                Case BuildingEnum.Gym
+                Case BuildingEnum.Gym 'Added Special Ability text, but it did not look final.
                     Dim newBuilding As New Building(bType, 60, 1)
                     newBuilding.SetHappiness(15, 1)
                     newBuilding.SetHealth(12, 7)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Want to look good and feel better?  Put in some time at the Gym.")
+					newBuilding.SetSpecialAbility("Effect boost if the Gym is on the same square as a Park or a Botanical Garden.")
                     Return newBuilding
                 Case BuildingEnum.Harbor
                     Dim newBuilding As New Building(bType, 80, 2)
