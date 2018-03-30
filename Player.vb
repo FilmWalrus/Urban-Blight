@@ -56,7 +56,7 @@ Public Class Player
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
 
-                If thisLocation.OwnerID = ID Then
+                If thisLocation.IsOwned(ID) Then
 
                     '-- Update player territory, population, development, employees, and jobs
                     TotalTerritory += 1
@@ -117,7 +117,7 @@ Public Class Player
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
-                If thisLocation.OwnerID = ID Then
+                If thisLocation.IsOwned(ID) Then
                     populationArray.AddRange(thisLocation.People)
                 End If
             Next
@@ -129,7 +129,7 @@ Public Class Player
         Dim sum As Integer = 0
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = ID Then
+                If GridArray(i, j).IsOwned(ID) Then
                     sum = sum + GridArray(i, j).getPopulation()
                 End If
             Next
@@ -142,7 +142,7 @@ Public Class Player
         Dim territoryArray As New List(Of CitySquare)
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = ID Then
+                If GridArray(i, j).IsOwned(ID) Then
                     territoryArray.Add(GridArray(i, j))
                 End If
             Next
@@ -154,7 +154,7 @@ Public Class Player
         Dim sum As Integer = 0
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = ID Then
+                If GridArray(i, j).IsOwned(ID) Then
                     sum = sum + 1
                 End If
             Next
@@ -170,13 +170,13 @@ Public Class Player
                 Dim thisLocation As CitySquare = GridArray(i, j)
 
                 '-- No one can already owns this location and it can't be a lake
-                If thisLocation.OwnerID < 0 And thisLocation.Terrain <> TerrainLake Then
+                If Not thisLocation.IsOwned() And thisLocation.Terrain <> TerrainLake Then
 
                     '-- The current player must own an adjacent location
                     Dim adjacentList As List(Of CitySquare) = thisLocation.GetAdjacents()
                     For k As Integer = 0 To adjacentList.Count - 1
                         Dim neighborLocation As CitySquare = adjacentList(k)
-                        If neighborLocation.OwnerID = ID Then
+                        If neighborLocation.IsOwned(ID) Then
                             territoryArray.Add(thisLocation)
                             Exit For
                         End If
@@ -192,7 +192,7 @@ Public Class Player
         Dim sum As Integer = 0
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = ID Then
+                If GridArray(i, j).IsOwned(ID) Then
                     sum = sum + GridArray(i, j).getDevelopment()
                 End If
             Next
@@ -207,7 +207,7 @@ Public Class Player
         Dim personPoints As Double
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = ID Then
+                If GridArray(i, j).IsOwned(ID) Then
                     For k As Integer = 0 To GridArray(i, j).People.Count - 1
                         '-- Computation of individual's value
                         personPoints = 0
@@ -242,7 +242,7 @@ Public Class Player
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim theLocation As CitySquare = GridArray(i, j)
-                If theLocation.OwnerID = ID Then
+                If theLocation.IsOwned(ID) Then
                     If theLocation.Terrain <> TerrainSwamp Then
                         landCost += 20
                     End If
@@ -262,7 +262,7 @@ Public Class Player
         Dim adjacentList As List(Of CitySquare) = theLocation.GetAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
             Dim neighborLocation As CitySquare = adjacentList(i)
-            If neighborLocation.OwnerID = ID Then
+            If neighborLocation.IsOwned(ID) Then
                 Return True
             End If
         Next
@@ -386,7 +386,7 @@ Public Class Player
             Dim adjacentList As List(Of CitySquare) = thisLocation.GetAdjacents()
             For k As Integer = 0 To adjacentList.Count - 1
                 Dim ownedLocation As CitySquare = adjacentList(k)
-                If ownedLocation.OwnerID = ID Then
+                If ownedLocation.IsOwned(ID) Then
                     neighboringPopulation += ownedLocation.getPopulation()
                 End If
             Next

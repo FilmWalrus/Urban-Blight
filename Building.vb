@@ -517,6 +517,14 @@ Public Class Building
         Return AdjacentLocations
     End Function
 
+    Public Overridable Sub UpdateEndurance(ByRef Mobility As Integer, ByRef thePerson As Person)
+        '-- Base class does nothing
+    End Sub
+
+    Public Overridable Sub ResetBuilding()
+        '-- Base class does nothing
+    End Sub
+
 #End Region
 
 #Region " Destruction "

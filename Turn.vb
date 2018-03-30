@@ -85,6 +85,9 @@
         '-- Collect taxes from citizens and pay for upkeep of land
         Taxation()
 
+        '-- Reset any temporary building data
+        ResetBuildings()
+
     End Sub
 
     Sub AgeAndChange()
@@ -113,7 +116,7 @@
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             Dim locationsInRange As New List(Of CitySquare)
-            RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
+            RangeChecker(originalHome, thePerson, locationsInRange)
 
             ' Visit each location in range
             For j As Integer = 0 To locationsInRange.Count - 1
@@ -188,7 +191,7 @@
             If Not (originalHome.RowID = newHome.RowID And originalHome.ColID = newHome.ColID) Then '-- Only "move" if it is to a new square
 
                 '-- Happy people are loyal
-                If newHome.OwnerID <> CurrentPlayer.ID Then
+                If Not newHome.IsOwned(CurrentPlayer.ID) Then
                     If NoEmigration Or GetRandom(0, 100) < thePerson.Happiness Then
                         Return
                     End If
@@ -212,7 +215,7 @@
                 Dim NewAddress As String = newHome.GetName()
                 thePerson.AddEvent("Moved from " + OldAddress + " to " + NewAddress)
 
-                If newHome.OwnerID = CurrentPlayer.ID Then
+                If newHome.IsOwned(CurrentPlayer.ID) Then
                     '--Post Event for internal move
                     Diary.MoveEvents.AddEvent(thePerson.Name + " of " + OldAddress + " moved to " + NewAddress)
                 Else
@@ -599,7 +602,7 @@
 
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = CurrentPlayer.ID Then
+                If GridArray(i, j).IsOwned(CurrentPlayer.ID) Then
                     Dim localPop As Integer = GridArray(i, j).getPopulation()
                     For k As Integer = 0 To localPop - 1
                         Dim thePerson As Person = GridArray(i, j).People(k)
@@ -618,7 +621,7 @@
 
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = CurrentPlayer.ID Then
+                If GridArray(i, j).IsOwned(CurrentPlayer.ID) Then
                     LocationList.Add(GridArray(i, j))
                 End If
             Next
@@ -646,25 +649,36 @@
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
-                If thisLocation.OwnerID >= 0 Then
+                If thisLocation.IsOwned() Then
                     thisLocation.ClearVisit()
                 End If
             Next
         Next
     End Sub
 
-    Sub RangeChecker(ByRef location As CitySquare, ByVal Mobility As Integer, ByRef visitList As List(Of CitySquare))
+    Sub ResetBuildings()
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim theLocation As CitySquare = GridArray(i, j)
+                For k As Integer = 0 To theLocation.Buildings.Count - 1
+                    theLocation.Buildings(k).ResetBuilding()
+                Next
+            Next
+        Next
+    End Sub
+
+    Sub RangeChecker(ByRef theLocation As CitySquare, ByRef thePerson As Person, ByRef visitList As List(Of CitySquare))
         ClearVisited()
 
         '-- Travel outward from this location
         VisitOrder = 0
-        TravelOnward(location, Mobility)
+        TravelOnward(theLocation, thePerson, thePerson.Mobility)
 
         '-- Add every location that was visited during the travel to the visitList
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
-                If thisLocation.OwnerID >= 0 And thisLocation.VisitedKey > 0 Then
+                If thisLocation.IsOwned() And thisLocation.VisitedKey > 0 Then
                     visitList.Add(thisLocation)
                 End If
             Next
@@ -675,43 +689,48 @@
         visitList.Sort()
     End Sub
 
-    Sub TravelOnward(ByRef location As CitySquare, ByVal Mobility As Integer)
-        '-- Make sure this location is habited and that we didn't already reach here some faster way
-        If location.VisitedKey > Mobility Or location.OwnerID < 0 Then
+    Sub TravelOnward(ByRef theLocation As CitySquare, ByRef thePerson As Person, ByVal Endurance As Integer)
+        '-- Make sure this location is habited and that we didn't already reach here some faster (or equivalent) way
+        If theLocation.VisitedKey >= Endurance Or Not theLocation.IsOwned() Then
             Return
         End If
 
-        '-- Mark as an official visit with the current mobility and visit method (like bike, car, plane, etc)
-        location.VisitedKey = Mobility
-        location.SetVisitMethod(location.VisitMethodAttempt)
+        '-- Mark as an official visit with the current endurance and visit method (like bike, car, plane, etc)
+        theLocation.VisitedKey = Endurance
+        theLocation.SetVisitMethod(theLocation.VisitMethodAttempt)
         VisitOrder += 1
-        location.VisitOrder = VisitOrder
+        theLocation.VisitOrder = VisitOrder
 
         '-- (Don't recalculate the drag loss if we've been here already)
-        If location.DragLoss < 0 Then
+        If theLocation.DragLoss < 0 Then
             '-- Poor roads make travel difficult
             'Dim DragLoss1 As Integer = (7 - GetRandom(0, location.Transportation + 2))
-            Dim DragLoss1 As Integer = (5 - GetRandom(0, location.Transportation))
-            Dim DragLoss2 As Integer = (5 - GetRandom(0, location.Transportation))
-            location.DragLoss = (DragLoss1 * DragLoss2) + 4
+            Dim DragLoss1 As Integer = (5 - GetRandom(0, theLocation.Transportation))
+            Dim DragLoss2 As Integer = (5 - GetRandom(0, theLocation.Transportation))
+            theLocation.DragLoss = (DragLoss1 * DragLoss2) + 4
         End If
 
-        Mobility -= location.DragLoss
+        Endurance -= theLocation.DragLoss
 
         '-- Mountains also slow travel
-        If location.Terrain = TerrainMountain Then
-            Mobility -= 6
+        If theLocation.Terrain = TerrainMountain Then
+            Endurance -= 6
         End If
 
-        '-- Check to see if you have enough mobility to continue onward
-        If Mobility < 0 Then
+        '-- Check for travel bonuses based on buildings.
+        For i As Integer = 0 To theLocation.Buildings.Count - 1
+            theLocation.Buildings(i).UpdateEndurance(Endurance, thePerson)
+        Next
+
+        '-- Check to see if you have enough endurance to continue onward
+        If Endurance < 0 Then
             Return
         End If
 
         '-- Continue traveling to locations adjacent to this location
-        Dim adjacentList As List(Of CitySquare) = location.GetAdjacents()
+        Dim adjacentList As List(Of CitySquare) = theLocation.GetAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
-            TravelOnward(adjacentList(i), Mobility)
+            TravelOnward(adjacentList(i), thePerson, Endurance)
         Next
     End Sub
 

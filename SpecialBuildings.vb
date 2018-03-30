@@ -21,6 +21,30 @@ Public Class ConstructionSiteBuilding
     End Function
 End Class
 
+Public Class SkyscraperBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        '-- Make sure there IS another building of the same type already here
+        If Not DoesAnotherBuildingOfTheSameTypeExistHere() Then
+            Return
+        End If
+
+        '-- If multiple skyscrapers, 50% chance of creating a park, 50% chance of creating a crime ring
+        Dim newBuilding As Building = Nothing
+        If GetRandom(0, 1) = 0 Then
+            newBuilding = BuildingGenerator.CreateBuilding(BuildingGen.BuildingEnum.Crime_Ring)
+        Else
+            newBuilding = BuildingGenerator.CreateBuilding(BuildingGen.BuildingEnum.Park)
+        End If
+        Location.AddBuilding(newBuilding)
+    End Sub
+End Class
+
 Public Class StartupIncubatorBuilding
     Inherits Building
 

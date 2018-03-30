@@ -20,7 +20,7 @@ Public Class CitySquare
     '-- Info
     Public Buildings As New List(Of Building)
     Public People As New List(Of Person)
-    Public Transportation As Integer = 0
+    Public Transportation As Integer = RoadNone
     Public Terrain As Integer = TerrainPlain
     Public Coastal As Boolean = False
 
@@ -250,6 +250,14 @@ Public Class CitySquare
         End If
     End Function
 
+    Public Function IsOwned() As Boolean
+        Return (OwnerID >= 0)
+    End Function
+
+    Public Function IsOwned(ByVal playerID As Integer) As Boolean
+        Return (OwnerID = playerID)
+    End Function
+
     Public Function GetVisitMethod() As String
         Dim visitString As String = "Visited " + GetName() + " by "
         Select Case VisitMethod
@@ -336,7 +344,15 @@ Public Class CitySquare
         AdjacentList.AddRange(CarAdjacentList)
 
         '-- Now get any citysquares that are connect by mass transit
-        Dim MassTransitList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Airport)
+        Dim TaxiList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Taxi_Service)
+        For i As Integer = 0 To TaxiList.Count - 1
+            Dim TaxiAdjacentList As List(Of CitySquare) = TaxiList(0).GetAdjacentLocations()
+            TaxiAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Taxi))
+            AdjacentList.AddRange(TaxiAdjacentList)
+        Next
+
+        '-- Now get any citysquares that are connect by mass transit
+        Dim MassTransitList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Mass_Transit)
         For i As Integer = 0 To MassTransitList.Count - 1
             Dim TrainAdjacentList As List(Of CitySquare) = MassTransitList(0).GetAdjacentLocations()
             TrainAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Train))

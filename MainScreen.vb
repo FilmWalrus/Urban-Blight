@@ -1095,7 +1095,7 @@ Public Class Form1
                 Dim theLocation As CitySquare = GridArray(startX, startY)
 
                 '-- Starting cities can't be on or adjacent to another city
-                If (theLocation.OwnerID < 0 And GridArray(startX + 1, startY).OwnerID < 0 And GridArray(startX - 1, startY).OwnerID < 0 And GridArray(startX, startY - 1).OwnerID < 0 And GridArray(startX, startY + 1).OwnerID < 0) Then
+                If (Not theLocation.IsOwned() And Not GridArray(startX + 1, startY).IsOwned() And Not GridArray(startX - 1, startY).IsOwned() And Not GridArray(startX, startY - 1).IsOwned() And Not GridArray(startX, startY + 1).IsOwned()) Then
                     theLocation.OwnerID = i
 
                     '-- Starting cities are always on Plain terrain
@@ -1151,7 +1151,7 @@ Public Class Form1
         ClickCity.GridSquare.BorderStyle = BorderStyle.Fixed3D
 
         '-- Don't let players rename each other's cities!
-        If ClickCity.OwnerID = CurrentPlayerIndex Then
+        If ClickCity.IsOwned(CurrentPlayerIndex) Then
             ubName.Visible = True
         Else
             ubName.Visible = False
@@ -1159,7 +1159,7 @@ Public Class Form1
 
         '-- Don't switch to the city tab by default if user was looking at people or buildings
         Dim DontSwitch As Boolean = False
-        If ClickCity.OwnerID >= 0 Then
+        If ClickCity.IsOwned() Then
             If Infotab.SelectedIndex = PersonTab Or Infotab.SelectedIndex = BuildingTab Then
                 DontSwitch = True
             End If
@@ -1210,12 +1210,12 @@ Public Class Form1
         '-- Was the selected CitySquare valid?
         If SelectedCard = LandCard Then
             '-- For Land cards they must be unowned, adjacent to land the player already owns, and not a lake
-            If ClickCity.OwnerID >= 0 Or ClickCity.Terrain = TerrainLake Or (Not CurrentPlayer.OwnedAdjacent(ClickCity)) Then
+            If ClickCity.IsOwned() Or ClickCity.Terrain = TerrainLake Or (Not CurrentPlayer.OwnedAdjacent(ClickCity)) Then
                 Return False
             End If
         ElseIf SelectedCard <> WipeCard Then
             '-- For Roads and Buildings the player must already own the land
-            If ClickCity.OwnerID <> CurrentPlayerIndex Then
+            If Not ClickCity.IsOwned(CurrentPlayerIndex) Then
                 Return False
             End If
 
@@ -1558,7 +1558,7 @@ Public Class Form1
         Dim sum As Integer = 0
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
-                If GridArray(i, j).OwnerID = CurrentPlayerIndex Then
+                If GridArray(i, j).IsOwned(CurrentPlayerIndex) Then
                     'Also updates success
                     GridArray(i, j).ComputeAverages()
                 End If

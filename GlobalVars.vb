@@ -3,12 +3,14 @@ Imports System.Drawing
 Module GlobalVars
 
 #Region " Global Variables "
+    '-- DEBUG MODE
+    Public DebugMode As Boolean = False
+
     '--Gameplay
     Public PlayerCount As Integer = 1
     Public GameType As Integer = 1
     Public GoalNumber As Integer = 0
     Public LastCityName As String = ""
-    Public DebugMode As Boolean = False
 
     '--GameTypes
     Public Const ScoreGame As Integer = 0
@@ -154,6 +156,13 @@ Module GlobalVars
         Else
             Return A / B
         End If
+    End Function
+
+    Function GetCitySquare(ByVal Row As Integer, ByVal Col As Integer) As CitySquare
+        If Row < 0 Or Row > GridWidth Or Col < 0 Or Col > GridHeight Then
+            Return Nothing
+        End If
+        Return GridArray(Row, Col)
     End Function
 
     Function GetTerrainName(ByVal terrainIndex As Integer, Optional ByVal coastNotLake As Boolean = False) As String

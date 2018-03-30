@@ -88,6 +88,7 @@
         Rehab_Clinic
         Restaurant
         Retirement_Home
+        Safe_House
         School
         Shipping_Center
         Sidewalks
@@ -119,6 +120,7 @@
         Manufacturing
         Medical
         Monument
+        Transportation
     End Enum
 
 #End Region
@@ -297,6 +299,8 @@
                 Return "Restaurant"
             Case BuildingEnum.Retirement_Home
                 Return "Retirement Home"
+            Case BuildingEnum.Safe_House
+                Return "Safe House"
             Case BuildingEnum.School
                 Return "School"
             Case BuildingEnum.Shipping_Center
@@ -358,6 +362,8 @@
                 Return "Medical"
             Case TagEnum.Monument
                 Return "Monument"
+            Case TagEnum.Transportation
+                Return "Transportation"
             Case Else
                 Return ""
         End Select
@@ -389,6 +395,7 @@
                 Case BuildingEnum.Airport
                     Dim newBuilding As New AirportBuilding(bType, 560, 5)
                     newBuilding.SetMobility(18, 10)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Though a more expensive option, Airports allow for travel to far-reaching destinations.")
                     newBuilding.SetSpecialAbility("Cities containing Airports are considered adjacent to other citiies containing Airports - both yours and those belonging to other players.")
                     Return newBuilding
@@ -397,6 +404,7 @@
                     newBuilding.SetHealth(10, 4)
                     newBuilding.SetMobility(10, 1)
                     newBuilding.AddTag(TagEnum.Medical)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("In a medical emergency, the Ambulance Service provides treatment and transport to afflicted individuals.")
                     newBuilding.SetSpecialAbility("The Ambulance Service boosts the effects of all medical buildings within a radius of two adjacent squares.")
                     Return newBuilding
@@ -642,14 +650,17 @@
                     Return newBuilding
                 Case BuildingEnum.Freeway
                     Dim newBuilding As New Building(bType, 275, 0)
+                    newBuilding.SetHealth(10, -3)
                     newBuilding.SetMobility(20, 6)
-                    newBuilding.SetInfo("Nothing is quite as freeing as a Freeway.")
+                    newBuilding.AddTag(TagEnum.Transportation)
+                    newBuilding.SetInfo("Eight lanes of shimmering cement. Smooth, ""safe"", fast. Traffic jams will be a thing of the past.")
                     newBuilding.SetSpecialAbility("Upgrades all roads within a two square adjacency by one level.")
                     Return newBuilding
                 Case BuildingEnum.Gas_Station
-                    Dim newBuilding As New Building(bType, 70, 1)
-                    newBuilding.SetHealth(30, -1)
+                    Dim newBuilding As New GasStationBuilding(bType, 110, 1)
+                    newBuilding.SetHealth(30, -2)
                     newBuilding.SetMobility(38, 3)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Gas Stations let your citizens drive futher and explore more.  If only vehicles didn't give off pollution.")
                     newBuilding.SetSpecialAbility("When your citizens travel to the Gas Station, their mobility increases by 8. However, fires on the same square as the Gas Station are worse.")
                     Return newBuilding
@@ -688,15 +699,16 @@
                     Dim newBuilding As New Building(bType, 80, 2)
                     newBuilding.SetMobility(12, 2)
                     newBuilding.SetCriminality(12, 2)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("The Harbor makes the import/export business flourish with added shipping lanes.  However, new methods of transportation breed new ideas from the unsavory sort.")
                     newBuilding.SetSpecialAbility("The Harbor works only on Coastal tiles.  It makes the owner adjacent for building and travel through Water tiles.")
-					Return newBuilding
+                    Return newBuilding
                 Case BuildingEnum.Hospital_Cancer
                     Dim newBuilding As New HospitalCancerBuilding(bType, 270, 3)
                     newBuilding.SetHealth(30, 5)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("The Cancer Ward specializes in providing care and comfort to all those in need.")
-					newBuilding.SetSpecialAbility("The Cancer Ward reduces the effect of outbreaks and increases the chances of preventing death caused by illness.  Stacking hospitals of different types on the same square boosts health.")
+                    newBuilding.SetSpecialAbility("The Cancer Ward reduces the effect of outbreaks and increases the chances of preventing death caused by illness.  Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Emergency
                     Dim newBuilding As New HospitalEmergencyBuilding(bType, 240, 3)
@@ -704,28 +716,28 @@
                     newBuilding.SetDrunkenness(12, -3)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Car accident? Second-degree burn? Drunken jigsaw mishap? The Emergency Ward can sort you out and sober you up.")
-					newBuilding.SetSpecialAbility("The Emergency Ward decreases the chances that your citizens will be killed in traffic accidents.  Stacking hospitals of different types on the same square boosts health.")
+                    newBuilding.SetSpecialAbility("The Emergency Ward decreases the chances that your citizens will be killed in traffic accidents.  Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Geriatric
                     Dim newBuilding As New HospitalGeriatricBuilding(bType, 200, 3)
                     newBuilding.SetHealth(30, 3)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("The Geriatric Ward caters to the elderly of society - giving them a place to get the treatment they need.")
-					newBuilding.SetSpecialAbility("The Geriatric Ward boosts the chances of the elderly at having a longer life. Stacking hospitals of different types on the same square boosts health.")
+                    newBuilding.SetSpecialAbility("The Geriatric Ward boosts the chances of the elderly at having a longer life. Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Maternity
                     Dim newBuilding As New HospitalMaternityBuilding(bType, 250, 3)
                     newBuilding.SetHealth(30, 3)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("When the time comes for your bundle of joy to enter the world, let our years of dedicated service help you experience the joys of parenthood.")
-					newBuilding.SetSpecialAbility("The Maternity Ward increases the birthrate within range one of the building. Stacking hospitals of different types on the same square boosts health.")					
+                    newBuilding.SetSpecialAbility("The Maternity Ward increases the birthrate within range one of the building. Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Pediatric
                     Dim newBuilding As New HospitalPediatricBuilding(bType, 190, 3)
                     newBuilding.SetHealth(30, 4)
                     newBuilding.AddTag(TagEnum.Medical)
-					newBuilding.SetInfo("The youngest members of society can get the specialized care they need at the Pediatric Ward.")
-					newBuilding.SetSpecialAbility("The Pediatric Ward boost the chances of the youths at being saved from death.  Stacking hospitals of different types on the same square boosts health.")
+                    newBuilding.SetInfo("The youngest members of society can get the specialized care they need at the Pediatric Ward.")
+                    newBuilding.SetSpecialAbility("The Pediatric Ward boost the chances of the youths at being saved from death.  Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Research
                     Dim newBuilding As New HospitalBuilding(bType, 260, 3)
@@ -733,21 +745,21 @@
                     newBuilding.SetIntelligence(40, 5)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("At the Research Ward we don't treat the illnesses of today, we work to create the medicines of tomorrow.")
-					newBuilding.SetSpecialAbility("Stacking hospitals of different types on the same square boosts health.")
+                    newBuilding.SetSpecialAbility("Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
                 Case BuildingEnum.Hotel
-                    Dim newBuilding As New Building(bType, 275, 3)
-					'Used to have Creativity stats. 
+                    Dim newBuilding As New HotelBuilding(bType, 275, 3)
+                    'Used to have Creativity stats. 
                     newBuilding.SetMobility(20, 2)
                     newBuilding.SetInfo("Treat yourself to the luxury of a night away.")
-					newBuilding.SetSpecialAbility("Citizens who stop at the Hotel can rest and recover some of their Mobility.")
+                    newBuilding.SetSpecialAbility("Citizens who stop at the Hotel will rest and recover up to half of their Mobility.")
                     Return newBuilding
                 Case BuildingEnum.Laboratory
                     Dim newBuilding As New Building(bType, 205, 2)
                     newBuilding.SetHealth(20, -2)
                     newBuilding.SetIntelligence(16, 8)
                     newBuilding.SetInfo("Laboratories are on the cutting-edge of research and intellectual advancement, but the chemicals they use and experiments they perform can be unhealthy.")
-					newBuilding.SetSpecialAbility("Laboratories may produce a one-time invention that permanently changes the tile stats on its square. Labs also help with outbreak relief.")
+                    newBuilding.SetSpecialAbility("Laboratories may produce a one-time invention that permanently changes the tile stats on its square. Labs also help with outbreak relief.")
                     Return newBuilding
                 Case BuildingEnum.Land_Developer 'Come back to this one
                     Dim newBuilding As New Building(bType, 350, 5)
@@ -761,7 +773,7 @@
                     newBuilding.SetIntelligence(20, 3)
                     newBuilding.SetCriminality(20, -2)
                     newBuilding.SetInfo("Whether it's a parking ticket or a murder charge, let the Law Firm give you the representation you deserve.")
-					newBuilding.SetSpecialAbility("Law Firms are more effective on Swamp tiles. Criminals also may be able to beat the system and get off scot-free.")
+                    newBuilding.SetSpecialAbility("Law Firms are more effective on Swamp tiles. Criminals also may be able to beat the system and get off scot-free.")
                     Return newBuilding
                 Case BuildingEnum.Library
                     Dim newBuilding As New Building(bType, 105, 2)
@@ -769,7 +781,7 @@
                     newBuilding.SetIntelligence(15, 4)
                     newBuilding.SetCreativity(10, 1)
                     newBuilding.SetInfo("Libraries are nice, quiet places for citizens to read, relax, and learn at their own pace.")
-					ewBuilding.SetSpecialAbility("Libaries get a stat boost from Colleges and Schools on the same square.")
+                    newBuilding.SetSpecialAbility("Libaries get a stat boost from Colleges and Schools on the same square.")
                     Return newBuilding
                 Case BuildingEnum.Lottery
 
@@ -778,7 +790,7 @@
                     newBuilding.SetHealth(15, -2)
                     newBuilding.AddTag(TagEnum.Manufacturing)
                     newBuilding.SetInfo("Though not always the safest job, Lumber Mills provide necessary resources to any growing city.")
-					ewBuilding.SetSpecialAbility("Lumber Mills start with twice as many jobs if built on a Forest tile.  The terrain they are built on has a chance of turning in a Plain tile.")
+                    newBuilding.SetSpecialAbility("Lumber Mills start with twice as many jobs if built on a Forest tile.  The terrain they are built on has a chance of turning in a Plain tile.")
                     Return newBuilding
                 Case BuildingEnum.Mall
                     Dim newBuilding As New Building(bType, 385, 5)
@@ -789,6 +801,7 @@
                 Case BuildingEnum.Mass_Transit
                     Dim newBuilding As New MassTransitBuilding(bType, 175, 1)
                     newBuilding.SetMobility(32, 5)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Mass Transit allows many of your citizens to gain mobility they never would have had without it.")
                     Return newBuilding
                 Case BuildingEnum.Military_Base
@@ -846,23 +859,26 @@
                     newBuilding.SetInfo("Attractive parks allow the casual stroller to engage in happy, healthy and creative exercise and meditation.")
                     Return newBuilding
                 Case BuildingEnum.Parking_Garage
-                    Dim newBuilding As New Building(bType, 155, 1)
+                    Dim newBuilding As New ParkingGarageBuilding(bType, 155, 1)
                     newBuilding.SetCreativity(20, -1)
                     newBuilding.SetMobility(40, 1)
                     newBuilding.SetCriminality(20, 2)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Parking_Lot
-                    Dim newBuilding As New Building(bType, 50, 0)
+                    Dim newBuilding As New ParkingLotBuilding(bType, 50, 0)
                     newBuilding.SetCreativity(10, -1)
                     newBuilding.SetMobility(20, 1)
                     newBuilding.SetCriminality(10, 1)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Pharmacy
                     Dim newBuilding As New Building(bType, 70, 1)
                     newBuilding.SetHealth(50, 1)
                     newBuilding.SetDrunkenness(5, 5)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Police_Station
@@ -922,6 +938,14 @@
                     newBuilding.SetDrunkenness(20, -2)
                     newBuilding.SetInfo("")
                     Return newBuilding
+                Case BuildingEnum.Safe_House
+                    Dim newBuilding As New SafeHouseBuilding(bType, 65, 0)
+                    newBuilding.SetCreativity(15, -3)
+                    newBuilding.SetMobility(20, -3)
+                    newBuilding.SetIntelligence(20, 3)
+                    newBuilding.AddTag(TagEnum.Transportation)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.School
                     Dim newBuilding As New SchoolBuilding(bType, 160, 2)
                     newBuilding.SetHappiness(33, -1)
@@ -932,12 +956,14 @@
                 Case BuildingEnum.Shipping_Center
                     Dim newBuilding As New ShippingBuilding(bType, 175, 1)
                     newBuilding.SetMobility(12, 2)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Sidewalks
-                    Dim newBuilding As New Building(bType, 35, 0)
+                    Dim newBuilding As New SidewalkBuilding(bType, 35, 0)
                     newBuilding.SetHappiness(8, 1)
-                    newBuilding.SetMobility(40, 1)
+                    newBuilding.SetMobility(30, 1)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians.")
                     Return newBuilding
                 Case BuildingEnum.Ski_Resort
@@ -947,7 +973,7 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Skyscraper
-                    Dim newBuilding As New Building(bType, 325, 6)
+                    Dim newBuilding As New SkyscraperBuilding(bType, 325, 6)
                     newBuilding.SetIntelligence(30, 1)
                     newBuilding.SetInfo("Skyscrapers provide tons of jobs and a place for smart minds and ambitious career climbers to collaborate.")
                     Return newBuilding
@@ -973,7 +999,11 @@
                 Case BuildingEnum.Suburb
 
                 Case BuildingEnum.Taxi_Service
-
+                    Dim newBuilding As New TaxiBuilding(bType, 145, 1)
+                    newBuilding.SetMobility(8, 4)
+                    newBuilding.AddTag(TagEnum.Transportation)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Temp_Agency
                     Dim newBuilding As New Building(bType, 135, 1)
                     newBuilding.SetHappiness(15, -1)
@@ -998,9 +1028,10 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Toll_Booth
-                    Dim newBuilding As New Building(bType, 40, 1)
+                    Dim newBuilding As New TollBoothBuilding(bType, 40, 1)
                     newBuilding.SetHappiness(25, -1)
                     newBuilding.SetMobility(25, -1)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Tourism_Agency
@@ -1017,6 +1048,7 @@
                     newBuilding.SetHappiness(70, 2)
                     newBuilding.SetCreativity(50, -1)
                     newBuilding.SetInfo("The TV station reaches almost house In a city, subtly boosting happiness And equally subtly stifling creativity.")
+                    Return newBuilding
                 Case BuildingEnum.Welfare_Service
                     Dim newBuilding As New Building(bType, 100, 1)
                     newBuilding.SetHealth(10, 2)
