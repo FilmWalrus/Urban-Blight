@@ -387,7 +387,7 @@
                     newBuilding.SetSpecialAbility("Permanently bans the user from building [] ")
                     Return newBuilding
                 Case BuildingEnum.Airport
-                    Dim newBuilding As New Building(bType, 560, 5)
+                    Dim newBuilding As New AirportBuilding(bType, 560, 5)
                     newBuilding.SetMobility(18, 10)
                     newBuilding.SetInfo("Though a more expensive option, Airports allow for travel to far-reaching destinations.")
                     newBuilding.SetSpecialAbility("Cities containing Airports are considered adjacent to other citiies containing Airports - both yours and those belonging to other players.")
@@ -708,13 +708,13 @@
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Pediatric
-                    Dim newBuilding As New Building(bType, 190, 3)
+                    Dim newBuilding As New HospitalPediatricBuilding(bType, 190, 3)
                     newBuilding.SetHealth(30, 4)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("Hospitals are an excellent way of ensuring the health and well-being of your citizens.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Research
-                    Dim newBuilding As New HospitalPediatricBuilding(bType, 260, 3)
+                    Dim newBuilding As New HospitalBuilding(bType, 260, 3)
                     newBuilding.SetHealth(5, 10)
                     newBuilding.SetIntelligence(40, 5)
                     newBuilding.AddTag(TagEnum.Medical)
@@ -767,7 +767,7 @@
                     newBuilding.SetInfo("A mall provides a tiny bit of happiness for nearly everyone, but can tend to stifle creativity and local flavor.")
                     Return newBuilding
                 Case BuildingEnum.Mass_Transit
-                    Dim newBuilding As New Building(bType, 175, 1)
+                    Dim newBuilding As New MassTransitBuilding(bType, 175, 1)
                     newBuilding.SetMobility(32, 5)
                     newBuilding.SetInfo("Mass Transit allows many of your citizens to gain mobility they never would have had without it.")
                     Return newBuilding
@@ -884,6 +884,7 @@
                     Dim newBuilding As New Building(bType, 145, 1)
                     newBuilding.SetHealth(10, 4)
                     newBuilding.SetDrunkenness(50, -2)
+                    newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Restaurant

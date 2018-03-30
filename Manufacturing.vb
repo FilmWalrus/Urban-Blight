@@ -38,8 +38,8 @@ Public Class ShippingBuilding
 
     Public Overrides Sub ConstructionEffects()
 
-        '-- Make sure there isn't already a shipping center here
-        If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Shipping_Center) > 0 Then
+        '-- Make sure there isn't another building of the same type already here
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
             Return
         End If
 
@@ -53,7 +53,7 @@ Public Class ShippingBuilding
 
     Public Overrides Sub Destroy()
         '-- Make sure there isn't another a shipping center here
-        If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Shipping_Center) > 1 Then
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
             Return
         End If
 

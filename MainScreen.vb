@@ -20,6 +20,7 @@ Public Class Form1
     Dim RoadCard As Integer = CardCount
     Dim LandCard As Integer = RoadCard + 1
     Dim WipeCard As Integer = LandCard + 1
+    Dim RoadMaxCard As Integer = WipeCard + 1
     Dim SelectedCard As Integer = NoCard
 
     '--
@@ -49,6 +50,7 @@ Public Class Form1
     Friend WithEvents txt_building As TextBox
     Friend WithEvents BuildingDropdown As ComboBox
     Friend WithEvents btnCheat As Button
+    Friend WithEvents ubroadmax As Button
     '--
     Dim init As Boolean = False
 
@@ -205,6 +207,7 @@ Public Class Form1
         Me.ubWipe = New System.Windows.Forms.Button()
         Me.BuildingDropdown = New System.Windows.Forms.ComboBox()
         Me.btnCheat = New System.Windows.Forms.Button()
+        Me.ubroadmax = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCard.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
@@ -618,9 +621,9 @@ Public Class Form1
         Me.ubroad.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ubroad.Location = New System.Drawing.Point(512, 206)
         Me.ubroad.Name = "ubroad"
-        Me.ubroad.Size = New System.Drawing.Size(136, 32)
+        Me.ubroad.Size = New System.Drawing.Size(87, 32)
         Me.ubroad.TabIndex = 5
-        Me.ubroad.Text = "Road, Cost: 50"
+        Me.ubroad.Text = "Road"
         '
         'gbP1
         '
@@ -868,10 +871,20 @@ Public Class Form1
         Me.btnCheat.Text = "Cheat"
         Me.btnCheat.UseVisualStyleBackColor = True
         '
+        'ubroadmax
+        '
+        Me.ubroadmax.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubroadmax.Location = New System.Drawing.Point(605, 206)
+        Me.ubroadmax.Name = "ubroadmax"
+        Me.ubroadmax.Size = New System.Drawing.Size(43, 32)
+        Me.ubroadmax.TabIndex = 24
+        Me.ubroadmax.Text = "Max"
+        '
         'Form1
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.ClientSize = New System.Drawing.Size(810, 678)
+        Me.Controls.Add(Me.ubroadmax)
         Me.Controls.Add(Me.btnCheat)
         Me.Controls.Add(Me.BuildingDropdown)
         Me.Controls.Add(Me.ubWipe)
@@ -1173,6 +1186,8 @@ Public Class Form1
         Dim CardCost As Integer = 0
         If SelectedCard = RoadCard Then
             CardCost = RoadCostBase
+        ElseIf SelectedCard = RoadMaxCard Then
+            CardCost = RoadCostBase * (RoadHighway - ClickCity.Transportation)
         ElseIf SelectedCard = LandCard Then
             If ClickCity.Terrain = TerrainSwamp Then
                 CardCost = 0 '-- Swamps are free!
@@ -1205,7 +1220,7 @@ Public Class Form1
             End If
 
             '-- Roads can't be built if highway is already present
-            If SelectedCard = RoadCard And ClickCity.Transportation = RoadHighway Then
+            If (SelectedCard = RoadCard Or SelectedCard = RoadMaxCard) And ClickCity.Transportation = RoadHighway Then
                 Return False
             End If
         End If
@@ -1218,6 +1233,9 @@ Public Class Form1
         If SelectedCard = RoadCard Then
             '-- Upgrade Road
             ClickCity.AddRoad()
+        ElseIf SelectedCard = RoadMaxCard Then
+            '-- Upgrade Road to Max
+            ClickCity.Transportation = RoadHighway
         ElseIf SelectedCard = LandCard Then
             '-- Expand Territory
             ClickCity.OwnerID = CurrentPlayerIndex
@@ -1316,6 +1334,7 @@ Public Class Form1
         ubcard3.Enabled = toggleButtons
         ubcard4.Enabled = toggleButtons
         ubroad.Enabled = toggleButtons
+        ubroadmax.Enabled = toggleButtons
         ubland.Enabled = toggleButtons
         ubWipe.Enabled = toggleButtons
 
@@ -1514,7 +1533,7 @@ Public Class Form1
         Dim currentPop As Integer = ClickCity.getPopulation()
         If currentPop > 0 Then
             SelectedPerson = 0
-            personText = ClickCity.People(0).ToString()
+            personText = ClickCity.People(0).toString()
             lblPerson.Text = "Displaying 1 of " + currentPop.ToString()
         Else
             personText = ""
@@ -1527,7 +1546,7 @@ Public Class Form1
         Dim currentDev As Integer = ClickCity.getDevelopment()
         If currentDev > 0 Then
             SelectedBuilding = 0
-            buildingText = ClickCity.Buildings(0).ToString()
+            buildingText = ClickCity.Buildings(0).toString()
             lblBuilding.Text = "Displaying 1 of " + currentDev.ToString()
         Else
             buildingText = ""
@@ -1723,7 +1742,11 @@ Public Class Form1
         CardClick(3)
     End Sub
     Private Sub ubroad_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubroad.Click
-        CardClick(RoadCard)
+
+    End Sub
+
+    Private Sub ubroadmax_Click(sender As Object, e As EventArgs) Handles ubroadmax.Click
+        CardClick(RoadMaxCard)
     End Sub
 
     Private Sub ubland_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubland.Click
@@ -1748,7 +1771,7 @@ Public Class Form1
         '-- Display the card text
         Dim cardText As String = ""
         If (SelectedCard >= 0 And SelectedCard < CardCount) Then
-            cardText = Cards(SelectedCard).ToString()
+            cardText = Cards(SelectedCard).toString()
         ElseIf SelectedCard = RoadCard Then
             cardText = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCostBase.ToString()
         ElseIf SelectedCard = LandCard Then
@@ -1757,6 +1780,8 @@ Public Class Form1
             cardText = "Redraw discards the currently available buildings and draws new ones, for the base price of $100. Click anywhere on the map to confirm." + ControlChars.NewLine + ControlChars.NewLine
             cardText += "Like with buildings, the cost drops $5 after every action you take." + ControlChars.NewLine + ControlChars.NewLine
             cardText += "Unlike buildings, the cost is unique to each player and can go below $0."
+        ElseIf SelectedCard = RoadMaxCard Then
+            cardText = "Increase road on a square to the maximum level you can afford."
         End If
         UpdateTextBox(txt_card, cardText)
 
@@ -1775,6 +1800,7 @@ Public Class Form1
         ubroad.Font = newRegular
         ubland.Font = newRegular
         ubWipe.Font = newRegular
+        ubroadmax.Font = newRegular
 
         Select Case SelectedCard
             Case 0
@@ -1791,6 +1817,8 @@ Public Class Form1
                 ubland.Font = newBold
             Case WipeCard
                 ubWipe.Font = newBold
+            Case RoadMaxCard
+                ubroadmax.Font = newBold
         End Select
 
     End Sub
@@ -1808,7 +1836,7 @@ Public Class Form1
             SelectedPerson -= 1
             lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + selectedPop.ToString()
             If SelectedPerson < selectedPop Then
-                UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).ToString())
+                UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).toString())
             End If
         End If
     End Sub
@@ -1818,7 +1846,7 @@ Public Class Form1
         If selectedPop > 0 And SelectedPerson < selectedPop - 1 Then
             SelectedPerson += 1
             lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + selectedPop.ToString()
-            UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).ToString())
+            UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).toString())
         End If
     End Sub
 
@@ -1827,9 +1855,9 @@ Public Class Form1
         Dim selectedDev As Integer = ClickCity.getDevelopment()
         If selectedDev > 0 And SelectedBuilding > 0 Then
             SelectedBuilding -= 1
-            lblPerson.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + selectedDev.ToString()
+            lblBuilding.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + selectedDev.ToString()
             If SelectedBuilding < selectedDev Then
-                UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).ToString())
+                UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).toString())
             End If
         End If
     End Sub
@@ -1839,7 +1867,7 @@ Public Class Form1
         If selectedDev > 0 And SelectedBuilding < selectedDev - 1 Then
             SelectedBuilding += 1
             lblBuilding.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + selectedDev.ToString()
-            UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).ToString())
+            UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).toString())
         End If
     End Sub
 
@@ -2009,6 +2037,8 @@ Public Class Form1
         CurrentPlayer.TotalMoney += 1000000
         UpdatePlayers()
     End Sub
+
+
 #End Region
 
 End Class

@@ -1,4 +1,6 @@
-﻿Public Class ConstructionSiteBuilding
+﻿
+
+Public Class ConstructionSiteBuilding
     Inherits Building
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
@@ -42,8 +44,8 @@ Public Class MonumentBuilding
     End Sub
 
     Public Overrides Sub ConstructionEffects()
-        '-- Make sure there isn't already a monument here
-        If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) > 0 Then
+        '-- Make sure there isn't another building of the same type already here
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
             Return
         End If
 
@@ -56,8 +58,8 @@ Public Class MonumentBuilding
     End Sub
 
     Public Overrides Sub Destroy()
-        '-- Make sure there isn't another monument here
-        If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) > 1 Then
+        '-- Make sure there isn't another building of the same type here
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
             Return
         End If
 

@@ -6,8 +6,12 @@ Public Class CitySquare
     Public ColID As Integer = 0
     Public OwnerID As Integer = -1
     Public CityName As String = ""
+
+    '-- Travel and visit
     Public VisitedKey As Integer = -1
     Public DragLoss As Integer = -1
+    Public VisitMethodAttempt As Integer = TransportType.Bike
+    Public VisitMethod As Integer = TransportType.Bike
 
     '--
     Public GridSquare As Label = Nothing
@@ -28,6 +32,14 @@ Public Class CitySquare
     Public AvgMobility As Integer = 0
     Public AvgDrunkenness As Integer = 0
     Public AvgCriminality As Integer = 0
+
+    Public Enum TransportType
+        Bike
+        Car
+        Plane
+        Train
+        Taxi
+    End Enum
 #End Region
 
 #Region " New "
@@ -144,6 +156,24 @@ Public Class CitySquare
         Return citizensUnemployed
     End Function
 
+    Public Function getUnemploymentValue() As Double
+        '-- We have to actually check every citizen since they might have jobs elsewhere
+        Dim unemploymentValue As Double = 0.0
+        For i As Integer = 0 To People.Count - 1
+            '-- Add up how many citizens unemployed
+            Dim currentCitizen As Person = People(i)
+            If currentCitizen.JobBuilding Is Nothing Then
+                If currentCitizen.IsMinor() Then
+                    '-- Count minors as a fraction of an adult based on how close they are to working age
+                    unemploymentValue += (currentCitizen.Age / Person.MinorAge)
+                Else
+                    unemploymentValue += 1
+                End If
+            End If
+        Next
+        Return unemploymentValue
+    End Function
+
     Public Function getEmployment() As Integer
         '-- We have to actually check every citizen since they might have jobs elsewhere
         Dim citizensEmployed As Integer = 0
@@ -215,10 +245,36 @@ Public Class CitySquare
         End If
     End Function
 
+    Public Function GetVisitMethod() As String
+        Dim visitString As String = "Visited " + GetName() + " by "
+        Select Case VisitMethod
+            Case TransportType.Bike
+                visitString += "bike"
+            Case TransportType.Car
+                visitString += "car"
+            Case TransportType.Train
+                visitString += "mass transit"
+            Case TransportType.Plane
+                visitString += "plane"
+            Case TransportType.Taxi
+                visitString += "taxi"
+        End Select
+        Return visitString
+    End Function
+
+    Public Sub SetVisitMethod(ByVal transportMethod As Integer)
+        VisitMethod = transportMethod
+        VisitMethodAttempt = transportMethod
+    End Sub
+
+    Public Sub SetVisitMethodAttempt(ByVal transportMethod As Integer)
+        VisitMethodAttempt = transportMethod
+    End Sub
+
     Public Sub AddBuilding(ByVal NewBuilding As Building)
         NewBuilding.Location = Me
-        NewBuilding.ConstructionEffects()
         Buildings.Add(NewBuilding)
+        NewBuilding.ConstructionEffects()
     End Sub
 
     Public Sub AddRoad()
@@ -246,7 +302,7 @@ Public Class CitySquare
         End If
     End Function
 
-    Function GetAdjacents() As List(Of CitySquare)
+    Function GetTrueAdjacents() As List(Of CitySquare)
         Dim AdjacentList As New List(Of CitySquare)
 
         If RowID - 1 >= 0 Then
@@ -260,6 +316,34 @@ Public Class CitySquare
         End If
         If ColID + 1 <= GridHeight Then
             AdjacentList.Add(GridArray(RowID, ColID + 1))
+        End If
+
+        Return AdjacentList
+
+    End Function
+
+    Function GetAdjacents() As List(Of CitySquare)
+        Dim AdjacentList As New List(Of CitySquare)
+
+        '-- Get all the literally adjacent citysquares
+        Dim CarAdjacentList As List(Of CitySquare) = GetTrueAdjacents()
+        CarAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Car))
+        AdjacentList.AddRange(CarAdjacentList)
+
+        '-- Now get any citysquares that are connect by mass transit
+        Dim MassTransitList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Airport)
+        For i As Integer = 0 To MassTransitList.Count - 1
+            Dim TrainAdjacentList As List(Of CitySquare) = MassTransitList(0).GetAdjacentLocations()
+            TrainAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Train))
+            AdjacentList.AddRange(TrainAdjacentList)
+        Next
+
+        '-- Now get any citysquares that are connect by buildings like airports
+        Dim AirportList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Airport)
+        If AirportList.Count > 0 Then
+            Dim PlaneAdjacentList As List(Of CitySquare) = AirportList(0).GetAdjacentLocations()
+            PlaneAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Plane))
+            AdjacentList.AddRange(PlaneAdjacentList)
         End If
 
         Return AdjacentList
@@ -293,7 +377,7 @@ Public Class CitySquare
         End If
 
         '-- Any other terrain next to a lake is coastal
-        Dim adjacentList As List(Of CitySquare) = GetAdjacents()
+        Dim adjacentList As List(Of CitySquare) = GetTrueAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
             Dim neighborLocation As CitySquare = adjacentList(i)
             If neighborLocation.Terrain = TerrainLake Then
