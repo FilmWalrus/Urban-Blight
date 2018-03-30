@@ -751,6 +751,7 @@
                     Dim newBuilding As New HotelBuilding(bType, 275, 3)
                     'Used to have Creativity stats. 
                     newBuilding.SetMobility(20, 2)
+                    newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Treat yourself to the luxury of a night away.")
                     newBuilding.SetSpecialAbility("Citizens who stop at the Hotel will rest and recover up to half of their Mobility.")
                     Return newBuilding

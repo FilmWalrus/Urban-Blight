@@ -163,6 +163,11 @@
             End If
         Next
 
+        '-- If you work at a building, you are affected by it an extra time.
+        If thePerson.JobBuilding IsNot Nothing Then
+            thePerson.JobBuilding.AffectPerson(thePerson)
+        End If
+
     End Sub
 
     Sub ChangeResidence(ByRef thePerson As Person, ByRef locationsInRange As List(Of CitySquare))
