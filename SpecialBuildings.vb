@@ -13,7 +13,32 @@ Public Class ConstructionSiteBuilding
         If GetRandom(1, 5) = 1 Then
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
             Location.AddBuilding(newBuilding)
-            Destroy()
+            Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " is now a " + newBuilding.GetName())
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+End Class
+
+Public Class StartupIncubatorBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Function UpdateInternal() As Boolean
+        MyBase.UpdateInternal()
+
+        If GetRandom(1, 100) <= 15 Then '-- 15% chance to spawn a new building
+            Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
+            Location.AddBuilding(newBuilding)
+            Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " launched " + newBuilding.GetName())
+        End If
+
+        If GetRandom(1, 100) <= 5 Then '-- 5% chance of failing
+            Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " declared bankruptcy")
             Return False
         Else
             Return True

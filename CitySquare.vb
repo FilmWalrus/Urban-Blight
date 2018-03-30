@@ -12,6 +12,7 @@ Public Class CitySquare
     Public DragLoss As Integer = -1
     Public VisitMethodAttempt As Integer = TransportType.Bike
     Public VisitMethod As Integer = TransportType.Bike
+    Public VisitOrder As Integer = 0
 
     '--
     Public GridSquare As Label = Nothing
@@ -185,6 +186,10 @@ Public Class CitySquare
             End If
         Next
         Return citizensEmployed
+    End Function
+
+    Public Function getVisitOrder() As Integer
+        Return VisitOrder
     End Function
 
     Public Function CountBuildingsByType(ByVal bType As Integer) As Integer
@@ -367,6 +372,14 @@ Public Class CitySquare
     Function GetDistance(ByRef OtherSquare As CitySquare) As Integer
         Return Math.Abs(RowID - OtherSquare.RowID) + Math.Abs(ColID - OtherSquare.ColID)
     End Function
+
+    Sub ClearVisit()
+        VisitedKey = 0
+        DragLoss = -1
+        VisitOrder = 0
+        VisitMethod = CitySquare.TransportType.Bike
+        VisitMethodAttempt = CitySquare.TransportType.Bike
+    End Sub
 
     Sub UpdateCoastline()
 
@@ -555,11 +568,14 @@ Public Class CitySquare
         Dim city1, city2 As Integer
         Dim temp As CitySquare = CType(obj, CitySquare)
 
-        If SortType = PopSort Then
+        If SortType = VisitOrderSort Then
+            '-- Sort the locations in the order visited
+            city1 = getVisitOrder()
+            city2 = temp.getVisitOrder()
+        ElseIf SortType = PopSort Then
             '-- Always head for least populated area (choose randomly if tied)
             city1 = getPopulation()
             city2 = temp.getPopulation()
-
         ElseIf SortType = CultureSort Then
             '-- Head for most developed region (choose randomly if tied)
             city1 = -getCulture()

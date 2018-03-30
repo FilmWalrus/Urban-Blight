@@ -1364,19 +1364,18 @@ Public Class Form1
                 AIActionCount += 1
                 If AIDecision >= 0 And AIDecision < CardCount Then
                     Dim newBuilding As Building = ClickCity.Buildings(ClickCity.Buildings.Count - 1) '-- Get latest building
-                    AIActionEvents += CurrentPlayer.GetPlayerName() + " bought a " + newBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
+                    Diary.AIBuildEvents.AddEvent(CurrentPlayer.GetPlayerName() + " bought a " + newBuilding.GetNameAndAddress())
                 ElseIf AIDecision = RoadCard Then
-                    AIActionEvents += CurrentPlayer.GetPlayerName() + " upgraded the road at " + ClickCity.GetName() + "." + ControlChars.NewLine
+                    Diary.AIRoadEvents.AddEvent(CurrentPlayer.GetPlayerName() + " upgraded the road at " + ClickCity.GetName())
                 ElseIf AIDecision = LandCard Then
-                    AIActionEvents += CurrentPlayer.GetPlayerName() + " founded " + ClickCity.GetName() + " at " + ClickCity.GetLocationText() + "." + ControlChars.NewLine
+                    Diary.AILandEvents.AddEvent(CurrentPlayer.GetPlayerName() + " founded " + ClickCity.GetName() + " at " + ClickCity.GetLocationText())
                 End If
             ElseIf AIActionCount = 0 Then
-                AIActionEvents += CurrentPlayer.GetPlayerName() + " passed on their turn." + ControlChars.NewLine
+                Diary.AILandEvents.AddEvent(CurrentPlayer.GetPlayerName() + " passed on their turn")
             End If
 
         Loop While ActionSuccess
 
-        Diary.AIEvents += AIActionEvents
 
     End Sub
 
@@ -1742,7 +1741,7 @@ Public Class Form1
         CardClick(3)
     End Sub
     Private Sub ubroad_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubroad.Click
-
+        CardClick(RoadCard)
     End Sub
 
     Private Sub ubroadmax_Click(sender As Object, e As EventArgs) Handles ubroadmax.Click

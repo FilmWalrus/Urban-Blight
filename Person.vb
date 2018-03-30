@@ -22,7 +22,9 @@ Public Class Person
     Public Mobility As Integer = 0 '(0 Is stationary)
     Public Drunkenness As Integer = 0
     Public Criminality As Integer = 0
+
     Public Age As Integer = 1
+    Public TimeAtJob As Integer = 0
 
     Public Const MinorAge As Integer = 16
 
@@ -186,6 +188,8 @@ Public Class Person
         Dim thePop As Integer = Residence.getPopulation()
         Dim theRoad As Integer = Residence.Transportation
 
+        AddEvent("Started in " + Residence.GetName())
+
         '-- Age
         Age = Age + TimeIncrement
         If Age <= 28 Then
@@ -239,6 +243,8 @@ Public Class Person
 
         '--Employment
         If Employment > 0 Then
+            TimeAtJob += TimeIncrement
+
             '-- Success leads to promotions
             maxBonus = (Intelligence / 8.0) + (Creativity / 9.0) ' - 5 (allow work performance to be bad and employee to be fired
             statChange = GetRandom(0, maxBonus)
@@ -495,7 +501,7 @@ Public Class Person
 
         If JobBuilding IsNot Nothing Then
             '-- If already employed, make sure this other opportunity is better
-            If newJob.Cost <= JobBuilding.Cost Then '-- Change this to salary in future
+            If TimeAtJob <= TimeIncrement Or newJob.Cost <= JobBuilding.Cost Then '-- Change this to salary in future
                 Return False
             End If
 
@@ -516,7 +522,6 @@ Public Class Person
             Odds = Odds + (Creativity / 5.5)
             Odds = Odds + (Mobility / 15.0)
             If GetRandom(0, 100) <= Odds Then
-                AddEvent("Hired by the " + newJob.GetNameAndAddress())
                 Return True
             Else
                 AddEvent("Job application rejected by the " + newJob.GetNameAndAddress())
@@ -526,6 +531,20 @@ Public Class Person
 
         Return False
     End Function
+
+    Sub ApplicationAccepted()
+
+        TimeAtJob = 0
+        Employment += 1
+
+        AddEvent("Hired by the " + JobBuilding.GetNameAndAddress())
+        If Age = 16 Then
+            '-- If employed from an early age, buy a hotrod
+            Dim statChange As Integer = GetRandom(3, 4)
+            Mobility += statChange
+            AddEvent("mobility for buying first car", statChange)
+        End If
+    End Sub
 
     Function CommitCrime(ByVal CrimeType As Integer, ByVal Optional ExtraText As String = "") As Boolean
 
@@ -664,6 +683,7 @@ Public Class Person
             PersonString += ControlChars.NewLine
         End If
 
+        '-- Print this person's "life Journey" (everything they did including all stat changes)
         If Residence.CountBuildingsByType(BuildingGen.BuildingEnum.Detective_Agency) > 0 Or DebugMode Then
             PersonString += JourneyString + ControlChars.NewLine
         End If

@@ -442,7 +442,7 @@ Public Class Building
         '-- Start at your new job
         Employees.Add(Employee)
         Employee.JobBuilding = Me
-        Employee.Employment += 1
+        Employee.ApplicationAccepted()
     End Sub
 
     Public Overridable Sub ExpandBuilding()

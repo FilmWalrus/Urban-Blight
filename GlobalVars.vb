@@ -130,9 +130,10 @@ Module GlobalVars
     Public Const AILand As Integer = 5
 
     '-- Sort Types
-    Public Const PopSort As Integer = 0
-    Public Const JobSort As Integer = 1
-    Public Const CultureSort As Integer = 2
+    Public Const VisitOrderSort As Integer = 0
+    Public Const PopSort As Integer = 1
+    Public Const JobSort As Integer = 2
+    Public Const CultureSort As Integer = 3
     Public SortType As Integer = 0
 
     '-- Building Stuff
