@@ -330,9 +330,6 @@ Public Class Player
         Dim averagePopulation As Double = SafeDivide(citizenList.Count, territoryList.Count)
         landNeed = 100 * SafeDivide(averagePopulation, 20.0) * Personality.GetLandAdjustment()
 
-
-
-
         '-- Determine best locations for buildings and roads
         Dim bestBuildingLocation As CitySquare = Nothing
         Dim maxBuildingUtility As Double = -1
@@ -342,7 +339,7 @@ Public Class Player
             Dim thisLocation As CitySquare = territoryList(i)
 
             '-- Check if this is the location in most need of jobs
-            Dim thisBuildingUtility As Double = (thisLocation.getUnemployment() - thisLocation.getJobsEmpty())
+            Dim thisBuildingUtility As Double = (thisLocation.getUnemploymentValue() - thisLocation.getJobsEmpty())
             thisBuildingUtility *= Personality.GetDecisionAdjustment()
             If thisBuildingUtility > maxBuildingUtility Then
                 maxBuildingUtility = thisBuildingUtility

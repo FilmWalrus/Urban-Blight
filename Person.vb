@@ -24,6 +24,8 @@ Public Class Person
     Public Criminality As Integer = 0
     Public Age As Integer = 1
 
+    Public Const MinorAge As Integer = 16
+
     '-- Criminal Record
     Public ParkingTicketCount As Integer = 0
     Public DrivingTicketCount As Integer = 0
@@ -459,10 +461,11 @@ Public Class Person
         child.BirthPlace = Residence
         child.Residence = Residence
         Residence.People.Add(child)
+        AddEvent("Gave birth to " + child.Name)
         Return child
     End Function
 
-    Function Die() As Boolean
+    Function Die(ByVal CauseOfDeath As Integer) As Boolean
         'Free dead person's job
         If JobBuilding IsNot Nothing Then
             JobBuilding.Employees.Remove(Me)
@@ -470,6 +473,20 @@ Public Class Person
 
         'Free dead person's residence
         Residence.People.Remove(Me)
+
+        '-- Record cause of death
+        Select Case CauseOfDeath
+            Case Turn.DeathCause.Illness
+                AddEvent("Died of illness")
+            Case Turn.DeathCause.Murder
+                AddEvent("Murdered")
+            Case Turn.DeathCause.NaturalCauses
+                AddEvent("Died of natural causes")
+            Case Turn.DeathCause.TrafficAccident
+                AddEvent("Died in traffic accident")
+            Case Turn.DeathCause.Unknown
+                AddEvent("Died of unknown causes")
+        End Select
 
         Return True
     End Function
@@ -499,8 +516,10 @@ Public Class Person
             Odds = Odds + (Creativity / 5.5)
             Odds = Odds + (Mobility / 15.0)
             If GetRandom(0, 100) <= Odds Then
+                AddEvent("Hired by the " + newJob.GetNameAndAddress())
                 Return True
             Else
+                AddEvent("Job application rejected by the " + newJob.GetNameAndAddress())
                 Return False
             End If
         End If
@@ -508,19 +527,39 @@ Public Class Person
         Return False
     End Function
 
-    Sub IssueTicket(ByVal parking As Boolean)
+    Function CommitCrime(ByVal CrimeType As Integer, ByVal Optional ExtraText As String = "") As Boolean
+
         If Age < 16 Then
-            Return
+            Return False
         End If
 
-        If parking Then
-            ParkingTicketCount += 1
-            UnpaidFines += 1
-        Else
-            DrivingTicketCount += 1
-            UnpaidFines += 2
-        End If
-    End Sub
+        '-- Record cause of death
+        Select Case CrimeType
+            Case Turn.CrimeType.ParkingTicket
+                ParkingTicketCount += 1
+                UnpaidFines += 1
+                AddEvent("Received a parking ticket")
+            Case Turn.CrimeType.TrafficTicket
+                DrivingTicketCount += 1
+                UnpaidFines += 2
+                AddEvent("Received a traffic ticket")
+            Case Turn.CrimeType.Robbery
+                RobberyCount += 1
+                AddEvent("Stole $" + ExtraText)
+            Case Turn.CrimeType.Vandalism
+                AddEvent("Vandalized the " + ExtraText)
+            Case Turn.CrimeType.Arson
+                ArsonCount += 1
+                AddEvent("Burned down the " + ExtraText)
+            Case Turn.CrimeType.Murder
+                MurderCount += 1
+                AddEvent("Killed " + ExtraText)
+            Case Turn.CrimeType.Unknown
+                AddEvent("Committed unknown crime")
+        End Select
+
+        Return True
+    End Function
 
 #End Region
 
@@ -531,7 +570,7 @@ Public Class Person
     End Function
 
     Public Function IsMinor() As Boolean
-        If Age < 16 Then
+        If Age < MinorAge Then
             Return True
         Else
             Return False

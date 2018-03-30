@@ -1,9 +1,17 @@
 ﻿Public Class HospitalBuilding
     Inherits Building
 
+    Public HospitalCampus As New List(Of Integer)
+
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
         SetRange(1) '-- Hospitals have a base range of 1
+    End Sub
+
+    Public Sub UpdateHospitalCampus(ByVal medType As Integer)
+        If Not HospitalCampus.Contains(medType) Then
+            HospitalCampus.Add(medType)
+        End If
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -11,10 +19,34 @@
         If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Ambulance_Service) > 0 Then
             Range += 1
         End If
+
+        UpdateHospitalCampus(Type)
+
+        '-- Update all medical buildings on this location to alert them that the hospital campus has changed
+        Dim MedicalBuildings As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Medical)
+        For i As Integer = 0 To MedicalBuildings.Count - 1
+            Dim thisMedicalBuilding As Building = MedicalBuildings(i)
+            thisMedicalBuilding.UpdateBuildingEffects()
+        Next
+    End Sub
+
+    Public Overrides Sub UpdateBuildingEffects()
+        '-- Add all local medical buildings to the hospital campus
+        Dim MedicalBuildings As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Medical)
+        For i As Integer = 0 To MedicalBuildings.Count - 1
+            Dim thisMedicalBuilding As Building = MedicalBuildings(i)
+            UpdateHospitalCampus(thisMedicalBuilding.Type)
+        Next
     End Sub
 
     Public Overridable Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
         Return False '-- Default hospital doesn't have a specialty
+    End Function
+
+    Public Function GetHealthBonus() As Integer
+        '-- Medical buildings are more effective when part of a large hospital campus
+        Dim HealthBonus As Integer = (HospitalCampus.Count - 1) * 3.0
+        Return HealthBonus
     End Function
 
     Public Overrides Function SavePatient(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
@@ -35,6 +67,7 @@
         If Distance < Range Then
             SaveOdds = 25
         End If
+        SaveOdds += GetHealthBonus()
 
         '-- Attempt to save!
         If GetRandom(1, 100) <= SaveOdds Then
@@ -43,6 +76,26 @@
             Return False
         End If
     End Function
+
+    Public Overrides Function GetHealthOdds() As Integer
+        Return MyBase.GetHealthOdds() + GetHealthBonus()
+    End Function
+
+    Public Overrides Sub Destroy()
+        '-- Make sure there isn't another of this building on this square
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
+            Return
+        End If
+
+        '-- Update all medical buildings on this location to alert them that the hospital campus has changed
+        Dim MedicalBuildings As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Medical)
+        For i As Integer = 0 To MedicalBuildings.Count - 1
+            Dim thisMedicalBuilding As Building = MedicalBuildings(i)
+            thisMedicalBuilding.UpdateBuildingEffects()
+        Next
+
+        MyBase.Destroy()
+    End Sub
 End Class
 
 Public Class HospitalCancerBuilding
@@ -53,7 +106,7 @@ Public Class HospitalCancerBuilding
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
-        Return (causeOfDeath = Turn.DeathHazard.Illness)
+        Return (causeOfDeath = Turn.DeathCause.Illness)
     End Function
 End Class
 
@@ -65,7 +118,7 @@ Public Class HospitalEmergencyBuilding
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
-        Return (causeOfDeath = Turn.DeathHazard.TrafficAccident)
+        Return (causeOfDeath = Turn.DeathCause.TrafficAccident)
     End Function
 End Class
 

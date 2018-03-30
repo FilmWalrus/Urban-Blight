@@ -136,6 +136,7 @@
     <Compile Include="CitySquare.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Transport.vb" />
     <Compile Include="Turn.vb" />
     <Compile Include="FancyLabel.vb">
       <SubType>Component</SubType>

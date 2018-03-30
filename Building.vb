@@ -494,6 +494,10 @@ Public Class Building
         End If
     End Sub
 
+    Public Overridable Sub UpdateBuildingEffects()
+        '-- Base class does nothing
+    End Sub
+
     Public Overridable Function SavePatient(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
         '-- Most buildings can not save patients
         Return False
@@ -502,6 +506,15 @@ Public Class Building
     Public Overridable Function GetBirthrateAdjust(ByRef thePerson As Person) As Double
         '-- Most buildings do not affect the birthrate
         Return 1.0
+    End Function
+
+    Public Function DoesAnotherBuildingOfTheSameTypeExistHere() As Boolean
+        Return (Location.CountBuildingsByType(Type) > 1)
+    End Function
+
+    Public Overridable Function GetAdjacentLocations() As List(Of CitySquare)
+        Dim AdjacentLocations As New List(Of CitySquare)
+        Return AdjacentLocations
     End Function
 
 #End Region
@@ -609,25 +622,25 @@ Public Class Building
         '-- Show stat info
         If DebugMode Then
             If Happiness_odds > 0 Then
-                BuildingString += "Happiness: " + Happiness_odds.ToString + "% chance boosts up to " + Happiness_adj.ToString + ControlChars.NewLine
+                BuildingString += "Happiness: " + GetHappinessOdds().ToString + "% chance boosts up to " + GetHappinessAdj().ToString + ControlChars.NewLine
             End If
             If Health_odds > 0 Then
-                BuildingString += "Health: " + Health_odds.ToString + "% chance boosts up to " + Health_adj.ToString + ControlChars.NewLine
+                BuildingString += "Health: " + GetHealthOdds().ToString + "% chance boosts up to " + GetHealthAdj().ToString + ControlChars.NewLine
             End If
             If Intelligence_odds > 0 Then
-                BuildingString += "Intelligence: " + Intelligence_odds.ToString + "% chance boosts up to " + Intelligence_adj.ToString + ControlChars.NewLine
+                BuildingString += "Intelligence: " + GetIntelligenceOdds().ToString + "% chance boosts up to " + GetIntelligenceAdj().ToString + ControlChars.NewLine
             End If
             If Creativity_odds > 0 Then
-                BuildingString += "Creativity: " + Creativity_odds.ToString + "% chance boosts up to " + Creativity_adj.ToString + ControlChars.NewLine
+                BuildingString += "Creativity: " + GetCreativityOdds().ToString + "% chance boosts up to " + GetCreativityAdj().ToString + ControlChars.NewLine
             End If
             If Mobility_odds > 0 Then
-                BuildingString += "Mobility: " + Mobility_odds.ToString + "% chance boosts up to " + Mobility_adj.ToString + ControlChars.NewLine
+                BuildingString += "Mobility: " + GetMobilityOdds().ToString + "% chance boosts up to " + GetMobilityAdj().ToString + ControlChars.NewLine
             End If
             If Drunkenness_odds > 0 Then
-                BuildingString += "Drunkenness: " + Drunkenness_odds.ToString + "% chance boosts up to " + Drunkenness_adj.ToString + ControlChars.NewLine
+                BuildingString += "Drunkenness: " + GetDrunkennessOdds().ToString + "% chance boosts up to " + GetDrunkennessAdj().ToString + ControlChars.NewLine
             End If
             If Criminality_odds > 0 Then
-                BuildingString += "Criminality: " + Criminality_odds.ToString + "% chance boosts up to " + Criminality_adj.ToString + ControlChars.NewLine
+                BuildingString += "Criminality: " + GetCriminalityOdds().ToString + "% chance boosts up to " + GetCriminalityAdj().ToString + ControlChars.NewLine
             End If
         End If
 

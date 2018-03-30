@@ -14,11 +14,22 @@
     Public NoEmigration As Boolean = False
     Public NoCrime As Boolean = False
 
-    Public Enum DeathHazard
+    Public Enum DeathCause
         NaturalCauses
         Illness
         TrafficAccident
         Murder
+        Unknown
+    End Enum
+
+    Public Enum CrimeType
+        ParkingTicket
+        TrafficTicket
+        Robbery
+        Vandalism
+        Arson
+        Murder
+        Unknown
     End Enum
 
 #End Region
@@ -33,7 +44,7 @@
             NoDeath = True
             NoCrime = True
         End If
-        If theYear < 20 Then
+        If theYear < 15 Then
             ' Don't let anyone emigrate in the first few turns. It unbalances the game too much.
             NoEmigration = True
         End If
@@ -96,18 +107,18 @@
             parkingOdds += thePerson.Criminality / 10.0
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
-            ClearVisited()
             Dim locationsInRange As New List(Of CitySquare)
             RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
 
             ' Visit each location in range
             For j As Integer = 0 To locationsInRange.Count - 1
                 Dim currentLocation As CitySquare = locationsInRange(j)
-                thePerson.AddEvent("Visited " + currentLocation.CityName)
+                thePerson.AddEvent(currentLocation.GetVisitMethod())
+                currentLocation.SetVisitMethod(CitySquare.TransportType.Bike)
 
                 '-- Issue speeding ticket
                 If GetRandom(0, 200) < drivingOdds Then
-                    thePerson.IssueTicket(False)
+                    thePerson.CommitCrime(CrimeType.ParkingTicket)
                 End If
 
                 '-- Visit each building at this location
@@ -115,7 +126,7 @@
 
                     '-- Issue parking ticket
                     If GetRandom(0, 200) < parkingOdds Then
-                        thePerson.IssueTicket(True)
+                        thePerson.CommitCrime(CrimeType.TrafficTicket)
                     End If
 
                     '-- Have person potentially visit each building in range for leisure and change due to external factors
@@ -205,7 +216,7 @@
             odds += (thePerson.Age - 20.0) / 4.0
             If thePerson.Health <= 0 Or GetRandom(0, 100) < odds Then
                 '-- Attempt to save the life of this citizen
-                Dim Rescuer As Building = AttemptToSave(thePerson, DeathHazard.NaturalCauses)
+                Dim Rescuer As Building = AttemptToSave(thePerson, DeathCause.NaturalCauses)
                 If Rescuer IsNot Nothing Then
                     '-- Citizen was saved!
                     LocalCountSaves += 1
@@ -216,7 +227,7 @@
                     End If
 
                 Else
-                    If thePerson.Die() Then
+                    If thePerson.Die(DeathCause.NaturalCauses) Then
                         DeadCitizens.Add(thePerson)
 
                         '--Post Event
@@ -238,7 +249,7 @@
             If GetRandom(0, 100) < odds Then
 
                 '-- Attempt to save the life of this citizen
-                Dim Rescuer As Building = AttemptToSave(thePerson, DeathHazard.Illness)
+                Dim Rescuer As Building = AttemptToSave(thePerson, DeathCause.Illness)
                 If Rescuer IsNot Nothing Then
                     '-- Citizen was saved!
                     LocalCountSaves += 1
@@ -249,7 +260,7 @@
                     End If
 
                 Else
-                    If thePerson.Die() Then
+                    If thePerson.Die(DeathCause.Illness) Then
                         '-- Citizen died
                         DeadCitizens.Add(thePerson)
 
@@ -280,7 +291,7 @@
 
             If GetRandom(0, 100) <= odds Then
                 '-- Attempt to save the life of this citizen
-                Dim Rescuer As Building = AttemptToSave(thePerson, DeathHazard.TrafficAccident)
+                Dim Rescuer As Building = AttemptToSave(thePerson, DeathCause.TrafficAccident)
                 If Rescuer IsNot Nothing Then
                     '-- Citizen was saved!
                     LocalCountSaves += 1
@@ -291,7 +302,7 @@
                     End If
 
                 Else
-                    If thePerson.Die() Then
+                    If thePerson.Die(DeathCause.TrafficAccident) Then
 
                         DeadCitizens.Add(thePerson)
 
@@ -328,7 +339,6 @@
             Dim originalHome As CitySquare = thePerson.Residence
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
-            ClearVisited()
             Dim locationsInRange As New List(Of CitySquare)
             RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
 
@@ -414,7 +424,6 @@
             Dim originalHome As CitySquare = thePerson.Residence
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
-            ClearVisited()
             Dim locationsInRange As New List(Of CitySquare)
             RangeChecker(originalHome, thePerson.Mobility, locationsInRange)
             Dim foundJob As Boolean = False
@@ -493,18 +502,21 @@
             odds += thePerson.Criminality / 3.0
             odds -= thePerson.Employment / 5.0
             If GetRandom(0, 100) < odds Then
-                thePerson.RobberyCount += 1
                 Dim theft As Integer = Math.Min(thePerson.Criminality, CurrentPlayer.TotalMoney)
-                CurrentPlayer.TotalMoney -= theft
+                If thePerson.CommitCrime(CrimeType.Robbery, theft.ToString()) Then
+                    CurrentPlayer.TotalMoney -= theft
 
-                TheftSum += theft
-                CountTheft += 1
-                '--Post Event
-                If CountTheft >= EventLimit Then
-                    LocalEventTheft = CountTheft.ToString() + " citizens stole a combined $" + TheftSum.ToString() + "." + ControlChars.NewLine
-                ElseIf theft > 0 Then
-                    LocalEventTheft += thePerson.GetNameAndAddress() + " stole $" + theft.ToString + "." + ControlChars.NewLine
+                    TheftSum += theft
+                    CountTheft += 1
+                    '--Post Event
+                    If CountTheft >= EventLimit Then
+                        LocalEventTheft = CountTheft.ToString() + " citizens stole a combined $" + TheftSum.ToString() + "." + ControlChars.NewLine
+                    ElseIf theft > 0 Then
+                        LocalEventTheft += thePerson.GetNameAndAddress() + " stole $" + theft.ToString + "." + ControlChars.NewLine
+                    End If
                 End If
+                thePerson.RobberyCount += 1
+
             End If
 
             Dim currentLocation As CitySquare = thePerson.Residence
@@ -516,18 +528,18 @@
             odds += thePerson.Criminality / 8.0
             odds -= (thePerson.Happiness - 20) / 10.0
             If GetRandom(0, 150) < odds And buildingCount > 0 And GetRandom(0, 9) < TotalBuildings Then
-                thePerson.ArsonCount += 1
                 Dim targetBuilding As Building = currentLocation.Buildings(GetRandom(0, buildingCount - 1))
-                targetBuilding.Destroy()
+                If thePerson.CommitCrime(CrimeType.Arson, targetBuilding.GetNameAndAddress()) Then
+                    targetBuilding.Destroy()
 
-                CountArson += 1
-                '--Post Event
-                If CountMurder >= EventLimit Then
-                    LocalEventArson = "Citizens burned down " + CountArson.ToString + " buildings." + ControlChars.NewLine
-                Else
-                    LocalEventArson += thePerson.GetNameAndAddress() + " burned down the " + targetBuilding.GetNameAndAddress + "." + ControlChars.NewLine
+                    CountArson += 1
+                    '--Post Event
+                    If CountMurder >= EventLimit Then
+                        LocalEventArson = "Citizens burned down " + CountArson.ToString + " buildings." + ControlChars.NewLine
+                    Else
+                        LocalEventArson += thePerson.GetNameAndAddress() + " burned down the " + targetBuilding.GetNameAndAddress + "." + ControlChars.NewLine
+                    End If
                 End If
-
             End If
 
 
@@ -544,18 +556,18 @@
                 '-- Killing spree potential (especially if the crime paid off)
                 thePerson.Criminality += GetRandom(4, Math.Min(7, theVictim.Employment / 7.0))
 
-                If theVictim.Die() Then
+                If theVictim.Die(DeathCause.Murder) Then
 
-                    DeadCitizens.Add(theVictim)
+                    If thePerson.CommitCrime(CrimeType.Murder, theVictim.GetNameAndAddress()) Then
+                        DeadCitizens.Add(theVictim)
 
-                    thePerson.MurderCount += 1
-
-                    CountMurder += 1
-                    '--Post Event
-                    If CountMurder >= EventLimit Then
-                        LocalEventMurder = CountMurder.ToString + " citizens were murdered." + ControlChars.NewLine
-                    Else
-                        LocalEventMurder += thePerson.GetNameAndAddress() + " killed " + theVictim.Name + "." + ControlChars.NewLine
+                        CountMurder += 1
+                        '--Post Event
+                        If CountMurder >= EventLimit Then
+                            LocalEventMurder = CountMurder.ToString + " citizens were murdered." + ControlChars.NewLine
+                        Else
+                            LocalEventMurder += thePerson.GetNameAndAddress() + " killed " + theVictim.Name + "." + ControlChars.NewLine
+                        End If
                     End If
                 End If
             End If
@@ -823,15 +835,17 @@
             Return
         End If
 
-        '-- Mark
+        '-- Mark as an official visit with the current mobility and visit method (like bike, car, plane, etc)
         location.VisitedKey = Mobility
+        location.SetVisitMethod(location.VisitMethodAttempt)
 
         '-- (Don't recalculate the drag loss if we've been here already)
         If location.DragLoss < 0 Then
             '-- Poor roads make travel difficult
+            'Dim DragLoss1 As Integer = (7 - GetRandom(0, location.Transportation + 2))
             Dim DragLoss1 As Integer = (5 - GetRandom(0, location.Transportation))
             Dim DragLoss2 As Integer = (5 - GetRandom(0, location.Transportation))
-            location.DragLoss = (DragLoss1 * DragLoss2)
+            location.DragLoss = (DragLoss1 * DragLoss2) + 4
         End If
 
         Mobility -= location.DragLoss
