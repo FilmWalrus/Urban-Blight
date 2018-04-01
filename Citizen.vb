@@ -511,7 +511,7 @@ Public Class Citizen
             End If
         End If
 
-        If Age >= 10 And Intelligence >= 5 Then
+        If Age >= newJob.minAge And Intelligence >= 5 Then
             Dim Odds As Double = 20
             Odds = Odds + (15 - Math.Abs(Age - 35.0)) / 5.0
             Odds = Odds + (Health / 9.0)

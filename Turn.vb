@@ -53,25 +53,6 @@
         End If
     End Sub
 
-    Sub Setup()
-        '-- Gather all the current player's people
-        GatherCitizens()
-
-        '-- Gather all the occupied territory (all players)
-        GatherTerritory()
-
-        '-- Gather hospitals (effects births and deaths)
-        GatherHospitals()
-    End Sub
-
-    Sub Cleanup()
-        '-- Reset any temporary building data
-        ResetBuildings()
-
-        '-- Clear visit info from locations
-        ClearVisited()
-    End Sub
-
     Sub UpdatePeople()
 
         Setup()
@@ -510,13 +491,18 @@
             upkeep = 0
         End If
 
+        '-- Choose between "You" and "They" based on if the player is human or robot
+        Dim Pronoun As String = "You"
+        If CurrentPlayer.PlayerType = PlayerAI Then
+            Pronoun = "They"
+        End If
 
-        Diary.TaxEvents.AddEventNoLimit("You collected $" + revenue.ToString() + " in taxes")
+        Diary.TaxEvents.AddEventNoLimit(Pronoun + " collected $" + revenue.ToString() + " in taxes")
         If trafficFines > 0 Then
-            Diary.TaxEvents.AddEventNoLimit("You collected $" + trafficFines.ToString() + " in traffic fines")
+            Diary.TaxEvents.AddEventNoLimit(Pronoun + " collected $" + trafficFines.ToString() + " in traffic fines")
         End If
         If upkeep > 0 Then
-            Diary.TaxEvents.AddEventNoLimit("You payed $" + upkeep.ToString() + " in upkeep")
+            Diary.TaxEvents.AddEventNoLimit(Pronoun + " payed $" + upkeep.ToString() + " in upkeep")
         End If
 
         '-- Update the player's money
@@ -610,7 +596,19 @@
 
 #End Region
 
-#Region " Support "
+#Region " Setup "
+
+    Sub Setup()
+        '-- Gather all the current player's people
+        GatherCitizens()
+
+        '-- Gather all the occupied territory (all players)
+        GatherTerritory()
+
+        '-- Gather hospitals (effects births and deaths)
+        GatherHospitals()
+    End Sub
+
     Sub GatherCitizens()
 
         CitizenList.Clear()
@@ -642,6 +640,18 @@
             Next
         Next
 
+    End Sub
+
+#End Region
+
+#Region " Cleanup "
+
+    Sub Cleanup()
+        '-- Reset any temporary building data
+        ResetBuildings()
+
+        '-- Clear visit info from locations
+        ClearVisited()
     End Sub
 
     Sub PurgeDead()
@@ -680,6 +690,9 @@
         Next
     End Sub
 
+#End Region
+
+#Region " Travelling "
     Sub RangeChecker(ByRef theLocation As CitySquare, ByRef thePerson As Citizen, ByRef visitList As List(Of CitySquare))
         ClearVisited()
 
