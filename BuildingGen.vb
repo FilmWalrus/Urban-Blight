@@ -595,7 +595,7 @@
                     newBuilding.SetHappiness(20, 5)
                     newBuilding.SetHealth(18, 2)
                     newBuilding.SetCriminality(20, -2)
-                    newBuilding.SetInfo("Daycare Centers give the little ones a place to go while the adults are at work.  They are excellent places for children to learn interpersonal skills while they play.")
+                    newBuilding.SetInfo("Daycare Centers and after-school programs provide a place for minors while their parents are at work.  They are excellent places for children to learn interpersonal skills while they play.")
                     newBuilding.SetSpecialAbility("The Daycare Center effects only minors.")
                     Return newBuilding
                 Case BuildingEnum.Department_Store
