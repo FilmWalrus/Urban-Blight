@@ -36,6 +36,7 @@ Public Class CitySquare
 
     Public Enum TransportType
         Bike
+        Boat
         Car
         Plane
         Train
@@ -100,6 +101,12 @@ Public Class CitySquare
         GridSquare.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         GridSquare.Text = "0"
         GridSquare.BorderStyle = BorderStyle.FixedSingle
+    End Sub
+
+    Public Sub Occupy(ByVal PlayerID As Integer)
+        OwnerID = PlayerID
+        '-- Generate random city name
+        CityName = Namer.GenerateCityName(Me)
     End Sub
 
 #End Region
@@ -263,6 +270,8 @@ Public Class CitySquare
         Select Case VisitMethod
             Case TransportType.Bike
                 visitString += "bike"
+            Case TransportType.Boat
+                visitString += "boat"
             Case TransportType.Car
                 visitString += "car"
             Case TransportType.Train
@@ -284,8 +293,9 @@ Public Class CitySquare
         VisitMethodAttempt = transportMethod
     End Sub
 
-    Public Sub AddBuilding(ByVal NewBuilding As Building)
+    Public Sub AddBuilding(ByVal NewBuilding As Building, ByVal PlayerIndex As Integer)
         NewBuilding.Location = Me
+        NewBuilding.OwnerID = PlayerIndex
         Buildings.Add(NewBuilding)
         NewBuilding.ConstructionEffects()
     End Sub
@@ -338,17 +348,27 @@ Public Class CitySquare
     Function GetAdjacents() As List(Of CitySquare)
         Dim AdjacentList As New List(Of CitySquare)
 
+        '-- Note: Destinations can currently show up multiple times if they can be reached in multiple ways
+
         '-- Get all the literally adjacent citysquares
         Dim CarAdjacentList As List(Of CitySquare) = GetTrueAdjacents()
         CarAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Car))
         AdjacentList.AddRange(CarAdjacentList)
 
-        '-- Now get any citysquares that are connect by mass transit
+        '-- Now get any citysquares that are connect by taxi service
         Dim TaxiList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Taxi_Service)
         For i As Integer = 0 To TaxiList.Count - 1
             Dim TaxiAdjacentList As List(Of CitySquare) = TaxiList(0).GetAdjacentLocations()
             TaxiAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Taxi))
             AdjacentList.AddRange(TaxiAdjacentList)
+        Next
+
+        '-- Now get any citysquares that are connect by harbor
+        Dim HarborList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Harbor)
+        For i As Integer = 0 To HarborList.Count - 1
+            Dim HarborAdjacentList As List(Of CitySquare) = HarborList(0).GetAdjacentLocations()
+            HarborAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Boat))
+            AdjacentList.AddRange(HarborAdjacentList)
         Next
 
         '-- Now get any citysquares that are connect by mass transit

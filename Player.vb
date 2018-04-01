@@ -6,7 +6,7 @@ Public Class Player
     Public Score As Integer = 0
     Public Flag As System.Drawing.Color = System.Drawing.Color.Black
 
-    '--
+    '-- Player Stats
     Public TotalMoney As Integer = 0
     Public TotalPopulation As Integer = 0
     Public TotalJobs As Integer = 0
@@ -17,6 +17,9 @@ Public Class Player
 
     '--
     Public WipeCost As Integer = WipeCostBase
+
+    '-- Special Land Construction Buildings
+    Public LandOptionBuildings As New List(Of Building)
 
     '-- AI stuff
     Public BestMove As CitySquare = Nothing
@@ -256,7 +259,19 @@ Public Class Player
         Return WipeCost
     End Function
 
-    Function OwnedAdjacent(ByVal theLocation As CitySquare) As Boolean
+    Function IsValidLandExpansion(ByVal theLocation As CitySquare) As Boolean
+
+        '-- You can not expand onto occupied land or water
+        If theLocation.IsOwned() Or theLocation.Terrain = TerrainLake Then
+            Return False
+        End If
+
+        '-- Check if this location is included by the special land option buildings
+        For i As Integer = 0 To LandOptionBuildings.Count - 1
+            If LandOptionBuildings(i).GetLandExpansionOptions().Contains(theLocation) Then
+                Return True
+            End If
+        Next
 
         '-- Check if this player owns a neighboring location
         Dim adjacentList As List(Of CitySquare) = theLocation.GetAdjacents()

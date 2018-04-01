@@ -76,26 +76,26 @@
     End Sub
 
     Public Function GenerateHint() As String
-        'Dim hintString As String = ""
-        'hintString += HintList(GetRandom(0, HintList.Count - 1))
-        'Return hintString
-
         Dim hintString As String = ""
-
-        Dim aMan1 As New AirportMan()
-        Dim bMan1 As New BuildMan()
-        Dim hMan1 As New HotelMan()
-
-        BuildList.Add(aMan1)
-        BuildList.Add(bMan1)
-        BuildList.Add(hMan1)
-
-        For i As Integer = 0 To BuildList.Count - 1
-            Dim xMan As BuildMan = BuildList(i)
-            hintString += xMan.GetName()
-        Next
-
+        hintString += HintList(GetRandom(0, HintList.Count - 1))
         Return hintString
+
+        'Dim hintString As String = ""
+
+        'Dim aMan1 As New AirportMan()
+        'Dim bMan1 As New BuildMan()
+        'Dim hMan1 As New HotelMan()
+
+        'BuildList.Add(aMan1)
+        'BuildList.Add(bMan1)
+        'BuildList.Add(hMan1)
+
+        'For i As Integer = 0 To BuildList.Count - 1
+        '    Dim xMan As BuildMan = BuildList(i)
+        '    hintString += xMan.GetName()
+        'Next
+
+        'Return hintString
 
     End Function
 

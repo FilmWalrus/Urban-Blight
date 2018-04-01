@@ -16,6 +16,8 @@ Public Class AirportBuilding
     End Sub
 
     Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
         '-- Add yourself to the list of destinations
         UpdateDestinationList(Location)
     End Sub
@@ -44,6 +46,36 @@ Public Class AirportBuilding
 
 End Class
 
+Public Class FreewayBuilding
+    Inherits Building
+
+    Public Const EnduranceBoost As Integer = 10
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        Range = 2
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Upgrade all roads within range 2
+        Dim CurrentRange As Integer = GetRange()
+        For i As Integer = Location.RowID - CurrentRange To Location.RowID + CurrentRange
+            For j As Integer = Location.ColID - CurrentRange To Location.ColID + CurrentRange
+                Dim FreewayDestination As CitySquare = GetCitySquare(i, j)
+                If FreewayDestination IsNot Nothing Then
+                    Dim CurrentDistance As Integer = Location.GetDistance(FreewayDestination)
+                    If FreewayDestination.IsOwned() And CurrentDistance <= CurrentRange Then
+                        FreewayDestination.AddRoad()
+                    End If
+                End If
+            Next
+        Next
+    End Sub
+
+End Class
+
 Public Class GasStationBuilding
     Inherits Building
 
@@ -59,6 +91,92 @@ Public Class GasStationBuilding
         thePerson.AddEvent("Fueled up at gas station before continuing on")
     End Sub
 
+End Class
+
+Public Class HarborBuilding
+    Inherits Building
+
+    Public DestinationList As New List(Of CitySquare)
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Sub AffectMobility(ByRef thePerson As Person)
+        If Location.Coastal Then '-- Harbors only work on coastal areas
+            MyBase.AffectMobility(thePerson)
+        End If
+    End Sub
+
+    Public Sub UpdateDestinationList()
+        '-- Harbors are adjacent to all coastss reachable by a water route (but not themselves)
+        Dim AdjLocations As List(Of CitySquare) = Location.GetTrueAdjacents()
+        For i As Integer = 0 To AdjLocations.Count - 1
+            GatherCoast(AdjLocations(i))
+        Next
+    End Sub
+
+    Public Sub UpdateDestinationList(ByRef Destination As CitySquare)
+        If Not DestinationList.Contains(Destination) And Not Destination.Equals(Location) Then
+            DestinationList.Add(Destination)
+        End If
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        UpdateDestinationList()
+
+        '-- Add this building to the owner's list of special land option buildings
+        Players(OwnerID).LandOptionBuildings.Add(Me)
+    End Sub
+
+    Public Sub GatherCoast(ByRef theLocation As CitySquare)
+        '-- Travel only over water we have not yet visited
+        If theLocation.Terrain <> TerrainLake Or theLocation.VisitedKey > 0 Then
+            Return
+        End If
+        theLocation.VisitedKey = 1
+
+        Dim AdjLocations As List(Of CitySquare) = theLocation.GetTrueAdjacents()
+        For i As Integer = 0 To AdjLocations.Count - 1
+            Dim AdjLocation As CitySquare = AdjLocations(i)
+            If AdjLocation.Terrain = TerrainLake Then
+                '-- If adjacent to water keep sailing
+                GatherCoast(AdjLocation)
+            Else
+                '-- If adjacent to land, add it to the destination list
+                UpdateDestinationList(AdjLocation)
+            End If
+        Next
+
+    End Sub
+
+    Public Overloads Function GetAdjacentLocations(ByVal OwnedAdjacent As Boolean) As List(Of CitySquare)
+        Dim ValidDestinations As New List(Of CitySquare)
+        For i As Integer = 0 To DestinationList.Count - 1
+            Dim Destination As CitySquare = DestinationList(i)
+            If Destination.IsOwned() = OwnedAdjacent Then
+                ValidDestinations.Add(Destination)
+            End If
+        Next
+        Return ValidDestinations
+    End Function
+
+    Public Overrides Function GetAdjacentLocations() As List(Of CitySquare)
+        Return GetAdjacentLocations(True)
+    End Function
+
+    Public Overrides Function GetLandExpansionOptions() As List(Of CitySquare)
+        Return GetAdjacentLocations(False)
+    End Function
+
+    Public Overrides Sub Destroy()
+        '-- Remove this building from the list of the player's special land option buildings
+        Players(OwnerID).LandOptionBuildings.Remove(Me)
+
+        MyBase.Destroy()
+    End Sub
 End Class
 
 Public Class HotelBuilding
@@ -93,6 +211,8 @@ Public Class MassTransitBuilding
     End Sub
 
     Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
         '-- Add yourself to the list of destinations
         UpdateDestinationList(Location)
     End Sub

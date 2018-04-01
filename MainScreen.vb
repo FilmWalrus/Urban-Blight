@@ -1096,13 +1096,11 @@ Public Class Form1
 
                 '-- Starting cities can't be on or adjacent to another city
                 If (Not theLocation.IsOwned() And Not GridArray(startX + 1, startY).IsOwned() And Not GridArray(startX - 1, startY).IsOwned() And Not GridArray(startX, startY - 1).IsOwned() And Not GridArray(startX, startY + 1).IsOwned()) Then
-                    theLocation.OwnerID = i
+                    theLocation.Occupy(i)
 
-                    '-- Starting cities are always on Plain terrain
+                    '-- Starting cities are always on Plain terrain and start out with free dirt roads
                     theLocation.Terrain = TerrainPlain
-
-                    '-- Generate random city name
-                    theLocation.CityName = Namer.GenerateCityName(theLocation)
+                    theLocation.AddRoad()
 
                     ' Create starting population
                     Dim j As Integer
@@ -1184,10 +1182,8 @@ Public Class Form1
 
         '-- What is the cost of this card?
         Dim CardCost As Integer = 0
-        If SelectedCard = RoadCard Then
+        If SelectedCard = RoadCard Or SelectedCard = RoadMaxCard Then
             CardCost = RoadCostBase
-        ElseIf SelectedCard = RoadMaxCard Then
-            CardCost = RoadCostBase * (RoadHighway - ClickCity.Transportation)
         ElseIf SelectedCard = LandCard Then
             If ClickCity.Terrain = TerrainSwamp Then
                 CardCost = 0 '-- Swamps are free!
@@ -1210,7 +1206,7 @@ Public Class Form1
         '-- Was the selected CitySquare valid?
         If SelectedCard = LandCard Then
             '-- For Land cards they must be unowned, adjacent to land the player already owns, and not a lake
-            If ClickCity.IsOwned() Or ClickCity.Terrain = TerrainLake Or (Not CurrentPlayer.OwnedAdjacent(ClickCity)) Then
+            If Not CurrentPlayer.IsValidLandExpansion(ClickCity) Then
                 Return False
             End If
         ElseIf SelectedCard <> WipeCard Then
@@ -1230,18 +1226,12 @@ Public Class Form1
         UpdateNeeded = True
 
         '-- Do construction
-        If SelectedCard = RoadCard Then
+        If SelectedCard = RoadCard Or SelectedCard = RoadMaxCard Then
             '-- Upgrade Road
             ClickCity.AddRoad()
-        ElseIf SelectedCard = RoadMaxCard Then
-            '-- Upgrade Road to Max
-            ClickCity.Transportation = RoadHighway
         ElseIf SelectedCard = LandCard Then
             '-- Expand Territory
-            ClickCity.OwnerID = CurrentPlayerIndex
-
-            '-- Generate random name
-            ClickCity.CityName = Namer.GenerateCityName(ClickCity)
+            ClickCity.Occupy(CurrentPlayerIndex)
 
             '-- Handle special terrain bonuses
             If ClickCity.Terrain = TerrainDesert Then
@@ -1255,7 +1245,7 @@ Public Class Form1
                 Dim randNum As Integer = GetRandom(0, CardCount - 1)
                 Dim newBuilding As Building = Cards(randNum)
                 newBuilding.Location = ClickCity
-                ClickCity.AddBuilding(newBuilding)
+                ClickCity.AddBuilding(newBuilding, CurrentPlayerIndex)
                 Cards.RemoveAt(randNum)
             ElseIf ClickCity.Terrain = TerrainTownship Then
                 '-- Township effect: free population
@@ -1268,7 +1258,7 @@ Public Class Form1
             End If
         ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
             '-- Create Building
-            ClickCity.AddBuilding(Cards(SelectedCard))
+            ClickCity.AddBuilding(Cards(SelectedCard), CurrentPlayerIndex)
             Cards.RemoveAt(SelectedCard)
         ElseIf SelectedCard = WipeCard Then
             Cards.Clear()
@@ -1281,6 +1271,10 @@ Public Class Form1
             UpdatePlayers()
             UpdateCards()
 
+            '-- If road max was selected keep building more road
+            If SelectedCard = RoadMaxCard Then
+                Build()
+            End If
             SelectedCard = NoCard
             UpdateCardSelection()
         End If

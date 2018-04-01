@@ -14,6 +14,7 @@ Public Class Building
     Public SpecialAbility As String = ""
     Public Tags As New List(Of Integer)
 
+    Public OwnerID As Integer = -1
     Public Location As CitySquare = Nothing
     Public Employees As New List(Of Person)
 
@@ -524,6 +525,10 @@ Public Class Building
     Public Overridable Sub ResetBuilding()
         '-- Base class does nothing
     End Sub
+
+    Public Overridable Function GetLandExpansionOptions() As List(Of CitySquare)
+        Return New List(Of CitySquare)
+    End Function
 
 #End Region
 

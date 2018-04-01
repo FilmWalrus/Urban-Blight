@@ -15,6 +15,8 @@
     End Sub
 
     Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
         '-- Increase the range of hospitals on this square if an ambulance service is present
         If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Ambulance_Service) > 0 Then
             Range += 1
@@ -179,6 +181,7 @@ Public Class AmbulanceBuilding
     End Sub
 
     Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
 
         '-- Make sure there isn't already a building of this type here
         If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Ambulance_Service) > 0 Then

@@ -6,6 +6,8 @@
     End Sub
 
     Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
         '-- Double the number of manufacturing jobs if on the correct terrain type.
         Dim JobMultiplier As Integer = 1
         If Type = BuildingGen.BuildingEnum.Cartel And Location.Terrain = TerrainDirt Then
@@ -37,6 +39,7 @@ Public Class ShippingBuilding
     End Sub
 
     Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
 
         '-- Make sure there isn't another building of the same type already here
         If DoesAnotherBuildingOfTheSameTypeExistHere() Then

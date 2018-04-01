@@ -85,8 +85,9 @@
         '-- Collect taxes from citizens and pay for upkeep of land
         Taxation()
 
-        '-- Reset any temporary building data
+        '-- Clean up. Reset any temporary building data
         ResetBuildings()
+        ClearVisited()
 
     End Sub
 
@@ -654,9 +655,7 @@
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
-                If thisLocation.IsOwned() Then
-                    thisLocation.ClearVisit()
-                End If
+                thisLocation.ClearVisit()
             Next
         Next
     End Sub

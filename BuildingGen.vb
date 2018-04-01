@@ -115,11 +115,14 @@
         Ad
         Athletic
         Coffee
+        Criminal
         Food
         Government
         Manufacturing
         Medical
         Monument
+        Nature
+        Science
         Transportation
     End Enum
 
@@ -352,6 +355,8 @@
                 Return "Athletic"
             Case TagEnum.Coffee
                 Return "Coffee"
+            Case TagEnum.Criminal
+                Return "Criminal"
             Case TagEnum.Food
                 Return "Food"
             Case TagEnum.Government
@@ -362,6 +367,10 @@
                 Return "Medical"
             Case TagEnum.Monument
                 Return "Monument"
+            Case TagEnum.Nature
+                Return "Nature"
+            Case TagEnum.Science
+                Return "Science"
             Case TagEnum.Transportation
                 Return "Transportation"
             Case Else
@@ -476,7 +485,7 @@
                     newBuilding.SetSpecialAbility("The player will receive a payout for each person that visits the Casino.")
                     Return newBuilding
                 Case BuildingEnum.Church
-                    Dim newBuilding As New Building(bType, 180, 1)
+                    Dim newBuilding As New ChurchBuilding(bType, 180, 1)
                     newBuilding.SetHappiness(14, 7)
                     newBuilding.SetDrunkenness(35, -4)
                     newBuilding.SetCriminality(16, -3)
@@ -649,12 +658,12 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Freeway
-                    Dim newBuilding As New Building(bType, 275, 0)
+                    Dim newBuilding As New FreewayBuilding(bType, 275, 0)
                     newBuilding.SetHealth(10, -3)
                     newBuilding.SetMobility(20, 6)
                     newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Eight lanes of shimmering cement. Smooth, ""safe"", fast. Traffic jams will be a thing of the past.")
-                    newBuilding.SetSpecialAbility("Upgrades all roads within a two square adjacency by one level.")
+                    newBuilding.SetSpecialAbility("Upgrades all roads within a two square adjacency, regardless of owner, by one level.")
                     Return newBuilding
                 Case BuildingEnum.Gas_Station
                     Dim newBuilding As New GasStationBuilding(bType, 110, 1)
@@ -696,12 +705,13 @@
                     newBuilding.SetSpecialAbility("Effect boost if the Gym is on the same square as a Park or a Botanical Garden.")
                     Return newBuilding
                 Case BuildingEnum.Harbor
-                    Dim newBuilding As New Building(bType, 80, 2)
+                    Dim newBuilding As New HarborBuilding(bType, 95, 2)
                     newBuilding.SetMobility(12, 2)
                     newBuilding.SetCriminality(12, 2)
+                    newBuilding.SetDrunkenness(20, 2)
                     newBuilding.AddTag(TagEnum.Transportation)
-                    newBuilding.SetInfo("The Harbor makes the import/export business flourish with added shipping lanes.  However, new methods of transportation breed new ideas from the unsavory sort.")
-                    newBuilding.SetSpecialAbility("The Harbor works only on Coastal tiles.  It makes the owner adjacent for building and travel through Water tiles.")
+                    newBuilding.SetInfo("Harbors add color and commerce to coastal life.  Passengers travel and sightsee.  Sailors work and carouse.  Goods flow in and out, and a maybe little contraband sneaks through.")
+                    newBuilding.SetSpecialAbility("Harbors only provide mobility on Coastal tiles.  The owner can expand their land to anywhere reachable over water from the harbor.  Citizens can similarly sail from the harbor to any coast.")
                     Return newBuilding
                 Case BuildingEnum.Hospital_Cancer
                     Dim newBuilding As New HospitalCancerBuilding(bType, 270, 3)
