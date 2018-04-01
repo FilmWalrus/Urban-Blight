@@ -511,25 +511,7 @@ Public Class Citizen
             End If
         End If
 
-        If Age >= newJob.minAge And Intelligence >= 5 Then
-            Dim Odds As Double = 20
-            Odds = Odds + (15 - Math.Abs(Age - 35.0)) / 5.0
-            Odds = Odds + (Health / 9.0)
-            Odds = Odds + (Happiness / 15.0)
-            Odds = Odds - (Drunkenness / 6.0)
-            Odds = Odds - (Criminality / 5.0)
-            Odds = Odds + (Intelligence / 4.5)
-            Odds = Odds + (Creativity / 5.5)
-            Odds = Odds + (Mobility / 15.0)
-            If GetRandom(0, 100) <= Odds Then
-                Return True
-            Else
-                AddEvent("Job application rejected by the " + newJob.GetNameAndAddress())
-                Return False
-            End If
-        End If
-
-        Return False
+        Return True
     End Function
 
     Sub ApplicationAccepted()

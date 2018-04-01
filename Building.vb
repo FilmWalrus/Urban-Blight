@@ -431,6 +431,32 @@ Public Class Building
             Return False
         End If
 
+        '-- Check whether candidate will apply (they may be happy with their current job)
+        If Not Candidate.WillApply(Me) Then
+            Return False
+        End If
+
+        If Candidate.Intelligence < 5 Then
+            Return False
+        End If
+
+        '-- Check the candidate's qualifications
+        Dim Odds As Double = 20
+        Odds = Odds + (15 - Math.Abs(Age - 35.0)) / 5.0
+        Odds = Odds + (Candidate.Health / 9.0)
+        Odds = Odds + (Candidate.Happiness / 15.0)
+        Odds = Odds - (Candidate.Drunkenness / 6.0)
+        Odds = Odds - (Candidate.Criminality / 5.0)
+        Odds = Odds + (Candidate.Intelligence / 4.5)
+        Odds = Odds + (Candidate.Creativity / 5.5)
+        Odds = Odds + (Candidate.Mobility / 15.0)
+        If GetRandom(0, 100) <= Odds Then
+            Return True
+        Else
+            Candidate.AddEvent("Job application rejected by the " + GetNameAndAddress())
+            Return False
+        End If
+
         Return True
     End Function
 

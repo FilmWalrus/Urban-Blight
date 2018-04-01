@@ -146,8 +146,8 @@
             Dim currentBuilding As Building = theLocation.Buildings(n)
             currentBuilding.AffectPerson(thePerson)
 
-            '-- Apply for a job if the building is hiring and the person is interested
-            If currentBuilding.WillHire(thePerson) And thePerson.WillApply(currentBuilding) Then
+            '-- See if this building will hire the person
+            If currentBuilding.WillHire(thePerson) Then
                 'Hire the employee
                 currentBuilding.HireEmployee(thePerson)
                 Diary.HireEvents.AddEvent(thePerson.GetNameAndAddress() + " took a job at the " + thePerson.JobBuilding.GetNameAndAddress())
