@@ -526,8 +526,8 @@ Public Class Building
         '-- Base class does nothing
     End Sub
 
-    Public Overridable Function GetLandExpansionOptions() As List(Of CitySquare)
-        Return New List(Of CitySquare)
+    Public Overridable Function IsLandExpansionOption(ByRef testLocation As CitySquare) As Boolean
+        Return False
     End Function
 
 #End Region

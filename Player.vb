@@ -266,9 +266,9 @@ Public Class Player
             Return False
         End If
 
-        '-- Check if this location is included by the special land option buildings
+        '-- Check if a special building this player owns allows them to build at this location
         For i As Integer = 0 To LandOptionBuildings.Count - 1
-            If LandOptionBuildings(i).GetLandExpansionOptions().Contains(theLocation) Then
+            If LandOptionBuildings(i).IsLandExpansionOption(theLocation) Then
                 Return True
             End If
         Next

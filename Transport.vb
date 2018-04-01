@@ -167,8 +167,9 @@ Public Class HarborBuilding
         Return GetAdjacentLocations(True)
     End Function
 
-    Public Overrides Function GetLandExpansionOptions() As List(Of CitySquare)
-        Return GetAdjacentLocations(False)
+    Public Overrides Function IsLandExpansionOption(ByRef testLocation As CitySquare) As Boolean
+        Dim ValidDestinations As List(Of CitySquare) = GetAdjacentLocations(False)
+        Return ValidDestinations.Contains(testLocation)
     End Function
 
     Public Overrides Sub Destroy()

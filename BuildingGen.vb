@@ -591,7 +591,7 @@
                     newBuilding.SetSpecialAbility("Customs Houses generate revenue for the owner and are more effective for each unique player with an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Daycare_Center
-                    Dim newBuilding As New DayCareBuilding(bType, 90, 1) 'Daycare Centers traditionally serve younger kids who aren't going to school yet.  Maybe under 7?
+                    Dim newBuilding As New DayCareBuilding(bType, 80, 1) 'Daycare Centers traditionally serve younger kids who aren't going to school yet.  Maybe under 7?
                     newBuilding.SetHappiness(20, 5)
                     newBuilding.SetHealth(18, 2)
                     newBuilding.SetCriminality(20, -2)
@@ -926,7 +926,7 @@
                     newBuilding.SetHealth(25, -2)
                     newBuilding.SetCriminality(25, 3)
                     newBuilding.SetInfo("")
-                    Return newBuilding
+                    'Return newBuilding
                 Case BuildingEnum.Rehab_Clinic
                     Dim newBuilding As New Building(bType, 145, 1)
                     newBuilding.SetHealth(10, 4)
