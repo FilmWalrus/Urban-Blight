@@ -432,6 +432,7 @@
 
         '-- Income
         Dim revenue As Integer = 0
+        Dim upkeep As Integer = 0
         Dim trafficFines As Integer = 0
         For i As Integer = 0 To CitizenList.Count - 1
             Dim thePerson As Citizen = CitizenList(i)
@@ -450,8 +451,10 @@
             End If
 
             '-- Collect unpaid fines (e.g. traffic tickets) then clear the citizen's debt
-            trafficFines += thePerson.UnpaidFines
-            thePerson.UnpaidFines = 0
+            trafficFines += thePerson.CollectFines()
+
+            '-- Pay any upkeep on this citizen (like welfare)
+            upkeep += thePerson.CollectUpkeep()
 
             '-- Townships take their cut
             If thePerson.Residence.Terrain = TerrainTownship Then
@@ -466,7 +469,6 @@
         revenue *= TaxAdj
 
         '-- Pay upkeep on the land
-        Dim upkeep As Integer = 0
         For i As Integer = 0 To LocationList.Count - 1
             Dim theLocation As CitySquare = LocationList(i)
 
@@ -599,6 +601,9 @@
 #Region " Setup "
 
     Sub Setup()
+        '-- Setup buildings
+        SetupBuildings()
+
         '-- Gather all the current player's people
         GatherCitizens()
 
@@ -642,13 +647,26 @@
 
     End Sub
 
+    Sub SetupBuildings()
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim theLocation As CitySquare = GridArray(i, j)
+                For k As Integer = 0 To theLocation.Buildings.Count - 1
+                    If theLocation.Buildings(k).OwnerID = CurrentPlayer.ID Then
+                        theLocation.Buildings(k).SetupBuilding()
+                    End If
+                Next
+            Next
+        Next
+    End Sub
+
 #End Region
 
 #Region " Cleanup "
 
     Sub Cleanup()
         '-- Reset any temporary building data
-        ResetBuildings()
+        CleanupBuildings()
 
         '-- Clear visit info from locations
         ClearVisited()
@@ -679,12 +697,14 @@
         Next
     End Sub
 
-    Sub ResetBuildings()
+    Sub CleanupBuildings()
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim theLocation As CitySquare = GridArray(i, j)
                 For k As Integer = 0 To theLocation.Buildings.Count - 1
-                    theLocation.Buildings(k).ResetBuilding()
+                    If theLocation.Buildings(k).OwnerID = CurrentPlayer.ID Then
+                        theLocation.Buildings(k).CleanupBuilding()
+                    End If
                 Next
             Next
         Next

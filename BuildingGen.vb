@@ -1061,7 +1061,7 @@
                     newBuilding.SetInfo("The TV station reaches almost house In a city, subtly boosting happiness And equally subtly stifling creativity.")
                     Return newBuilding
                 Case BuildingEnum.Welfare_Service
-                    Dim newBuilding As New Building(bType, 100, 1)
+                    Dim newBuilding As New WelfareBuilding(bType, 100, 1)
                     newBuilding.SetHealth(10, 2)
                     newBuilding.SetIntelligence(10, -2)
                     newBuilding.SetCreativity(10, -2)

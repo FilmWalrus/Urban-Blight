@@ -44,6 +44,12 @@ Public Class Building
     Public Drunkenness_odds As Integer = 0
     Public Criminality_odds As Integer = 0
 
+    '-- Revenue and upkeep
+    Public CurrentRevenue As Integer = 0
+    Public TotalRevenue As Integer = 0
+    Public CurrentUpkeep As Integer = 0
+    Public TotalUpkeep As Integer = 0
+
 #End Region
 
 #Region " New "
@@ -101,11 +107,11 @@ Public Class Building
     End Sub
 
     Public Sub SetInfo(ByVal bInfo As String)
-        Info = bInfo
+        Info = bInfo + ControlChars.NewLine
     End Sub
 
     Public Sub SetSpecialAbility(ByVal bSpecial As String)
-        SpecialAbility = bSpecial
+        SpecialAbility = bSpecial + ControlChars.NewLine
     End Sub
 
     Public Overridable Sub UpdateHappinessOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
@@ -548,13 +554,29 @@ Public Class Building
         '-- Base class does nothing
     End Sub
 
-    Public Overridable Sub ResetBuilding()
+    Public Overridable Sub SetupBuilding()
+        '-- Reset current revenue and upkeep
+        CurrentRevenue = 0
+        CurrentUpkeep = 0
+    End Sub
+
+    Public Overridable Sub CleanupBuilding()
         '-- Base class does nothing
     End Sub
 
     Public Overridable Function IsLandExpansionOption(ByRef testLocation As CitySquare) As Boolean
         Return False
     End Function
+
+    Public Sub AddRevenue(ByVal NewRevenue As Integer)
+        CurrentRevenue += NewRevenue
+        TotalRevenue += NewRevenue
+    End Sub
+
+    Public Sub AddUpkeep(ByVal NewUpkeep As Integer)
+        CurrentUpkeep += NewUpkeep
+        TotalUpkeep += NewUpkeep
+    End Sub
 
 #End Region
 
@@ -681,18 +703,26 @@ Public Class Building
             If Criminality_odds > 0 Then
                 BuildingString += "Criminality: " + GetCriminalityOdds().ToString + "% chance boosts up to " + GetCriminalityAdj().ToString + ControlChars.NewLine
             End If
+            BuildingString += ControlChars.NewLine
+        End If
+
+        If CurrentRevenue > 0 Or TotalRevenue > 0 Or CurrentUpkeep > 0 Or TotalUpkeep > 0 Then
+            If TotalRevenue > 0 Then
+                BuildingString += "Revenue this turn: $" + CurrentRevenue.ToString + ControlChars.NewLine
+                BuildingString += "Revenue total: $" + TotalRevenue.ToString + ControlChars.NewLine
+            End If
+            If TotalUpkeep > 0 Then
+                BuildingString += "Upkeep this turn: $" + CurrentUpkeep.ToString + ControlChars.NewLine
+                BuildingString += "Upkeep total: $" + TotalUpkeep.ToString + ControlChars.NewLine
+            End If
         End If
 
         '-- Show flavor text
-        BuildingString += ControlChars.NewLine
-
-        BuildingString += Info
+        BuildingString += Info + ControlChars.NewLine
 
         '-- Show special ability text
         If SpecialAbility.Length > 0 Then
-            BuildingString += ControlChars.NewLine + ControlChars.NewLine
-
-            BuildingString += SpecialAbility
+            BuildingString += SpecialAbility + ControlChars.NewLine
         End If
 
         Return BuildingString

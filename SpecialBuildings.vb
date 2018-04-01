@@ -209,3 +209,18 @@ Public Class StartupIncubatorBuilding
     End Function
 End Class
 
+Public Class WelfareBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        '-- Only affect unemployed citizens
+        If thePerson.JobBuilding IsNot Nothing Then
+            MyBase.AffectPerson(thePerson)
+        End If
+    End Sub
+
+End Class

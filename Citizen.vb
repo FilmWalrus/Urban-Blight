@@ -38,6 +38,7 @@ Public Class Citizen
     '-- Financials
     Public Wealth As Integer = 0
     Public UnpaidFines As Integer = 0
+    Public UnpaidUpkeep As Integer = 0
 
     '-- Life Events
     Public JourneyString As String = ""
@@ -246,7 +247,7 @@ Public Class Citizen
             TimeAtJob += TimeIncrement
 
             '-- Success leads to promotions
-            maxBonus = (Intelligence / 8.0) + (Creativity / 9.0) ' - 5 (allow work performance to be bad and employee to be fired
+            maxBonus = (Intelligence / 8.0) + (Creativity / 9.0) ' - 5 (allow work performance to be bad and employee to be fired. Also maybe upper cap on this?
             statChange = GetRandom(0, maxBonus)
             Employment += statChange
             AddEvent("employment for solid work performance", statChange)
@@ -257,14 +258,27 @@ Public Class Citizen
             AddEvent("criminality b/c of steady employment", -statChange)
         Else
             If Not IsMinor() Then
-                '-- Unemployment is depressing and encourages a life of crime
-                statChange = GetRandom(0, 3)
-                Happiness -= statChange
-                AddEvent("happiness due to unemployment frustration", -statChange)
 
-                statChange = GetRandom(0, 2)
-                Criminality += statChange
-                AddEvent("criminality from unemployment desperation", statChange)
+                If Residence.CountBuildingsByType(BuildingGen.BuildingEnum.Welfare_Service) > 0 Then
+                    '-- Welfare service allows you to skip negative unemployment effects, but requires upkeep
+                    Dim WelfareCost As Integer = 2
+                    UnpaidUpkeep += WelfareCost
+                    Dim WelfareService As List(Of Building) = Residence.GetBuildingsByType(BuildingGen.BuildingEnum.Welfare_Service)
+                    WelfareService(0).AddUpkeep(WelfareCost)
+                Else
+                    '-- Unemployment is depressing, limits food and healthcare options and, if times get desperate, can lead to crime
+                    statChange = GetRandom(0, 3)
+                    Happiness -= statChange
+                    AddEvent("happiness due to unemployment frustration", -statChange)
+
+                    statChange = GetRandom(0, 3)
+                    Health -= statChange
+                    AddEvent("health due to lack of employment healthcare", -statChange)
+
+                    statChange = GetRandom(0, 2)
+                    Criminality += statChange
+                    AddEvent("criminality from unemployment desperation", statChange)
+                End If
             End If
         End If
         If Employment > 50 Then
@@ -560,6 +574,18 @@ Public Class Citizen
         End Select
 
         Return True
+    End Function
+
+    Public Function CollectFines() As Integer
+        Dim FinesDue As Integer = UnpaidFines
+        UnpaidFines = 0
+        Return FinesDue
+    End Function
+
+    Public Function CollectUpkeep() As Integer
+        Dim UpkeepDue As Integer = UnpaidUpkeep
+        UnpaidUpkeep = 0
+        Return UpkeepDue
     End Function
 
 #End Region

@@ -88,7 +88,7 @@ Public Class GasStationBuilding
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Gas station restores up to 10 endurance, but not to exceed the person's starting mobility plus 10
         Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.Mobility + EnduranceBoost)
-        thePerson.AddEvent("Fueled up at gas station before continuing on")
+        thePerson.AddEvent("Fueled up at " + GetName() + " before continuing on")
     End Sub
 
 End Class
@@ -190,7 +190,7 @@ Public Class HotelBuilding
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Hotel restores a person to half the mobility
         Endurance = Math.Max(Endurance, SafeDivide(thePerson.Mobility, 2.0))
-        thePerson.AddEvent("Rested up at hotel before continuing on")
+        thePerson.AddEvent("Rested up at " + GetName() + " before continuing on")
     End Sub
 
 End Class
@@ -294,7 +294,7 @@ Public Class SafeHouseBuilding
         '-- Safe house has a chance to add criminality to current endurance, but only up to the sum of the two
         If GetRandom(1, 100) <= 30 Then
             Endurance = Math.Min(Endurance + thePerson.Criminality, thePerson.Mobility + thePerson.Criminality)
-            thePerson.AddEvent("Laid low at safe house before continuing on")
+            thePerson.AddEvent("Laid low at " + GetName() + " before continuing on")
         End If
     End Sub
 
@@ -312,7 +312,7 @@ Public Class SidewalkBuilding
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Gas station restores up to 3 endurance, but not to exceed the person's starting mobility plus 3
         Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.Mobility + EnduranceBoost)
-        thePerson.AddEvent("Strolled along the sidewalk")
+        thePerson.AddEvent("Strolled along the " + GetName())
     End Sub
 
 End Class
@@ -383,11 +383,12 @@ Public Class TollBoothBuilding
 
             thePerson.UnpaidFines += TollCost
             thePerson.AddEvent("Paid toll of $" + TollCost.ToString())
+            AddRevenue(TollCost)
         End If
 
     End Sub
 
-    Public Overrides Sub ResetBuilding()
+    Public Overrides Sub CleanupBuilding()
         TollList.Clear()
     End Sub
 
