@@ -716,7 +716,7 @@ Public Class Building
             BuildingString += ControlChars.NewLine
         End If
 
-        If CurrentEffects > 0 Or TotalEffects > 0 Or CurrentRevenue > 0 Or TotalRevenue > 0 Or CurrentUpkeep > 0 Or TotalUpkeep > 0 Then
+        If TotalEffects > 0 Or TotalRevenue > 0 Or TotalUpkeep > 0 Then
             If TotalEffects > 0 Then
                 BuildingString += CurrentEffects.ToString + " " + EffectText + " this turn." + ControlChars.NewLine
                 BuildingString += TotalEffects.ToString + " " + EffectText + " total." + ControlChars.NewLine
