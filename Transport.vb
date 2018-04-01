@@ -85,7 +85,7 @@ Public Class GasStationBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Person)
+    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Gas station restores up to 10 endurance, but not to exceed the person's starting mobility plus 10
         Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.Mobility + EnduranceBoost)
         thePerson.AddEvent("Fueled up at gas station before continuing on")
@@ -102,7 +102,7 @@ Public Class HarborBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub AffectMobility(ByRef thePerson As Person)
+    Public Overrides Sub AffectMobility(ByRef thePerson As Citizen)
         If Location.Coastal Then '-- Harbors only work on coastal areas
             MyBase.AffectMobility(thePerson)
         End If
@@ -187,7 +187,7 @@ Public Class HotelBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Person)
+    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Hotel restores a person to half the mobility
         Endurance = Math.Max(Endurance, SafeDivide(thePerson.Mobility, 2.0))
         thePerson.AddEvent("Rested up at hotel before continuing on")
@@ -251,7 +251,7 @@ Public Class ParkingGarageBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub AffectPerson(ByRef thePerson As Person)
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         MyBase.AffectPerson(thePerson)
 
         '-- Parking lot gives you a 1/3 chance of visiting each building on this location an extra time.
@@ -270,7 +270,7 @@ Public Class ParkingLotBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub AffectPerson(ByRef thePerson As Person)
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         MyBase.AffectPerson(thePerson)
 
         '-- Parking lot gives you a 2/3 chance of visiting a random building on this location an extra time.
@@ -290,7 +290,7 @@ Public Class SafeHouseBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Person)
+    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Safe house has a chance to add criminality to current endurance, but only up to the sum of the two
         If GetRandom(1, 100) <= 30 Then
             Endurance = Math.Min(Endurance + thePerson.Criminality, thePerson.Mobility + thePerson.Criminality)
@@ -309,7 +309,7 @@ Public Class SidewalkBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Person)
+    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Gas station restores up to 3 endurance, but not to exceed the person's starting mobility plus 3
         Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.Mobility + EnduranceBoost)
         thePerson.AddEvent("Strolled along the sidewalk")
@@ -363,13 +363,13 @@ End Class
 Public Class TollBoothBuilding
     Inherits Building
 
-    Public TollList As New List(Of Person)
+    Public TollList As New List(Of Citizen)
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Person)
+    Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
 
         Dim MaxTollCost As Integer = Location.Transportation
 

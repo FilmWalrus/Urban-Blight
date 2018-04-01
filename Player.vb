@@ -70,7 +70,7 @@ Public Class Player
 
                     '-- Update player score for their citizens
                     For k As Integer = 0 To thisLocation.getPopulation() - 1
-                        Dim currentCitizen As Person = thisLocation.People(k)
+                        Dim currentCitizen As Citizen = thisLocation.People(k)
 
                         '-- Computation of individual's value
                         Dim personPoints As Integer = 0
@@ -115,8 +115,8 @@ Public Class Player
         Return playerName
     End Function
 
-    Function GetPlayerPopulation() As List(Of Person)
-        Dim populationArray As New List(Of Person)
+    Function GetPlayerPopulation() As List(Of Citizen)
+        Dim populationArray As New List(Of Citizen)
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 Dim thisLocation As CitySquare = GridArray(i, j)
@@ -311,7 +311,7 @@ Public Class Player
         Dim buildingNeed As Double = 0.0
         Dim landNeed As Double = 0.0
 
-        Dim citizenList As List(Of Person) = GetPlayerPopulation()
+        Dim citizenList As List(Of Citizen) = GetPlayerPopulation()
         Dim territoryList As List(Of CitySquare) = GetPlayerTerritory()
 
         '-- Collect some basic info on employment and transport levels
@@ -321,7 +321,7 @@ Public Class Player
         For i As Integer = 0 To citizenList.Count - 1
 
             '-- Add up how many citizens employed and unemployed
-            Dim currentCitizen As Person = citizenList(i)
+            Dim currentCitizen As Citizen = citizenList(i)
             If currentCitizen.JobBuilding Is Nothing Then
                 citizensUnemployed += 1
             Else

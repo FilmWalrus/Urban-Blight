@@ -19,7 +19,7 @@ Public Class CitySquare
 
     '-- Info
     Public Buildings As New List(Of Building)
-    Public People As New List(Of Person)
+    Public People As New List(Of Citizen)
     Public Transportation As Integer = RoadNone
     Public Terrain As Integer = TerrainPlain
     Public Coastal As Boolean = False
@@ -156,7 +156,7 @@ Public Class CitySquare
         Dim citizensUnemployed As Integer = 0
         For i As Integer = 0 To People.Count - 1
             '-- Add up how many citizens unemployed
-            Dim currentCitizen As Person = People(i)
+            Dim currentCitizen As Citizen = People(i)
             If currentCitizen.JobBuilding Is Nothing Then
                 citizensUnemployed += 1
             End If
@@ -169,11 +169,11 @@ Public Class CitySquare
         Dim unemploymentValue As Double = 0.0
         For i As Integer = 0 To People.Count - 1
             '-- Add up how many citizens unemployed
-            Dim currentCitizen As Person = People(i)
+            Dim currentCitizen As Citizen = People(i)
             If currentCitizen.JobBuilding Is Nothing Then
                 If currentCitizen.IsMinor() Then
                     '-- Count minors as a fraction of an adult based on how close they are to working age
-                    unemploymentValue += (currentCitizen.Age / Person.MinorAge)
+                    unemploymentValue += (currentCitizen.Age / Citizen.MinorAge)
                 Else
                     unemploymentValue += 1
                 End If
@@ -187,7 +187,7 @@ Public Class CitySquare
         Dim citizensEmployed As Integer = 0
         For i As Integer = 0 To People.Count - 1
             '-- Add up how many citizens employed
-            Dim currentCitizen As Person = People(i)
+            Dim currentCitizen As Citizen = People(i)
             If currentCitizen.JobBuilding IsNot Nothing Then
                 citizensEmployed += 1
             End If
@@ -307,7 +307,7 @@ Public Class CitySquare
         End If
     End Sub
 
-    Public Sub AddPerson(ByVal newPerson As Person)
+    Public Sub AddPerson(ByVal newPerson As Citizen)
         '-- Use for immigration
         newPerson.Residence = Me
         People.Add(newPerson)

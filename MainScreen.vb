@@ -1105,7 +1105,7 @@ Public Class Form1
                     ' Create starting population
                     Dim j As Integer
                     For j = 0 To StartPop - 1
-                        Dim founder As New Person(True)
+                        Dim founder As New Citizen(True)
                         GridArray(startX, startY).AddPerson(founder)
                     Next
 
@@ -1252,7 +1252,7 @@ Public Class Form1
                 Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(CurrentPlayer.GetPlayerPopulationCount(), 15.0)) + 2)
                 Dim randNum As Integer = GetRandom(2, maxFreePopulation)
                 For i As Integer = 0 To randNum - 1
-                    Dim founder As New Person(True)
+                    Dim founder As New Citizen(True)
                     ClickCity.AddPerson(founder)
                 Next
             End If

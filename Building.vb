@@ -16,7 +16,7 @@ Public Class Building
 
     Public OwnerID As Integer = -1
     Public Location As CitySquare = Nothing
-    Public Employees As New List(Of Person)
+    Public Employees As New List(Of Citizen)
 
     '-- Keep track of how many times no one bought this for free
     Public RejectionCount As Integer = 0
@@ -335,7 +335,7 @@ Public Class Building
         End If
     End Function
 
-    Public Overridable Sub AffectHappiness(ByRef thePerson As Person)
+    Public Overridable Sub AffectHappiness(ByRef thePerson As Citizen)
         If GetHappinessOdds() > 0 Then
             If GetRandom(0, 100) <= GetHappinessOdds() Then
                 Dim statChange As Integer = GetStatChange(GetHappinessAdj())
@@ -345,7 +345,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Overridable Sub AffectHealth(ByRef thePerson As Person)
+    Public Overridable Sub AffectHealth(ByRef thePerson As Citizen)
         If GetHealthOdds() > 0 Then
             If GetRandom(0, 100) <= GetHealthOdds() Then
                 Dim statChange As Integer = GetStatChange(GetHealthAdj())
@@ -355,7 +355,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Overridable Sub AffectIntelligence(ByRef thePerson As Person)
+    Public Overridable Sub AffectIntelligence(ByRef thePerson As Citizen)
         If GetIntelligenceOdds() > 0 Then
             If GetRandom(0, 100) <= GetIntelligenceOdds() Then
                 Dim statChange As Integer = GetStatChange(GetIntelligenceAdj())
@@ -365,7 +365,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Overridable Sub AffectCreativity(ByRef thePerson As Person)
+    Public Overridable Sub AffectCreativity(ByRef thePerson As Citizen)
         If GetCreativityOdds() > 0 Then
             If GetRandom(0, 100) <= GetCreativityOdds() Then
                 Dim statChange As Integer = GetStatChange(GetCreativityAdj())
@@ -375,7 +375,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Overridable Sub AffectMobility(ByRef thePerson As Person)
+    Public Overridable Sub AffectMobility(ByRef thePerson As Citizen)
         If GetMobilityOdds() > 0 Then
             If GetRandom(0, 100) <= GetMobilityOdds() Then
                 Dim statChange As Integer = GetStatChange(GetMobilityAdj())
@@ -385,7 +385,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Overridable Sub AffectDrunkenness(ByRef thePerson As Person)
+    Public Overridable Sub AffectDrunkenness(ByRef thePerson As Citizen)
         If GetDrunkennessOdds() > 0 Then
             If GetRandom(0, 100) <= GetDrunkennessOdds() Then
                 Dim statChange As Integer = GetStatChange(GetDrunkennessAdj())
@@ -395,7 +395,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Overridable Sub AffectCriminality(ByRef thePerson As Person)
+    Public Overridable Sub AffectCriminality(ByRef thePerson As Citizen)
         If GetCriminalityOdds() > 0 Then
             If GetRandom(0, 100) <= GetCriminalityOdds() Then
                 Dim statChange As Integer = GetStatChange(GetCriminalityAdj())
@@ -405,7 +405,7 @@ Public Class Building
         End If
     End Sub
 
-    Public Overridable Sub AffectPerson(ByRef thePerson As Person)
+    Public Overridable Sub AffectPerson(ByRef thePerson As Citizen)
         AffectHappiness(thePerson)
         AffectHealth(thePerson)
         AffectIntelligence(thePerson)
@@ -419,7 +419,7 @@ Public Class Building
 
 #Region " Job Functions "
 
-    Public Overridable Function WillHire(ByRef Candidate As Person) As Boolean
+    Public Overridable Function WillHire(ByRef Candidate As Citizen) As Boolean
 
         '-- Confirm there is an open position
         If GetEmployeeCount() >= Jobs Then
@@ -434,7 +434,7 @@ Public Class Building
         Return True
     End Function
 
-    Public Sub HireEmployee(ByRef Employee As Person)
+    Public Sub HireEmployee(ByRef Employee As Citizen)
         '-- Quit any previous job
         If Employee.JobBuilding IsNot Nothing Then
             Employee.JobBuilding.Employees.Remove(Employee)
@@ -499,12 +499,12 @@ Public Class Building
         '-- Base class does nothing
     End Sub
 
-    Public Overridable Function SavePatient(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+    Public Overridable Function SavePatient(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
         '-- Most buildings can not save patients
         Return False
     End Function
 
-    Public Overridable Function GetBirthrateAdjust(ByRef thePerson As Person) As Double
+    Public Overridable Function GetBirthrateAdjust(ByRef thePerson As Citizen) As Double
         '-- Most buildings do not affect the birthrate
         Return 1.0
     End Function
@@ -518,7 +518,7 @@ Public Class Building
         Return AdjacentLocations
     End Function
 
-    Public Overridable Sub UpdateEndurance(ByRef Mobility As Integer, ByRef thePerson As Person)
+    Public Overridable Sub UpdateEndurance(ByRef Mobility As Integer, ByRef thePerson As Citizen)
         '-- Base class does nothing
     End Sub
 
@@ -537,7 +537,7 @@ Public Class Building
     Public Overridable Sub Destroy()
         '-- All the employees are back on the street
         For i As Integer = 0 To Employees.Count - 1
-            Dim theEmployee As Person = Employees(i)
+            Dim theEmployee As Citizen = Employees(i)
             theEmployee.JobBuilding = Nothing
         Next
 
@@ -605,7 +605,7 @@ Public Class Building
         If Employees.Count > 0 Then
             BuildingString += "Employees: "
             For i As Integer = 0 To Employees.Count - 1
-                Dim Employee As Person = Employees(i)
+                Dim Employee As Citizen = Employees(i)
                 BuildingString += Employee.Name
 
                 If i <> Employees.Count - 1 Then

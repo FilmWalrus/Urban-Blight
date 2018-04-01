@@ -1,4 +1,4 @@
-Public Class Person
+Public Class Citizen
 
 #Region " Variables "
     Public Name As String = ""
@@ -89,7 +89,7 @@ Public Class Person
 
     End Sub
 
-    Public Sub New(ByRef Parent As Person)
+    Public Sub New(ByRef Parent As Citizen)
         '-- Create randomly with heriditary influence
         Name = Namer.GeneratePersonName()
         Happiness = GetRandom(20, 30) + (Parent.Happiness / 9.0)
@@ -462,8 +462,8 @@ Public Class Person
         End If
     End Function
 
-    Function Reproduce() As Person
-        Dim child As New Person(Me)
+    Function Reproduce() As Citizen
+        Dim child As New Citizen(Me)
         child.BirthPlace = Residence
         child.Residence = Residence
         Residence.People.Add(child)

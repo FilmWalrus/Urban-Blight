@@ -3,12 +3,12 @@
 #Region " Variables "
     Public CurrentPlayer As Player = Nothing
 
-    Public CitizenList As New List(Of Person)
+    Public CitizenList As New List(Of Citizen)
     Public LocationList As New List(Of CitySquare)
 
     Public HospitalList As New List(Of Building)
 
-    Public DeadCitizens As New List(Of Person)
+    Public DeadCitizens As New List(Of Citizen)
     Public DestroyedBuildings As New List(Of Building)
 
     Public NoDeath As Boolean = False
@@ -53,8 +53,7 @@
         End If
     End Sub
 
-    Sub UpdatePeople()
-
+    Sub Setup()
         '-- Gather all the current player's people
         GatherCitizens()
 
@@ -63,6 +62,19 @@
 
         '-- Gather hospitals (effects births and deaths)
         GatherHospitals()
+    End Sub
+
+    Sub Cleanup()
+        '-- Reset any temporary building data
+        ResetBuildings()
+
+        '-- Clear visit info from locations
+        ClearVisited()
+    End Sub
+
+    Sub UpdatePeople()
+
+        Setup()
 
         '-- Handle business expansions
         BuildingsExpand()
@@ -85,15 +97,12 @@
         '-- Collect taxes from citizens and pay for upkeep of land
         Taxation()
 
-        '-- Clean up. Reset any temporary building data
-        ResetBuildings()
-        ClearVisited()
-
+        Cleanup()
     End Sub
 
     Sub AgeAndChange()
         For i As Integer = 0 To CitizenList.Count - 1
-            Dim thePerson As Person = CitizenList(i)
+            Dim thePerson As Citizen = CitizenList(i)
 
             '-- Age and change internally
             thePerson.UpdateInternal()
@@ -102,7 +111,7 @@
 
     Sub VisitPlaces()
         For i As Integer = 0 To CitizenList.Count - 1
-            Dim thePerson As Person = CitizenList(i)
+            Dim thePerson As Citizen = CitizenList(i)
 
             Dim originalHome As CitySquare = thePerson.Residence
 
@@ -136,7 +145,7 @@
         Next
     End Sub
 
-    Sub VisitBuildings(ByRef thePerson As Person, ByRef theLocation As CitySquare, ByVal drivingOdds As Double, ByVal parkingOdds As Double)
+    Sub VisitBuildings(ByRef thePerson As Citizen, ByRef theLocation As CitySquare, ByVal drivingOdds As Double, ByVal parkingOdds As Double)
 
         '-- Issue speeding ticket
         If GetRandom(0, 200) < drivingOdds Then
@@ -171,7 +180,7 @@
 
     End Sub
 
-    Sub ChangeResidence(ByRef thePerson As Person, ByRef locationsInRange As List(Of CitySquare))
+    Sub ChangeResidence(ByRef thePerson As Citizen, ByRef locationsInRange As List(Of CitySquare))
 
         Dim originalHome As CitySquare = thePerson.Residence
 
@@ -244,7 +253,7 @@
         '-- Get the adjustment to reproduction based on AI difficulty level (1.0 if current player is human)
         Dim ReproduceAdj As Double = CurrentPlayer.GetReproduceAdjustment()
 
-        Dim thePerson As Person
+        Dim thePerson As Citizen
         For i As Integer = 0 To CitizenList.Count - 1
             thePerson = CitizenList(i)
             thePerson.TouchedKey = 0
@@ -256,11 +265,11 @@
             If thePerson.WillReproduce(ReproduceAdj) Then
 
                 Dim homeTown As CitySquare = thePerson.Residence
-                Dim newChild As Person = thePerson.Reproduce()
+                Dim newChild As Citizen = thePerson.Reproduce()
                 CitizenList.Add(newChild)
 
                 'Check for twins (very rare)
-                Dim newChild2 As Person = Nothing
+                Dim newChild2 As Citizen = Nothing
                 Dim TwinOdds As Double = 14 * MaternityWardAdj
                 If (GetRandom(0, 1000) < TwinOdds) Then
                     newChild2 = thePerson.Reproduce()
@@ -284,7 +293,7 @@
         End If
 
         For i As Integer = 0 To CitizenList.Count - 1
-            Dim thePerson As Person = CitizenList(i)
+            Dim thePerson As Citizen = CitizenList(i)
 
             '-- Handle deaths by natural causes
             Dim odds As Double = 0.0
@@ -366,7 +375,7 @@
         Dim TheftSum As Integer = 0
         Dim VictimName As String = ""
 
-        Dim thePerson As Person
+        Dim thePerson As Citizen
         Dim citizenCount As Integer = CitizenList.Count
         For i As Integer = 0 To citizenCount - 1
             thePerson = CitizenList(i)
@@ -412,7 +421,7 @@
             odds += thePerson.Criminality / 6.5
             odds += thePerson.Drunkenness / 9.0
             If GetRandom(0, 100) < odds And localPop > 1 Then
-                Dim theVictim As Person = thePerson
+                Dim theVictim As Citizen = thePerson
                 While (theVictim.Equals(thePerson))
                     theVictim = currentLocation.People(GetRandom(0, localPop - 1))
                 End While
@@ -444,7 +453,7 @@
         Dim revenue As Integer = 0
         Dim trafficFines As Integer = 0
         For i As Integer = 0 To CitizenList.Count - 1
-            Dim thePerson As Person = CitizenList(i)
+            Dim thePerson As Citizen = CitizenList(i)
 
             '-- Collect taxes for each person
             Dim personalTax As Integer = 0
@@ -524,7 +533,7 @@
 
         '-- The success rate of a building is current = to the sum of the employment stat of employees
         For i As Integer = 0 To CitizenList.Count - 1
-            Dim thePerson As Person = CitizenList(i)
+            Dim thePerson As Citizen = CitizenList(i)
 
             If thePerson.JobBuilding IsNot Nothing Then
                 'Update success of job
@@ -578,7 +587,7 @@
 
     End Sub
 
-    Function AttemptToSave(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Building
+    Function AttemptToSave(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Building
 
         For i As Integer = 0 To HospitalList.Count - 1
             If HospitalList(i).SavePatient(thePerson, causeOfDeath) Then
@@ -589,7 +598,7 @@
         Return Nothing
     End Function
 
-    Function GetMaternityWardAdjust(ByRef thePerson As Person) As Double
+    Function GetMaternityWardAdjust(ByRef thePerson As Citizen) As Double
 
         Dim BirthrateAdjust As Double = 1.0
         For i As Integer = 0 To HospitalList.Count - 1
@@ -611,7 +620,7 @@
                 If GridArray(i, j).IsOwned(CurrentPlayer.ID) Then
                     Dim localPop As Integer = GridArray(i, j).getPopulation()
                     For k As Integer = 0 To localPop - 1
-                        Dim thePerson As Person = GridArray(i, j).People(k)
+                        Dim thePerson As Citizen = GridArray(i, j).People(k)
                         thePerson.JourneyString = "" '-- Clear their journey string
                         CitizenList.Add(thePerson)
                     Next
@@ -637,7 +646,7 @@
 
     Sub PurgeDead()
         For i As Integer = 0 To DeadCitizens.Count - 1
-            Dim DeadCitizen As Person = DeadCitizens(i)
+            Dim DeadCitizen As Citizen = DeadCitizens(i)
             CitizenList.Remove(DeadCitizen)
         Next
         DeadCitizens.Clear()
@@ -671,7 +680,7 @@
         Next
     End Sub
 
-    Sub RangeChecker(ByRef theLocation As CitySquare, ByRef thePerson As Person, ByRef visitList As List(Of CitySquare))
+    Sub RangeChecker(ByRef theLocation As CitySquare, ByRef thePerson As Citizen, ByRef visitList As List(Of CitySquare))
         ClearVisited()
 
         '-- Travel outward from this location
@@ -693,7 +702,7 @@
         visitList.Sort()
     End Sub
 
-    Sub TravelOnward(ByRef theLocation As CitySquare, ByRef thePerson As Person, ByVal Endurance As Integer)
+    Sub TravelOnward(ByRef theLocation As CitySquare, ByRef thePerson As Citizen, ByVal Endurance As Integer)
         '-- Make sure this location is habited and that we didn't already reach here some faster (or equivalent) way
         If theLocation.VisitedKey >= Endurance Or Not theLocation.IsOwned() Then
             Return

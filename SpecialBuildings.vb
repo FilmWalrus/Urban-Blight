@@ -1,4 +1,6 @@
-﻿Public Class ChurchBuilding
+﻿Imports Urban_Blight
+
+Public Class ChurchBuilding
     Inherits Building
 
     Public defaultOdds As Integer = 1
@@ -7,7 +9,7 @@
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub AffectPerson(ByRef thePerson As Person)
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         '-- Small chance of reducing a person's criminality or drunkenness to 0
         Dim odds As Integer = defaultOdds
         odds += SafeDivide(thePerson.Criminality, 20.0)
@@ -53,17 +55,13 @@ Public Class DayCareBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub AffectPerson(ByRef thePerson As Person)
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         '-- Only affect citizens under the age of 17
         If thePerson.IsMinor() Then
             MyBase.AffectPerson(thePerson)
         End If
     End Sub
 End Class
-
-
-
-
 
 Public Class MonumentBuilding
     Inherits Building
@@ -112,7 +110,7 @@ Public Class RetirementBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub AffectPerson(ByRef thePerson As Person)
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         '-- Only affect citizens over the age of 50
         If thePerson.IsElderly() Then
             MyBase.AffectPerson(thePerson)
@@ -127,13 +125,37 @@ Public Class SchoolBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Sub AffectPerson(ByRef thePerson As Person)
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         '-- Run the regular building stat changes and then run it again on minors
         MyBase.AffectPerson(thePerson)
         If thePerson.IsMinor() Then
             MyBase.AffectPerson(thePerson)
         End If
     End Sub
+End Class
+
+Public Class SkiResortBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        '-- Only affect citizens if built on mountain
+        If Location.Terrain = TerrainMountain Then
+            MyBase.AffectPerson(thePerson)
+        End If
+    End Sub
+
+    Public Overrides Function WillHire(ByRef Candidate As Citizen) As Boolean
+        '-- Only hire citizens if built on mountain
+        If Location.Terrain = TerrainMountain Then
+            Return MyBase.WillHire(Candidate)
+        Else
+            Return False
+        End If
+    End Function
 End Class
 
 Public Class SkyscraperBuilding

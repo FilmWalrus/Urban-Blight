@@ -978,7 +978,7 @@
                     newBuilding.SetInfo("Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians.")
                     Return newBuilding
                 Case BuildingEnum.Ski_Resort
-                    Dim newBuilding As New Building(bType, 215, 0)
+                    Dim newBuilding As New SkiResortBuilding(bType, 215, 0)
                     newBuilding.SetHappiness(8, 1)
                     newBuilding.SetMobility(40, 1)
                     newBuilding.SetInfo("")

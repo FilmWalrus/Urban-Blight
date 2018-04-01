@@ -162,7 +162,7 @@
     <Compile Include="NameGenerator.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Person.vb">
+    <Compile Include="Citizen.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Player.vb">

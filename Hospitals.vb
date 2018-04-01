@@ -41,7 +41,7 @@
         Next
     End Sub
 
-    Public Overridable Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+    Public Overridable Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
         Return False '-- Default hospital doesn't have a specialty
     End Function
 
@@ -51,7 +51,7 @@
         Return HealthBonus
     End Function
 
-    Public Overrides Function SavePatient(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+    Public Overrides Function SavePatient(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
 
         '-- Check if the hospital specializes in this type of thing
         If Not IsSpecialty(thePerson, causeOfDeath) Then
@@ -107,7 +107,7 @@ Public Class HospitalCancerBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+    Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
         Return (causeOfDeath = Turn.DeathCause.Illness)
     End Function
 End Class
@@ -119,7 +119,7 @@ Public Class HospitalEmergencyBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+    Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
         Return (causeOfDeath = Turn.DeathCause.TrafficAccident)
     End Function
 End Class
@@ -131,7 +131,7 @@ Public Class HospitalPediatricBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+    Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
         Return thePerson.IsMinor()
     End Function
 End Class
@@ -143,7 +143,7 @@ Public Class HospitalGeriatricBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function IsSpecialty(ByRef thePerson As Person, ByVal causeOfDeath As Integer) As Boolean
+    Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
         Return thePerson.IsElderly()
     End Function
 End Class
@@ -155,7 +155,7 @@ Public Class HospitalMaternityBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetBirthrateAdjust(ByRef thePerson As Person) As Double
+    Public Overrides Function GetBirthrateAdjust(ByRef thePerson As Citizen) As Double
 
         '-- Check if hospital is in range
         Dim Distance As Integer = Location.GetDistance(thePerson.Residence)
