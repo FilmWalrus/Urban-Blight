@@ -98,6 +98,7 @@
         Startup_Incubator
         Steel_Mill
         Suburb
+        Tax_Assessor
         Taxi_Service
         Temp_Agency
         Textile_Mill
@@ -322,6 +323,8 @@
                 Return "Steel Mill"
             Case BuildingEnum.Suburb
                 Return "Suburb"
+            Case BuildingEnum.Tax_Assessor
+                Return "Tax Assessor"
             Case BuildingEnum.Taxi_Service
                 Return "Taxi Service"
             Case BuildingEnum.Temp_Agency
@@ -1009,8 +1012,16 @@
                     Return newBuilding
                 Case BuildingEnum.Suburb
 
+                Case BuildingEnum.Tax_Assessor
+                    Dim newBuilding As New Building(bType, 125, 1)
+                    newBuilding.SetHappiness(50, -2)
+                    newBuilding.SetIntelligence(10, 2)
+                    newBuilding.SetCriminality(10, 2)
+                    newBuilding.AddTag(TagEnum.Government)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Taxi_Service
-                    Dim newBuilding As New TaxiBuilding(bType, 145, 1)
+                    Dim newBuilding As New TaxiBuilding(bType, 145, 2)
                     newBuilding.SetMobility(8, 4)
                     newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("")

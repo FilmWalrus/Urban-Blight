@@ -7,6 +7,7 @@ Public Class AirportBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "passengers transported"
     End Sub
 
     Public Sub UpdateDestinationList(ByRef Destination As CitySquare)
@@ -83,12 +84,14 @@ Public Class GasStationBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "customers served"
     End Sub
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Gas station restores up to 10 endurance, but not to exceed the person's starting mobility plus 10
         Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.Mobility + EnduranceBoost)
         thePerson.AddEvent("Fueled up at " + GetName() + " before continuing on")
+        AddEffects(1)
     End Sub
 
 End Class
@@ -100,6 +103,7 @@ Public Class HarborBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "passengers transported"
     End Sub
 
     Public Overrides Sub AffectMobility(ByRef thePerson As Citizen)
@@ -185,12 +189,14 @@ Public Class HotelBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "guest checked in"
     End Sub
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Hotel restores a person to half the mobility
         Endurance = Math.Max(Endurance, SafeDivide(thePerson.Mobility, 2.0))
         thePerson.AddEvent("Rested up at " + GetName() + " before continuing on")
+        AddEffects(1)
     End Sub
 
 End Class
@@ -203,6 +209,7 @@ Public Class MassTransitBuilding
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
         SetRange(3) '-- Default mass transit range is 3
+        EffectText = "passengers transported"
     End Sub
 
     Public Sub UpdateDestinationList(ByRef Destination As CitySquare)
@@ -249,15 +256,17 @@ Public Class ParkingGarageBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "cars parked"
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         MyBase.AffectPerson(thePerson)
 
-        '-- Parking lot gives you a 1/3 chance of visiting each building on this location an extra time.
+        '-- Parking garage gives you a 1/3 chance of visiting each building on this location an extra time.
         For i As Integer = 0 To Location.Buildings.Count - 1
             If Location.Buildings(i).Type <> BuildingGen.BuildingEnum.Parking_Garage And GetRandom(1, 100) <= 33 Then
                 Location.Buildings(i).AffectPerson(thePerson)
+                AddEffects(1)
             End If
         Next
     End Sub
@@ -268,6 +277,7 @@ Public Class ParkingLotBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "cars parked"
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
@@ -278,6 +288,7 @@ Public Class ParkingLotBuilding
             Dim BuildingIndex As Integer = GetRandom(0, Location.Buildings.Count - 1)
             If Location.Buildings(BuildingIndex).Type <> BuildingGen.BuildingEnum.Parking_Lot Then
                 Location.Buildings(BuildingIndex).AffectPerson(thePerson)
+                AddEffects(1)
             End If
         End If
     End Sub
@@ -288,13 +299,17 @@ Public Class SafeHouseBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "criminals sheltered"
     End Sub
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Safe house has a chance to add criminality to current endurance, but only up to the sum of the two
-        If GetRandom(1, 100) <= 30 Then
-            Endurance = Math.Min(Endurance + thePerson.Criminality, thePerson.Mobility + thePerson.Criminality)
-            thePerson.AddEvent("Laid low at " + GetName() + " before continuing on")
+        If thePerson.Criminality >= 10 Then
+            If GetRandom(1, 100) <= 30 Then
+                Endurance = Math.Min(Endurance + thePerson.Criminality, thePerson.Mobility + thePerson.Criminality)
+                thePerson.AddEvent("Laid low at " + GetName() + " before continuing on")
+                AddEffects(1)
+            End If
         End If
     End Sub
 
@@ -327,6 +342,7 @@ Public Class TaxiBuilding
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
         SetRange(3) '-- Default taxi range is 3
+        EffectText = "passengers transported"
     End Sub
 
     Public Overrides Function GetAdjacentLocations() As List(Of CitySquare)
@@ -367,6 +383,7 @@ Public Class TollBoothBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "tolls paid"
     End Sub
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
@@ -384,6 +401,7 @@ Public Class TollBoothBuilding
             thePerson.UnpaidFines += TollCost
             thePerson.AddEvent("Paid toll of $" + TollCost.ToString())
             AddRevenue(TollCost)
+            AddEffects(1)
         End If
 
     End Sub

@@ -7,6 +7,7 @@ Public Class ChurchBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "religious epiphanies inspired"
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
@@ -16,6 +17,7 @@ Public Class ChurchBuilding
         If GetRandom(1, 100) = 1 Then
             thePerson.Criminality = 0
             thePerson.AddEvent("Religious epiphany reset criminality to 0")
+            AddEffects(1)
         End If
 
         odds = defaultOdds
@@ -23,6 +25,7 @@ Public Class ChurchBuilding
         If GetRandom(1, 100) = 1 Then
             thePerson.Drunkenness = 0
             thePerson.AddEvent("Religious epiphany reset drunkenness to 0")
+            AddEffects(1)
         End If
     End Sub
 End Class
@@ -46,6 +49,31 @@ Public Class ConstructionSiteBuilding
             Return True
         End If
     End Function
+End Class
+
+Public Class CorrectionalFacilityBuilding
+    Inherits Building
+
+    Public defaultOdds As Integer = 1
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        EffectText = "criminals rehabilitated"
+    End Sub
+
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        '-- Small chance of reducing a person's criminality to 0 (and mobility to 0 as well)
+        If thePerson.Criminality > 10 Then
+            Dim odds As Integer = 1
+            odds += SafeDivide(thePerson.Criminality, 20.0)
+            If GetRandom(1, 10) <= odds Then
+                thePerson.Criminality = 0
+                thePerson.Mobility = 0
+                thePerson.AddEvent("Thrown in jail: criminality and mobility set to 0")
+                AddEffects(1)
+            End If
+        End If
+    End Sub
 End Class
 
 Public Class DayCareBuilding
@@ -123,6 +151,7 @@ Public Class SchoolBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "children taught"
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
@@ -130,6 +159,7 @@ Public Class SchoolBuilding
         MyBase.AffectPerson(thePerson)
         If thePerson.IsMinor() Then
             MyBase.AffectPerson(thePerson)
+            AddEffects(1)
         End If
     End Sub
 End Class
@@ -189,6 +219,7 @@ Public Class StartupIncubatorBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "buildings launched"
     End Sub
 
     Public Overrides Function UpdateInternal() As Boolean
@@ -198,6 +229,7 @@ Public Class StartupIncubatorBuilding
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
             Location.AddBuilding(newBuilding, OwnerID)
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " launched " + newBuilding.GetName())
+            AddEffects(1)
         End If
 
         If GetRandom(1, 100) <= 5 Then '-- 5% chance of failing
@@ -214,6 +246,7 @@ Public Class WelfareBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
+        EffectText = "welfare recipients"
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)

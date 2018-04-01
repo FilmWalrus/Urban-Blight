@@ -10,8 +10,8 @@ Public Class CitySquare
     '-- Travel and visit
     Public VisitedKey As Integer = -1
     Public DragLoss As Integer = -1
-    Public VisitMethodAttempt As Integer = TransportType.Bike
-    Public VisitMethod As Integer = TransportType.Bike
+    Public VisitMethodAttempt As Building = Nothing
+    Public VisitMethod As Building = Nothing
     Public VisitOrder As Integer = 0
 
     '--
@@ -195,10 +195,6 @@ Public Class CitySquare
         Return citizensEmployed
     End Function
 
-    Public Function getVisitOrder() As Integer
-        Return VisitOrder
-    End Function
-
     Public Function CountBuildingsByType(ByVal bType As Integer) As Integer
         Dim buildingCount As Integer = 0
         For i As Integer = 0 To Buildings.Count - 1
@@ -265,34 +261,6 @@ Public Class CitySquare
         Return (OwnerID = playerID)
     End Function
 
-    Public Function GetVisitMethod() As String
-        Dim visitString As String = "Visited " + GetName() + " by "
-        Select Case VisitMethod
-            Case TransportType.Bike
-                visitString += "bike"
-            Case TransportType.Boat
-                visitString += "boat"
-            Case TransportType.Car
-                visitString += "car"
-            Case TransportType.Train
-                visitString += "mass transit"
-            Case TransportType.Plane
-                visitString += "plane"
-            Case TransportType.Taxi
-                visitString += "taxi"
-        End Select
-        Return visitString
-    End Function
-
-    Public Sub SetVisitMethod(ByVal transportMethod As Integer)
-        VisitMethod = transportMethod
-        VisitMethodAttempt = transportMethod
-    End Sub
-
-    Public Sub SetVisitMethodAttempt(ByVal transportMethod As Integer)
-        VisitMethodAttempt = transportMethod
-    End Sub
-
     Public Sub AddBuilding(ByVal NewBuilding As Building, ByVal PlayerIndex As Integer)
         NewBuilding.Location = Me
         NewBuilding.OwnerID = PlayerIndex
@@ -317,105 +285,9 @@ Public Class CitySquare
 
     End Function
 
-    Function Valid() As Boolean
-        If RowID >= 0 And ColID >= 0 And RowID <= GridWidth And ColID <= GridHeight Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
-    Function GetTrueAdjacents() As List(Of CitySquare)
-        Dim AdjacentList As New List(Of CitySquare)
-
-        If RowID - 1 >= 0 Then
-            AdjacentList.Add(GridArray(RowID - 1, ColID))
-        End If
-        If RowID + 1 <= GridWidth Then
-            AdjacentList.Add(GridArray(RowID + 1, ColID))
-        End If
-        If ColID - 1 >= 0 Then
-            AdjacentList.Add(GridArray(RowID, ColID - 1))
-        End If
-        If ColID + 1 <= GridHeight Then
-            AdjacentList.Add(GridArray(RowID, ColID + 1))
-        End If
-
-        Return AdjacentList
-
-    End Function
-
-    Function GetAdjacents() As List(Of CitySquare)
-        Dim AdjacentList As New List(Of CitySquare)
-
-        '-- Note: Destinations can currently show up multiple times if they can be reached in multiple ways
-
-        '-- Get all the literally adjacent citysquares
-        Dim CarAdjacentList As List(Of CitySquare) = GetTrueAdjacents()
-        CarAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Car))
-        AdjacentList.AddRange(CarAdjacentList)
-
-        '-- Now get any citysquares that are connect by taxi service
-        Dim TaxiList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Taxi_Service)
-        For i As Integer = 0 To TaxiList.Count - 1
-            Dim TaxiAdjacentList As List(Of CitySquare) = TaxiList(0).GetAdjacentLocations()
-            TaxiAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Taxi))
-            AdjacentList.AddRange(TaxiAdjacentList)
-        Next
-
-        '-- Now get any citysquares that are connect by harbor
-        Dim HarborList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Harbor)
-        For i As Integer = 0 To HarborList.Count - 1
-            Dim HarborAdjacentList As List(Of CitySquare) = HarborList(0).GetAdjacentLocations()
-            HarborAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Boat))
-            AdjacentList.AddRange(HarborAdjacentList)
-        Next
-
-        '-- Now get any citysquares that are connect by mass transit
-        Dim MassTransitList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Mass_Transit)
-        For i As Integer = 0 To MassTransitList.Count - 1
-            Dim TrainAdjacentList As List(Of CitySquare) = MassTransitList(0).GetAdjacentLocations()
-            TrainAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Train))
-            AdjacentList.AddRange(TrainAdjacentList)
-        Next
-
-        '-- Now get any citysquares that are connect by buildings like airports
-        Dim AirportList As List(Of Building) = GetBuildingsByType(BuildingGen.BuildingEnum.Airport)
-        If AirportList.Count > 0 Then
-            Dim PlaneAdjacentList As List(Of CitySquare) = AirportList(0).GetAdjacentLocations()
-            PlaneAdjacentList.ForEach(Sub(s) s.SetVisitMethodAttempt(TransportType.Plane))
-            AdjacentList.AddRange(PlaneAdjacentList)
-        End If
-
-        Return AdjacentList
-
-    End Function
-
-    Sub GetLocationsInRange(ByVal Range As Integer, ByRef visitList As List(Of CitySquare))
-        visitList.Add(Me)
-
-        If Range > 0 Then
-            '-- Continue moving to locations adjacent to this location
-            Dim adjacentList As List(Of CitySquare) = GetAdjacents()
-            For i As Integer = 0 To adjacentList.Count - 1
-                If Not visitList.Contains(adjacentList(i)) Then
-                    adjacentList(i).GetLocationsInRange(Range - 1, visitList)
-                End If
-            Next
-        End If
-    End Sub
-
     Function GetDistance(ByRef OtherSquare As CitySquare) As Integer
         Return Math.Abs(RowID - OtherSquare.RowID) + Math.Abs(ColID - OtherSquare.ColID)
     End Function
-
-    Sub ClearVisit()
-        VisitedKey = 0
-        DragLoss = -1
-        VisitOrder = 0
-        VisitMethod = CitySquare.TransportType.Bike
-        VisitMethodAttempt = CitySquare.TransportType.Bike
-    End Sub
 
     Sub UpdateCoastline()
 
@@ -631,6 +503,144 @@ Public Class CitySquare
         End If
     End Function
 
+#End Region
+
+#Region " Adjacency "
+
+    Function Valid() As Boolean
+        If RowID >= 0 And ColID >= 0 And RowID <= GridWidth And ColID <= GridHeight Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Function GetTrueAdjacents() As List(Of CitySquare)
+        Dim AdjacentList As New List(Of CitySquare)
+
+        If RowID - 1 >= 0 Then
+            AdjacentList.Add(GridArray(RowID - 1, ColID))
+        End If
+        If RowID + 1 <= GridWidth Then
+            AdjacentList.Add(GridArray(RowID + 1, ColID))
+        End If
+        If ColID - 1 >= 0 Then
+            AdjacentList.Add(GridArray(RowID, ColID - 1))
+        End If
+        If ColID + 1 <= GridHeight Then
+            AdjacentList.Add(GridArray(RowID, ColID + 1))
+        End If
+
+        Return AdjacentList
+
+    End Function
+
+    Sub AddToAdjList(ByRef AdjacentList As List(Of CitySquare), ByRef TransportBuilding As Building)
+
+        Dim NewDestinations As List(Of CitySquare) = TransportBuilding.GetAdjacentLocations()
+
+        For i As Integer = 0 To NewDestinations.Count - 1
+            Dim NewDestination As CitySquare = NewDestinations(i)
+            '-- Add this new destination to the adjacency list if it wasn't already there
+            If Not AdjacentList.Contains(NewDestination) Then
+
+                '-- Set the building that was used to reach this destination
+                NewDestination.VisitMethodAttempt = TransportBuilding
+
+                AdjacentList.Add(NewDestination)
+            End If
+        Next
+    End Sub
+
+    Function GetAdjacents() As List(Of CitySquare)
+        Dim AdjacentList As New List(Of CitySquare)
+
+        '-- Get all the literally adjacent citysquares
+        Dim CarAdjacentList As List(Of CitySquare) = GetTrueAdjacents()
+        AdjacentList.AddRange(CarAdjacentList)
+
+        '-- Get destinations that are "adjacent" by virtue of a building connecting them
+        For i As Integer = 0 To Buildings.Count - 1
+            Dim CurrentBuilding As Building = Buildings(i)
+
+            If CurrentBuilding.Type = BuildingGen.BuildingEnum.Taxi_Service Or
+                CurrentBuilding.Type = BuildingGen.BuildingEnum.Harbor Or
+                CurrentBuilding.Type = BuildingGen.BuildingEnum.Mass_Transit Or
+                CurrentBuilding.Type = BuildingGen.BuildingEnum.Airport Then
+
+                AddToAdjList(AdjacentList, CurrentBuilding)
+            End If
+        Next
+
+        Return AdjacentList
+
+    End Function
+
+    Sub GetLocationsInRange(ByVal Range As Integer, ByRef visitList As List(Of CitySquare))
+        visitList.Add(Me)
+
+        If Range > 0 Then
+            '-- Continue moving to locations adjacent to this location
+            Dim adjacentList As List(Of CitySquare) = GetAdjacents()
+            For i As Integer = 0 To adjacentList.Count - 1
+                If Not visitList.Contains(adjacentList(i)) Then
+                    adjacentList(i).GetLocationsInRange(Range - 1, visitList)
+                End If
+            Next
+        End If
+    End Sub
+#End Region
+
+#Region " Visitation "
+
+    Public Function getVisitOrder() As Integer
+        Return VisitOrder
+    End Function
+
+    Public Function GetVisitMethod() As String
+        Dim visitString As String = "Visited " + GetName() + " by "
+
+        If VisitMethod Is Nothing Then
+            visitString += "car"
+        Else
+            Select Case VisitMethod.Type
+                Case BuildingGen.BuildingEnum.Harbor
+                    visitString += "boat"
+                Case BuildingGen.BuildingEnum.Mass_Transit
+                    visitString += "train"
+                Case BuildingGen.BuildingEnum.Airport
+                    visitString += "plane"
+                Case BuildingGen.BuildingEnum.Taxi_Service
+                    visitString += "taxi"
+            End Select
+        End If
+        Return visitString
+    End Function
+
+    Public Sub SetVisitMethod(ByRef transportMethod As Building)
+        VisitMethod = transportMethod
+        VisitMethodAttempt = transportMethod
+    End Sub
+
+    Public Sub SetVisitMethodAttempt(ByRef transportMethod As Building)
+        VisitMethodAttempt = transportMethod
+    End Sub
+
+    Sub VisitHere(ByRef Visitor As Citizen)
+        Visitor.AddEvent(GetVisitMethod())
+        If VisitMethod IsNot Nothing Then
+            VisitMethod.AddEffects(1)
+        End If
+        SetVisitMethod(Nothing)
+    End Sub
+
+    Sub ClearVisit()
+        VisitedKey = 0
+        DragLoss = -1
+        VisitOrder = 0
+        VisitMethod = Nothing
+        VisitMethodAttempt = Nothing
+    End Sub
 #End Region
 
 End Class

@@ -263,8 +263,9 @@ Public Class Citizen
                     '-- Welfare service allows you to skip negative unemployment effects, but requires upkeep
                     Dim WelfareCost As Integer = 2
                     UnpaidUpkeep += WelfareCost
-                    Dim WelfareService As List(Of Building) = Residence.GetBuildingsByType(BuildingGen.BuildingEnum.Welfare_Service)
-                    WelfareService(0).AddUpkeep(WelfareCost)
+                    Dim WelfareService As Building = Residence.GetBuildingsByType(BuildingGen.BuildingEnum.Welfare_Service)(0)
+                    WelfareService.AddUpkeep(WelfareCost)
+                    WelfareService.AddEffects(1)
                 Else
                     '-- Unemployment is depressing, limits food and healthcare options and, if times get desperate, can lead to crime
                     statChange = GetRandom(0, 3)

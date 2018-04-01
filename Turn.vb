@@ -114,8 +114,7 @@
                 Dim theLocation As CitySquare = locationsInRange(j)
 
                 '-- Record the visit to this location
-                thePerson.AddEvent(theLocation.GetVisitMethod())
-                theLocation.SetVisitMethod(CitySquare.TransportType.Bike)
+                theLocation.VisitHere(thePerson)
 
                 '-- Visit buildings at this location. Apply for jobs if unemployed.
                 VisitBuildings(thePerson, theLocation, parkingOdds, drivingOdds)

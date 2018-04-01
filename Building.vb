@@ -13,6 +13,7 @@ Public Class Building
     Public Info As String = ""
     Public SpecialAbility As String = ""
     Public Tags As New List(Of Integer)
+    Public EffectText As String = "people affected"
 
     Public OwnerID As Integer = -1
     Public Location As CitySquare = Nothing
@@ -45,10 +46,13 @@ Public Class Building
     Public Criminality_odds As Integer = 0
 
     '-- Revenue and upkeep
+    Public CurrentEffects As Integer = 0
+    Public TotalEffects As Integer = 0
     Public CurrentRevenue As Integer = 0
     Public TotalRevenue As Integer = 0
     Public CurrentUpkeep As Integer = 0
     Public TotalUpkeep As Integer = 0
+
 
 #End Region
 
@@ -556,6 +560,7 @@ Public Class Building
 
     Public Overridable Sub SetupBuilding()
         '-- Reset current revenue and upkeep
+        CurrentEffects = 0
         CurrentRevenue = 0
         CurrentUpkeep = 0
     End Sub
@@ -567,6 +572,11 @@ Public Class Building
     Public Overridable Function IsLandExpansionOption(ByRef testLocation As CitySquare) As Boolean
         Return False
     End Function
+
+    Public Sub AddEffects(ByVal NewEffect As Integer)
+        CurrentEffects += NewEffect
+        TotalEffects += NewEffect
+    End Sub
 
     Public Sub AddRevenue(ByVal NewRevenue As Integer)
         CurrentRevenue += NewRevenue
@@ -706,7 +716,11 @@ Public Class Building
             BuildingString += ControlChars.NewLine
         End If
 
-        If CurrentRevenue > 0 Or TotalRevenue > 0 Or CurrentUpkeep > 0 Or TotalUpkeep > 0 Then
+        If CurrentEffects > 0 Or TotalEffects > 0 Or CurrentRevenue > 0 Or TotalRevenue > 0 Or CurrentUpkeep > 0 Or TotalUpkeep > 0 Then
+            If TotalEffects > 0 Then
+                BuildingString += CurrentEffects.ToString + " " + EffectText + " this turn." + ControlChars.NewLine
+                BuildingString += TotalEffects.ToString + " " + EffectText + " total." + ControlChars.NewLine
+            End If
             If TotalRevenue > 0 Then
                 BuildingString += "Revenue this turn: $" + CurrentRevenue.ToString + ControlChars.NewLine
                 BuildingString += "Revenue total: $" + TotalRevenue.ToString + ControlChars.NewLine
@@ -715,6 +729,7 @@ Public Class Building
                 BuildingString += "Upkeep this turn: $" + CurrentUpkeep.ToString + ControlChars.NewLine
                 BuildingString += "Upkeep total: $" + TotalUpkeep.ToString + ControlChars.NewLine
             End If
+            BuildingString += ControlChars.NewLine
         End If
 
         '-- Show flavor text
