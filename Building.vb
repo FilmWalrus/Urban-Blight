@@ -724,6 +724,32 @@ Public Class Building
             BuildingString += ControlChars.NewLine
         End If
 
+        If TotalEffects > 0 Or TotalRevenue > 0 Or TotalUpkeep > 0 Then
+            If TotalEffects > 0 Then
+                BuildingString += CurrentEffects.ToString + " " + EffectText + " this turn." + ControlChars.NewLine
+                BuildingString += TotalEffects.ToString + " " + EffectText + " total." + ControlChars.NewLine
+            End If
+            If TotalRevenue > 0 Then
+                BuildingString += "Revenue this turn: $" + CurrentRevenue.ToString + ControlChars.NewLine
+                BuildingString += "Revenue total: $" + TotalRevenue.ToString + ControlChars.NewLine
+            End If
+            If TotalUpkeep > 0 Then
+                BuildingString += "Upkeep this turn: $" + CurrentUpkeep.ToString + ControlChars.NewLine
+                BuildingString += "Upkeep total: $" + TotalUpkeep.ToString + ControlChars.NewLine
+            End If
+            BuildingString += ControlChars.NewLine
+        End If
+
+        '-- Show flavor text
+        If Info.Length > 0 Then
+            BuildingString += Info + ControlChars.NewLine
+        End If
+
+        '-- Show special ability text
+        If SpecialAbility.Length > 0 Then
+            BuildingString += SpecialAbility + ControlChars.NewLine
+        End If
+
         '-- Show stat info
         If DebugMode Then
             If Happiness_odds > 0 Then
@@ -748,30 +774,6 @@ Public Class Building
                 BuildingString += "Criminality: " + GetCriminalityOdds().ToString + "% chance boosts up to " + GetCriminalityAdj().ToString + ControlChars.NewLine
             End If
             BuildingString += ControlChars.NewLine
-        End If
-
-        If TotalEffects > 0 Or TotalRevenue > 0 Or TotalUpkeep > 0 Then
-            If TotalEffects > 0 Then
-                BuildingString += CurrentEffects.ToString + " " + EffectText + " this turn." + ControlChars.NewLine
-                BuildingString += TotalEffects.ToString + " " + EffectText + " total." + ControlChars.NewLine
-            End If
-            If TotalRevenue > 0 Then
-                BuildingString += "Revenue this turn: $" + CurrentRevenue.ToString + ControlChars.NewLine
-                BuildingString += "Revenue total: $" + TotalRevenue.ToString + ControlChars.NewLine
-            End If
-            If TotalUpkeep > 0 Then
-                BuildingString += "Upkeep this turn: $" + CurrentUpkeep.ToString + ControlChars.NewLine
-                BuildingString += "Upkeep total: $" + TotalUpkeep.ToString + ControlChars.NewLine
-            End If
-            BuildingString += ControlChars.NewLine
-        End If
-
-        '-- Show flavor text
-        BuildingString += Info + ControlChars.NewLine
-
-        '-- Show special ability text
-        If SpecialAbility.Length > 0 Then
-            BuildingString += SpecialAbility + ControlChars.NewLine
         End If
 
         Return BuildingString

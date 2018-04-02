@@ -22,6 +22,7 @@ Public Class Form1
     Dim WipeCard As Integer = LandCard + 1
     Dim RoadMaxCard As Integer = WipeCard + 1
     Dim SelectedCard As Integer = NoCard
+    Public ButtonList As New List(Of System.Windows.Forms.Button)
 
     '--
     Dim SelectedPerson As Integer = -1
@@ -960,6 +961,9 @@ Public Class Form1
         Namer.FillLists()
         Hinter.FillLists()
 
+        '-- Fill button list
+        FillButtonList()
+
         '-- Fill building dropdown
         FillBuildingDropdown()
 
@@ -1319,18 +1323,7 @@ Public Class Form1
     Sub RunAI()
 
         '-- Toggle the buttons so humans can't play for the computer
-        Dim toggleButtons As Boolean = True
-        If CurrentPlayer.PlayerType = PlayerAI Then
-            toggleButtons = False
-        End If
-        ubcard1.Enabled = toggleButtons
-        ubcard2.Enabled = toggleButtons
-        ubcard3.Enabled = toggleButtons
-        ubcard4.Enabled = toggleButtons
-        ubroad.Enabled = toggleButtons
-        ubroadmax.Enabled = toggleButtons
-        ubland.Enabled = toggleButtons
-        ubWipe.Enabled = toggleButtons
+        UpdateButtonEnables()
 
         '-- If not an AI bail at this point
         If CurrentPlayer.PlayerType <> PlayerAI Then
@@ -1456,16 +1449,7 @@ Public Class Form1
             cardText += "$" + CardBuilding.Cost.ToString() + " - "
             cardText += CardBuilding.Jobs.ToString() + " jobs"
 
-            Select Case i
-                Case 0
-                    ubcard1.Text = cardText
-                Case 1
-                    ubcard2.Text = cardText
-                Case 2
-                    ubcard3.Text = cardText
-                Case 3
-                    ubcard4.Text = cardText
-            End Select
+            ButtonList(i).Text = cardText
         Next
 
         '--Update wipe card text
@@ -1479,6 +1463,9 @@ Public Class Form1
         '--Update land card text
         Dim LandCost As Integer = CurrentPlayer.GetPlayerLandCost()
         ubland.Text = "$" + LandCost.ToString() + " - Land"
+
+        '-- Set whether the building buttons are enabled for this player
+        UpdateButtonEnables()
 
     End Sub
 
@@ -1781,39 +1768,42 @@ Public Class Form1
         Infotab.SelectedTab = Infotab.TabPages(CardTab)
     End Sub
 
+    Sub UpdateButtonEnables()
+        '-- Toggle the buttons so humans can't play for the computer
+        Dim toggleButtons As Boolean = True
+        If CurrentPlayer.PlayerType = PlayerAI Then
+            toggleButtons = False
+        End If
+
+        For i As Integer = 0 To ButtonList.Count - 1
+            ButtonList(i).Enabled = toggleButtons
+        Next
+
+        '-- Disable access to cards banned for this player
+        If CurrentPlayer.PlayerType = PlayerHuman Then
+            For i As Integer = 0 To Cards.Count - 1
+                If CurrentPlayer.BannedBuildings.Contains(Cards(i).Type) Then
+                    ButtonList(i).Enabled = False
+                End If
+            Next
+        Else
+
+        End If
+    End Sub
+
     Public Sub UpdateCardSelection()
 
         Dim newBold As New Font(ubEnd.Font.FontFamily, 10, FontStyle.Bold)
         Dim newRegular As New Font(ubEnd.Font.FontFamily, 10, FontStyle.Regular)
 
-        ubcard1.Font = newRegular
-        ubcard2.Font = newRegular
-        ubcard3.Font = newRegular
-        ubcard4.Font = newRegular
-        ubroad.Font = newRegular
-        ubland.Font = newRegular
-        ubWipe.Font = newRegular
-        ubroadmax.Font = newRegular
-
-        Select Case SelectedCard
-            Case 0
-                ubcard1.Font = newBold
-            Case 1
-                ubcard2.Font = newBold
-            Case 2
-                ubcard3.Font = newBold
-            Case 3
-                ubcard4.Font = newBold
-            Case RoadCard
-                ubroad.Font = newBold
-            Case LandCard
-                ubland.Font = newBold
-            Case WipeCard
-                ubWipe.Font = newBold
-            Case RoadMaxCard
-                ubroadmax.Font = newBold
-        End Select
-
+        '-- Bold the text on the selected card
+        For i As Integer = 0 To ButtonList.Count - 1
+            If i = SelectedCard Then
+                ButtonList(i).Font = newBold
+            Else
+                ButtonList(i).Font = newRegular
+            End If
+        Next
     End Sub
 
     Private Sub ubEnd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubEnd.Click
@@ -2008,6 +1998,17 @@ Public Class Form1
         DebugMode = debugBool
         BuildingDropdown.Visible = DebugMode
         btnCheat.Visible = DebugMode
+    End Sub
+
+    Public Sub FillButtonList()
+        ButtonList.Add(ubcard1)
+        ButtonList.Add(ubcard2)
+        ButtonList.Add(ubcard3)
+        ButtonList.Add(ubcard4)
+        ButtonList.Add(ubroad)
+        ButtonList.Add(ubland)
+        ButtonList.Add(ubWipe)
+        ButtonList.Add(ubroadmax)
     End Sub
 
     Public Sub FillBuildingDropdown()

@@ -400,12 +400,14 @@
                     newBuilding.SetInfo("Want to boost the effects of local commercial businesses?  Hire an Ad Agency to get those creative juices flowing.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
-                Case BuildingEnum.Activism_Organization 'Brian to fill in the brackets under Special Ability
-                    Dim newBuilding As New Building(bType, 105, 1)
-                    newBuilding.SetHappiness(20, 1)
+                Case BuildingEnum.Activism_Organization
+                    Dim newBuilding As New ActivismBuilding(bType, 65, 1)
+                    newBuilding.SetHappiness(20, 2)
                     newBuilding.SetHealth(30, 4)
-                    newBuilding.SetInfo("It is our mission to improve the wellbeing of the community, one person at a time.")
-                    newBuilding.SetSpecialAbility("Permanently bans the user from building [] ")
+                    newBuilding.SetIntelligence(15, 1)
+                    newBuilding.SetInfo("Our mission is to spread awareness, improve community wellbeing, and fight corporate corruption wherever it lurks!")
+                    newBuilding.SetSpecialAbility("Permanently bans the owner from building " + GetName(newBuilding.BannedBuilding) + ".")
+                    '-- Note: Banned buildings could still get built by Construction Sites, Startup Incubator, etc.
                     Return newBuilding
                 Case BuildingEnum.Airport
                     Dim newBuilding As New AirportBuilding(bType, 560, 5)

@@ -1,5 +1,35 @@
 ﻿Imports Urban_Blight
 
+Public Class ActivismBuilding
+    Inherits Building
+
+    Public BannedBuilding As Integer = -1
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        EffectText = "buildings banned"
+
+        BannedBuilding = GetRandom(0, BuildingGen.BuildingEnum.BuildingCount - 1)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Add to the owner's list of banned buildings
+        '-- This is correct even if it results in a building appearing multiple times
+        Players(OwnerID).BannedBuildings.Add(BannedBuilding)
+    End Sub
+
+    Public Overrides Sub Destroy()
+
+        '-- Remove this banned building (removes only 1 copy so we are ok if there are multiple)
+        Players(OwnerID).BannedBuildings.Remove(BannedBuilding)
+
+        MyBase.Destroy()
+    End Sub
+
+End Class
+
 Public Class ChurchBuilding
     Inherits Building
 

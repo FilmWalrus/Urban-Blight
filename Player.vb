@@ -18,8 +18,9 @@ Public Class Player
     '--
     Public WipeCost As Integer = WipeCostBase
 
-    '-- Special Land Construction Buildings
+    '-- Stuff that effects player's choices
     Public LandOptionBuildings As New List(Of Building)
+    Public BannedBuildings As New List(Of Integer)
 
     '-- AI stuff
     Public BestMove As CitySquare = Nothing
@@ -377,7 +378,11 @@ Public Class Player
         Dim cardWeightSum As Double = 0
         For i As Integer = 0 To Cards.Count - 1
             Dim theBuilding As Building = Cards(i)
-            cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForAI(Personality)
+            If BannedBuildings.Contains(theBuilding.Type) Then
+                cardDecisionWeights(i) = -2.0 '-- AI can't build banned buildings
+            Else
+                cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForAI(Personality)
+            End If
             cardWeightSum += cardDecisionWeights(i)
         Next
         Dim cardWeightAvg As Double = SafeDivide(cardWeightSum, Cards.Count)

@@ -76,9 +76,24 @@
     End Sub
 
     Public Function GenerateHint() As String
-        Dim hintString As String = ""
-        hintString += HintList(GetRandom(0, HintList.Count - 1))
-        Return hintString
+        'Dim hintString As String = ""
+        'hintString += HintList(GetRandom(0, HintList.Count - 1))
+        'Return hintString
+
+        'Dim hintString As String = ""
+        'Dim testList As New List(Of Integer)
+        'testList.Add(1)
+        'testList.Add(2)
+        'testList.Add(2)
+        'testList.Add(3)
+        'testList.Add(2)
+        'testList.Remove(2)
+
+        'For i As Integer = 0 To testList.Count - 1
+        '    hintString += testList(i).ToString()
+        'Next
+
+        'Return hintString
 
         'Dim hintString As String = ""
 
