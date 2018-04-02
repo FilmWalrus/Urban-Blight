@@ -130,6 +130,7 @@
     <Compile Include="EventDiary.vb" />
     <Compile Include="Hospitals.vb" />
     <Compile Include="Manufacturing.vb" />
+    <Compile Include="Police.vb" />
     <Compile Include="RenameCity.vb">
       <SubType>Form</SubType>
     </Compile>

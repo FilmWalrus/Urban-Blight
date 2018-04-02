@@ -6,6 +6,7 @@
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
         SetRange(1) '-- Hospitals have a base range of 1
+        EffectText = "lives saved"
     End Sub
 
     Public Sub UpdateHospitalCampus(ByVal medType As Integer)
@@ -73,6 +74,7 @@
 
         '-- Attempt to save!
         If GetRandom(1, 100) <= SaveOdds Then
+            AddEffects(1)
             Return True
         Else
             Return False

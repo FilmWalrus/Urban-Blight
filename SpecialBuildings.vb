@@ -54,8 +54,6 @@ End Class
 Public Class CorrectionalFacilityBuilding
     Inherits Building
 
-    Public defaultOdds As Integer = 1
-
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
         EffectText = "criminals rehabilitated"
@@ -128,6 +126,29 @@ Public Class MonumentBuilding
         Next
 
         MyBase.Destroy()
+    End Sub
+End Class
+
+Public Class RehabBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        EffectText = "addicts rehabilitated"
+    End Sub
+
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        '-- Small chance of reducing a person's drunkenness to 0 (and mobility to 0 as well)
+        If thePerson.Drunkenness > 10 Then
+            Dim odds As Integer = 1
+            odds += SafeDivide(thePerson.Drunkenness, 10.0)
+            If GetRandom(1, 10) <= odds Then
+                thePerson.Drunkenness = 0
+                thePerson.Mobility = SafeDivide(thePerson.Mobility, 2.0)
+                thePerson.AddEvent("Admitted to rehab: drunkenness reset to 0 and mobility halved")
+                AddEffects(1)
+            End If
+        End If
     End Sub
 End Class
 

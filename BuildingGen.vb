@@ -124,6 +124,7 @@
         Monument
         Nature
         Science
+        Security
         Transportation
     End Enum
 
@@ -374,6 +375,8 @@
                 Return "Nature"
             Case TagEnum.Science
                 Return "Science"
+            Case TagEnum.Security
+                Return "Security"
             Case TagEnum.Transportation
                 Return "Transportation"
             Case Else
@@ -560,7 +563,7 @@
                     newBuilding.SetSpecialAbility("In 1 to 6 turns, the Construction Site will turn into a new building.  At this point, all people employed by the Construction Site will lose their jobs.")
                     Return newBuilding
                 Case BuildingEnum.Correctional_Facility 'Skipped.  Come back to later.
-                    Dim newBuilding As New Building(bType, 185, 2)
+                    Dim newBuilding As New CorrectionalFacilityBuilding(bType, 185, 2)
                     newBuilding.SetCriminality(60, -2)
                     newBuilding.SetInfo("")
                     Return newBuilding
@@ -609,8 +612,9 @@
                     newBuilding.SetSpecialAbility("Department Stores have a small chance of opening another of their chain on an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Detective_Agency
-                    Dim newBuilding As New Building(bType, 80, 1)
+                    Dim newBuilding As New DetectiveBuilding(bType, 80, 1)
                     newBuilding.SetCriminality(8, -8)
+                    newBuilding.AddTag(TagEnum.Security)
                     newBuilding.SetInfo("Suspicious of a co-worker? Want to know the whereabouts of your lover? Some cases aren't meant for the police. That's where the Detective Agency comes in to play.")
                     newBuilding.SetSpecialAbility("The Detective Agency lets you see where your citizens have been and what they've done on their last turn. This only applies to citizens living on the square with the Detective Agency.")
                     Return newBuilding
@@ -649,8 +653,9 @@
                     newBuilding.SetSpecialAbility("Fast Food Chains have a small chance of opening another location on an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Fire_Station 'What range for the special ability?  Clarify in Special Ability text.
-                    Dim newBuilding As New Building(bType, 100, 2)
+                    Dim newBuilding As New FireStationBuilding(bType, 100, 2)
                     newBuilding.SetHealth(5, 1)
+                    newBuilding.AddTag(TagEnum.Security)
                     newBuilding.SetInfo("An important part of any society, Fire Stations help stop the spread of local fires and improve general wellbeing.")
                     newBuilding.SetSpecialAbility("Fire Stations reduce the chance of arson and fires.")
                     Return newBuilding
@@ -819,13 +824,14 @@
                     newBuilding.SetInfo("Mass Transit allows many of your citizens to gain mobility they never would have had without it.")
                     Return newBuilding
                 Case BuildingEnum.Military_Base
-                    Dim newBuilding As New Building(bType, 260, 5)
+                    Dim newBuilding As New MilitaryBaseBuilding(bType, 260, 5)
                     newBuilding.SetHappiness(15, -1)
                     newBuilding.SetHealth(15, 1)
                     newBuilding.SetCreativity(30, -2)
                     newBuilding.SetDrunkenness(14, 7)
                     newBuilding.SetCriminality(30, -3)
                     newBuilding.AddTag(TagEnum.Monument)
+                    newBuilding.AddTag(TagEnum.Security)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Mine
@@ -896,9 +902,10 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Police_Station
-                    Dim newBuilding As New Building(bType, 155, 2)
+                    Dim newBuilding As New PoliceBuilding(bType, 155, 2)
                     newBuilding.SetHappiness(15, -1)
                     newBuilding.SetCriminality(50, -3)
+                    newBuilding.AddTag(TagEnum.Security)
                     newBuilding.SetInfo("Police stations are the best way to crack down on crime, even if every once in a while they spoil some harmless fun.")
                     Return newBuilding
                 Case BuildingEnum.Polling_Place
@@ -915,8 +922,9 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Private_Security_Company
-                    Dim newBuilding As New Building(bType, 300, 2)
+                    Dim newBuilding As New PrivateSecurityBuilding(bType, 300, 2)
                     newBuilding.SetCriminality(12, -5)
+                    newBuilding.AddTag(TagEnum.Security)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Real_Estate_Developer
@@ -931,7 +939,7 @@
                     newBuilding.SetInfo("")
                     'Return newBuilding
                 Case BuildingEnum.Rehab_Clinic
-                    Dim newBuilding As New Building(bType, 145, 1)
+                    Dim newBuilding As New RehabBuilding(bType, 145, 1)
                     newBuilding.SetHealth(10, 4)
                     newBuilding.SetDrunkenness(50, -2)
                     newBuilding.AddTag(TagEnum.Medical)

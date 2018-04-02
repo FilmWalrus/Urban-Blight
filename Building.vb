@@ -514,6 +514,21 @@ Public Class Building
         Return True
     End Function
 
+    Public Sub UpdateNeighbors(ByVal AddThis As Boolean)
+
+        '-- Update the city squares within range with a refernce to this building
+        Dim LocationsInRange As New List(Of CitySquare)
+        Location.GetLocationsInRange(GetRange(), LocationsInRange)
+        For i As Integer = 0 To LocationsInRange.Count - 1
+            If AddThis Then
+                Location.NeighborBuildings.Add(Me)
+            Else
+                Location.NeighborBuildings.Remove(Me)
+            End If
+        Next
+
+    End Sub
+
 #End Region
 
 #Region " Building Effects "
@@ -538,6 +553,11 @@ Public Class Building
     Public Overridable Function SavePatient(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
         '-- Most buildings can not save patients
         Return False
+    End Function
+
+    Public Overridable Function PreventCrime(ByRef thePerson As Citizen, ByVal crimeType As Integer) As Integer
+        '-- Most buildings can not prevent crimes
+        Return CrimePreventionBuilding.PreventionType.Fail
     End Function
 
     Public Overridable Function GetBirthrateAdjust(ByRef thePerson As Citizen) As Double

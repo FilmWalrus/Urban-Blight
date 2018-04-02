@@ -19,6 +19,7 @@ Public Class CitySquare
 
     '-- Info
     Public Buildings As New List(Of Building)
+    Public NeighborBuildings As New List(Of Building)
     Public People As New List(Of Citizen)
     Public Transportation As Integer = RoadNone
     Public Terrain As Integer = TerrainPlain
@@ -581,7 +582,7 @@ Public Class CitySquare
 
         If Range > 0 Then
             '-- Continue moving to locations adjacent to this location
-            Dim adjacentList As List(Of CitySquare) = GetAdjacents()
+            Dim adjacentList As List(Of CitySquare) = GetTrueAdjacents()
             For i As Integer = 0 To adjacentList.Count - 1
                 If Not visitList.Contains(adjacentList(i)) Then
                     adjacentList(i).GetLocationsInRange(Range - 1, visitList)

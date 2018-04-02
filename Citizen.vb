@@ -543,6 +543,15 @@ Public Class Citizen
         End If
     End Sub
 
+    Sub Fired()
+        '-- Fired from job
+        If JobBuilding IsNot Nothing Then
+            JobBuilding.Employees.Remove(Me)
+            AddEvent("Fired from the " + JobBuilding.GetNameAndAddress())
+            JobBuilding = Nothing
+        End If
+    End Sub
+
     Function CommitCrime(ByVal CrimeType As Integer, ByVal Optional ExtraText As String = "") As Boolean
 
         If Age < 16 Then

@@ -7,6 +7,7 @@
     Public LocationList As New List(Of CitySquare)
 
     Public HospitalList As New List(Of Building)
+    Public CrimePreventerList As New List(Of Building)
 
     Public DeadCitizens As New List(Of Citizen)
     Public DestroyedBuildings As New List(Of Building)
@@ -22,6 +23,7 @@
         Illness
         TrafficAccident
         Murder
+        ResistingArrest
         Unknown
     End Enum
 
@@ -372,11 +374,17 @@
             If GetRandom(0, 100) < odds Then
                 Dim theft As Integer = Math.Max(1, Math.Min(thePerson.Criminality, CurrentPlayer.TotalMoney))
                 If thePerson.CommitCrime(CrimeType.Robbery, theft.ToString()) Then
-                    CurrentPlayer.TotalMoney -= theft
-                    TheftSum += theft
-                    Diary.TheftEvents.AddEvent(thePerson.GetNameAndAddress() + " stole $" + theft.ToString)
-                    'LocalEventTheft = CountTheft.ToString() + " citizens stole a combined $" + TheftSum.ToString() + "." + ControlChars.NewLine
+
+                    '-- Attempt to prevent this crime
+                    Dim CrimeStopper As Building = AttemptToPreventCrime(thePerson, CrimeType.Robbery)
+                    If CrimeStopper Is Nothing Then
+                        CurrentPlayer.TotalMoney -= theft
+                        TheftSum += theft
+                        Diary.TheftEvents.AddEvent(thePerson.GetNameAndAddress() + " stole $" + theft.ToString)
+                        'LocalEventTheft = CountTheft.ToString() + " citizens stole a combined $" + TheftSum.ToString() + "." + ControlChars.NewLine
+                    End If
                 End If
+
             End If
 
             Dim currentLocation As CitySquare = thePerson.Residence
@@ -390,8 +398,12 @@
             If GetRandom(0, 150) < odds And buildingCount > 0 And GetRandom(0, 9) < TotalBuildings Then
                 Dim targetBuilding As Building = currentLocation.Buildings(GetRandom(0, buildingCount - 1))
                 If thePerson.CommitCrime(CrimeType.Arson, targetBuilding.GetNameAndAddress()) Then
-                    DestroyedBuildings.Add(targetBuilding)
-                    Diary.ArsonEvents.AddEvent(thePerson.GetNameAndAddress() + " burned down the " + targetBuilding.GetNameAndAddress)
+                    '-- Attempt to prevent this crime
+                    Dim CrimeStopper As Building = AttemptToPreventCrime(thePerson, CrimeType.Arson)
+                    If CrimeStopper Is Nothing Then
+                        DestroyedBuildings.Add(targetBuilding)
+                        Diary.ArsonEvents.AddEvent(thePerson.GetNameAndAddress() + " burned down the " + targetBuilding.GetNameAndAddress)
+                    End If
                 End If
             End If
 
@@ -406,14 +418,17 @@
                     theVictim = currentLocation.People(GetRandom(0, localPop - 1))
                 End While
 
-                '-- Killing spree potential (especially if the crime paid off)
-                thePerson.Criminality += GetRandom(4, Math.Min(7, theVictim.Employment / 7.0))
+                If thePerson.CommitCrime(CrimeType.Murder, theVictim.GetNameAndAddress()) Then
+                    '-- Attempt to prevent this crime
+                    Dim CrimeStopper As Building = AttemptToPreventCrime(thePerson, CrimeType.Murder)
+                    If CrimeStopper Is Nothing Then
+                        If theVictim.Die(DeathCause.Murder) Then
+                            '-- Killing spree potential (especially if the crime paid off)
+                            thePerson.Criminality += GetRandom(4, Math.Min(7, theVictim.Employment / 7.0))
 
-                If theVictim.Die(DeathCause.Murder) Then
-
-                    If thePerson.CommitCrime(CrimeType.Murder, theVictim.GetNameAndAddress()) Then
-                        DeadCitizens.Add(theVictim)
-                        Diary.MurderEvents.AddEvent(thePerson.GetNameAndAddress() + " killed " + theVictim.Name)
+                            DeadCitizens.Add(theVictim)
+                            Diary.MurderEvents.AddEvent(thePerson.GetNameAndAddress() + " killed " + theVictim.Name)
+                        End If
                     End If
                 End If
             End If
@@ -597,6 +612,62 @@
 
 #End Region
 
+#Region " Crime Prevention "
+
+    Sub GatherCrimePrevention()
+
+        CrimePreventerList.Clear()
+
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim thisLocation As CitySquare = GridArray(i, j)
+
+                '-- Add all medical buildings at this location
+                CrimePreventerList.AddRange(thisLocation.GetBuildingsByTag(BuildingGen.TagEnum.Security))
+            Next
+        Next
+
+    End Sub
+
+    Function AttemptToPreventCrime(ByRef theCriminal As Citizen, ByVal criminalAct As Integer) As Building
+
+        For i As Integer = 0 To CrimePreventerList.Count - 1
+            Dim PreventionOutcome As Integer = CrimePreventerList(i).PreventCrime(theCriminal, criminalAct)
+            If PreventionOutcome <> CrimePreventionBuilding.PreventionType.Fail Then
+                Dim PreventionText As String = ""
+                PreventionText += theCriminal.Name + "'s "
+                Select Case criminalAct
+                    Case CrimeType.Murder
+                        PreventionText += "murder"
+                    Case CrimeType.Arson
+                        PreventionText += "arson"
+                    Case CrimeType.Vandalism
+                        PreventionText += "vandalism"
+                    Case CrimeType.Robbery
+                        PreventionText += "robbery"
+                    Case Else
+                        PreventionText += "criminal"
+                End Select
+                PreventionText += " plot foiled by " + CrimePreventerList(i).GetName()
+
+                '-- Handle criminals killed resisting arrest
+                If PreventionOutcome = CrimePreventionBuilding.PreventionType.SuccessFatal Then
+                    If theCriminal.Die(DeathCause.ResistingArrest) Then
+                        PreventionText += ". Perpetrator killed resisting arrest"
+                        DeadCitizens.Add(theCriminal)
+                    End If
+                End If
+
+                Diary.CrimesPeventedEvents.AddEvent(PreventionText)
+                Return CrimePreventerList(i)
+            End If
+        Next
+
+        Return Nothing
+    End Function
+
+#End Region
+
 #Region " Setup "
 
     Sub Setup()
@@ -611,6 +682,9 @@
 
         '-- Gather hospitals (effects births and deaths)
         GatherHospitals()
+
+        '-- Gather crime preventers
+        GatherCrimePrevention()
     End Sub
 
     Sub GatherCitizens()
