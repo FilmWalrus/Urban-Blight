@@ -127,6 +127,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BuildingGen.vb" />
+    <Compile Include="Construction.vb" />
     <Compile Include="EventDiary.vb" />
     <Compile Include="Hospitals.vb" />
     <Compile Include="Manufacturing.vb" />

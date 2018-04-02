@@ -1,4 +1,6 @@
-﻿Public Class HospitalBuilding
+﻿'-- This file contains classes for Hospital and other Medical-type buildings
+
+Public Class HospitalBuilding
     Inherits Building
 
     Public HospitalCampus As New List(Of Integer)

@@ -648,18 +648,21 @@ Public Class Citizen
         PersonString += "Criminality: " + Criminality.ToString + ControlChars.NewLine
         PersonString += ControlChars.NewLine
 
-        '-- Print the citizen's age and employment status
+        '-- Print the citizen's employment status
+        Dim WorkStatus As String = ""
         If IsMinor() Then
-            PersonString += "Minor." + ControlChars.NewLine
+            WorkStatus += "Minor." + ControlChars.NewLine
         End If
         If JobBuilding Is Nothing Then
-            If Age > 16 Then
-                PersonString += "Currently unemployed." + ControlChars.NewLine
+            If Not IsMinor() Then
+                WorkStatus += "Currently unemployed." + ControlChars.NewLine
             End If
         Else
-            PersonString += "Employed by the " + JobBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
+            WorkStatus += "Employed by the " + JobBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
         End If
-        PersonString += ControlChars.NewLine
+        If WorkStatus.Length > 0 Then
+            PersonString += WorkStatus + ControlChars.NewLine
+        End If
 
         '-- Print the citizen's parents and children
         If ParentName.Length > 0 Or Children.Count > 0 Then

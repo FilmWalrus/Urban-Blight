@@ -46,9 +46,8 @@ Public Class AIDiaryPage
         If lineCount < EventLimit Then
             Return diaryText
         Else
-            Dim defaultCopy As String = defaultText
-            defaultCopy.Replace("@", lineCount.ToString())
-            Return defaultText + ControlChars.NewLine
+            Dim defaultCopy As String = defaultText.Replace("@", lineCount.ToString())
+            Return defaultCopy + ControlChars.NewLine
         End If
 
     End Function
@@ -78,15 +77,15 @@ Public Class EventDiary
 
     Public CrimesPeventedEvents As New DiaryPage("crimes prevented")
     Public ResistingArrestEvents As New DiaryPage("criminals died resisting arrest.")
-    Public TheftEvents As New DiaryPage("citizens stole from you.")
+    Public TheftEvents As New DiaryPage("citizens stole public funds.")
     Public ArsonEvents As New DiaryPage("buildings torched.")
     Public MurderEvents As New DiaryPage("citizens murdered.")
 
     Public TaxEvents As New DiaryPage("")
 
-    Public AILandEvents As New DiaryPage("AI founded @ new cities")
-    Public AIBuildEvents As New DiaryPage("AI created @ new buildings")
-    Public AIRoadEvents As New DiaryPage("AI upgraded roads @ times")
+    Public AILandEvents As New AIDiaryPage("AI founded @ new cities")
+    Public AIBuildEvents As New AIDiaryPage("AI created @ new buildings")
+    Public AIRoadEvents As New AIDiaryPage("AI upgraded roads @ times")
 
     Public SectionHasContent As Boolean = False
 

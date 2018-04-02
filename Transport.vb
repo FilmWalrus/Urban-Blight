@@ -1,4 +1,4 @@
-﻿Imports Urban_Blight
+﻿'-- This file contains classes for Transportation-type buildings
 
 Public Class AirportBuilding
     Inherits Building

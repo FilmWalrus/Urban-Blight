@@ -1,4 +1,6 @@
-﻿Public Class CrimePreventionBuilding
+﻿'-- This file contains classes for Police Stations and other Security-type buildings
+
+Public Class CrimePreventionBuilding
     Inherits Building
 
     Public DefaultOddsNear As Double = 0.0

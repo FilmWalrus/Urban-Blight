@@ -1,4 +1,6 @@
-﻿Public Class ManufacturingBuilding
+﻿'-- This file contains classes for Manufacturing-type buildings
+
+Public Class ManufacturingBuilding
     Inherits Building
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)

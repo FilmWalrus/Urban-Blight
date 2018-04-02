@@ -1,4 +1,7 @@
-﻿Public Class HintGenerator
+﻿'This file contains the HintGenerator class.
+'The hint generator simply returns a random hint text from a preset list.
+
+Public Class HintGenerator
 
 #Region " Variables "
     Dim HintList As New List(Of String)
@@ -76,9 +79,9 @@
     End Sub
 
     Public Function GenerateHint() As String
-        'Dim hintString As String = ""
-        'hintString += HintList(GetRandom(0, HintList.Count - 1))
-        'Return hintString
+        Dim hintString As String = ""
+        hintString += HintList(GetRandom(0, HintList.Count - 1))
+        Return hintString
 
         'Dim hintString As String = ""
         'Dim testList As New List(Of Integer)
