@@ -1035,7 +1035,7 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Temp_Agency
-                    Dim newBuilding As New Building(bType, 135, 1)
+                    Dim newBuilding As New TempAgencyBuilding(bType, 135, 1)
                     newBuilding.SetHappiness(15, -1)
                     newBuilding.SetIntelligence(15, -1)
                     newBuilding.SetInfo("")

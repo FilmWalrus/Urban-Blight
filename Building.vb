@@ -544,6 +544,16 @@ Public Class Building
                 UpdateAllOdds(2.0, True)
             End If
         End If
+
+        '-- If temp agencies are here, add a job to this building for each
+        Dim TempAgencyList As List(Of Building) = Location.GetBuildingsByType(BuildingGen.BuildingEnum.Temp_Agency)
+        For i As Integer = 0 To TempAgencyList.Count - 1
+            Dim thisTempAgency As Building = TempAgencyList(i)
+            If Not thisTempAgency.Equals(Me) Then
+                Jobs += 1
+                TempAgencyList(i).AddEffects(1)
+            End If
+        Next
     End Sub
 
     Public Overridable Sub UpdateBuildingEffects()
@@ -593,6 +603,11 @@ Public Class Building
         Return False
     End Function
 
+
+
+#End Region
+
+#Region " Effects, Revenue, and Upkeep "
     Public Sub AddEffects(ByVal NewEffect As Integer)
         CurrentEffects += NewEffect
         TotalEffects += NewEffect
@@ -607,7 +622,6 @@ Public Class Building
         CurrentUpkeep += NewUpkeep
         TotalUpkeep += NewUpkeep
     End Sub
-
 #End Region
 
 #Region " Destruction "

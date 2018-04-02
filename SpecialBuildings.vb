@@ -262,6 +262,29 @@ Public Class StartupIncubatorBuilding
     End Function
 End Class
 
+Public Class TempAgencyBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        EffectText = "temp positions created"
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Add jobs to all buildings at this location
+        For i As Integer = 0 To Location.Buildings.Count - 1
+            Dim thisBuilding As Building = Location.Buildings(i)
+            If Not thisBuilding.Equals(Me) Then
+                thisBuilding.Jobs += 1
+                AddEffects(1)
+            End If
+        Next
+    End Sub
+
+End Class
+
 Public Class WelfareBuilding
     Inherits Building
 
