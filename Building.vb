@@ -729,7 +729,7 @@ Public Class Building
         End If
 
         '-- Show job info
-        BuildingString += "Jobs: " + GetEmployeeCount.ToString + "/" + Jobs.ToString + ControlChars.NewLine
+        BuildingString += "Jobs: " + GetEmployeeCount.ToString + "/" + Jobs.ToString + "   Success: " + BusinessSuccess.ToString() + ControlChars.NewLine
         If Employees.Count > 0 Then
             BuildingString += "Employees: "
             For i As Integer = 0 To Employees.Count - 1
