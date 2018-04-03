@@ -480,7 +480,7 @@ Public Class Player
             If Personality.PreferenceList.Contains(AIPersonality.AIType.AI_Spendthrift) Then
                 Dim ChoiceCost As Integer = 0
                 If i <= AIBuilding4 Then
-                    ChoiceCost = Cards(i).Cost
+                    ChoiceCost = Cards(i).GetPurchasePrice()
                 ElseIf i = AIRoad Then
                     ChoiceCost = RoadCostBase
                 ElseIf i = AILand Then

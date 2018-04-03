@@ -62,6 +62,15 @@ Public Class ChurchBuilding
     End Sub
 End Class
 
+Public Class CrimeRingBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        EffectText = "kickbacks generated"
+    End Sub
+End Class
+
 Public Class CorrectionalFacilityBuilding
     Inherits Building
 

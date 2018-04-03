@@ -26,6 +26,7 @@ Public Class SpreadableBuilding
         '-- If it is occupied and population of adj city can sustain it, spread to that location.
         If CountExisting < MaxExisting Then
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(Type)
+            newBuilding.PurchasePrice = 0
             RandomNeighbor.AddBuilding(newBuilding, OwnerID)
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetName() + " has opened a new location at " + RandomNeighbor.GetName())
             AddEffects(1)
@@ -56,6 +57,7 @@ Public Class ConstructionSiteBuilding
 
         If GetRandom(1, 5) = 1 Then
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
+            newBuilding.PurchasePrice = GetPurchasePrice()
             Location.AddBuilding(newBuilding, OwnerID)
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " is now a " + newBuilding.GetName())
             Return False
@@ -113,6 +115,7 @@ Public Class DepartmentStoreBuilding
         If GetRandom(1, 100) <= 3 Then
             '-- Create a mall
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(BuildingGen.BuildingEnum.Mall)
+            newBuilding.PurchasePrice = GetPurchasePrice()
             Location.AddBuilding(newBuilding, OwnerID)
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " upgraded to a " + newBuilding.GetName())
 
@@ -161,6 +164,7 @@ Public Class SkyscraperBuilding
         Else
             newBuilding = BuildingGenerator.CreateBuilding(BuildingGen.BuildingEnum.Park)
         End If
+        newBuilding.PurchasePrice = 0
         Location.AddBuilding(newBuilding, OwnerID)
     End Sub
 End Class
@@ -178,6 +182,7 @@ Public Class StartupIncubatorBuilding
 
         If GetRandom(1, 100) <= 15 Then '-- 15% chance to spawn a new building
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
+            newBuilding.PurchasePrice = 0
             Location.AddBuilding(newBuilding, OwnerID)
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " launched " + newBuilding.GetName())
             AddEffects(1)

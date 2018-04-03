@@ -516,7 +516,7 @@ Public Class Citizen
 
         If JobBuilding IsNot Nothing Then
             '-- If already employed, make sure this other opportunity is better
-            If TimeAtJob <= TimeIncrement Or newJob.Cost <= JobBuilding.Cost Then '-- Change this to salary in future
+            If TimeAtJob <= TimeIncrement Or newJob.GetBaseCost() <= JobBuilding.GetBaseCost() Then '-- Change this to salary in future
                 Return False
             End If
 
@@ -615,7 +615,7 @@ Public Class Citizen
     End Function
 
     Public Function IsElderly() As Boolean
-        If Age > 50 Then
+        If Age >= 55 Then
             Return True
         Else
             Return False

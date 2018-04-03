@@ -3,7 +3,10 @@ Public Class Building
 #Region " Variables "
     Public Type As Integer = -1
 
-    Public Cost As Integer = 0
+    Public BaseCost As Integer = 0
+    Public MarkdownCost As Integer = 0
+    Public PurchasePrice As Integer = 0
+
     Public Jobs As Integer = 0
     Public BusinessSuccess As Integer = 0
 
@@ -19,8 +22,8 @@ Public Class Building
     Public Location As CitySquare = Nothing
     Public Employees As New List(Of Citizen)
 
-    '-- Keep track of how many times no one bought this for free
-    Public RejectionCount As Integer = 0
+    '-- Keep track of who rejected this building for free
+    Public RejecterList As New List(Of Player)
 
     '-- Minimum employee standards
     Public minAge As Integer = 16
@@ -66,7 +69,9 @@ Public Class Building
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         Type = bType
-        Cost = bCost
+        BaseCost = bCost
+        MarkdownCost = bCost
+        PurchasePrice = bCost
         Jobs = bJobs
     End Sub
 
@@ -268,8 +273,16 @@ Public Class Building
         Return Employees.Count
     End Function
 
+    Public Overridable Function GetBaseCost() As Integer
+        Return BaseCost
+    End Function
+
     Public Overridable Function GetCost() As Integer
-        Return Cost
+        Return MarkdownCost
+    End Function
+
+    Public Overridable Function GetPurchasePrice() As Integer
+        Return PurchasePrice
     End Function
 
     Public Overridable Function GetRange() As Integer
@@ -658,6 +671,51 @@ Public Class Building
         CurrentUpkeep += NewUpkeep
         TotalUpkeep += NewUpkeep
     End Sub
+
+    Public Function CollectRevenue() As Integer
+        AddRevenue(SafeDivide(CurrentVisitors, 5.0)) '-- Building revenue increases with visitors
+        Return CurrentRevenue
+    End Function
+
+    Public Function CollectUpkeep() As Integer
+        AddUpkeep(SafeDivide(Age, 10.0)) '-- Building upkeep increases with age
+        Return CurrentUpkeep
+    End Function
+#End Region
+
+#Region " Cost of Building "
+
+    Public Sub DropPrice()
+        MarkdownCost = Math.Max(MarkdownCost - DropCostBase, 0)
+        PurchasePrice = MarkdownCost
+    End Sub
+
+    Public Sub AdjPurchasePrice(ByRef thisPlayer As Player)
+
+    End Sub
+
+    Public Function IsBuildingUnwanted(ByRef thisPlayer As Player) As Boolean
+        '-- Check to see if every player has rejected this building even for free
+        If GetCost() <= 0 Then
+            If Not RejecterList.Contains(thisPlayer) Then
+                RejecterList.Add(thisPlayer)
+
+                '-- Count the number of active players
+                Dim ActivePlayers As Integer = 0
+                For i As Integer = 0 To Players.Count - 1
+                    If Players(i).PlayerType <> PlayerNone Then
+                        ActivePlayers += 1
+                    End If
+                Next
+
+                '-- If all active players have rejected this building, replace it
+                If RejecterList.Count = ActivePlayers Then
+                    Return True
+                End If
+            End If
+        End If
+        Return False
+    End Function
 #End Region
 
 #Region " Destruction "
@@ -706,10 +764,10 @@ Public Class Building
 
         buildingValue += (Jobs * aiBrain.GetStatAdjustment(StatEmployment))
 
-        If Cost <= 0 Then
+        If PurchasePrice <= 0 Then
             Return 9999999.9
         Else
-            Return SafeDivide(buildingValue, Cost)
+            Return SafeDivide(buildingValue, PurchasePrice)
         End If
 
     End Function
@@ -718,11 +776,14 @@ Public Class Building
     Public Overrides Function toString() As String
         Dim BuildingString As String = ""
 
-        BuildingString += "Name: " + GetName() + ControlChars.NewLine
+        BuildingString += GetName() + ControlChars.NewLine '"Name: " + 
 
         If Location IsNot Nothing Then
             BuildingString += "Location: " + Location.GetName() + ControlChars.NewLine
+            BuildingString += "Age: " + Age.ToString + ControlChars.NewLine
         End If
+
+        BuildingString += "Cost: $" + GetPurchasePrice().ToString + "   (Base Value $" + GetBaseCost().ToString + ")" + ControlChars.NewLine
 
         If Range > 0 Then
             BuildingString += "Range: " + GetRange().ToString() + ControlChars.NewLine

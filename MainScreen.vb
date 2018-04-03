@@ -1198,7 +1198,7 @@ Public Class Form1
         ElseIf SelectedCard = WipeCard Then
             CardCost = CurrentPlayer.GetPlayerWipeCost()
         ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
-            CardCost = Cards(SelectedCard).Cost
+            CardCost = Cards(SelectedCard).GetPurchasePrice()
         Else
             Return False
         End If
@@ -1320,6 +1320,7 @@ Public Class Form1
         '-- Display event messages
         UpdateTextBox(txt_event, Diary.toString())
         Infotab.SelectedTab = Infotab.TabPages(EventTab)
+        UpdateTabs()
 
     End Sub
 
@@ -1413,47 +1414,35 @@ Public Class Form1
     End Sub
 
     Sub UpdateCards()
-        '--Increase hand to full
+
         For i As Integer = 0 To Cards.Length - 1
-            If Cards(i) Is Nothing Then
-                Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
-                Cards(i) = newBuilding
-            End If
-        Next
-
-        '--Reduce Cost of Available Buildings
-        For i As Integer = 0 To CardCount - 1
-
             Dim CardBuilding As Building = Cards(i)
-            If CardBuilding.Cost = 0 Then
-                If CardBuilding.RejectionCount >= Players.Count Then
-                    '-- If the rejection level of a free building hit the player count, replace it
+
+            If CardBuilding Is Nothing Then
+                '--Increase hand to full
+                CardBuilding = BuildingGenerator.CreateBuilding(-1)
+                Cards(i) = CardBuilding
+            Else
+                '-- If no player bought this building even for free, replace it
+                If CardBuilding.IsBuildingUnwanted(CurrentPlayer) Then
                     Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
                     Cards(i) = newBuilding
-                Else
-                    '-- No one bought this building even though it was free. Escallate its rejection level
-                    CardBuilding.RejectionCount += 1
                 End If
+
+                '-- Reduce cost of available buildings
+                CardBuilding.DropPrice()
             End If
 
-            '-- Reduce cost of available buildings by 5
-            CardBuilding.Cost = Math.Max(CardBuilding.Cost - DropCostBase, 0)
-        Next
-
-        '-- Reduce cost for this player to wipe the buildings cards by 5 (no lower limit)
-        CurrentPlayer.WipeCost -= DropCostBase
-
-        '--Update building card text
-        For i As Integer = 0 To CardCount - 1
-
-            Dim CardBuilding As Building = Cards(i)
-
+            '--Update building card text
             Dim cardText As String = CardBuilding.GetName() + ControlChars.NewLine
-            cardText += "$" + CardBuilding.Cost.ToString() + " - "
+            cardText += "$" + CardBuilding.GetPurchasePrice().ToString() + " - "
             cardText += CardBuilding.Jobs.ToString() + " jobs"
 
             ButtonList(i).Text = cardText
         Next
+
+        '-- Reduce cost for this player to wipe the buildings cards by 5 (no lower limit)
+        CurrentPlayer.WipeCost -= DropCostBase
 
         '--Update wipe card text
         Dim WipeCost As Integer = CurrentPlayer.GetPlayerWipeCost()
@@ -1508,6 +1497,10 @@ Public Class Form1
     End Sub
 
     Sub UpdateTabs()
+        If ClickCity Is Nothing Then
+            Return
+        End If
+
         '-- Update the city tab
         UpdateTextBox(txt_city, ClickCity.toString())
 

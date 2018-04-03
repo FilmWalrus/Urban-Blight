@@ -398,7 +398,6 @@ Public Class TollBoothBuilding
         If Not TollList.Contains(thePerson) And TollCost > 0 Then
             TollList.Add(thePerson)
 
-            thePerson.UnpaidFines += TollCost
             thePerson.AddEvent("Paid toll of $" + TollCost.ToString())
             AddRevenue(TollCost)
             AddEffects(1)

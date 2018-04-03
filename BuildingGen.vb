@@ -425,7 +425,7 @@
                     newBuilding.SetMobility(10, 1)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.AddTag(TagEnum.Transportation)
-                    newBuilding.SetInfo("In a medical emergency, the Ambulance Service provides treatment and transport to afflicted individuals.")
+                    newBuilding.SetInfo("In a medical emergency, the Ambulance Service provides treatment and transport for afflicted individuals.")
                     newBuilding.SetSpecialAbility("The Ambulance Service boosts the effects of all medical buildings within a radius of two adjacent squares.")
                     Return newBuilding
                 Case BuildingEnum.Amusement_Park
@@ -582,9 +582,9 @@
                     newBuilding.SetSpecialAbility("Courthouses let the owner collect double the money from fines within a two-square adjacency of the building. If the Courthouse is built on a Swamp tile, fines are tripled.")
                     Return newBuilding
                 Case BuildingEnum.Crime_Ring
-                    Dim newBuilding As New Building(bType, 50, 4)
+                    Dim newBuilding As New CrimeRingBuilding(bType, 50, 4)
                     newBuilding.SetCriminality(14, 10)
-                    newBuilding.SetInfo("Crime Rings bring plenty of cheap jobs but sharp, if rare, increases in extreme criminal behavior are likely.")
+                    newBuilding.SetInfo("Crime Rings bring plenty of cheap jobs but sharp, sporadic increases in extreme criminal behavior are likely.")
                     newBuilding.SetSpecialAbility("Crimes committed on the square of the Crime Ring result in monetary kickbacks to the owner.")
                     Return newBuilding
                 Case BuildingEnum.Cult
@@ -844,7 +844,7 @@
                     Return newBuilding
                 Case BuildingEnum.Mine
                     Dim newBuilding As New Building(bType, 55, 2)
-                    newBuilding.SetHappiness(10, -2)
+                    newBuilding.SetHappiness(18, -4)
                     newBuilding.SetHealth(50, -3)
                     newBuilding.SetInfo("")
                     Return newBuilding
