@@ -3,8 +3,7 @@
 Public Class CrimePreventionBuilding
     Inherits Building
 
-    Public DefaultOddsNear As Double = 0.0
-    Public DefaultOddsFar As Double = 0.0
+    Public DefaultOdds As New List(Of Double)
     Public ChanceFatal As Double = 0
 
     Enum PreventionType
@@ -40,6 +39,18 @@ Public Class CrimePreventionBuilding
         End If
     End Function
 
+    Public Overridable Function GetPreventionOdds(ByVal Distance As Integer) As Integer
+        '-- Get the odds of preventing a crime at this range
+        If Distance > Range Then
+            Return 0
+        ElseIf Range > DefaultOdds.Count Then
+            '-- If range increases expand the odds outward
+            Distance -= (Range - DefaultOdds.Count)
+        End If
+        Dim Odds As Double = DefaultOdds(Distance)
+        Return Odds
+    End Function
+
     Public Overrides Function PreventCrime(ByRef thePerson As Citizen, ByVal crimeType As Integer) As Integer
 
         '-- Check if the crime preventer specializes in this type of thing
@@ -54,11 +65,7 @@ Public Class CrimePreventionBuilding
         End If
 
         '-- Get the odds of preventing a crime at this range
-        Dim PreventOdds As Integer = DefaultOddsFar
-        If Distance < Range Then
-            PreventOdds = DefaultOddsNear
-        End If
-        'PreventOdds += GetHealthBonus()
+        Dim PreventOdds As Integer = GetPreventionOdds(Distance)
 
         '-- Attempt to prevent this crime!
         If GetRandom(1, 100) <= PreventOdds Then
@@ -78,8 +85,10 @@ Public Class DetectiveBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
-        DefaultOddsNear = 50
-        DefaultOddsFar = 25
+        DefaultOdds.Add(50.0)
+        DefaultOdds.Add(25.0)
+        DefaultOdds.Add(5.0)
+        SetRange(2)
         ChanceFatal = 2
         EffectText = "cases solved"
     End Sub
@@ -91,8 +100,8 @@ Public Class FireStationBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
-        DefaultOddsNear = 90
-        DefaultOddsFar = 75
+        DefaultOdds.Add(90.0)
+        DefaultOdds.Add(75.0)
         ChanceFatal = 0
         EffectText = "fires extinguished"
     End Sub
@@ -108,8 +117,8 @@ Public Class MilitaryBaseBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
-        DefaultOddsNear = 30
-        DefaultOddsFar = 20
+        DefaultOdds.Add(30.0)
+        DefaultOdds.Add(20.0)
         ChanceFatal = 50
     End Sub
 
@@ -124,9 +133,11 @@ Public Class PoliceBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
-        DefaultOddsNear = 80
-        DefaultOddsFar = 40
+        DefaultOdds.Add(80.0)
+        DefaultOdds.Add(40.0)
+        DefaultOdds.Add(10.0)
         ChanceFatal = 10
+        SetRange(2)
     End Sub
 
 End Class
@@ -136,8 +147,8 @@ Public Class PrivateSecurityBuilding
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
-        DefaultOddsNear = 95
-        DefaultOddsFar = 65
+        DefaultOdds.Add(95.0)
+        DefaultOdds.Add(65.0)
         ChanceFatal = 0
         EffectText = "threats neutralized"
     End Sub

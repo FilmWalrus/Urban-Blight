@@ -413,7 +413,7 @@
                     '-- Note: Banned buildings could still get built by Construction Sites, Startup Incubator, etc.
                     Return newBuilding
                 Case BuildingEnum.Airport
-                    Dim newBuilding As New AirportBuilding(bType, 560, 5)
+                    Dim newBuilding As New AirportBuilding(bType, 560, 6)
                     newBuilding.SetMobility(18, 10)
                     newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Though a more expensive option, Airports allow for travel to far-reaching destinations.")
@@ -512,7 +512,7 @@
                     Return newBuilding
                 Case BuildingEnum.Civic_Center
                     Dim newBuilding As New Building(bType, 635, 8)
-                    newBuilding.SetHappiness(25, 5)
+                    newBuilding.SetHappiness(25, 3)
                     newBuilding.SetIntelligence(25, 3)
                     newBuilding.SetCreativity(25, 3)
                     newBuilding.SetInfo("Civic Centers provide public spaces and shared landscapes for the free flow of commerce, art, and culture.")
