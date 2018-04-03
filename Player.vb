@@ -301,7 +301,7 @@ Public Class Player
 
 #Region " AI "
 
-    Public Function ChooseNextAction() As Integer
+    Public Function ChooseNextAction(ByRef Cards() As Building) As Integer
 
         '-- Misers often just hoard their money
         If Personality.BeMiserly() Then
@@ -374,9 +374,9 @@ Public Class Player
 
         '-- Find the weight of the decision in favor of buying each building
         '-- Equal to the need for jobs * value of the building / cost of the building
-        Dim cardDecisionWeights(Cards.Count - 1) As Double
+        Dim cardDecisionWeights(Cards.Length - 1) As Double
         Dim cardWeightSum As Double = 0
-        For i As Integer = 0 To Cards.Count - 1
+        For i As Integer = 0 To Cards.Length - 1
             Dim theBuilding As Building = Cards(i)
             If BannedBuildings.Contains(theBuilding.Type) Then
                 cardDecisionWeights(i) = -2.0 '-- AI can't build banned buildings
@@ -385,7 +385,7 @@ Public Class Player
             End If
             cardWeightSum += cardDecisionWeights(i)
         Next
-        Dim cardWeightAvg As Double = SafeDivide(cardWeightSum, Cards.Count)
+        Dim cardWeightAvg As Double = SafeDivide(cardWeightSum, Cards.Length)
 
         '-- Find the weight of the decision in favor of buying road
         '-- Equal to the need for roads * value of the road / cost of road
@@ -477,10 +477,22 @@ Public Class Player
         For i As Integer = 0 To decisionWeights.Count - 1
 
             '-- Spendthrifts won't consciously choose an action that will result in a pass
-            If Personality.BeSpendthrifty(i, TotalMoney, bestLandCost) Then
-                Continue For
+            If Personality.PreferenceList.Contains(AIPersonality.AIType.AI_Spendthrift) Then
+                Dim ChoiceCost As Integer = 0
+                If i <= AIBuilding4 Then
+                    ChoiceCost = Cards(i).Cost
+                ElseIf i = AIRoad Then
+                    ChoiceCost = RoadCostBase
+                ElseIf i = AILand Then
+                    ChoiceCost = bestLandCost
+                End If
+
+                If TotalMoney < ChoiceCost Then
+                    Continue For
+                End If
             End If
 
+            '-- Check if this is the best decision
             If decisionWeights(i) > bestDecisionWeight Then
                 bestDecisionWeight = decisionWeights(i)
                 finalDecision = i

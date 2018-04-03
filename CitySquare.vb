@@ -282,10 +282,6 @@ Public Class CitySquare
         People.Add(newPerson)
     End Sub
 
-    Function WillExpand() As Boolean
-
-    End Function
-
     Function GetDistance(ByRef OtherSquare As CitySquare) As Integer
         Return Math.Abs(RowID - OtherSquare.RowID) + Math.Abs(ColID - OtherSquare.ColID)
     End Function
@@ -459,7 +455,7 @@ Public Class CitySquare
             Dim i As Integer
             For i = 0 To Buildings.Count - 1
                 Dim thisBuilding As Building = Buildings(i)
-                CityString += thisBuilding.GetName() + ": " + thisBuilding.GetEmployeeCount().ToString() + "/" + thisBuilding.Jobs.ToString() + "   Success: " + thisBuilding.Success.ToString() + ControlChars.NewLine
+                CityString += thisBuilding.GetName() + ": " + thisBuilding.GetEmployeeCount().ToString() + "/" + thisBuilding.Jobs.ToString() + "   Success: " + thisBuilding.BusinessSuccess.ToString() + ControlChars.NewLine
             Next
         End If
 

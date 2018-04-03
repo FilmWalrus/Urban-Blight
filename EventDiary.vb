@@ -73,6 +73,7 @@ Public Class EventDiary
     Public EmigrationEvents As New DiaryPage("citizens emigrated.")
 
     Public HireEvents As New DiaryPage("citizens got new jobs.")
+    Public CultEvents As New DiaryPage("lured in by cults")
     Public SpecialBuildingEvents As New DiaryPage("")
 
     Public CrimesPeventedEvents As New DiaryPage("crimes prevented")
@@ -111,6 +112,7 @@ Public Class EventDiary
         EmigrationEvents.ClearPage()
 
         HireEvents.ClearPage()
+        CultEvents.ClearPage()
         SpecialBuildingEvents.ClearPage()
 
         CrimesPeventedEvents.ClearPage()
@@ -166,6 +168,7 @@ Public Class EventDiary
 
         PrintEvent(SpecialBuildingEvents.toString())
         PrintEvent(ExpansionEvents.toString())
+        PrintEvent(CultEvents.toString(), True)
         PrintEvent(HireEvents.toString(), True)
 
         Return EventString

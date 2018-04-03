@@ -15,8 +15,9 @@ Public Class Form1
     Dim WinFlag As Boolean = False
 
     '--
-    Dim NoCard As Integer = -1
     Dim CardCount As Integer = 4
+    Public Cards(CardCount - 1) As Building
+    Dim NoCard As Integer = -1
     Dim RoadCard As Integer = CardCount
     Dim LandCard As Integer = RoadCard + 1
     Dim WipeCard As Integer = LandCard + 1
@@ -347,7 +348,7 @@ Public Class Form1
         Me.lblPerson.Name = "lblPerson"
         Me.lblPerson.Size = New System.Drawing.Size(136, 16)
         Me.lblPerson.TabIndex = 4
-        Me.lblPerson.Text = "Displaying X of Y"
+        Me.lblPerson.Text = "Displaying 0 of 0"
         '
         'ubPForward
         '
@@ -775,7 +776,7 @@ Public Class Form1
         Me.lblBuilding.Name = "lblBuilding"
         Me.lblBuilding.Size = New System.Drawing.Size(136, 16)
         Me.lblBuilding.TabIndex = 8
-        Me.lblBuilding.Text = "Displaying X of Y"
+        Me.lblBuilding.Text = "Displaying 0 of 0"
         '
         'ubBForward
         '
@@ -1250,7 +1251,7 @@ Public Class Form1
                 Dim newBuilding As Building = Cards(randNum)
                 newBuilding.Location = ClickCity
                 ClickCity.AddBuilding(newBuilding, CurrentPlayerIndex)
-                Cards.RemoveAt(randNum)
+                Cards(randNum) = Nothing
             ElseIf ClickCity.Terrain = TerrainTownship Then
                 '-- Township effect: free population
                 Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(CurrentPlayer.GetPlayerPopulationCount(), 15.0)) + 2)
@@ -1263,9 +1264,11 @@ Public Class Form1
         ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
             '-- Create Building
             ClickCity.AddBuilding(Cards(SelectedCard), CurrentPlayerIndex)
-            Cards.RemoveAt(SelectedCard)
+            Cards(SelectedCard) = Nothing
         ElseIf SelectedCard = WipeCard Then
-            Cards.Clear()
+            For i As Integer = 0 To Cards.Length - 1
+                Cards(i) = Nothing
+            Next
             CurrentPlayer.WipeCost = WipeCostBase + 5
         End If
 
@@ -1337,7 +1340,7 @@ Public Class Form1
         Dim ActionSuccess As Boolean = False
         Do
             '-- Get the AIs decision (the action they chose and where they chose to make it)
-            Dim AIDecision As Integer = CurrentPlayer.ChooseNextAction()
+            Dim AIDecision As Integer = CurrentPlayer.ChooseNextAction(Cards)
 
             If AIDecision = AIPass Then
                 ActionSuccess = False
@@ -1411,22 +1414,22 @@ Public Class Form1
 
     Sub UpdateCards()
         '--Increase hand to full
-        While (Cards.Count < 4)
-            Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
-            Cards.Add(newBuilding)
-        End While
+        For i As Integer = 0 To Cards.Length - 1
+            If Cards(i) Is Nothing Then
+                Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
+                Cards(i) = newBuilding
+            End If
+        Next
 
         '--Reduce Cost of Available Buildings
-        Dim i As Integer
-        For i = 0 To CardCount - 1
+        For i As Integer = 0 To CardCount - 1
 
             Dim CardBuilding As Building = Cards(i)
             If CardBuilding.Cost = 0 Then
                 If CardBuilding.RejectionCount >= Players.Count Then
                     '-- If the rejection level of a free building hit the player count, replace it
-                    Cards.RemoveAt(i)
                     Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
-                    Cards.Add(newBuilding)
+                    Cards(i) = newBuilding
                 Else
                     '-- No one bought this building even though it was free. Escallate its rejection level
                     CardBuilding.RejectionCount += 1
@@ -1441,7 +1444,7 @@ Public Class Form1
         CurrentPlayer.WipeCost -= DropCostBase
 
         '--Update building card text
-        For i = 0 To CardCount - 1
+        For i As Integer = 0 To CardCount - 1
 
             Dim CardBuilding As Building = Cards(i)
 
@@ -1540,7 +1543,6 @@ Public Class Form1
         For i As Integer = 0 To GridWidth
             For j As Integer = 0 To GridHeight
                 If GridArray(i, j).IsOwned(CurrentPlayerIndex) Then
-                    'Also updates success
                     GridArray(i, j).ComputeAverages()
                 End If
             Next
@@ -1642,7 +1644,7 @@ Public Class Form1
     Sub ResetForNewTurn()
         If ClickCity IsNot Nothing Then
             ClickCity.GridSquare.BorderStyle = BorderStyle.FixedSingle
-            ClickCity = Nothing
+            'ClickCity = Nothing
         End If
 
         SelectedCard = NoCard
@@ -1781,7 +1783,7 @@ Public Class Form1
 
         '-- Disable access to cards banned for this player
         If CurrentPlayer.PlayerType = PlayerHuman Then
-            For i As Integer = 0 To Cards.Count - 1
+            For i As Integer = 0 To Cards.Length - 1
                 If CurrentPlayer.BannedBuildings.Contains(Cards(i).Type) Then
                     ButtonList(i).Enabled = False
                 End If
@@ -1814,6 +1816,9 @@ Public Class Form1
 
     '-- Person viewing
     Private Sub ubPBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPBack.Click
+        If ClickCity Is Nothing Then
+            Return
+        End If
         Dim selectedPop As Integer = ClickCity.getPopulation()
         If selectedPop > 0 And SelectedPerson > 0 Then
             SelectedPerson -= 1
@@ -1825,6 +1830,9 @@ Public Class Form1
     End Sub
 
     Private Sub ubPForward_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPForward.Click
+        If ClickCity Is Nothing Then
+            Return
+        End If
         Dim selectedPop As Integer = ClickCity.getPopulation()
         If selectedPop > 0 And SelectedPerson < selectedPop - 1 Then
             SelectedPerson += 1
@@ -1835,6 +1843,9 @@ Public Class Form1
 
     '-- Building viewing
     Private Sub ubBBack_Click(sender As Object, e As EventArgs) Handles ubBBack.Click
+        If ClickCity Is Nothing Then
+            Return
+        End If
         Dim selectedDev As Integer = ClickCity.getDevelopment()
         If selectedDev > 0 And SelectedBuilding > 0 Then
             SelectedBuilding -= 1
@@ -1846,6 +1857,9 @@ Public Class Form1
     End Sub
 
     Private Sub ubBForward_Click(sender As Object, e As EventArgs) Handles ubBForward.Click
+        If ClickCity Is Nothing Then
+            Return
+        End If
         Dim selectedDev As Integer = ClickCity.getDevelopment()
         If selectedDev > 0 And SelectedBuilding < selectedDev - 1 Then
             SelectedBuilding += 1
@@ -2018,12 +2032,20 @@ Public Class Form1
     End Sub
 
     Private Sub BuildingDropdown_SelectedIndexChanged(sender As Object, e As EventArgs) Handles BuildingDropdown.SelectedIndexChanged
+
+        Static ReplaceIndex As Integer = 0
+
         '-- Add the building of the type selected to the dropdown
         Dim newBuildingType As Integer = BuildingDropdown.SelectedIndex
-
-        Cards.RemoveAt(0)
         Dim newBuilding As Building = BuildingGenerator.CreateBuilding(newBuildingType)
-        Cards.Add(newBuilding)
+        Cards(ReplaceIndex) = newBuilding
+
+        '-- Rotate through which cards you replace
+        ReplaceIndex += 1
+        If ReplaceIndex >= Cards.Length Then
+            ReplaceIndex = 0
+        End If
+
         UpdateCards()
     End Sub
 

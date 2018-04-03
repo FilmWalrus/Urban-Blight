@@ -41,6 +41,8 @@ Public Class ChurchBuilding
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        MyBase.AffectPerson(thePerson)
+
         '-- Small chance of reducing a person's criminality or drunkenness to 0
         Dim odds As Integer = defaultOdds
         odds += SafeDivide(thePerson.Criminality, 20.0)
@@ -69,6 +71,8 @@ Public Class CorrectionalFacilityBuilding
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        MyBase.AffectPerson(thePerson)
+
         '-- Small chance of reducing a person's criminality to 0 (and mobility to 0 as well)
         If thePerson.Criminality > 10 Then
             Dim odds As Integer = 1
@@ -147,6 +151,8 @@ Public Class RehabBuilding
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        MyBase.AffectPerson(thePerson)
+
         '-- Small chance of reducing a person's drunkenness to 0 (and mobility to 0 as well)
         If thePerson.Drunkenness > 10 Then
             Dim odds As Integer = 1

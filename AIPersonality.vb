@@ -121,31 +121,6 @@
         Return False
     End Function
 
-    Public Function BeSpendthrifty(ByVal potentialDecision As Integer, ByVal money As Integer, ByVal landCost As Integer) As Boolean
-
-        If Not PreferenceList.Contains(AIType.AI_Spendthrift) Then
-            Return False
-        End If
-
-        If potentialDecision = AIPass Then
-            Return False
-        ElseIf potentialDecision <= AIBuilding4 Then
-            If money < Cards(potentialDecision).Cost Then
-                Return True
-            End If
-        ElseIf potentialDecision = AIRoad Then
-            If money < RoadCostBase Then
-                Return True
-            End If
-        ElseIf potentialDecision = AILand Then
-            If money < landCost Then
-                Return True
-            End If
-        End If
-
-        Return False
-    End Function
-
     Public Function GetDecisionAdjustment() As Double
 
         '-- Difficulty level

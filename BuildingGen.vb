@@ -118,6 +118,7 @@
         Coffee
         Criminal
         Food
+        Franchise
         Government
         Manufacturing
         Medical
@@ -363,6 +364,8 @@
                 Return "Criminal"
             Case TagEnum.Food
                 Return "Food"
+            Case TagEnum.Franchise
+                Return "Franchise"
             Case TagEnum.Government
                 Return "Government"
             Case TagEnum.Manufacturing
@@ -585,10 +588,11 @@
                     newBuilding.SetSpecialAbility("Crimes committed on the square of the Crime Ring result in monetary kickbacks to the owner.")
                     Return newBuilding
                 Case BuildingEnum.Cult
-                    Dim newBuilding As New Building(bType, 90, 2) 'Skipped.  Come back later.
+                    Dim newBuilding As New CultBuilding(bType, 70, 2) 'Skipped.  Come back later.
                     newBuilding.SetHappiness(5, 20)
                     newBuilding.SetIntelligence(10, -6)
                     newBuilding.SetCriminality(25, 3)
+                    newBuilding.AddTag(TagEnum.Franchise)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Customs_House
@@ -599,7 +603,7 @@
                     newBuilding.SetSpecialAbility("Customs Houses generate revenue for the owner and are more effective for each unique player with an adjacent square.")
                     Return newBuilding
                 Case BuildingEnum.Daycare_Center
-                    Dim newBuilding As New DayCareBuilding(bType, 80, 1) 'Daycare Centers traditionally serve younger kids who aren't going to school yet.  Maybe under 7?
+                    Dim newBuilding As New DayCareBuilding(bType, 80, 1)
                     newBuilding.SetHappiness(20, 5)
                     newBuilding.SetHealth(18, 2)
                     newBuilding.SetCriminality(20, -2)
@@ -607,11 +611,12 @@
                     newBuilding.SetSpecialAbility("The Daycare Center effects only minors.")
                     Return newBuilding
                 Case BuildingEnum.Department_Store
-                    Dim newBuilding As New Building(bType, 115, 3)
+                    Dim newBuilding As New DepartmentStoreBuilding(bType, 185, 3)
                     newBuilding.SetHappiness(8, 1)
                     newBuilding.SetCreativity(12, -1)
+                    newBuilding.AddTag(TagEnum.Franchise)
                     newBuilding.SetInfo("Make errands eazy and fun at the Department Store - the one-stop shop for all your home and clothing needs.")
-                    newBuilding.SetSpecialAbility("Department Stores have a small chance of opening another of their chain on an adjacent square.")
+                    newBuilding.SetSpecialAbility("Department Stores not only open new branches, they sometimes upgrade into malls.")
                     Return newBuilding
                 Case BuildingEnum.Detective_Agency
                     Dim newBuilding As New DetectiveBuilding(bType, 80, 1)
@@ -647,10 +652,11 @@
                     newBuilding.SetSpecialAbility("Farms double the effect of any Food buildings on the same square.  Farms expand faster on a Dirt tile.")
                     Return newBuilding
                 Case BuildingEnum.Fast_Food_Chain
-                    Dim newBuilding As New Building(bType, 50, 1)
+                    Dim newBuilding As New FastFoodBuilding(bType, 50, 1)
                     newBuilding.SetHappiness(65, 1)
                     newBuilding.SetHealth(65, -2)
                     newBuilding.SetMobility(15, 1)
+                    newBuilding.AddTag(TagEnum.Franchise)
                     newBuilding.SetInfo("Quick and convenient with a side order of grease, Fast Food Chains help satisfy your food cravings and fuel you up for the day to come.")
                     newBuilding.SetSpecialAbility("Fast Food Chains have a small chance of opening another location on an adjacent square.")
                     Return newBuilding

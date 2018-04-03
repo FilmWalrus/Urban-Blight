@@ -151,7 +151,6 @@
             If currentBuilding.WillHire(thePerson) Then
                 'Hire the employee
                 currentBuilding.HireEmployee(thePerson)
-                Diary.HireEvents.AddEvent(thePerson.GetNameAndAddress() + " took a job at the " + thePerson.JobBuilding.GetNameAndAddress())
             End If
         Next
 
@@ -282,11 +281,7 @@
             odds += (thePerson.Age - 20.0) / 4.0
             If thePerson.Health <= 0 Or GetRandom(0, 100) < odds Then
                 '-- Attempt to save the life of this citizen
-                Dim Rescuer As Building = AttemptToSave(thePerson, DeathCause.NaturalCauses)
-                If Rescuer IsNot Nothing Then
-                    '-- Citizen was saved!
-                    Diary.RescueEvents.AddEvent(Rescuer.GetNameAndAddress() + " saved the life of " + thePerson.GetNameAndAddress())
-                Else
+                If Not SaveVictim(thePerson, DeathCause.NaturalCauses) Then
                     If thePerson.Die(DeathCause.NaturalCauses) Then
                         DeadCitizens.Add(thePerson)
                         Diary.DeathNaturalEvents.AddEvent(thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural causes")
@@ -301,11 +296,8 @@
             If GetRandom(0, 100) < odds Then
 
                 '-- Attempt to save the life of this citizen
-                Dim Rescuer As Building = AttemptToSave(thePerson, DeathCause.Illness)
-                If Rescuer IsNot Nothing Then
-                    '-- Citizen was saved!
-                    Diary.RescueEvents.AddEvent(Rescuer.GetNameAndAddress() + " saved the life of " + thePerson.GetNameAndAddress())
-                Else
+                If Not SaveVictim(thePerson, DeathCause.Illness) Then
+
                     If thePerson.Die(DeathCause.Illness) Then
                         '-- Citizen died
                         DeadCitizens.Add(thePerson)
@@ -328,11 +320,7 @@
 
             If GetRandom(0, 100) <= odds Then
                 '-- Attempt to save the life of this citizen
-                Dim Rescuer As Building = AttemptToSave(thePerson, DeathCause.TrafficAccident)
-                If Rescuer IsNot Nothing Then
-                    '-- Citizen was saved!
-                    Diary.RescueEvents.AddEvent(Rescuer.GetNameAndAddress() + " saved the life of " + thePerson.GetNameAndAddress())
-                Else
+                If Not SaveVictim(thePerson, DeathCause.TrafficAccident) Then
                     If thePerson.Die(DeathCause.TrafficAccident) Then
                         DeadCitizens.Add(thePerson)
                         Diary.DeathTrafficEvents.AddEvent(thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died in a car accident")
@@ -374,10 +362,8 @@
             If GetRandom(0, 100) < odds Then
                 Dim theft As Integer = Math.Max(1, Math.Min(thePerson.Criminality, CurrentPlayer.TotalMoney))
                 If thePerson.CommitCrime(CrimeType.Robbery, theft.ToString()) Then
-
                     '-- Attempt to prevent this crime
-                    Dim CrimeStopper As Building = AttemptToPreventCrime(thePerson, CrimeType.Robbery)
-                    If CrimeStopper Is Nothing Then
+                    If Not PreventCrime(thePerson, CrimeType.Robbery) Then
                         CurrentPlayer.TotalMoney -= theft
                         TheftSum += theft
                         Diary.TheftEvents.AddEvent(thePerson.GetNameAndAddress() + " stole $" + theft.ToString)
@@ -399,8 +385,7 @@
                 Dim targetBuilding As Building = currentLocation.Buildings(GetRandom(0, buildingCount - 1))
                 If thePerson.CommitCrime(CrimeType.Arson, targetBuilding.GetNameAndAddress()) Then
                     '-- Attempt to prevent this crime
-                    Dim CrimeStopper As Building = AttemptToPreventCrime(thePerson, CrimeType.Arson)
-                    If CrimeStopper Is Nothing Then
+                    If Not PreventCrime(thePerson, CrimeType.Arson) Then
                         DestroyedBuildings.Add(targetBuilding)
                         Diary.ArsonEvents.AddEvent(thePerson.GetNameAndAddress() + " burned down the " + targetBuilding.GetNameAndAddress)
                     End If
@@ -420,8 +405,7 @@
 
                 If thePerson.CommitCrime(CrimeType.Murder, theVictim.GetNameAndAddress()) Then
                     '-- Attempt to prevent this crime
-                    Dim CrimeStopper As Building = AttemptToPreventCrime(thePerson, CrimeType.Murder)
-                    If CrimeStopper Is Nothing Then
+                    If Not PreventCrime(thePerson, CrimeType.Murder) Then
                         If theVictim.Die(DeathCause.Murder) Then
                             '-- Killing spree potential (especially if the crime paid off)
                             thePerson.Criminality += GetRandom(4, Math.Min(7, theVictim.Employment / 7.0))
@@ -533,13 +517,13 @@
 
     Sub BuildingsExpand()
 
-        '-- The success rate of a building is current = to the sum of the employment stat of employees
+        '-- The BusinessSuccess of a building is current = to the sum of the employment stat of employees / by the # of jobs (see UpdateInternal)
         For i As Integer = 0 To CitizenList.Count - 1
             Dim thePerson As Citizen = CitizenList(i)
 
             If thePerson.JobBuilding IsNot Nothing Then
-                'Update success of job
-                thePerson.JobBuilding.Success += thePerson.Employment
+                'Update BusinessSuccess of job
+                thePerson.JobBuilding.BusinessSuccess += thePerson.Employment
             End If
         Next
 
@@ -557,12 +541,9 @@
                 End If
 
                 '-- Check if the building expanded
-                If theBuilding.CheckSuccess() Then
+                If theBuilding.WillExpand() Then
                     Diary.ExpansionEvents.AddEvent(theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString)
                 End If
-
-                '-- Clear success at the end
-                theBuilding.Success = 0
             Next
         Next
 
@@ -589,15 +570,17 @@
 
     End Sub
 
-    Function AttemptToSave(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Building
+    Function SaveVictim(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
 
         For i As Integer = 0 To HospitalList.Count - 1
             If HospitalList(i).SavePatient(thePerson, causeOfDeath) Then
-                Return HospitalList(i)
+                '-- Citizen was saved!
+                Diary.RescueEvents.AddEvent(HospitalList(i).GetNameAndAddress() + " saved the life of " + thePerson.GetNameAndAddress())
+                Return True
             End If
         Next
 
-        Return Nothing
+        Return False
     End Function
 
     Function GetMaternityWardAdjust(ByRef thePerson As Citizen) As Double
@@ -629,7 +612,7 @@
 
     End Sub
 
-    Function AttemptToPreventCrime(ByRef theCriminal As Citizen, ByVal criminalAct As Integer) As Building
+    Function PreventCrime(ByRef theCriminal As Citizen, ByVal criminalAct As Integer) As Boolean
 
         For i As Integer = 0 To CrimePreventerList.Count - 1
             Dim PreventionOutcome As Integer = CrimePreventerList(i).PreventCrime(theCriminal, criminalAct)
@@ -659,11 +642,11 @@
                 End If
 
                 Diary.CrimesPeventedEvents.AddEvent(PreventionText)
-                Return CrimePreventerList(i)
+                Return True
             End If
         Next
 
-        Return Nothing
+        Return False
     End Function
 
 #End Region

@@ -5,7 +5,7 @@ Public Class Building
 
     Public Cost As Integer = 0
     Public Jobs As Integer = 0
-    Public Success As Integer = 0
+    Public BusinessSuccess As Integer = 0
 
     Public Age As Integer = 0
     Public Range As Integer = 0
@@ -45,7 +45,9 @@ Public Class Building
     Public Drunkenness_odds As Integer = 0
     Public Criminality_odds As Integer = 0
 
-    '-- Revenue and upkeep
+    '-- Visits, Revenue and Upkeep
+    Public CurrentVisitors As Integer = 0
+    Public TotalVisitors As Integer = 0
     Public CurrentEffects As Integer = 0
     Public TotalEffects As Integer = 0
     Public CurrentRevenue As Integer = 0
@@ -423,6 +425,8 @@ Public Class Building
         AffectMobility(thePerson)
         AffectDrunkenness(thePerson)
         AffectCriminality(thePerson)
+
+        AddVisitors(1)
     End Sub
 
 #End Region
@@ -470,7 +474,11 @@ Public Class Building
         Return True
     End Function
 
-    Public Sub HireEmployee(ByRef Employee As Citizen)
+    Public Sub HireEmployee(ByRef Employee As Citizen, Optional ByVal PostEvent As Boolean = True)
+        If GetEmployeeCount() >= Jobs Then
+            Return
+        End If
+
         '-- Quit any previous job
         If Employee.JobBuilding IsNot Nothing Then
             Employee.JobBuilding.Employees.Remove(Employee)
@@ -480,27 +488,43 @@ Public Class Building
         Employees.Add(Employee)
         Employee.JobBuilding = Me
         Employee.ApplicationAccepted()
+
+        '-- Post the event
+        If PostEvent Then
+            Diary.HireEvents.AddEvent(Employee.GetNameAndAddress() + " took a job at the " + GetNameAndAddress())
+        End If
     End Sub
 
-    Public Overridable Sub ExpandBuilding()
-        Jobs += 1
+    Public Sub TransferEmployees(ByRef SourceBuilding As Building)
+        '-- Move employees from another building into this one
+        Dim OriginalStaff As New List(Of Citizen)
+        For i As Integer = 0 To SourceBuilding.Employees.Count - 1
+            OriginalStaff.Add(SourceBuilding.Employees(i))
+        Next
+        For i As Integer = 0 To OriginalStaff.Count - 1
+            HireEmployee(OriginalStaff(i), False)
+        Next
     End Sub
 
-    Public Overridable Function CheckSuccess() As Boolean
+    Public Overridable Sub ExpandBuilding(ByVal NewJobs As Integer)
+        Jobs += NewJobs
+    End Sub
+
+    Public Overridable Function WillExpand() As Boolean
 
         '-- Building must be at max employment
         If GetEmployeeCount() = Jobs Then
 
-            '-- Odds of expanding = half the average employment score of employees
+            '-- Odds of expanding are half the business sucess
             Dim odds As Double = 0.0
-            odds += SafeDivide(Success, GetEmployeeCount() * 2.0)
+            odds += SafeDivide(BusinessSuccess, 2.0)
 
             '-- Odds of expanding go down as you get larger
             Dim oddsRange As Integer = 100 + (10 * Jobs)
 
             If GetRandom(0, oddsRange) <= odds Then '-- Remove equal sign to prevent 0 job businesses from expanding?
                 '--Buildings expand
-                ExpandBuilding()
+                ExpandBuilding(1)
                 Return True
             Else
                 Return False
@@ -511,6 +535,11 @@ Public Class Building
 
     Public Overridable Function UpdateInternal() As Boolean
         Age = Age + TimeIncrement
+
+        '-- Business Success is sum of the employee's employment scores (calculated earlier) divided by the # of jobs
+        '-- Plus 1 for every 10 visitors this turn
+        BusinessSuccess = SafeDivide(BusinessSuccess, Jobs) + SafeDivide(CurrentVisitors, 10.0)
+
         Return True
     End Function
 
@@ -590,9 +619,11 @@ Public Class Building
 
     Public Overridable Sub SetupBuilding()
         '-- Reset current revenue and upkeep
+        CurrentVisitors = 0
         CurrentEffects = 0
         CurrentRevenue = 0
         CurrentUpkeep = 0
+        BusinessSuccess = 0
     End Sub
 
     Public Overridable Sub CleanupBuilding()
@@ -607,7 +638,12 @@ Public Class Building
 
 #End Region
 
-#Region " Effects, Revenue, and Upkeep "
+#Region " Visits, Effects, Revenue, and Upkeep "
+    Public Sub AddVisitors(ByVal NewVisitors As Integer)
+        CurrentVisitors += NewVisitors
+        TotalVisitors += NewVisitors
+    End Sub
+
     Public Sub AddEffects(ByVal NewEffect As Integer)
         CurrentEffects += NewEffect
         TotalEffects += NewEffect
@@ -709,22 +745,12 @@ Public Class Building
         End If
         BuildingString += ControlChars.NewLine
 
-        '-- Show tags
-        If Tags.Count > 0 Then
-            BuildingString += "Tags: "
-            For i As Integer = 0 To Tags.Count - 1
-                BuildingString += BuildingGenerator.GetTagName(Tags(i))
-
-                If i <> Tags.Count - 1 Then
-                    BuildingString += ", "
-                Else
-                    BuildingString += ControlChars.NewLine
-                End If
-            Next
-            BuildingString += ControlChars.NewLine
-        End If
-
-        If TotalEffects > 0 Or TotalRevenue > 0 Or TotalUpkeep > 0 Then
+        '-- Show visitors, effects, revenue and upkeep
+        If TotalVisitors > 0 Or TotalEffects > 0 Or TotalRevenue > 0 Or TotalUpkeep > 0 Then
+            If TotalVisitors > 0 Then
+                BuildingString += CurrentVisitors.ToString + " visitors this turn." + ControlChars.NewLine
+                BuildingString += TotalVisitors.ToString + " visitors total." + ControlChars.NewLine
+            End If
             If TotalEffects > 0 Then
                 BuildingString += CurrentEffects.ToString + " " + EffectText + " this turn." + ControlChars.NewLine
                 BuildingString += TotalEffects.ToString + " " + EffectText + " total." + ControlChars.NewLine
@@ -748,6 +774,21 @@ Public Class Building
         '-- Show special ability text
         If SpecialAbility.Length > 0 Then
             BuildingString += SpecialAbility + ControlChars.NewLine
+        End If
+
+        '-- Show tags
+        If Tags.Count > 0 Then
+            BuildingString += "Tags: "
+            For i As Integer = 0 To Tags.Count - 1
+                BuildingString += BuildingGenerator.GetTagName(Tags(i))
+
+                If i <> Tags.Count - 1 Then
+                    BuildingString += ", "
+                Else
+                    BuildingString += ControlChars.NewLine
+                End If
+            Next
+            BuildingString += ControlChars.NewLine
         End If
 
         '-- Show stat info
