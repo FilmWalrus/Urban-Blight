@@ -521,7 +521,7 @@ Public Class Citizen
             End If
 
             '-- Even if the opportunity is better, stick with your current job most of the time
-            If GetRandom(0, 100) < 85 Then
+            If GetRandom(1, 100) <= 85 Then
                 Return False
             End If
         End If

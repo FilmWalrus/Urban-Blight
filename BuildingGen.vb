@@ -1,4 +1,6 @@
-﻿Public Class BuildingGen
+﻿Imports Urban_Blight
+
+Public Class BuildingGen
 
 #Region " Variables "
 
@@ -25,6 +27,7 @@
         College
         Community_Center
         Concert_Venue
+        Conglomerate
         Conservation_Area
         Construction_Site
         Correctional_Facility
@@ -82,6 +85,7 @@
         Post_Office
         Power_Plant
         Private_Security_Company
+        Ranch
         Real_Estate_Developer
         Recycling_Center
         Refugee_Camp
@@ -107,6 +111,7 @@
         Toll_Booth
         Tourism_Agency
         TV_Station
+        Warehouse
         Welfare_Service
         Zoo
         BuildingCount
@@ -179,6 +184,8 @@
                 Return "Community Center"
             Case BuildingEnum.Concert_Venue
                 Return "Concert Venue"
+            Case BuildingEnum.Conglomerate
+                Return "Conglomerate"
             Case BuildingEnum.Conservation_Area
                 Return "Conservation Area"
             Case BuildingEnum.Construction_Site
@@ -293,6 +300,8 @@
                 Return "Power Plant"
             Case BuildingEnum.Private_Security_Company
                 Return "Private Security Company"
+            Case BuildingEnum.Ranch
+                Return "Ranch"
             Case BuildingEnum.Real_Estate_Developer
                 Return "Real Estate Developer"
             Case BuildingEnum.Recycling_Center
@@ -343,6 +352,8 @@
                 Return "Tourism Agency"
             Case BuildingEnum.TV_Station
                 Return "TV Station"
+            Case BuildingEnum.Warehouse
+                Return "Warehouse"
             Case BuildingEnum.Welfare_Service
                 Return "Welfare Service"
             Case BuildingEnum.Zoo
@@ -458,6 +469,7 @@
                     Dim newBuilding As New Building(bType, 60, 1)
                     newBuilding.SetHappiness(30, 4)
                     newBuilding.SetDrunkenness(30, 6)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Bars provide a social atmosphere to cheer people up but can result in overindulgence.")
                     newBuilding.SetSpecialAbility("Bars double the effect of Stadiums and Colleges on the same square.")
                     Return newBuilding
@@ -523,6 +535,7 @@
                     newBuilding.SetHappiness(20, 1)
                     newBuilding.SetMobility(20, 1)
                     newBuilding.SetDrunkenness(40, -1)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Coffee Shops perk you up and put a spring in your step. Though caffeine can be addictive, it's not as bad as alcohol.")
                     newBuilding.SetSpecialAbility("Coffee Shops are more effective on Libraries, Offices, Skyscrapers, and at Colleges.")
                     Return newBuilding
@@ -552,6 +565,14 @@
                     newBuilding.SetCreativity(55, 4)
                     newBuilding.SetDrunkenness(45, 3)
                     newBuilding.SetInfo("Whether you jam out in the mosh pit or sway in you seat, Concert Venues can allow for a crazy good time.")
+                    newBuilding.SetSpecialAbility("")
+                    Return newBuilding
+                Case BuildingEnum.Conglomerate
+                    Dim newBuilding As New ConglomerateBuilding(bType, 425, 7)
+                    newBuilding.SetHappiness(15, -2)
+                    newBuilding.SetDrunkenness(20, 3)
+                    newBuilding.SetCreativity(30, -4)
+                    newBuilding.SetInfo("") '-- Kelley, got a new one for you
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Conservation_Area
@@ -648,6 +669,7 @@
                 Case BuildingEnum.Farm
                     Dim newBuilding As New Building(bType, 80, 1)
                     newBuilding.SetHealth(65, 2)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Farms are the backbone of any society. They provide fresh produce and fibers to the local community.")
                     newBuilding.SetSpecialAbility("Farms double the effect of any Food buildings on the same square.  Farms expand faster on a Dirt tile.")
                     Return newBuilding
@@ -656,6 +678,7 @@
                     newBuilding.SetHappiness(65, 1)
                     newBuilding.SetHealth(65, -2)
                     newBuilding.SetMobility(15, 1)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.AddTag(TagEnum.Franchise)
                     newBuilding.SetInfo("Quick and convenient with a side order of grease, Fast Food Chains help satisfy your food cravings and fuel you up for the day to come.")
                     newBuilding.SetSpecialAbility("Fast Food Chains have a small chance of opening another location on an adjacent square.")
@@ -671,6 +694,7 @@
                     Dim newBuilding As New ManufacturingBuilding(bType, 165, 2)
                     newBuilding.SetHappiness(10, -2)
                     newBuilding.AddTag(TagEnum.Manufacturing)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Freeway
@@ -707,11 +731,12 @@
                 Case BuildingEnum.Graveyard
                     'newBuilding.AddTag(TagEnum.Monument)
                 Case BuildingEnum.Grocery_Store
-                    Dim newBuilding As New Building(bType, 95, 2)
-                    newBuilding.SetHealth(80, 1)
+                    Dim newBuilding As New GroceryBuilding(bType, 95, 2)
+                    newBuilding.SetHealth(75, 1)
                     newBuilding.SetDrunkenness(15, 1)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Grocery Stores provide access to fresh meat, vegetables, fruit, dairy, alcohol, and those boxes of almost-instant mac'n'cheese that are so addictive.")
-                    newBuilding.SetSpecialAbility("The effect of the Grocery Store increases with the population.")
+                    newBuilding.SetSpecialAbility("The health bonus of the Grocery Store increases with the population.")
                     Return newBuilding
                 Case BuildingEnum.Gym 'Added Special Ability text, but it did not look final.
                     Dim newBuilding As New Building(bType, 60, 1)
@@ -820,9 +845,10 @@
                     newBuilding.SetSpecialAbility("Lumber Mills start with twice as many jobs if built on a Forest tile.  The terrain they are built on has a chance of turning in a Plain tile.")
                     Return newBuilding
                 Case BuildingEnum.Mall
-                    Dim newBuilding As New Building(bType, 385, 5)
-                    newBuilding.SetHappiness(45, 3)
+                    Dim newBuilding As New MallBuilding(bType, 385, 5)
+                    newBuilding.SetHappiness(35, 3)
                     newBuilding.SetCreativity(20, -3)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("A mall provides a tiny bit of happiness for nearly everyone, but can tend to stifle creativity and local flavor.")
                     Return newBuilding
                 Case BuildingEnum.Mass_Transit
@@ -935,6 +961,13 @@
                     newBuilding.AddTag(TagEnum.Security)
                     newBuilding.SetInfo("")
                     Return newBuilding
+                Case BuildingEnum.Ranch
+                    Dim newBuilding As New Building(bType, 130, 2)
+                    newBuilding.SetHappiness(30, 1)
+                    newBuilding.SetHealth(33, 2)
+                    newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.SetInfo("")
+                    Return newBuilding
                 Case BuildingEnum.Real_Estate_Developer
 
                 Case BuildingEnum.Recycling_Center
@@ -954,10 +987,11 @@
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Restaurant
-                    Dim newBuilding As New Building(bType, 105, 2)
+                    Dim newBuilding As New RestaurantBuilding(bType, 105, 2)
                     newBuilding.SetHappiness(40, 1)
                     newBuilding.SetHealth(26, 1)
                     newBuilding.SetDrunkenness(5, 1)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Restaurants provide a charming setting for healthy meals and happy dates.")
                     Return newBuilding
                 Case BuildingEnum.Retirement_Home
@@ -1085,8 +1119,10 @@
                     Dim newBuilding As New Building(bType, 250, 3)
                     newBuilding.SetHappiness(70, 2)
                     newBuilding.SetCreativity(50, -1)
-                    newBuilding.SetInfo("The TV station reaches almost house In a city, subtly boosting happiness And equally subtly stifling creativity.")
+                    newBuilding.SetInfo("The TV station reaches almost house, boosting mindless contentment while subtly stifling creativity.")
                     Return newBuilding
+                Case BuildingEnum.Warehouse
+
                 Case BuildingEnum.Welfare_Service
                     Dim newBuilding As New WelfareBuilding(bType, 100, 1)
                     newBuilding.SetHealth(10, 2)

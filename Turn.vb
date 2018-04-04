@@ -561,22 +561,19 @@
 
         '-- Expanding buildings that are successful
         '-- Currently based on employee quality. Eventually should take into account number of visitors
-        For i As Integer = 0 To LocationList.Count - 1
-            Dim theLocation As CitySquare = LocationList(i)
+        For i As Integer = 0 To DevelopmentList.Count - 1
 
-            For k As Integer = 0 To theLocation.Buildings.Count - 1
-                Dim theBuilding As Building = theLocation.Buildings(k)
+            Dim theBuilding As Building = DevelopmentList(i)
 
-                '-- Update the buildings age and other info
-                If Not theBuilding.UpdateInternal() Then
-                    DestroyedBuildings.Add(theBuilding)
-                End If
+            '-- Update the buildings age and other info
+            If Not theBuilding.UpdateInternal() Then
+                DestroyedBuildings.Add(theBuilding)
+            End If
 
-                '-- Check if the building expanded
-                If theBuilding.WillExpand() Then
-                    Diary.ExpansionEvents.AddEvent(theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString)
-                End If
-            Next
+            '-- Check if the building expanded
+            If theBuilding.WillExpand() Then
+                Diary.ExpansionEvents.AddEvent(theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString)
+            End If
         Next
 
         '-- Remove buildings that were destroyed

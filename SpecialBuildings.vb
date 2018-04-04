@@ -111,6 +111,19 @@ Public Class DayCareBuilding
     End Sub
 End Class
 
+Public Class MallBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Function GetHappinessOdds() As Integer
+        Dim DevelopmentBonus As Integer = (Location.getDevelopment() - 1) * 3
+        Return Happiness_odds + DevelopmentBonus
+    End Function
+End Class
+
 Public Class MonumentBuilding
     Inherits Building
 

@@ -45,6 +45,33 @@ Public Class SpreadableBuilding
 
 End Class
 
+Public Class ConglomerateBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Function UpdateInternal() As Boolean
+        MyBase.UpdateInternal()
+
+        '-- Conglomerates only acquire other buildings once they hit full employment
+        If Employees.Count = Jobs Then
+            If GetRandom(1, 5) = 1 Then
+                Dim newAcquisition As Building = Location.Buildings(GetRandom(0, Location.Buildings.Count - 1))
+                If Not newAcquisition.Equals(Me) Then
+                    '-- Merge a building on the same square into the conglomerate and destroy it
+                    Me.Jobs += newAcquisition.Jobs
+                    Me.TransferEmployees(newAcquisition)
+                    Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " acquired " + newAcquisition.GetName())
+                    newAcquisition.Destroy()
+                End If
+            End If
+        End If
+        Return True
+    End Function
+End Class
+
 Public Class ConstructionSiteBuilding
     Inherits Building
 
