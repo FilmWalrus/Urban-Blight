@@ -580,6 +580,11 @@ Public Class Building
             Return
         End If
 
+        '-- If this building had a "Government" tag, update the player's GovernmentBuilding count.
+        If HasTag(BuildingGen.TagEnum.Government) Then
+            Players(OwnerID).GovernmentCount += 1
+        End If
+
         '-- Buildings with the "Monument" tag get twice the visitor odds if a monument is present
         If HasTag(BuildingGen.TagEnum.Monument) Then
             If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) Then
@@ -691,7 +696,11 @@ Public Class Building
     End Sub
 
     Public Sub AdjPurchasePrice(ByRef thisPlayer As Player)
-
+        '-- Government buildings get 5% more expensive for each one you already have
+        If HasTag(BuildingGen.TagEnum.Government) Then
+            Dim PriceAdjust As Double = 1.0 + (thisPlayer.GovernmentCount * 0.05)
+            PurchasePrice *= PriceAdjust
+        End If
     End Sub
 
     Public Function IsBuildingUnwanted(ByRef thisPlayer As Player) As Boolean
@@ -726,6 +735,11 @@ Public Class Building
             Dim theEmployee As Citizen = Employees(i)
             theEmployee.JobBuilding = Nothing
         Next
+
+        '-- If this was a government building, lower the player's government count
+        If HasTag(BuildingGen.TagEnum.Government) Then
+            Players(OwnerID).GovernmentCount -= 1
+        End If
 
         '-- Remove the building from this location
         Location.Buildings.Remove(Me)

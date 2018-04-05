@@ -647,11 +647,12 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The Detective Agency lets you see where your citizens have been and what they've done on their last turn. This only applies to citizens living on the square with the Detective Agency.")
                     Return newBuilding
                 Case BuildingEnum.Embassy
-                    Dim newBuilding As New Building(bType, 215, 2)
+                    Dim newBuilding As New EmbassyBuilding(bType, 215, 2)
                     newBuilding.SetIntelligence(10, 8)
                     newBuilding.SetCriminality(10, 7)
+                    newBuilding.AddTag(TagEnum.Government)
                     newBuilding.SetInfo("")
-                    newBuilding.SetSpecialAbility("")
+                    newBuilding.SetSpecialAbility("You can build in other player's territory at 120% cost -10% for each additional embassy. You retain ownership, keep any revenue, and pay any upkeep.")
                     Return newBuilding
                 Case BuildingEnum.Exurb
                     Dim newBuilding As New Building(bType, 435, 0) 'Check phrasing of Exurb special ability text.

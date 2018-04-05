@@ -1197,14 +1197,9 @@ Public Class Form1
             End If
         ElseIf SelectedCard = WipeCard Then
             CardCost = CurrentPlayer.GetPlayerWipeCost()
-        ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
+        ElseIf SelectedCard >= 0 And SelectedCard < Cards.Length Then
             CardCost = Cards(SelectedCard).GetPurchasePrice()
         Else
-            Return False
-        End If
-
-        '-- Can the player afford it?
-        If CardCost > SpendingMoney Then
             Return False
         End If
 
@@ -1214,16 +1209,21 @@ Public Class Form1
             If Not CurrentPlayer.IsValidLandExpansion(ClickCity) Then
                 Return False
             End If
-        ElseIf SelectedCard <> WipeCard Then
-            '-- For Roads and Buildings the player must already own the land
-            If Not ClickCity.IsOwned(CurrentPlayerIndex) Then
+        ElseIf SelectedCard >= 0 And SelectedCard < Cards.Length Then
+            '-- For road cards the location must be owned by the player or, with an embassy, another player
+            If Not CurrentPlayer.IsValidBuild(ClickCity, CardCost) Then
                 Return False
             End If
+        ElseIf SelectedCard = RoadCard Or SelectedCard = RoadMaxCard Then
+            '-- For Roads the player must already own the land and highway can't already be present
+            If (Not ClickCity.IsOwned(CurrentPlayerIndex)) Or ClickCity.Transportation = RoadHighway Then
+                Return False
+            End If
+        End If
 
-            '-- Roads can't be built if highway is already present
-            If (SelectedCard = RoadCard Or SelectedCard = RoadMaxCard) And ClickCity.Transportation = RoadHighway Then
-                Return False
-            End If
+        '-- Can the player afford it?
+        If CardCost > SpendingMoney Then
+            Return False
         End If
 
         '-- Pay for construction
@@ -1261,8 +1261,9 @@ Public Class Form1
                     ClickCity.AddPerson(founder)
                 Next
             End If
-        ElseIf SelectedCard >= 0 And SelectedCard < CardCount Then
+        ElseIf SelectedCard >= 0 And SelectedCard < Cards.Length Then
             '-- Create Building
+            Cards(SelectedCard).PurchasePrice = CardCost
             ClickCity.AddBuilding(Cards(SelectedCard), CurrentPlayerIndex)
             Cards(SelectedCard) = Nothing
         ElseIf SelectedCard = WipeCard Then
@@ -1432,6 +1433,9 @@ Public Class Form1
                 '-- Reduce cost of available buildings
                 CardBuilding.DropPrice()
             End If
+
+            '-- Adjust the purchase price for this player
+            CardBuilding.AdjPurchasePrice(CurrentPlayer)
 
             '--Update building card text
             Dim cardText As String = CardBuilding.GetName() + ControlChars.NewLine

@@ -21,6 +21,8 @@ Public Class Player
     '-- Stuff that effects player's choices
     Public LandOptionBuildings As New List(Of Building)
     Public BannedBuildings As New List(Of Integer)
+    Public EmbassyCount As Integer = 0
+    Public GovernmentCount As Integer = 0
 
     '-- AI stuff
     Public BestMove As CitySquare = Nothing
@@ -283,6 +285,29 @@ Public Class Player
             End If
         Next
         Return False
+    End Function
+
+    Function IsValidBuild(ByVal theLocation As CitySquare, ByRef theCost As Integer) As Boolean
+
+        '-- Location must be owned by someone
+        If Not theLocation.IsOwned() Then
+            Return False
+        End If
+
+        '-- Someone else owns this location!
+        If Not theLocation.IsOwned(ID) Then
+            '-- You need to own at least one embassy to build in an opponent's territory
+            If EmbassyCount <= 0 Then
+                Return False
+            Else
+                '-- Building in enemy territory costs 120% minus 10% for each additional embassy
+                Dim CostModifier As Double = 1.3 - (EmbassyCount * 0.1)
+                theCost *= CostModifier
+                Return True
+            End If
+        End If
+
+        Return True
     End Function
 
     Public Overrides Function toString() As String
