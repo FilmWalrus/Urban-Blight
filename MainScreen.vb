@@ -1,6 +1,6 @@
 Imports System.Drawing
 
-Public Class Form1
+Public Class MainForm
     Inherits System.Windows.Forms.Form
 
 #Region " Variables "
@@ -9,7 +9,6 @@ Public Class Form1
 
     '--
     Public CurrentPlayer As Player = Nothing
-    Public CurrentPlayerIndex As Integer = 0
 
     '--
     Dim WinFlag As Boolean = False
@@ -44,15 +43,28 @@ Public Class Form1
     Friend WithEvents p2_details As Button
     Friend WithEvents p4_details As Button
     Friend WithEvents p3_details As Button
-    Friend WithEvents ubWipe As Button
     Friend WithEvents TabPageBuilding As TabPage
     Friend WithEvents lblBuilding As Label
     Friend WithEvents ubBForward As Button
     Friend WithEvents ubBBack As Button
     Friend WithEvents txt_building As TextBox
-    Friend WithEvents BuildingDropdown As ComboBox
     Friend WithEvents btnCheat As Button
+    Friend WithEvents MarketPanel As Panel
+    Friend WithEvents ubcard1 As Button
+    Friend WithEvents BuildingDropdown As ComboBox
+    Friend WithEvents ubEnd As Button
+    Friend WithEvents gbP1 As Panel
+    Friend WithEvents gbP2 As Panel
+    Friend WithEvents gbP3 As Panel
+    Friend WithEvents gbP4 As Panel
+    Friend WithEvents MarketLabel As Label
+    Friend WithEvents ubcard2 As Button
+    Friend WithEvents ubland As Button
     Friend WithEvents ubroadmax As Button
+    Friend WithEvents ubroad As Button
+    Friend WithEvents ubWipe As Button
+    Friend WithEvents ubcard4 As Button
+    Friend WithEvents ubcard3 As Button
     '--
     Dim init As Boolean = False
 
@@ -87,14 +99,6 @@ Public Class Form1
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents ubcard1 As System.Windows.Forms.Button
-    Friend WithEvents ubcard2 As System.Windows.Forms.Button
-    Friend WithEvents ubcard3 As System.Windows.Forms.Button
-    Friend WithEvents ubcard4 As System.Windows.Forms.Button
-    Friend WithEvents gbP1 As GroupBox
-    Friend WithEvents gbP2 As GroupBox
-    Friend WithEvents gbP3 As GroupBox
-    Friend WithEvents gbP4 As GroupBox
     Friend WithEvents UltraTabSharedControlsPage1 As TabPage
     Friend WithEvents Infotab As TabControl
     Friend WithEvents TabPageEvents As TabPage
@@ -112,10 +116,6 @@ Public Class Form1
     Friend WithEvents txtP2 As System.Windows.Forms.TextBox
     Friend WithEvents txtP3 As System.Windows.Forms.TextBox
     Friend WithEvents txtP4 As System.Windows.Forms.TextBox
-    Friend WithEvents ubroad As System.Windows.Forms.Button
-    Friend WithEvents ubland As System.Windows.Forms.Button
-    Friend WithEvents ubEnd As System.Windows.Forms.Button
-    Friend WithEvents TabPageView As TabPage
     Friend WithEvents ubPopView As System.Windows.Forms.Button
     Friend WithEvents ubLocView As System.Windows.Forms.Button
     Friend WithEvents ubCriminality As System.Windows.Forms.Button
@@ -129,9 +129,6 @@ Public Class Form1
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents ubJobView As System.Windows.Forms.Button
     Friend WithEvents ubRoads As System.Windows.Forms.Button
-    Friend WithEvents lblYear As Label
-    Friend WithEvents lblView As Label
-    Friend WithEvents lblGoal As Label
     Friend WithEvents ubName As System.Windows.Forms.Button
     Friend WithEvents TabPageGame As TabPage
     Friend WithEvents ubNew As System.Windows.Forms.Button
@@ -139,7 +136,7 @@ Public Class Form1
     Friend WithEvents ubHint As System.Windows.Forms.Button
     Friend WithEvents txtHint As System.Windows.Forms.TextBox
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.UltraTab1 = New System.Windows.Forms.TabControl()
         Me.TabPageEvents = New System.Windows.Forms.TabPage()
         Me.txt_event = New System.Windows.Forms.TextBox()
@@ -157,7 +154,6 @@ Public Class Form1
         Me.ubPBack = New System.Windows.Forms.Button()
         Me.txt_person = New System.Windows.Forms.TextBox()
         Me.UltraTab5 = New System.Windows.Forms.TabControl()
-        Me.TabPageView = New System.Windows.Forms.TabPage()
         Me.ubRoads = New System.Windows.Forms.Button()
         Me.ubJobView = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -178,21 +174,12 @@ Public Class Form1
         Me.ubQuit = New System.Windows.Forms.Button()
         Me.ubNew = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.ubcard1 = New System.Windows.Forms.Button()
-        Me.ubcard2 = New System.Windows.Forms.Button()
-        Me.ubcard3 = New System.Windows.Forms.Button()
-        Me.ubcard4 = New System.Windows.Forms.Button()
-        Me.ubroad = New System.Windows.Forms.Button()
-        Me.gbP1 = New System.Windows.Forms.GroupBox()
         Me.p1_details = New System.Windows.Forms.Button()
         Me.txtP1 = New System.Windows.Forms.TextBox()
-        Me.gbP2 = New System.Windows.Forms.GroupBox()
         Me.p2_details = New System.Windows.Forms.Button()
         Me.txtP2 = New System.Windows.Forms.TextBox()
-        Me.gbP4 = New System.Windows.Forms.GroupBox()
         Me.p4_details = New System.Windows.Forms.Button()
         Me.txtP4 = New System.Windows.Forms.TextBox()
-        Me.gbP3 = New System.Windows.Forms.GroupBox()
         Me.p3_details = New System.Windows.Forms.Button()
         Me.txtP3 = New System.Windows.Forms.TextBox()
         Me.Infotab = New System.Windows.Forms.TabControl()
@@ -201,28 +188,36 @@ Public Class Form1
         Me.ubBForward = New System.Windows.Forms.Button()
         Me.ubBBack = New System.Windows.Forms.Button()
         Me.txt_building = New System.Windows.Forms.TextBox()
-        Me.ubland = New System.Windows.Forms.Button()
-        Me.ubEnd = New System.Windows.Forms.Button()
-        Me.lblYear = New System.Windows.Forms.Label()
-        Me.lblView = New System.Windows.Forms.Label()
-        Me.lblGoal = New System.Windows.Forms.Label()
-        Me.ubWipe = New System.Windows.Forms.Button()
-        Me.BuildingDropdown = New System.Windows.Forms.ComboBox()
         Me.btnCheat = New System.Windows.Forms.Button()
+        Me.MarketPanel = New System.Windows.Forms.Panel()
+        Me.ubland = New System.Windows.Forms.Button()
         Me.ubroadmax = New System.Windows.Forms.Button()
+        Me.ubroad = New System.Windows.Forms.Button()
+        Me.ubWipe = New System.Windows.Forms.Button()
+        Me.ubcard4 = New System.Windows.Forms.Button()
+        Me.ubcard3 = New System.Windows.Forms.Button()
+        Me.ubcard2 = New System.Windows.Forms.Button()
+        Me.MarketLabel = New System.Windows.Forms.Label()
+        Me.ubcard1 = New System.Windows.Forms.Button()
+        Me.BuildingDropdown = New System.Windows.Forms.ComboBox()
+        Me.ubEnd = New System.Windows.Forms.Button()
+        Me.gbP1 = New System.Windows.Forms.Panel()
+        Me.gbP2 = New System.Windows.Forms.Panel()
+        Me.gbP3 = New System.Windows.Forms.Panel()
+        Me.gbP4 = New System.Windows.Forms.Panel()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCard.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
-        Me.TabPageView.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.TabPageGame.SuspendLayout()
-        Me.gbP1.SuspendLayout()
-        Me.gbP2.SuspendLayout()
-        Me.gbP4.SuspendLayout()
-        Me.gbP3.SuspendLayout()
         Me.Infotab.SuspendLayout()
         Me.TabPageBuilding.SuspendLayout()
+        Me.MarketPanel.SuspendLayout()
+        Me.gbP1.SuspendLayout()
+        Me.gbP2.SuspendLayout()
+        Me.gbP3.SuspendLayout()
+        Me.gbP4.SuspendLayout()
         Me.SuspendLayout()
         '
         'UltraTab1
@@ -236,10 +231,11 @@ Public Class Form1
         '
         'TabPageEvents
         '
+        Me.TabPageEvents.BackColor = System.Drawing.SystemColors.Control
         Me.TabPageEvents.Controls.Add(Me.txt_event)
-        Me.TabPageEvents.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageEvents.Location = New System.Drawing.Point(4, 24)
         Me.TabPageEvents.Name = "TabPageEvents"
-        Me.TabPageEvents.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageEvents.Size = New System.Drawing.Size(290, 547)
         Me.TabPageEvents.TabIndex = 0
         Me.TabPageEvents.Text = "Events"
         '
@@ -247,11 +243,11 @@ Public Class Form1
         '
         Me.txt_event.AcceptsReturn = True
         Me.txt_event.AcceptsTab = True
-        Me.txt_event.Location = New System.Drawing.Point(13, 15)
+        Me.txt_event.Location = New System.Drawing.Point(3, 3)
         Me.txt_event.Multiline = True
         Me.txt_event.Name = "txt_event"
         Me.txt_event.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_event.Size = New System.Drawing.Size(248, 299)
+        Me.txt_event.Size = New System.Drawing.Size(284, 541)
         Me.txt_event.TabIndex = 1
         '
         'UltraTab2
@@ -266,9 +262,9 @@ Public Class Form1
         'TabPageCard
         '
         Me.TabPageCard.Controls.Add(Me.txt_card)
-        Me.TabPageCard.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageCard.Location = New System.Drawing.Point(4, 24)
         Me.TabPageCard.Name = "TabPageCard"
-        Me.TabPageCard.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageCard.Size = New System.Drawing.Size(290, 547)
         Me.TabPageCard.TabIndex = 0
         Me.TabPageCard.Text = "Card"
         '
@@ -276,11 +272,11 @@ Public Class Form1
         '
         Me.txt_card.AcceptsReturn = True
         Me.txt_card.AcceptsTab = True
-        Me.txt_card.Location = New System.Drawing.Point(13, 15)
+        Me.txt_card.Location = New System.Drawing.Point(3, 3)
         Me.txt_card.Multiline = True
         Me.txt_card.Name = "txt_card"
         Me.txt_card.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_card.Size = New System.Drawing.Size(248, 299)
+        Me.txt_card.Size = New System.Drawing.Size(284, 541)
         Me.txt_card.TabIndex = 1
         '
         'UltraTab3
@@ -296,17 +292,18 @@ Public Class Form1
         '
         Me.TabPageCity.Controls.Add(Me.ubName)
         Me.TabPageCity.Controls.Add(Me.txt_city)
-        Me.TabPageCity.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageCity.Location = New System.Drawing.Point(4, 24)
         Me.TabPageCity.Name = "TabPageCity"
-        Me.TabPageCity.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageCity.Size = New System.Drawing.Size(290, 547)
         Me.TabPageCity.TabIndex = 0
         Me.TabPageCity.Text = "City"
         '
         'ubName
         '
-        Me.ubName.Location = New System.Drawing.Point(208, 24)
+        Me.ubName.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubName.Location = New System.Drawing.Point(206, 13)
         Me.ubName.Name = "ubName"
-        Me.ubName.Size = New System.Drawing.Size(48, 24)
+        Me.ubName.Size = New System.Drawing.Size(57, 24)
         Me.ubName.TabIndex = 21
         Me.ubName.Text = "Name"
         '
@@ -314,11 +311,11 @@ Public Class Form1
         '
         Me.txt_city.AcceptsReturn = True
         Me.txt_city.AcceptsTab = True
-        Me.txt_city.Location = New System.Drawing.Point(13, 15)
+        Me.txt_city.Location = New System.Drawing.Point(3, 3)
         Me.txt_city.Multiline = True
         Me.txt_city.Name = "txt_city"
         Me.txt_city.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_city.Size = New System.Drawing.Size(248, 299)
+        Me.txt_city.Size = New System.Drawing.Size(287, 541)
         Me.txt_city.TabIndex = 1
         '
         'UltraTab4
@@ -336,23 +333,26 @@ Public Class Form1
         Me.TabPagePerson.Controls.Add(Me.ubPForward)
         Me.TabPagePerson.Controls.Add(Me.ubPBack)
         Me.TabPagePerson.Controls.Add(Me.txt_person)
-        Me.TabPagePerson.Location = New System.Drawing.Point(4, 22)
+        Me.TabPagePerson.Location = New System.Drawing.Point(4, 24)
         Me.TabPagePerson.Name = "TabPagePerson"
-        Me.TabPagePerson.Size = New System.Drawing.Size(272, 326)
+        Me.TabPagePerson.Size = New System.Drawing.Size(290, 547)
         Me.TabPagePerson.TabIndex = 0
         Me.TabPagePerson.Text = "Person"
         '
         'lblPerson
         '
-        Me.lblPerson.Location = New System.Drawing.Point(16, 299)
+        Me.lblPerson.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblPerson.Location = New System.Drawing.Point(3, 519)
         Me.lblPerson.Name = "lblPerson"
-        Me.lblPerson.Size = New System.Drawing.Size(136, 16)
+        Me.lblPerson.Size = New System.Drawing.Size(143, 23)
         Me.lblPerson.TabIndex = 4
         Me.lblPerson.Text = "Displaying 0 of 0"
+        Me.lblPerson.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'ubPForward
         '
-        Me.ubPForward.Location = New System.Drawing.Point(216, 296)
+        Me.ubPForward.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubPForward.Location = New System.Drawing.Point(239, 519)
         Me.ubPForward.Name = "ubPForward"
         Me.ubPForward.Size = New System.Drawing.Size(48, 23)
         Me.ubPForward.TabIndex = 3
@@ -360,7 +360,8 @@ Public Class Form1
         '
         'ubPBack
         '
-        Me.ubPBack.Location = New System.Drawing.Point(160, 296)
+        Me.ubPBack.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubPBack.Location = New System.Drawing.Point(183, 519)
         Me.ubPBack.Name = "ubPBack"
         Me.ubPBack.Size = New System.Drawing.Size(48, 23)
         Me.ubPBack.TabIndex = 2
@@ -370,11 +371,11 @@ Public Class Form1
         '
         Me.txt_person.AcceptsReturn = True
         Me.txt_person.AcceptsTab = True
-        Me.txt_person.Location = New System.Drawing.Point(13, 15)
+        Me.txt_person.Location = New System.Drawing.Point(3, 3)
         Me.txt_person.Multiline = True
         Me.txt_person.Name = "txt_person"
         Me.txt_person.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_person.Size = New System.Drawing.Size(248, 275)
+        Me.txt_person.Size = New System.Drawing.Size(284, 512)
         Me.txt_person.TabIndex = 1
         '
         'UltraTab5
@@ -386,22 +387,10 @@ Public Class Form1
         Me.UltraTab5.TabIndex = 0
         Me.UltraTab5.Text = "View"
         '
-        'TabPageView
-        '
-        Me.TabPageView.Controls.Add(Me.ubRoads)
-        Me.TabPageView.Controls.Add(Me.ubJobView)
-        Me.TabPageView.Controls.Add(Me.GroupBox1)
-        Me.TabPageView.Controls.Add(Me.ubLocView)
-        Me.TabPageView.Controls.Add(Me.ubPopView)
-        Me.TabPageView.Location = New System.Drawing.Point(4, 22)
-        Me.TabPageView.Name = "TabPageView"
-        Me.TabPageView.Size = New System.Drawing.Size(272, 326)
-        Me.TabPageView.TabIndex = 0
-        Me.TabPageView.Text = "View"
-        '
         'ubRoads
         '
-        Me.ubRoads.Location = New System.Drawing.Point(16, 72)
+        Me.ubRoads.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubRoads.Location = New System.Drawing.Point(15, 60)
         Me.ubRoads.Name = "ubRoads"
         Me.ubRoads.Size = New System.Drawing.Size(112, 32)
         Me.ubRoads.TabIndex = 17
@@ -409,7 +398,8 @@ Public Class Form1
         '
         'ubJobView
         '
-        Me.ubJobView.Location = New System.Drawing.Point(152, 24)
+        Me.ubJobView.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubJobView.Location = New System.Drawing.Point(151, 12)
         Me.ubJobView.Name = "ubJobView"
         Me.ubJobView.Size = New System.Drawing.Size(112, 32)
         Me.ubJobView.TabIndex = 16
@@ -426,7 +416,7 @@ Public Class Form1
         Me.GroupBox1.Controls.Add(Me.ubCriminality)
         Me.GroupBox1.Controls.Add(Me.ubMobility)
         Me.GroupBox1.Controls.Add(Me.ubHealth)
-        Me.GroupBox1.Location = New System.Drawing.Point(16, 128)
+        Me.GroupBox1.Location = New System.Drawing.Point(15, 116)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(248, 184)
         Me.GroupBox1.TabIndex = 14
@@ -499,7 +489,8 @@ Public Class Form1
         '
         'ubLocView
         '
-        Me.ubLocView.Location = New System.Drawing.Point(152, 72)
+        Me.ubLocView.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubLocView.Location = New System.Drawing.Point(151, 60)
         Me.ubLocView.Name = "ubLocView"
         Me.ubLocView.Size = New System.Drawing.Size(112, 32)
         Me.ubLocView.TabIndex = 5
@@ -507,7 +498,8 @@ Public Class Form1
         '
         'ubPopView
         '
-        Me.ubPopView.Location = New System.Drawing.Point(16, 24)
+        Me.ubPopView.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubPopView.Location = New System.Drawing.Point(15, 12)
         Me.ubPopView.Name = "ubPopView"
         Me.ubPopView.Size = New System.Drawing.Size(112, 32)
         Me.ubPopView.TabIndex = 4
@@ -524,13 +516,19 @@ Public Class Form1
         '
         'TabPageGame
         '
+        Me.TabPageGame.Controls.Add(Me.ubRoads)
         Me.TabPageGame.Controls.Add(Me.txtHint)
         Me.TabPageGame.Controls.Add(Me.ubHint)
+        Me.TabPageGame.Controls.Add(Me.ubJobView)
         Me.TabPageGame.Controls.Add(Me.ubQuit)
         Me.TabPageGame.Controls.Add(Me.ubNew)
-        Me.TabPageGame.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageGame.Controls.Add(Me.GroupBox1)
+        Me.TabPageGame.Controls.Add(Me.ubLocView)
+        Me.TabPageGame.Controls.Add(Me.ubPopView)
+        Me.TabPageGame.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.TabPageGame.Location = New System.Drawing.Point(4, 24)
         Me.TabPageGame.Name = "TabPageGame"
-        Me.TabPageGame.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageGame.Size = New System.Drawing.Size(290, 547)
         Me.TabPageGame.TabIndex = 0
         Me.TabPageGame.Text = "Game"
         '
@@ -538,110 +536,53 @@ Public Class Form1
         '
         Me.txtHint.AcceptsReturn = True
         Me.txtHint.AcceptsTab = True
-        Me.txtHint.Location = New System.Drawing.Point(11, 15)
+        Me.txtHint.Location = New System.Drawing.Point(13, 323)
         Me.txtHint.Multiline = True
         Me.txtHint.Name = "txtHint"
         Me.txtHint.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtHint.Size = New System.Drawing.Size(250, 136)
+        Me.txtHint.Size = New System.Drawing.Size(264, 136)
         Me.txtHint.TabIndex = 19
         '
         'ubHint
         '
-        Me.ubHint.Location = New System.Drawing.Point(80, 168)
+        Me.ubHint.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubHint.Location = New System.Drawing.Point(116, 480)
         Me.ubHint.Name = "ubHint"
-        Me.ubHint.Size = New System.Drawing.Size(112, 48)
+        Me.ubHint.Size = New System.Drawing.Size(67, 48)
         Me.ubHint.TabIndex = 18
         Me.ubHint.Text = "Hint"
         '
         'ubQuit
         '
-        Me.ubQuit.Location = New System.Drawing.Point(152, 264)
+        Me.ubQuit.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubQuit.Location = New System.Drawing.Point(189, 480)
         Me.ubQuit.Name = "ubQuit"
-        Me.ubQuit.Size = New System.Drawing.Size(112, 48)
+        Me.ubQuit.Size = New System.Drawing.Size(88, 48)
         Me.ubQuit.TabIndex = 17
         Me.ubQuit.Text = "Quit"
         '
         'ubNew
         '
-        Me.ubNew.Location = New System.Drawing.Point(16, 264)
+        Me.ubNew.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubNew.Location = New System.Drawing.Point(13, 480)
         Me.ubNew.Name = "ubNew"
-        Me.ubNew.Size = New System.Drawing.Size(112, 48)
+        Me.ubNew.Size = New System.Drawing.Size(97, 48)
         Me.ubNew.TabIndex = 16
         Me.ubNew.Text = "New Game"
         '
         'Label1
         '
         Me.Label1.BackColor = System.Drawing.SystemColors.ControlDark
-        Me.Label1.Location = New System.Drawing.Point(16, 32)
+        Me.Label1.Location = New System.Drawing.Point(16, 16)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(480, 480)
+        Me.Label1.Size = New System.Drawing.Size(720, 720)
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Board"
         Me.Label1.Visible = False
         '
-        'ubcard1
-        '
-        Me.ubcard1.BackColor = System.Drawing.SystemColors.Control
-        Me.ubcard1.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ubcard1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard1.Location = New System.Drawing.Point(512, 32)
-        Me.ubcard1.Name = "ubcard1"
-        Me.ubcard1.Size = New System.Drawing.Size(136, 48)
-        Me.ubcard1.TabIndex = 1
-        Me.ubcard1.Text = "Card1"
-        Me.ubcard1.UseVisualStyleBackColor = False
-        '
-        'ubcard2
-        '
-        Me.ubcard2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard2.Location = New System.Drawing.Point(656, 32)
-        Me.ubcard2.Name = "ubcard2"
-        Me.ubcard2.Size = New System.Drawing.Size(136, 48)
-        Me.ubcard2.TabIndex = 2
-        Me.ubcard2.Text = "Card2"
-        '
-        'ubcard3
-        '
-        Me.ubcard3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard3.Location = New System.Drawing.Point(512, 96)
-        Me.ubcard3.Name = "ubcard3"
-        Me.ubcard3.Size = New System.Drawing.Size(136, 48)
-        Me.ubcard3.TabIndex = 3
-        Me.ubcard3.Text = "Card3"
-        '
-        'ubcard4
-        '
-        Me.ubcard4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard4.Location = New System.Drawing.Point(656, 96)
-        Me.ubcard4.Name = "ubcard4"
-        Me.ubcard4.Size = New System.Drawing.Size(136, 48)
-        Me.ubcard4.TabIndex = 4
-        Me.ubcard4.Text = "Card4"
-        '
-        'ubroad
-        '
-        Me.ubroad.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubroad.Location = New System.Drawing.Point(512, 206)
-        Me.ubroad.Name = "ubroad"
-        Me.ubroad.Size = New System.Drawing.Size(87, 32)
-        Me.ubroad.TabIndex = 5
-        Me.ubroad.Text = "Road"
-        '
-        'gbP1
-        '
-        Me.gbP1.Controls.Add(Me.p1_details)
-        Me.gbP1.Controls.Add(Me.txtP1)
-        Me.gbP1.Location = New System.Drawing.Point(16, 527)
-        Me.gbP1.Name = "gbP1"
-        Me.gbP1.Size = New System.Drawing.Size(104, 130)
-        Me.gbP1.TabIndex = 11
-        Me.gbP1.TabStop = False
-        Me.gbP1.Text = "Player 1"
-        Me.gbP1.Visible = False
-        '
         'p1_details
         '
-        Me.p1_details.Location = New System.Drawing.Point(77, 102)
+        Me.p1_details.Location = New System.Drawing.Point(84, 101)
         Me.p1_details.Name = "p1_details"
         Me.p1_details.Size = New System.Drawing.Size(19, 22)
         Me.p1_details.TabIndex = 3
@@ -650,27 +591,15 @@ Public Class Form1
         '
         'txtP1
         '
-        Me.txtP1.Location = New System.Drawing.Point(8, 16)
+        Me.txtP1.Location = New System.Drawing.Point(8, 8)
         Me.txtP1.Multiline = True
         Me.txtP1.Name = "txtP1"
-        Me.txtP1.Size = New System.Drawing.Size(88, 108)
+        Me.txtP1.Size = New System.Drawing.Size(96, 114)
         Me.txtP1.TabIndex = 2
-        '
-        'gbP2
-        '
-        Me.gbP2.Controls.Add(Me.p2_details)
-        Me.gbP2.Controls.Add(Me.txtP2)
-        Me.gbP2.Location = New System.Drawing.Point(136, 527)
-        Me.gbP2.Name = "gbP2"
-        Me.gbP2.Size = New System.Drawing.Size(104, 130)
-        Me.gbP2.TabIndex = 12
-        Me.gbP2.TabStop = False
-        Me.gbP2.Text = "Player 2"
-        Me.gbP2.Visible = False
         '
         'p2_details
         '
-        Me.p2_details.Location = New System.Drawing.Point(77, 102)
+        Me.p2_details.Location = New System.Drawing.Point(83, 100)
         Me.p2_details.Name = "p2_details"
         Me.p2_details.Size = New System.Drawing.Size(19, 22)
         Me.p2_details.TabIndex = 4
@@ -679,27 +608,15 @@ Public Class Form1
         '
         'txtP2
         '
-        Me.txtP2.Location = New System.Drawing.Point(8, 16)
+        Me.txtP2.Location = New System.Drawing.Point(8, 8)
         Me.txtP2.Multiline = True
         Me.txtP2.Name = "txtP2"
-        Me.txtP2.Size = New System.Drawing.Size(88, 108)
+        Me.txtP2.Size = New System.Drawing.Size(96, 114)
         Me.txtP2.TabIndex = 3
-        '
-        'gbP4
-        '
-        Me.gbP4.Controls.Add(Me.p4_details)
-        Me.gbP4.Controls.Add(Me.txtP4)
-        Me.gbP4.Location = New System.Drawing.Point(376, 527)
-        Me.gbP4.Name = "gbP4"
-        Me.gbP4.Size = New System.Drawing.Size(104, 130)
-        Me.gbP4.TabIndex = 13
-        Me.gbP4.TabStop = False
-        Me.gbP4.Text = "Player 4"
-        Me.gbP4.Visible = False
         '
         'p4_details
         '
-        Me.p4_details.Location = New System.Drawing.Point(77, 102)
+        Me.p4_details.Location = New System.Drawing.Point(85, 100)
         Me.p4_details.Name = "p4_details"
         Me.p4_details.Size = New System.Drawing.Size(19, 22)
         Me.p4_details.TabIndex = 6
@@ -708,27 +625,15 @@ Public Class Form1
         '
         'txtP4
         '
-        Me.txtP4.Location = New System.Drawing.Point(8, 16)
+        Me.txtP4.Location = New System.Drawing.Point(8, 8)
         Me.txtP4.Multiline = True
         Me.txtP4.Name = "txtP4"
-        Me.txtP4.Size = New System.Drawing.Size(88, 108)
+        Me.txtP4.Size = New System.Drawing.Size(96, 114)
         Me.txtP4.TabIndex = 3
-        '
-        'gbP3
-        '
-        Me.gbP3.Controls.Add(Me.p3_details)
-        Me.gbP3.Controls.Add(Me.txtP3)
-        Me.gbP3.Location = New System.Drawing.Point(256, 527)
-        Me.gbP3.Name = "gbP3"
-        Me.gbP3.Size = New System.Drawing.Size(104, 130)
-        Me.gbP3.TabIndex = 14
-        Me.gbP3.TabStop = False
-        Me.gbP3.Text = "Player 3"
-        Me.gbP3.Visible = False
         '
         'p3_details
         '
-        Me.p3_details.Location = New System.Drawing.Point(79, 102)
+        Me.p3_details.Location = New System.Drawing.Point(85, 100)
         Me.p3_details.Name = "p3_details"
         Me.p3_details.Size = New System.Drawing.Size(19, 22)
         Me.p3_details.TabIndex = 5
@@ -737,10 +642,10 @@ Public Class Form1
         '
         'txtP3
         '
-        Me.txtP3.Location = New System.Drawing.Point(8, 16)
+        Me.txtP3.Location = New System.Drawing.Point(8, 8)
         Me.txtP3.Multiline = True
         Me.txtP3.Name = "txtP3"
-        Me.txtP3.Size = New System.Drawing.Size(88, 108)
+        Me.txtP3.Size = New System.Drawing.Size(96, 114)
         Me.txtP3.TabIndex = 3
         '
         'Infotab
@@ -750,12 +655,12 @@ Public Class Form1
         Me.Infotab.Controls.Add(Me.TabPageCity)
         Me.Infotab.Controls.Add(Me.TabPagePerson)
         Me.Infotab.Controls.Add(Me.TabPageBuilding)
-        Me.Infotab.Controls.Add(Me.TabPageView)
         Me.Infotab.Controls.Add(Me.TabPageGame)
-        Me.Infotab.Location = New System.Drawing.Point(512, 305)
+        Me.Infotab.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Infotab.Location = New System.Drawing.Point(943, 16)
         Me.Infotab.Name = "Infotab"
         Me.Infotab.SelectedIndex = 0
-        Me.Infotab.Size = New System.Drawing.Size(280, 352)
+        Me.Infotab.Size = New System.Drawing.Size(298, 575)
         Me.Infotab.TabIndex = 15
         '
         'TabPageBuilding
@@ -764,23 +669,26 @@ Public Class Form1
         Me.TabPageBuilding.Controls.Add(Me.ubBForward)
         Me.TabPageBuilding.Controls.Add(Me.ubBBack)
         Me.TabPageBuilding.Controls.Add(Me.txt_building)
-        Me.TabPageBuilding.Location = New System.Drawing.Point(4, 22)
+        Me.TabPageBuilding.Location = New System.Drawing.Point(4, 24)
         Me.TabPageBuilding.Name = "TabPageBuilding"
-        Me.TabPageBuilding.Size = New System.Drawing.Size(272, 326)
+        Me.TabPageBuilding.Size = New System.Drawing.Size(290, 547)
         Me.TabPageBuilding.TabIndex = 1
         Me.TabPageBuilding.Text = "Building"
         '
         'lblBuilding
         '
-        Me.lblBuilding.Location = New System.Drawing.Point(16, 299)
+        Me.lblBuilding.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lblBuilding.Location = New System.Drawing.Point(3, 519)
         Me.lblBuilding.Name = "lblBuilding"
-        Me.lblBuilding.Size = New System.Drawing.Size(136, 16)
+        Me.lblBuilding.Size = New System.Drawing.Size(143, 23)
         Me.lblBuilding.TabIndex = 8
         Me.lblBuilding.Text = "Displaying 0 of 0"
+        Me.lblBuilding.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'ubBForward
         '
-        Me.ubBForward.Location = New System.Drawing.Point(216, 296)
+        Me.ubBForward.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubBForward.Location = New System.Drawing.Point(239, 519)
         Me.ubBForward.Name = "ubBForward"
         Me.ubBForward.Size = New System.Drawing.Size(48, 23)
         Me.ubBForward.TabIndex = 7
@@ -788,7 +696,8 @@ Public Class Form1
         '
         'ubBBack
         '
-        Me.ubBBack.Location = New System.Drawing.Point(160, 296)
+        Me.ubBBack.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubBBack.Location = New System.Drawing.Point(183, 519)
         Me.ubBBack.Name = "ubBBack"
         Me.ubBBack.Size = New System.Drawing.Size(48, 23)
         Me.ubBBack.TabIndex = 6
@@ -798,118 +707,227 @@ Public Class Form1
         '
         Me.txt_building.AcceptsReturn = True
         Me.txt_building.AcceptsTab = True
-        Me.txt_building.Location = New System.Drawing.Point(13, 15)
+        Me.txt_building.Location = New System.Drawing.Point(3, 3)
         Me.txt_building.Multiline = True
         Me.txt_building.Name = "txt_building"
         Me.txt_building.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_building.Size = New System.Drawing.Size(248, 275)
+        Me.txt_building.Size = New System.Drawing.Size(284, 512)
         Me.txt_building.TabIndex = 5
-        '
-        'ubland
-        '
-        Me.ubland.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubland.Location = New System.Drawing.Point(656, 206)
-        Me.ubland.Name = "ubland"
-        Me.ubland.Size = New System.Drawing.Size(136, 32)
-        Me.ubland.TabIndex = 16
-        Me.ubland.Text = "Land"
-        '
-        'ubEnd
-        '
-        Me.ubEnd.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubEnd.Location = New System.Drawing.Point(568, 256)
-        Me.ubEnd.Name = "ubEnd"
-        Me.ubEnd.Size = New System.Drawing.Size(168, 32)
-        Me.ubEnd.TabIndex = 17
-        Me.ubEnd.Text = "END TURN"
-        '
-        'lblYear
-        '
-        Me.lblYear.Location = New System.Drawing.Point(16, 8)
-        Me.lblYear.Name = "lblYear"
-        Me.lblYear.Size = New System.Drawing.Size(96, 16)
-        Me.lblYear.TabIndex = 18
-        Me.lblYear.Text = "Year: "
-        '
-        'lblView
-        '
-        Me.lblView.Location = New System.Drawing.Point(112, 8)
-        Me.lblView.Name = "lblView"
-        Me.lblView.Size = New System.Drawing.Size(184, 16)
-        Me.lblView.TabIndex = 19
-        Me.lblView.Text = "Current View:"
-        '
-        'lblGoal
-        '
-        Me.lblGoal.Location = New System.Drawing.Point(296, 8)
-        Me.lblGoal.Name = "lblGoal"
-        Me.lblGoal.Size = New System.Drawing.Size(184, 16)
-        Me.lblGoal.TabIndex = 20
-        Me.lblGoal.Text = "Goal:"
-        '
-        'ubWipe
-        '
-        Me.ubWipe.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubWipe.Location = New System.Drawing.Point(512, 159)
-        Me.ubWipe.Name = "ubWipe"
-        Me.ubWipe.Size = New System.Drawing.Size(136, 32)
-        Me.ubWipe.TabIndex = 21
-        Me.ubWipe.Text = "Clear Above"
-        '
-        'BuildingDropdown
-        '
-        Me.BuildingDropdown.FormattingEnabled = True
-        Me.BuildingDropdown.Location = New System.Drawing.Point(656, 159)
-        Me.BuildingDropdown.Name = "BuildingDropdown"
-        Me.BuildingDropdown.Size = New System.Drawing.Size(136, 21)
-        Me.BuildingDropdown.TabIndex = 22
         '
         'btnCheat
         '
-        Me.btnCheat.Location = New System.Drawing.Point(747, 256)
+        Me.btnCheat.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.btnCheat.Location = New System.Drawing.Point(121, 541)
         Me.btnCheat.Name = "btnCheat"
         Me.btnCheat.Size = New System.Drawing.Size(45, 23)
         Me.btnCheat.TabIndex = 23
         Me.btnCheat.Text = "Cheat"
         Me.btnCheat.UseVisualStyleBackColor = True
         '
+        'MarketPanel
+        '
+        Me.MarketPanel.BackColor = System.Drawing.Color.DimGray
+        Me.MarketPanel.Controls.Add(Me.ubland)
+        Me.MarketPanel.Controls.Add(Me.ubroadmax)
+        Me.MarketPanel.Controls.Add(Me.ubroad)
+        Me.MarketPanel.Controls.Add(Me.ubWipe)
+        Me.MarketPanel.Controls.Add(Me.ubcard4)
+        Me.MarketPanel.Controls.Add(Me.ubcard3)
+        Me.MarketPanel.Controls.Add(Me.ubcard2)
+        Me.MarketPanel.Controls.Add(Me.MarketLabel)
+        Me.MarketPanel.Controls.Add(Me.ubcard1)
+        Me.MarketPanel.Controls.Add(Me.btnCheat)
+        Me.MarketPanel.Controls.Add(Me.BuildingDropdown)
+        Me.MarketPanel.Controls.Add(Me.ubEnd)
+        Me.MarketPanel.Location = New System.Drawing.Point(750, 16)
+        Me.MarketPanel.Name = "MarketPanel"
+        Me.MarketPanel.Size = New System.Drawing.Size(182, 575)
+        Me.MarketPanel.TabIndex = 26
+        '
+        'ubland
+        '
+        Me.ubland.BackColor = System.Drawing.SystemColors.Control
+        Me.ubland.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubland.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubland.Location = New System.Drawing.Point(16, 403)
+        Me.ubland.Name = "ubland"
+        Me.ubland.Size = New System.Drawing.Size(150, 32)
+        Me.ubland.TabIndex = 29
+        Me.ubland.Text = "Land"
+        Me.ubland.UseVisualStyleBackColor = False
+        '
         'ubroadmax
         '
+        Me.ubroadmax.BackColor = System.Drawing.SystemColors.Control
+        Me.ubroadmax.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubroadmax.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubroadmax.Location = New System.Drawing.Point(605, 206)
+        Me.ubroadmax.Location = New System.Drawing.Point(121, 365)
         Me.ubroadmax.Name = "ubroadmax"
-        Me.ubroadmax.Size = New System.Drawing.Size(43, 32)
-        Me.ubroadmax.TabIndex = 24
+        Me.ubroadmax.Size = New System.Drawing.Size(45, 32)
+        Me.ubroadmax.TabIndex = 28
         Me.ubroadmax.Text = "Max"
+        Me.ubroadmax.UseVisualStyleBackColor = False
         '
-        'Form1
+        'ubroad
+        '
+        Me.ubroad.BackColor = System.Drawing.SystemColors.Control
+        Me.ubroad.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubroad.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubroad.Location = New System.Drawing.Point(16, 365)
+        Me.ubroad.Name = "ubroad"
+        Me.ubroad.Size = New System.Drawing.Size(103, 32)
+        Me.ubroad.TabIndex = 27
+        Me.ubroad.Text = "Road"
+        Me.ubroad.UseVisualStyleBackColor = False
+        '
+        'ubWipe
+        '
+        Me.ubWipe.BackColor = System.Drawing.SystemColors.Control
+        Me.ubWipe.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubWipe.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubWipe.Location = New System.Drawing.Point(16, 293)
+        Me.ubWipe.Name = "ubWipe"
+        Me.ubWipe.Size = New System.Drawing.Size(150, 32)
+        Me.ubWipe.TabIndex = 26
+        Me.ubWipe.Text = "Clear Above"
+        Me.ubWipe.UseVisualStyleBackColor = False
+        '
+        'ubcard4
+        '
+        Me.ubcard4.BackColor = System.Drawing.SystemColors.Control
+        Me.ubcard4.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubcard4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubcard4.Location = New System.Drawing.Point(16, 229)
+        Me.ubcard4.Name = "ubcard4"
+        Me.ubcard4.Size = New System.Drawing.Size(150, 58)
+        Me.ubcard4.TabIndex = 4
+        Me.ubcard4.Text = "Card4"
+        Me.ubcard4.UseVisualStyleBackColor = False
+        '
+        'ubcard3
+        '
+        Me.ubcard3.BackColor = System.Drawing.SystemColors.Control
+        Me.ubcard3.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubcard3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubcard3.Location = New System.Drawing.Point(16, 164)
+        Me.ubcard3.Name = "ubcard3"
+        Me.ubcard3.Size = New System.Drawing.Size(150, 58)
+        Me.ubcard3.TabIndex = 3
+        Me.ubcard3.Text = "Card3"
+        Me.ubcard3.UseVisualStyleBackColor = False
+        '
+        'ubcard2
+        '
+        Me.ubcard2.BackColor = System.Drawing.SystemColors.Control
+        Me.ubcard2.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubcard2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubcard2.Location = New System.Drawing.Point(16, 101)
+        Me.ubcard2.Name = "ubcard2"
+        Me.ubcard2.Size = New System.Drawing.Size(150, 58)
+        Me.ubcard2.TabIndex = 2
+        Me.ubcard2.Text = "Card2"
+        Me.ubcard2.UseVisualStyleBackColor = False
+        '
+        'MarketLabel
+        '
+        Me.MarketLabel.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.MarketLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.MarketLabel.Location = New System.Drawing.Point(16, 7)
+        Me.MarketLabel.Name = "MarketLabel"
+        Me.MarketLabel.Size = New System.Drawing.Size(150, 25)
+        Me.MarketLabel.TabIndex = 25
+        Me.MarketLabel.Text = "Market"
+        Me.MarketLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'ubcard1
+        '
+        Me.ubcard1.BackColor = System.Drawing.SystemColors.Control
+        Me.ubcard1.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubcard1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubcard1.Location = New System.Drawing.Point(16, 37)
+        Me.ubcard1.Name = "ubcard1"
+        Me.ubcard1.Size = New System.Drawing.Size(150, 58)
+        Me.ubcard1.TabIndex = 1
+        Me.ubcard1.Text = "Card1"
+        Me.ubcard1.UseVisualStyleBackColor = False
+        '
+        'BuildingDropdown
+        '
+        Me.BuildingDropdown.FormattingEnabled = True
+        Me.BuildingDropdown.Location = New System.Drawing.Point(16, 448)
+        Me.BuildingDropdown.Name = "BuildingDropdown"
+        Me.BuildingDropdown.Size = New System.Drawing.Size(150, 21)
+        Me.BuildingDropdown.TabIndex = 22
+        '
+        'ubEnd
+        '
+        Me.ubEnd.BackColor = System.Drawing.SystemColors.ButtonFace
+        Me.ubEnd.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubEnd.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubEnd.Location = New System.Drawing.Point(16, 485)
+        Me.ubEnd.Name = "ubEnd"
+        Me.ubEnd.Size = New System.Drawing.Size(152, 79)
+        Me.ubEnd.TabIndex = 17
+        Me.ubEnd.Text = "END TURN"
+        Me.ubEnd.UseVisualStyleBackColor = False
+        '
+        'gbP1
+        '
+        Me.gbP1.BackColor = System.Drawing.Color.DimGray
+        Me.gbP1.Controls.Add(Me.p1_details)
+        Me.gbP1.Controls.Add(Me.txtP1)
+        Me.gbP1.Location = New System.Drawing.Point(750, 606)
+        Me.gbP1.Name = "gbP1"
+        Me.gbP1.Size = New System.Drawing.Size(110, 130)
+        Me.gbP1.TabIndex = 27
+        '
+        'gbP2
+        '
+        Me.gbP2.BackColor = System.Drawing.Color.DimGray
+        Me.gbP2.Controls.Add(Me.p2_details)
+        Me.gbP2.Controls.Add(Me.txtP2)
+        Me.gbP2.Location = New System.Drawing.Point(877, 606)
+        Me.gbP2.Name = "gbP2"
+        Me.gbP2.Size = New System.Drawing.Size(110, 130)
+        Me.gbP2.TabIndex = 28
+        '
+        'gbP3
+        '
+        Me.gbP3.BackColor = System.Drawing.Color.DimGray
+        Me.gbP3.Controls.Add(Me.p3_details)
+        Me.gbP3.Controls.Add(Me.txtP3)
+        Me.gbP3.Location = New System.Drawing.Point(1004, 606)
+        Me.gbP3.Name = "gbP3"
+        Me.gbP3.Size = New System.Drawing.Size(110, 130)
+        Me.gbP3.TabIndex = 29
+        '
+        'gbP4
+        '
+        Me.gbP4.BackColor = System.Drawing.Color.DimGray
+        Me.gbP4.Controls.Add(Me.p4_details)
+        Me.gbP4.Controls.Add(Me.txtP4)
+        Me.gbP4.Location = New System.Drawing.Point(1131, 606)
+        Me.gbP4.Name = "gbP4"
+        Me.gbP4.Size = New System.Drawing.Size(110, 130)
+        Me.gbP4.TabIndex = 30
+        '
+        'MainForm
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
-        Me.ClientSize = New System.Drawing.Size(810, 678)
-        Me.Controls.Add(Me.ubroadmax)
-        Me.Controls.Add(Me.btnCheat)
-        Me.Controls.Add(Me.BuildingDropdown)
-        Me.Controls.Add(Me.ubWipe)
-        Me.Controls.Add(Me.ubEnd)
-        Me.Controls.Add(Me.ubland)
-        Me.Controls.Add(Me.Infotab)
-        Me.Controls.Add(Me.gbP3)
+        Me.BackColor = System.Drawing.Color.Black
+        Me.ClientSize = New System.Drawing.Size(1251, 750)
         Me.Controls.Add(Me.gbP4)
-        Me.Controls.Add(Me.gbP1)
-        Me.Controls.Add(Me.ubroad)
-        Me.Controls.Add(Me.ubcard4)
-        Me.Controls.Add(Me.ubcard3)
-        Me.Controls.Add(Me.ubcard2)
-        Me.Controls.Add(Me.ubcard1)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.gbP3)
         Me.Controls.Add(Me.gbP2)
-        Me.Controls.Add(Me.lblView)
-        Me.Controls.Add(Me.lblYear)
-        Me.Controls.Add(Me.lblGoal)
+        Me.Controls.Add(Me.gbP1)
+        Me.Controls.Add(Me.MarketPanel)
+        Me.Controls.Add(Me.Infotab)
+        Me.Controls.Add(Me.Label1)
+        Me.ForeColor = System.Drawing.SystemColors.ControlLightLight
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
-        Me.Name = "Form1"
+        Me.Name = "MainForm"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Urban Blight"
@@ -921,21 +939,21 @@ Public Class Form1
         Me.TabPageCity.PerformLayout()
         Me.TabPagePerson.ResumeLayout(False)
         Me.TabPagePerson.PerformLayout()
-        Me.TabPageView.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.TabPageGame.ResumeLayout(False)
         Me.TabPageGame.PerformLayout()
+        Me.Infotab.ResumeLayout(False)
+        Me.TabPageBuilding.ResumeLayout(False)
+        Me.TabPageBuilding.PerformLayout()
+        Me.MarketPanel.ResumeLayout(False)
         Me.gbP1.ResumeLayout(False)
         Me.gbP1.PerformLayout()
         Me.gbP2.ResumeLayout(False)
         Me.gbP2.PerformLayout()
-        Me.gbP4.ResumeLayout(False)
-        Me.gbP4.PerformLayout()
         Me.gbP3.ResumeLayout(False)
         Me.gbP3.PerformLayout()
-        Me.Infotab.ResumeLayout(False)
-        Me.TabPageBuilding.ResumeLayout(False)
-        Me.TabPageBuilding.PerformLayout()
+        Me.gbP4.ResumeLayout(False)
+        Me.gbP4.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -968,11 +986,8 @@ Public Class Form1
         '-- Fill building dropdown
         FillBuildingDropdown()
 
-        '-- Display game goal
-        UpdateGoal()
-
-        '-- Display the starting year
-        UpdateYear()
+        '-- Display title, year, game goal, and current view
+        UpdateTitle()
 
         '-- Create players
         CreatePlayers()
@@ -1004,39 +1019,38 @@ Public Class Form1
             Dim thisPlayer As Player = Players(i)
 
             '-- Display player Info GUIs for active players
+            Dim PlayerVisibility As Boolean = False
             If thisPlayer.PlayerType <> PlayerNone Then
-                If i = 0 Then
-                    Players(i).Flag = Flag1
-                    gbP1.Visible = True
-                    gbP1.Text = thisPlayer.GetPlayerName()
-                    gbP1.BackColor = thisPlayer.Flag
-                    If thisPlayer.PlayerType = PlayerHuman Then
-                        p1_details.Visible = False
-                    End If
-                ElseIf i = 1 Then
-                    Players(i).Flag = Flag2
-                    gbP2.Visible = True
-                    gbP2.Text = thisPlayer.GetPlayerName()
-                    gbP2.BackColor = thisPlayer.Flag
-                    If thisPlayer.PlayerType = PlayerHuman Then
-                        p2_details.Visible = False
-                    End If
-                ElseIf i = 2 Then
-                    Players(i).Flag = Flag3
-                    gbP3.Visible = True
-                    gbP3.Text = thisPlayer.GetPlayerName()
-                    gbP3.BackColor = thisPlayer.Flag
-                    If thisPlayer.PlayerType = PlayerHuman Then
-                        p3_details.Visible = False
-                    End If
-                ElseIf i = 3 Then
-                    Players(i).Flag = Flag4
-                    gbP4.Visible = True
-                    gbP4.Text = thisPlayer.GetPlayerName()
-                    gbP4.BackColor = thisPlayer.Flag
-                    If thisPlayer.PlayerType = PlayerHuman Then
-                        p4_details.Visible = False
-                    End If
+                PlayerVisibility = True
+            End If
+
+            If i = 0 Then
+                Players(i).Flag = Flag1
+                gbP1.Visible = PlayerVisibility
+                gbP1.BackColor = thisPlayer.Flag
+                If thisPlayer.PlayerType = PlayerHuman Then
+                    p1_details.Visible = False
+                End If
+            ElseIf i = 1 Then
+                Players(i).Flag = Flag2
+                gbP2.Visible = PlayerVisibility
+                gbP2.BackColor = thisPlayer.Flag
+                If thisPlayer.PlayerType = PlayerHuman Then
+                    p2_details.Visible = False
+                End If
+            ElseIf i = 2 Then
+                Players(i).Flag = Flag3
+                gbP3.Visible = PlayerVisibility
+                gbP3.BackColor = thisPlayer.Flag
+                If thisPlayer.PlayerType = PlayerHuman Then
+                    p3_details.Visible = False
+                End If
+            ElseIf i = 3 Then
+                Players(i).Flag = Flag4
+                gbP4.Visible = PlayerVisibility
+                gbP4.BackColor = thisPlayer.Flag
+                If thisPlayer.PlayerType = PlayerHuman Then
+                    p4_details.Visible = False
                 End If
             End If
         Next
@@ -1045,11 +1059,13 @@ Public Class Form1
 
     Sub CreateMapGrid()
 
+        Dim path As String = My.Application.Info.DirectoryPath
+
         '-- Location Variables
         Dim LeftStart As Integer = 16
-        Dim LeftIncrement As Integer = 48
-        Dim TopStart As Integer = 32
-        Dim TopIncrement As Integer = 48
+        Dim LeftIncrement As Integer = 60
+        Dim TopStart As Integer = 16
+        Dim TopIncrement As Integer = 60
 
         '-- Create grid of colored labels
         Dim CurrentX As Integer = LeftStart
@@ -1061,9 +1077,12 @@ Public Class Form1
                 GridArray(i, j) = newLocation
 
                 '-- Set position and size of grid squares
-                Dim gridSquare As Label = newLocation.GridSquare
+                Dim gridSquare As LabelWithTextBorder = newLocation.GridSquare 'Label
                 gridSquare.Location = New System.Drawing.Point(CurrentX, CurrentY)
                 gridSquare.Size = New System.Drawing.Size(LeftIncrement, TopIncrement)
+
+
+
 
                 'ClickBox.Appearance.FontData.SizeInPoints = SmallFont
                 'ClickBox.ContextMenu = ctxTerrain 'Return this if context menu is used
@@ -1104,7 +1123,7 @@ Public Class Form1
                     theLocation.Occupy(i)
 
                     '-- Starting cities are always on Plain terrain and start out with free dirt roads
-                    theLocation.Terrain = TerrainPlain
+                    theLocation.SetTerrain(TerrainPlain)
                     theLocation.AddRoad()
 
                     ' Create starting population
@@ -1380,7 +1399,7 @@ Public Class Form1
 
                 '-- If this was the end of the round, advance the clock
                 theYear += TimeIncrement
-                UpdateYear()
+                UpdateTitle()
 
                 '-- Check for a winner
                 If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
@@ -1546,25 +1565,45 @@ Public Class Form1
         Next
     End Sub
 
-    Sub UpdateYear()
-        lblYear.Text = "Year: " + theYear.ToString
-    End Sub
+    Sub UpdateTitle()
+        Dim PlaceHolderTab As String = "        "
+        Dim TitleText As String = "URBAN BLIGHT" + PlaceHolderTab
+        TitleText += "Year: " + theYear.ToString + PlaceHolderTab
 
-    Sub UpdateGoal()
+        Dim GoalText As String = ""
         Select Case (GameType)
             Case ScoreGame
-                lblGoal.Text = "Goal: Score " + GoalNumber.ToString
+                GoalText = "Score " + GoalNumber.ToString
             Case TerritoryGame
-                lblGoal.Text = "Goal: Territory " + GoalNumber.ToString
+                GoalText = "Territory " + GoalNumber.ToString
             Case PopulationGame
-                lblGoal.Text = "Goal: Population " + GoalNumber.ToString
+                GoalText = "Population " + GoalNumber.ToString
             Case DevelopmentGame
-                lblGoal.Text = "Goal: Development " + GoalNumber.ToString
+                GoalText = "Development " + GoalNumber.ToString
             Case YearGame
-                lblGoal.Text = "Goal: Year " + GoalNumber.ToString
+                GoalText = "Year " + GoalNumber.ToString
             Case InfiniteGame
-                lblGoal.Text = "Goal: None"
+                GoalText = "None"
         End Select
+        TitleText += "Goal: " + GoalText.ToString + PlaceHolderTab
+
+        Dim ViewText As String = ""
+        Select Case (ViewText)
+            Case PopView
+                ViewText = "Population"
+            Case LocView
+                ViewText = "Location"
+            Case JobView
+                ViewText = "Jobs"
+            Case RoadView
+                ViewText = "Roads"
+            Case Else
+                ViewText = "Statistics"
+        End Select
+        TitleText += "Current View: " + ViewText.ToString
+
+        Me.Text = TitleText
+
     End Sub
 
     Sub UpdateCoastline()
@@ -1774,9 +1813,15 @@ Public Class Form1
             toggleButtons = False
         End If
 
-        For i As Integer = 0 To ButtonList.Count - 1
-            ButtonList(i).Enabled = toggleButtons
+        For Each Control As Control In MarketPanel.Controls
+            If Not Control.Equals(ubEnd) Then
+                Control.Enabled = toggleButtons
+            End If
         Next
+
+        'For i As Integer = 0 To ButtonList.Count - 1
+        '    ButtonList(i).Enabled = toggleButtons
+        'Next
 
         '-- Disable access to cards banned for this player
         If CurrentPlayer.PlayerType = PlayerHuman Then
@@ -1881,55 +1926,55 @@ Public Class Form1
 #Region " Views "
     Private Sub ubPopView_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPopView.Click
         CurrentView = PopView
-        lblView.Text = "Current View: Population"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubLocView_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubLocView.Click
         CurrentView = LocView
-        lblView.Text = "Current View: Location"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubJobView_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubJobView.Click
         CurrentView = JobView
-        lblView.Text = "Current View: Jobs"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubRoads_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubRoads.Click
         CurrentView = RoadView
-        lblView.Text = "Current View: Roads"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubHappiness_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubHappiness.Click
         CurrentView = HappinessView
-        lblView.Text = "Current View: Happiness"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubHealth_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubHealth.Click
         CurrentView = HealthView
-        lblView.Text = "Current View: Health"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubEmployment_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubEmployment.Click
         CurrentView = EmploymentView
-        lblView.Text = "Current View: Employment"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubIntelligence_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubIntelligence.Click
         CurrentView = IntelligenceView
-        lblView.Text = "Current View: Intelligence"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubCreativity_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubCreativity.Click
         CurrentView = CreativityView
-        lblView.Text = "Current View: Creativity"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
@@ -1940,13 +1985,13 @@ Public Class Form1
 
     Private Sub ubDrunkenness_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubDrunkenness.Click
         CurrentView = DrunkennessView
-        lblView.Text = "Current View: Drunkenness"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 
     Private Sub ubCriminality_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubCriminality.Click
         CurrentView = CriminalityView
-        lblView.Text = "Current View: Criminality"
+        UpdateTitle()
         UpdateGrid()
     End Sub
 #End Region
@@ -1955,7 +2000,7 @@ Public Class Form1
         If init Then
             If Not (CurrentView = RoadView And SelectedCard = RoadCard) Then
                 CurrentView = PopView
-                lblView.Text = "Current View: Population"
+                UpdateTitle()
                 UpdateGrid()
             End If
         End If
@@ -2051,7 +2096,15 @@ Public Class Form1
         UpdatePlayers()
     End Sub
 
+    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles MarketLabel.Click
+        ColorFlip = Not ColorFlip
+        For Each Location As CitySquare In GridArray
+            Location.UpdateTerrain()
+        Next
+        UpdateGrid()
+    End Sub
 
 #End Region
 
 End Class
+

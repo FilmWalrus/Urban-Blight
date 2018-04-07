@@ -955,7 +955,7 @@ Public Class BuildingGen
                 Case BuildingEnum.Power_Plant
                     Dim newBuilding As New Building(bType, 455, 3)
                     newBuilding.SetInfo("")
-                    Return newBuilding
+                    'Return newBuilding
                 Case BuildingEnum.Private_Security_Company
                     Dim newBuilding As New PrivateSecurityBuilding(bType, 300, 2)
                     newBuilding.SetCriminality(12, -5)

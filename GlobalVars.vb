@@ -28,6 +28,7 @@ Module GlobalVars
     '--Players
     Public Players As New List(Of Player)
     Public Const MaxPlayers As Integer = 4
+    Public CurrentPlayerIndex As Integer = 0
 
     '--Cards (Buildings available to buy)
 
@@ -36,8 +37,8 @@ Module GlobalVars
     Public Const DropCostBase As Integer = 5
 
     '--Board
-    Public Const GridWidth As Integer = 9 '-- 0 to 10
-    Public Const GridHeight As Integer = 9 '-- 0 to 10
+    Public Const GridWidth As Integer = 11 '-- 0 to 12
+    Public Const GridHeight As Integer = 11 '-- 0 to 12
     Public GridArray(GridWidth, GridHeight) As CitySquare
 
     '--Terrain
@@ -94,12 +95,14 @@ Module GlobalVars
 
     Public ColorPlayerSelected As Color = Color.Gold 'Color.LemonChiffon
     Public ColorPlayerUnselected As Color = Color.White
+    Public ColorFlip As Boolean = False
 
     '--Fonts
     'Dim newBold As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Bold)
     'Dim newRegular As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Regular)
-    Public LargeFont As New Font("Franklin Gothic Medium", 12, FontStyle.Regular)
-    Public RegularFont As New Font("Franklin Gothic Medium", 10, FontStyle.Regular)
+    Public DemoFont As New Font("Franklin Gothic Medium", 18, FontStyle.Regular)
+    Public LargeFont As New Font("Franklin Gothic Medium", 14, FontStyle.Regular)
+    Public RegularFont As New Font("Franklin Gothic Medium", 12, FontStyle.Regular)
 
     '--Views
     Public Const PopView As Integer = 0

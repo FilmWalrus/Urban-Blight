@@ -48,3 +48,47 @@ Public Class FancyLabel
     End Sub
 
 End Class
+
+
+Public Class LabelWithTextBorder
+    Inherits Label
+
+    Sub New()
+        SetStyle(ControlStyles.UserPaint, True)
+    End Sub
+
+    Protected Overrides Sub OnPaint(e As PaintEventArgs)
+
+        Dim size As SizeF = e.Graphics.MeasureString(Text, DemoFont)
+        'Using pen As New Pen(Color.White)
+        '    e.Graphics.DrawRectangle(pen, (ClientSize.Width - size.Width) / 2, (ClientSize.Height - size.Height) / 2, size.Width, size.Height)
+        'End Using
+
+
+        '-- Draw the image
+        If MyBase.Image IsNot Nothing Then
+            e.Graphics.DrawImage(MyBase.Image, New Point(0, 0))
+        End If
+
+        '-- Draw a spherical backdrop around the text
+        Dim BackColorAlpha As New Color()
+        BackColorAlpha = Color.FromArgb(120, Me.BackColor.R, Me.BackColor.G, Me.BackColor.B)
+        Using brush As New SolidBrush(BackColorAlpha) 'Me.BackColor
+            'e.Graphics.FillRectangle(brush, (ClientSize.Width - size.Width) / 2, (ClientSize.Height - size.Height) / 2, size.Width, size.Height)
+            e.Graphics.FillEllipse(brush, (ClientSize.Width - size.Width) / 2, (ClientSize.Height - size.Height) / 2, size.Width, size.Height)
+        End Using
+
+        '-- Draw the text
+        ' Dim TextColor As Color = SystemColors.ControlText
+        Dim TextColor As Color = System.Drawing.Color.White
+        If ColorFlip Then
+            TextColor = System.Drawing.Color.Black
+        End If
+        Using brush As New SolidBrush(TextColor)
+            e.Graphics.DrawString(Text, DemoFont, brush, (ClientSize.Width - size.Width) / 2, (ClientSize.Height - size.Height) / 2)
+        End Using
+
+        'MyBase.OnPaint(e)
+    End Sub
+
+End Class

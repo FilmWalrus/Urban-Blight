@@ -15,7 +15,7 @@ Public Class CitySquare
     Public VisitOrder As Integer = 0
 
     '--
-    Public GridSquare As Label = Nothing
+    Public GridSquare As LabelWithTextBorder = Nothing
 
     '-- Info
     Public Buildings As New List(Of Building)
@@ -75,26 +75,31 @@ Public Class CitySquare
         End If
 
         '-- Create the GUI label/button that represents this citySquare
-        GridSquare = New Label
-
-        Select Case (Terrain)
-            Case TerrainPlain
-                GridSquare.BackColor = ColorPlain
-            Case TerrainDirt
-                GridSquare.BackColor = ColorDirt
-            Case TerrainForest
-                GridSquare.BackColor = ColorForest
-            Case TerrainMountain
-                GridSquare.BackColor = ColorMountain
-            Case TerrainLake
-                GridSquare.BackColor = ColorOcean
-            Case TerrainSwamp
-                GridSquare.BackColor = ColorSwamp
-            Case TerrainTownship
-                GridSquare.BackColor = ColorTownship
-            Case TerrainDesert
-                GridSquare.BackColor = ColorDesert
-        End Select
+        GridSquare = New LabelWithTextBorder
+        UpdateTerrain()
+        'Select Case (Terrain)
+        '    Case TerrainPlain
+        '        GridSquare.BackColor = ColorPlain
+        '    Case TerrainDirt
+        '        GridSquare.BackColor = ColorPlain
+        '        'GridSquare.BackColor = ColorDirt
+        '    Case TerrainForest
+        '        GridSquare.BackColor = ColorPlain
+        '        'GridSquare.BackColor = ColorForest
+        '    Case TerrainMountain
+        '        GridSquare.BackColor = ColorPlain
+        '        'GridSquare.BackColor = ColorMountain
+        '    Case TerrainLake
+        '        GridSquare.BackColor = ColorOcean
+        '    Case TerrainSwamp
+        '        GridSquare.BackColor = ColorSwamp
+        '    Case TerrainTownship
+        '        GridSquare.BackColor = ColorPlain
+        '        'GridSquare.BackColor = ColorTownship
+        '    Case TerrainDesert
+        '        GridSquare.BackColor = ColorPlain
+        '        'GridSquare.BackColor = ColorDesert
+        'End Select
 
         GridSquare.Name = "NewBox"
         GridSquare.Tag = row & "," & col
@@ -108,6 +113,60 @@ Public Class CitySquare
         OwnerID = PlayerID
         '-- Generate random city name
         CityName = Namer.GenerateCityName(Me)
+    End Sub
+
+    Public Sub SetTerrain(ByVal TerrainType As Integer)
+        Terrain = TerrainType
+        UpdateTerrain()
+    End Sub
+
+    Public Sub UpdateTerrain()
+        GridSquare.BackColor = ColorPlain
+
+        Dim randImageIndex As Integer = GetRandom(1, 2)
+
+        Select Case Terrain
+            Case TerrainPlain
+                If GetRandom(1, 20) = 1 Then
+                    GridSquare.Image = My.Resources.ResourceManager.GetObject("Flowers1")
+                Else
+                    GridSquare.Image = Nothing
+                End If
+            Case TerrainForest
+                GridSquare.Image = My.Resources.ResourceManager.GetObject("Forest" + GetRandom(1, 3).ToString)
+            Case TerrainMountain
+                GridSquare.Image = My.Resources.ResourceManager.GetObject("Mountain" + GetRandom(1, 3).ToString)
+            Case TerrainLake
+                GridSquare.Image = My.Resources.ResourceManager.GetObject("Lake1")
+            Case TerrainTownship
+                GridSquare.Image = My.Resources.ResourceManager.GetObject("Township" + GetRandom(1, 3).ToString)
+            Case TerrainDesert
+                GridSquare.Image = My.Resources.ResourceManager.GetObject("Desert1")
+            Case TerrainDirt
+                GridSquare.Image = My.Resources.ResourceManager.GetObject("Dirt" + GetRandom(1, 3).ToString)
+            Case TerrainSwamp
+                GridSquare.Image = My.Resources.ResourceManager.GetObject("Swamp" + GetRandom(1, 2).ToString)
+        End Select
+
+        '-- Old graphics: Just color, no image
+        'Select Case (Terrain)
+        '    Case TerrainPlain
+        '        GridSquare.BackColor = ColorPlain
+        '    Case TerrainDirt
+        '        GridSquare.BackColor = ColorDirt
+        '    Case TerrainForest
+        '        GridSquare.BackColor = ColorForest
+        '    Case TerrainMountain
+        '        GridSquare.BackColor = ColorMountain
+        '    Case TerrainLake
+        '        GridSquare.BackColor = ColorOcean
+        '    Case TerrainSwamp
+        '        GridSquare.BackColor = ColorSwamp
+        '    Case TerrainTownship
+        '        GridSquare.BackColor = ColorTownship
+        '    Case TerrainDesert
+        '        GridSquare.BackColor = ColorDesert
+        'End Select
     End Sub
 
 #End Region
@@ -347,6 +406,7 @@ Public Class CitySquare
         If OwnerID >= 0 Or CurrentView = LocView Then
             If OwnerID >= 0 Then
                 GridSquare.BackColor = Players(OwnerID).Flag
+                'GridSquare.TextBackboard = Players(OwnerID).Flag
             End If
             GridSquare.Font = LargeFont
             Select Case (CurrentView)

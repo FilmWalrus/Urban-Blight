@@ -312,7 +312,7 @@ Public Class Player
 
     Public Overrides Function toString() As String
         Dim textString As String = ""
-        ' textString += GetPlayerName().ToString() + ControlChars.NewLine
+        textString += GetPlayerName().ToString() + ControlChars.NewLine
         textString += "Money: " + TotalMoney.ToString() + ControlChars.NewLine
         textString += "Pop: " + TotalPopulation.ToString() + ControlChars.NewLine
         textString += "Jobs: " + TotalEmployed.ToString() + "/" + TotalJobs.ToString() + ControlChars.NewLine

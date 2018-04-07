@@ -48,7 +48,7 @@ Public Class Start
         Me.Hide()
         Dim Looper As Boolean = True
         While (Looper)
-            Dim newGame As New Form1
+            Dim newGame As New MainForm
             If newGame.ShowDialog = DialogResult.Yes Then
                 Looper = True
             Else
