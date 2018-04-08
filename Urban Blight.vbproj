@@ -127,24 +127,25 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BuildingGen.vb" />
-    <Compile Include="Construction.vb" />
+    <Compile Include="SpecialBuilding\Construction.vb" />
     <Compile Include="EventDiary.vb" />
-    <Compile Include="Food.vb" />
-    <Compile Include="Hospitals.vb" />
-    <Compile Include="Manufacturing.vb" />
+    <Compile Include="SpecialBuilding\Food.vb" />
+    <Compile Include="SpecialBuilding\Hospitals.vb" />
+    <Compile Include="SpecialBuilding\Manufacturing.vb" />
     <Compile Include="My Project\Resource1.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
-    <Compile Include="Police.vb" />
+    <Compile Include="SpecialBuilding\Nature.vb" />
+    <Compile Include="SpecialBuilding\Police.vb" />
     <Compile Include="RenameCity.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CitySquare.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Transport.vb" />
+    <Compile Include="SpecialBuilding\Transport.vb" />
     <Compile Include="Turn.vb" />
     <Compile Include="FancyLabel.vb">
       <SubType>Component</SubType>
@@ -176,7 +177,7 @@
     <Compile Include="Player.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SpecialBuildings.vb" />
+    <Compile Include="SpecialBuilding\SpecialBuildings.vb" />
     <Compile Include="Start.vb">
       <SubType>Form</SubType>
     </Compile>

@@ -17,13 +17,23 @@ Public Class CitySquare
     '--
     Public GridSquare As LabelWithTextBorder = Nothing
 
-    '-- Info
-    Public Buildings As New List(Of Building)
-    Public NeighborBuildings As New List(Of Building)
-    Public People As New List(Of Citizen)
-    Public Transportation As Integer = RoadNone
+    '-- Terrain
     Public Terrain As Integer = TerrainPlain
     Public Coastal As Boolean = False
+
+    '-- Residents
+    Public People As New List(Of Citizen)
+
+    '-- Roads
+    Public Transportation As Integer = RoadNone
+
+    '-- Buildings
+    Public Buildings As New List(Of Building)
+    Public NeighborBuildings As New List(Of Building)
+
+    '-- Other Info
+    Public NatureCount As Integer = 0
+
 
     '-- Averages
     Public AvgHappiness As Integer = 0

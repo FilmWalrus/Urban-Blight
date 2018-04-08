@@ -585,6 +585,11 @@ Public Class Building
             Players(OwnerID).GovernmentCount += 1
         End If
 
+        '-- Buildings with the "Nature" tag update the location's nature count
+        If HasTag(BuildingGen.TagEnum.Nature) Then
+            Location.NatureCount += 1
+        End If
+
         '-- Buildings with the "Monument" tag get twice the visitor odds if a monument is present
         If HasTag(BuildingGen.TagEnum.Monument) Then
             If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) Then
