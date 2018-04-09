@@ -11,6 +11,7 @@ Public Class BuildingGen
         Ambulance_Service
         Amusement_Park
         Apartments
+        Aquarium
         Architecture_Firm
         Art_Gallery
         Bank
@@ -152,6 +153,8 @@ Public Class BuildingGen
                 Return "Amusement Park"
             Case BuildingEnum.Apartments
                 Return "Apartments"
+            Case BuildingEnum.Aquarium
+                Return "Aquarium"
             Case BuildingEnum.Architecture_Firm
                 Return "Architecture Firm"
             Case BuildingEnum.Art_Gallery
@@ -450,6 +453,15 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Everyone needs a place to call home.  Apartment-living is cheap and puts you in the middle of the action.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
+                Case BuildingEnum.Aquarium
+                    Dim newBuilding As New Building(bType, 195, 3)
+                    newBuilding.SetHappiness(25, 3)
+                    newBuilding.SetHealth(15, 2)
+                    newBuilding.SetIntelligence(15, 1)
+                    newBuilding.AddTag(TagEnum.Nature)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("")
+                    Return newBuilding
                 Case BuildingEnum.Architecture_Firm
                     Dim newBuilding As New Building(bType, 210, 2)
                     newBuilding.SetIntelligence(10, 2)
@@ -481,10 +493,11 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Gives owner a permanent 10% cost reduction to a randomly-selected building card (i.e. top right, top left, bottom right, bottom left).")
                     Return newBuilding
                 Case BuildingEnum.Botanical_Garden
-                    Dim newBuilding As New Building(bType, 260, 2)
-                    newBuilding.SetHappiness(30, 3)
-                    newBuilding.SetHealth(60, 3)
-                    newBuilding.SetCreativity(20, 2)
+                    Dim newBuilding As New BotanicalBuilding(bType, 260, 2)
+                    newBuilding.SetHappiness(30, 2)
+                    newBuilding.SetHealth(45, 2)
+                    newBuilding.SetCreativity(15, 1)
+                    newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.SetInfo("Stretch your legs and see what nature has to offer at the Botanical Garden.  Wander around the flowers, trees, and hedges and feel the tranquility set in.")
                     newBuilding.SetSpecialAbility("Botanical Gardens are more effective if built on a Forest tile.")
                     Return newBuilding
@@ -580,8 +593,9 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Conservation_Area
-                    Dim newBuilding As New Building(bType, 65, 0)
+                    Dim newBuilding As New ConservationBuilding(bType, 65, 0)
                     newBuilding.SetHealth(15, 1)
+                    newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.SetInfo("Enjoy the great outdoors and help save it at the same time.")
                     newBuilding.SetSpecialAbility("Conservation Areas nullify negative terrain effects of the square it is built on.")
                     Return newBuilding
@@ -678,6 +692,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, 80, 1)
                     newBuilding.SetHealth(65, 2)
                     newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.SetInfo("Farms are the backbone of any society. They provide fresh produce and fibers to the local community.")
                     newBuilding.SetSpecialAbility("Farms double the effect of any Food buildings on the same square.  Farms expand faster on a Dirt tile.")
                     Return newBuilding
@@ -921,6 +936,7 @@ Public Class BuildingGen
                     newBuilding.SetHappiness(15, 2)
                     newBuilding.SetHealth(40, 2)
                     newBuilding.SetCreativity(20, 2)
+                    newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.AddTag(TagEnum.Monument)
                     newBuilding.SetInfo("Attractive parks allow the casual stroller to engage in happy, healthy and creative exercise and meditation.")
                     Return newBuilding
@@ -980,6 +996,7 @@ Public Class BuildingGen
                     newBuilding.SetHappiness(30, 1)
                     newBuilding.SetHealth(33, 2)
                     newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Real_Estate_Developer
@@ -1045,10 +1062,13 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians.")
                     Return newBuilding
                 Case BuildingEnum.Ski_Resort
-                    Dim newBuilding As New SkiResortBuilding(bType, 215, 0)
-                    newBuilding.SetHappiness(8, 1)
-                    newBuilding.SetMobility(40, 1)
+                    Dim newBuilding As New SkiResortBuilding(bType, 215, 3)
+                    newBuilding.SetHappiness(10, 6)
+                    newBuilding.SetHealth(12, 3)
+                    newBuilding.SetMobility(5, 2)
+                    newBuilding.SetDrunkenness(5, 2)
                     newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Only works on mountains.")
                     Return newBuilding
                 Case BuildingEnum.Skyscraper
                     Dim newBuilding As New SkyscraperBuilding(bType, 325, 6)
@@ -1152,6 +1172,7 @@ Public Class BuildingGen
                     newBuilding.SetHealth(50, 3)
                     newBuilding.SetIntelligence(50, 2)
                     newBuilding.SetCreativity(30, 1)
+                    newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.SetInfo("")
                     Return newBuilding
 

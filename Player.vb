@@ -301,10 +301,15 @@ Public Class Player
                 Return False
             Else
                 '-- Building in enemy territory costs 120% minus 10% for each additional embassy
-                Dim CostModifier As Double = 1.3 - (EmbassyCount * 0.1)
-                theCost *= CostModifier
-                Return True
+                Dim EmbassyCostModifier As Double = 1.3 - (EmbassyCount * 0.1)
+                theCost *= EmbassyCostModifier
             End If
+        End If
+
+        '-- Conservation areas make it more expensive to build here
+        If theLocation.CountBuildingsByType(BuildingGen.BuildingEnum.Conservation_Area) > 0 Then
+            Dim ConservationCostModifier As Double = 1.4
+            theCost *= ConservationCostModifier
         End If
 
         Return True

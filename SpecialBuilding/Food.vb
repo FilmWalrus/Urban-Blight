@@ -6,7 +6,11 @@
     End Sub
 
     Public Overrides Function GetHealthAdj() As Integer
-        Dim PopulationBonus As Integer = Math.Floor(SafeDivide(Location.getPopulation(), 6.0))
+        Dim PopulationBonus As Integer = 0
+        If Location IsNot Nothing Then
+            PopulationBonus = Math.Floor(SafeDivide(Location.getPopulation(), 6.0))
+        End If
+
         Return Health_adj + PopulationBonus
     End Function
 End Class

@@ -229,6 +229,42 @@ Public Class SkiResortBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
+    Public Overrides Function GetHappinessOdds() As Integer
+        If Location IsNot Nothing Then
+            If Location.Terrain <> TerrainMountain Then
+                Return 0
+            End If
+        End If
+        Return MyBase.GetHappinessOdds()
+    End Function
+
+    Public Overrides Function GetHealthOdds() As Integer
+        If Location IsNot Nothing Then
+            If Location.Terrain <> TerrainMountain Then
+                Return 0
+            End If
+        End If
+        Return MyBase.GetHealthOdds()
+    End Function
+
+    Public Overrides Function GetMobilityOdds() As Integer
+        If Location IsNot Nothing Then
+            If Location.Terrain <> TerrainMountain Then
+                Return 0
+            End If
+        End If
+        Return MyBase.GetMobilityOdds()
+    End Function
+
+    Public Overrides Function GetDrunkennessOdds() As Integer
+        If Location IsNot Nothing Then
+            If Location.Terrain <> TerrainMountain Then
+                Return 0
+            End If
+        End If
+        Return MyBase.GetDrunkennessOdds()
+    End Function
+
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         '-- Only affect citizens if built on mountain
         If Location.Terrain = TerrainMountain Then
