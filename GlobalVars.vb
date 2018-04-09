@@ -41,7 +41,7 @@ Module GlobalVars
     Public Const GridHeight As Integer = 11 '-- 0 to 12
     Public GridArray(GridWidth, GridHeight) As CitySquare
 
-    '--Terrain
+    '--Terrain (There are 8 types)
     Public Const TerrainPlain As Integer = 0
     Public Const TerrainDirt As Integer = 1
     Public Const TerrainForest As Integer = 2

@@ -17,6 +17,7 @@ Public Class Player
 
     '--
     Public WipeCost As Integer = WipeCostBase
+    Public ChoiceCost As Integer = 0
 
     '-- Stuff that effects player's choices
     Public LandOptionBuildings As New List(Of Building)
@@ -262,6 +263,10 @@ Public Class Player
         Return WipeCost
     End Function
 
+    Function GetPlayerChoiceCost() As Integer
+        Return ChoiceCost
+    End Function
+
     Function IsValidLandExpansion(ByVal theLocation As CitySquare) As Boolean
 
         '-- You can not expand onto occupied land or water
@@ -318,12 +323,13 @@ Public Class Player
     Public Overrides Function toString() As String
         Dim textString As String = ""
         textString += GetPlayerName().ToString() + ControlChars.NewLine
-        textString += "Money: " + TotalMoney.ToString() + ControlChars.NewLine
+        textString += "Money: $" + TotalMoney.ToString() + ControlChars.NewLine
         textString += "Pop: " + TotalPopulation.ToString() + ControlChars.NewLine
         textString += "Jobs: " + TotalEmployed.ToString() + "/" + TotalJobs.ToString() + ControlChars.NewLine
         textString += "Territory: " + TotalTerritory.ToString() + ControlChars.NewLine
         textString += "Buildings: " + TotalDevelopment.ToString() + ControlChars.NewLine
-        textString += "Score: " + TotalScore.ToString()
+        textString += "Score: " + TotalScore.ToString() + ControlChars.NewLine
+        textString += "Cap: $" + ChoiceCost.ToString()
 
         Return textString
     End Function
@@ -408,6 +414,9 @@ Public Class Player
         Dim cardWeightSum As Double = 0
         For i As Integer = 0 To Cards.Length - 1
             Dim theBuilding As Building = Cards(i)
+            If theBuilding Is Nothing Then
+                Continue For
+            End If
             If BannedBuildings.Contains(theBuilding.Type) Then
                 cardDecisionWeights(i) = -2.0 '-- AI can't build banned buildings
             Else

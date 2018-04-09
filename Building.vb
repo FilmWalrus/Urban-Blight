@@ -70,8 +70,8 @@ Public Class Building
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         Type = bType
         BaseCost = bCost
-        MarkdownCost = bCost
-        PurchasePrice = bCost
+        MarkdownCost = BaseCost
+        PurchasePrice = BaseCost
         Jobs = bJobs
     End Sub
 
@@ -847,12 +847,12 @@ Public Class Building
         End If
 
         '-- Show flavor text
-        If Info.Length > 0 Then
+        If Info.TrimEnd.Length > 0 Then
             BuildingString += Info + ControlChars.NewLine
         End If
 
         '-- Show special ability text
-        If SpecialAbility.Length > 0 Then
+        If SpecialAbility.TrimEnd.Length > 0 Then
             BuildingString += SpecialAbility + ControlChars.NewLine
         End If
 

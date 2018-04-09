@@ -14,15 +14,17 @@ Public Class MainForm
     Dim WinFlag As Boolean = False
 
     '--
-    Dim CardCount As Integer = 4
+    Dim CardCount As Integer = 5
     Public Cards(CardCount - 1) As Building
     Dim NoCard As Integer = -1
-    Dim RoadCard As Integer = CardCount
+    Dim ChoiceCard As Integer = CardCount - 1
+    Dim RoadCard As Integer = ChoiceCard + 1
     Dim LandCard As Integer = RoadCard + 1
     Dim WipeCard As Integer = LandCard + 1
     Dim RoadMaxCard As Integer = WipeCard + 1
     Dim SelectedCard As Integer = NoCard
     Public ButtonList As New List(Of System.Windows.Forms.Button)
+    Public DisableDropdownChange = True
 
     '--
     Dim SelectedPerson As Integer = -1
@@ -65,6 +67,7 @@ Public Class MainForm
     Friend WithEvents ubWipe As Button
     Friend WithEvents ubcard4 As Button
     Friend WithEvents ubcard3 As Button
+    Friend WithEvents ubcardChoice As Button
     '--
     Dim init As Boolean = False
 
@@ -205,6 +208,7 @@ Public Class MainForm
         Me.gbP2 = New System.Windows.Forms.Panel()
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
+        Me.ubcardChoice = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCard.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
@@ -657,7 +661,7 @@ Public Class MainForm
         Me.Infotab.Controls.Add(Me.TabPageBuilding)
         Me.Infotab.Controls.Add(Me.TabPageGame)
         Me.Infotab.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Infotab.Location = New System.Drawing.Point(943, 16)
+        Me.Infotab.Location = New System.Drawing.Point(935, 161)
         Me.Infotab.Name = "Infotab"
         Me.Infotab.SelectedIndex = 0
         Me.Infotab.Size = New System.Drawing.Size(298, 575)
@@ -727,19 +731,20 @@ Public Class MainForm
         'MarketPanel
         '
         Me.MarketPanel.BackColor = System.Drawing.Color.DimGray
+        Me.MarketPanel.Controls.Add(Me.BuildingDropdown)
+        Me.MarketPanel.Controls.Add(Me.ubcardChoice)
         Me.MarketPanel.Controls.Add(Me.ubland)
         Me.MarketPanel.Controls.Add(Me.ubroadmax)
         Me.MarketPanel.Controls.Add(Me.ubroad)
         Me.MarketPanel.Controls.Add(Me.ubWipe)
+        Me.MarketPanel.Controls.Add(Me.MarketLabel)
         Me.MarketPanel.Controls.Add(Me.ubcard4)
         Me.MarketPanel.Controls.Add(Me.ubcard3)
         Me.MarketPanel.Controls.Add(Me.ubcard2)
-        Me.MarketPanel.Controls.Add(Me.MarketLabel)
         Me.MarketPanel.Controls.Add(Me.ubcard1)
         Me.MarketPanel.Controls.Add(Me.btnCheat)
-        Me.MarketPanel.Controls.Add(Me.BuildingDropdown)
         Me.MarketPanel.Controls.Add(Me.ubEnd)
-        Me.MarketPanel.Location = New System.Drawing.Point(750, 16)
+        Me.MarketPanel.Location = New System.Drawing.Point(745, 161)
         Me.MarketPanel.Name = "MarketPanel"
         Me.MarketPanel.Size = New System.Drawing.Size(182, 575)
         Me.MarketPanel.TabIndex = 26
@@ -749,7 +754,7 @@ Public Class MainForm
         Me.ubland.BackColor = System.Drawing.SystemColors.Control
         Me.ubland.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubland.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubland.Location = New System.Drawing.Point(16, 403)
+        Me.ubland.Location = New System.Drawing.Point(16, 453)
         Me.ubland.Name = "ubland"
         Me.ubland.Size = New System.Drawing.Size(150, 32)
         Me.ubland.TabIndex = 29
@@ -761,7 +766,7 @@ Public Class MainForm
         Me.ubroadmax.BackColor = System.Drawing.SystemColors.Control
         Me.ubroadmax.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubroadmax.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubroadmax.Location = New System.Drawing.Point(121, 365)
+        Me.ubroadmax.Location = New System.Drawing.Point(121, 415)
         Me.ubroadmax.Name = "ubroadmax"
         Me.ubroadmax.Size = New System.Drawing.Size(45, 32)
         Me.ubroadmax.TabIndex = 28
@@ -773,7 +778,7 @@ Public Class MainForm
         Me.ubroad.BackColor = System.Drawing.SystemColors.Control
         Me.ubroad.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubroad.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubroad.Location = New System.Drawing.Point(16, 365)
+        Me.ubroad.Location = New System.Drawing.Point(16, 415)
         Me.ubroad.Name = "ubroad"
         Me.ubroad.Size = New System.Drawing.Size(103, 32)
         Me.ubroad.TabIndex = 27
@@ -785,7 +790,7 @@ Public Class MainForm
         Me.ubWipe.BackColor = System.Drawing.SystemColors.Control
         Me.ubWipe.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubWipe.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubWipe.Location = New System.Drawing.Point(16, 293)
+        Me.ubWipe.Location = New System.Drawing.Point(16, 270)
         Me.ubWipe.Name = "ubWipe"
         Me.ubWipe.Size = New System.Drawing.Size(150, 32)
         Me.ubWipe.TabIndex = 26
@@ -797,7 +802,7 @@ Public Class MainForm
         Me.ubcard4.BackColor = System.Drawing.SystemColors.Control
         Me.ubcard4.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubcard4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard4.Location = New System.Drawing.Point(16, 229)
+        Me.ubcard4.Location = New System.Drawing.Point(16, 206)
         Me.ubcard4.Name = "ubcard4"
         Me.ubcard4.Size = New System.Drawing.Size(150, 58)
         Me.ubcard4.TabIndex = 4
@@ -809,7 +814,7 @@ Public Class MainForm
         Me.ubcard3.BackColor = System.Drawing.SystemColors.Control
         Me.ubcard3.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubcard3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard3.Location = New System.Drawing.Point(16, 164)
+        Me.ubcard3.Location = New System.Drawing.Point(16, 141)
         Me.ubcard3.Name = "ubcard3"
         Me.ubcard3.Size = New System.Drawing.Size(150, 58)
         Me.ubcard3.TabIndex = 3
@@ -821,7 +826,7 @@ Public Class MainForm
         Me.ubcard2.BackColor = System.Drawing.SystemColors.Control
         Me.ubcard2.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubcard2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard2.Location = New System.Drawing.Point(16, 101)
+        Me.ubcard2.Location = New System.Drawing.Point(16, 78)
         Me.ubcard2.Name = "ubcard2"
         Me.ubcard2.Size = New System.Drawing.Size(150, 58)
         Me.ubcard2.TabIndex = 2
@@ -832,19 +837,20 @@ Public Class MainForm
         '
         Me.MarketLabel.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.MarketLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.MarketLabel.Location = New System.Drawing.Point(16, 7)
+        Me.MarketLabel.Location = New System.Drawing.Point(16, 0)
         Me.MarketLabel.Name = "MarketLabel"
-        Me.MarketLabel.Size = New System.Drawing.Size(150, 25)
+        Me.MarketLabel.Size = New System.Drawing.Size(150, 27)
         Me.MarketLabel.TabIndex = 25
         Me.MarketLabel.Text = "Market"
         Me.MarketLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.MarketLabel.Visible = False
         '
         'ubcard1
         '
         Me.ubcard1.BackColor = System.Drawing.SystemColors.Control
         Me.ubcard1.FlatStyle = System.Windows.Forms.FlatStyle.System
         Me.ubcard1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcard1.Location = New System.Drawing.Point(16, 37)
+        Me.ubcard1.Location = New System.Drawing.Point(16, 14)
         Me.ubcard1.Name = "ubcard1"
         Me.ubcard1.Size = New System.Drawing.Size(150, 58)
         Me.ubcard1.TabIndex = 1
@@ -853,8 +859,10 @@ Public Class MainForm
         '
         'BuildingDropdown
         '
+        Me.BuildingDropdown.DropDownHeight = 190
         Me.BuildingDropdown.FormattingEnabled = True
-        Me.BuildingDropdown.Location = New System.Drawing.Point(16, 448)
+        Me.BuildingDropdown.IntegralHeight = False
+        Me.BuildingDropdown.Location = New System.Drawing.Point(16, 372)
         Me.BuildingDropdown.Name = "BuildingDropdown"
         Me.BuildingDropdown.Size = New System.Drawing.Size(150, 21)
         Me.BuildingDropdown.TabIndex = 22
@@ -864,9 +872,9 @@ Public Class MainForm
         Me.ubEnd.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.ubEnd.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ubEnd.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubEnd.Location = New System.Drawing.Point(16, 485)
+        Me.ubEnd.Location = New System.Drawing.Point(16, 505)
         Me.ubEnd.Name = "ubEnd"
-        Me.ubEnd.Size = New System.Drawing.Size(152, 79)
+        Me.ubEnd.Size = New System.Drawing.Size(150, 59)
         Me.ubEnd.TabIndex = 17
         Me.ubEnd.Text = "END TURN"
         Me.ubEnd.UseVisualStyleBackColor = False
@@ -876,7 +884,7 @@ Public Class MainForm
         Me.gbP1.BackColor = System.Drawing.Color.DimGray
         Me.gbP1.Controls.Add(Me.p1_details)
         Me.gbP1.Controls.Add(Me.txtP1)
-        Me.gbP1.Location = New System.Drawing.Point(750, 606)
+        Me.gbP1.Location = New System.Drawing.Point(745, 16)
         Me.gbP1.Name = "gbP1"
         Me.gbP1.Size = New System.Drawing.Size(110, 130)
         Me.gbP1.TabIndex = 27
@@ -886,7 +894,7 @@ Public Class MainForm
         Me.gbP2.BackColor = System.Drawing.Color.DimGray
         Me.gbP2.Controls.Add(Me.p2_details)
         Me.gbP2.Controls.Add(Me.txtP2)
-        Me.gbP2.Location = New System.Drawing.Point(877, 606)
+        Me.gbP2.Location = New System.Drawing.Point(871, 16)
         Me.gbP2.Name = "gbP2"
         Me.gbP2.Size = New System.Drawing.Size(110, 130)
         Me.gbP2.TabIndex = 28
@@ -896,7 +904,7 @@ Public Class MainForm
         Me.gbP3.BackColor = System.Drawing.Color.DimGray
         Me.gbP3.Controls.Add(Me.p3_details)
         Me.gbP3.Controls.Add(Me.txtP3)
-        Me.gbP3.Location = New System.Drawing.Point(1004, 606)
+        Me.gbP3.Location = New System.Drawing.Point(997, 16)
         Me.gbP3.Name = "gbP3"
         Me.gbP3.Size = New System.Drawing.Size(110, 130)
         Me.gbP3.TabIndex = 29
@@ -906,16 +914,28 @@ Public Class MainForm
         Me.gbP4.BackColor = System.Drawing.Color.DimGray
         Me.gbP4.Controls.Add(Me.p4_details)
         Me.gbP4.Controls.Add(Me.txtP4)
-        Me.gbP4.Location = New System.Drawing.Point(1131, 606)
+        Me.gbP4.Location = New System.Drawing.Point(1123, 16)
         Me.gbP4.Name = "gbP4"
         Me.gbP4.Size = New System.Drawing.Size(110, 130)
         Me.gbP4.TabIndex = 30
+        '
+        'ubcardChoice
+        '
+        Me.ubcardChoice.BackColor = System.Drawing.SystemColors.Control
+        Me.ubcardChoice.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubcardChoice.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubcardChoice.Location = New System.Drawing.Point(16, 308)
+        Me.ubcardChoice.Name = "ubcardChoice"
+        Me.ubcardChoice.Size = New System.Drawing.Size(150, 58)
+        Me.ubcardChoice.TabIndex = 30
+        Me.ubcardChoice.Text = "Card5"
+        Me.ubcardChoice.UseVisualStyleBackColor = False
         '
         'MainForm
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackColor = System.Drawing.Color.Black
-        Me.ClientSize = New System.Drawing.Size(1251, 750)
+        Me.ClientSize = New System.Drawing.Size(1249, 750)
         Me.Controls.Add(Me.gbP4)
         Me.Controls.Add(Me.gbP3)
         Me.Controls.Add(Me.gbP2)
@@ -982,9 +1002,6 @@ Public Class MainForm
 
         '-- Fill button list
         FillButtonList()
-
-        '-- Fill building dropdown
-        FillBuildingDropdown()
 
         '-- Display title, year, game goal, and current view
         UpdateTitle()
@@ -1217,6 +1234,9 @@ Public Class MainForm
         ElseIf SelectedCard = WipeCard Then
             CardCost = CurrentPlayer.GetPlayerWipeCost()
         ElseIf SelectedCard >= 0 And SelectedCard < Cards.Length Then
+            If Cards(SelectedCard) Is Nothing Then
+                Return False
+            End If
             CardCost = Cards(SelectedCard).GetPurchasePrice()
         Else
             Return False
@@ -1243,10 +1263,13 @@ Public Class MainForm
         '-- Can the player afford it?
         If CardCost > SpendingMoney Then
             Return False
+        ElseIf SelectedCard = ChoiceCard Then
+            '-- If you bought a building of your choice, reduce your choice money by the cost
+            CurrentPlayer.ChoiceCost -= CardCost
         End If
 
         '-- Pay for construction
-        Players(CurrentPlayerIndex).TotalMoney -= CardCost
+        CurrentPlayer.TotalMoney -= CardCost
         UpdateNeeded = True
 
         '-- Do construction
@@ -1260,7 +1283,7 @@ Public Class MainForm
             '-- Handle special terrain bonuses
             If ClickCity.Terrain = TerrainDesert Then
                 '-- Desert effect: rebate
-                Players(CurrentPlayerIndex).TotalMoney += SafeDivide(CardCost, 2)
+                CurrentPlayer.TotalMoney += SafeDivide(CardCost, 2)
             ElseIf ClickCity.Terrain = TerrainDirt Then
                 '-- Dirt effect: free road
                 ClickCity.Transportation = RoadDirt
@@ -1268,6 +1291,7 @@ Public Class MainForm
                 '-- Rock effect: free building
                 Dim randNum As Integer = GetRandom(0, CardCount - 1)
                 Dim newBuilding As Building = Cards(randNum)
+                newBuilding.PurchasePrice = 0
                 newBuilding.Location = ClickCity
                 ClickCity.AddBuilding(newBuilding, CurrentPlayerIndex)
                 Cards(randNum) = Nothing
@@ -1294,16 +1318,13 @@ Public Class MainForm
 
         '-- Update grid, cards, and players
         If UpdateNeeded Then
-            UpdateGrid()
-            UpdatePlayers()
-            UpdateCards()
-
             '-- If road max was selected keep building more road
             If SelectedCard = RoadMaxCard Then
                 Build()
             End If
             SelectedCard = NoCard
-            UpdateCardSelection()
+
+            UpdateAll()
         End If
 
         Return True
@@ -1319,20 +1340,14 @@ Public Class MainForm
         '--Advance to next player (If last player in round and end condition is met, show Game Over screen)
         AdvanceToNextPlayer()
 
-        '-- Refill Hand and Update Costs
-        UpdateCards()
-
         '-- Handle events: births, deaths, movement, employment, crime, taxation, and business expansion
         EventsHappen()
 
         '-- Update averages for views and successes for businesses
         UpdateAverages()
 
-        '-- Update grid appearence and texts
-        UpdateGrid()
-
-        '-- Update player info
-        UpdatePlayers()
+        '-- Update grid, players, and cards
+        UpdateAll()
 
         '-- Take turn automatically if AI
         RunAI()
@@ -1424,24 +1439,43 @@ Public Class MainForm
 #End Region
 
 #Region " Update Info "
+    Sub UpdateAll()
+        UpdateGrid()
+        UpdateCards(True)
+        UpdateCardSelection()
+        UpdatePlayers()
+    End Sub
+
     Sub UpdateGrid()
-        Dim i, j As Integer
-        For i = 0 To GridWidth
-            For j = 0 To GridHeight
-                GridArray(i, j).UpdateGridSquare(CurrentView)
-            Next
+        For Each CurrentLocation As CitySquare In GridArray
+            CurrentLocation.UpdateGridSquare(CurrentView)
         Next
     End Sub
 
-    Sub UpdateCards()
+    Sub UpdateCards(ByVal DropPrices As Boolean)
 
+        '-- Adjust cost of redraw and building of your choice
+        If DropPrices Then
+            '-- Reduce cost for this player to wipe the buildings cards by 5 (no lower limit)
+            CurrentPlayer.WipeCost -= DropCostBase
+
+            '-- Increase the Choice Cost for this player by 10
+            CurrentPlayer.ChoiceCost += 10
+
+            '-- Fill the dropdown with the buildings this player can choose
+            FillBuildingDropdown()
+        End If
+
+        '-- Adjust costs of building market and refill if any are missing
         For i As Integer = 0 To Cards.Length - 1
             Dim CardBuilding As Building = Cards(i)
 
             If CardBuilding Is Nothing Then
-                '--Increase hand to full
-                CardBuilding = BuildingGenerator.CreateBuilding(-1)
-                Cards(i) = CardBuilding
+                If i <> ChoiceCard Then
+                    '--Increase hand to full
+                    CardBuilding = BuildingGenerator.CreateBuilding(-1)
+                    Cards(i) = CardBuilding
+                End If
             Else
                 '-- If no player bought this building even for free, replace it
                 If CardBuilding.IsBuildingUnwanted(CurrentPlayer) Then
@@ -1449,33 +1483,40 @@ Public Class MainForm
                     Cards(i) = newBuilding
                 End If
 
-                '-- Reduce cost of available buildings
-                CardBuilding.DropPrice()
+                If DropPrices Then
+                    '-- Reduce cost of available buildings
+                    CardBuilding.DropPrice()
+                End If
             End If
 
-            '-- Adjust the purchase price for this player
-            CardBuilding.AdjPurchasePrice(CurrentPlayer)
+            Dim cardText As String = ""
 
-            '--Update building card text
-            Dim cardText As String = CardBuilding.GetName() + ControlChars.NewLine
-            cardText += "$" + CardBuilding.GetPurchasePrice().ToString() + " - "
-            cardText += CardBuilding.Jobs.ToString() + " jobs"
+            If CardBuilding Is Nothing Then
+                '-- Display the player's Choice cost
+                cardText += "Special Order" + ControlChars.NewLine
+                cardText += "$" + CurrentPlayer.GetPlayerChoiceCost().ToString() + " - Cap"
+            Else
+                '-- Adjust the purchase price for this player
+                CardBuilding.AdjPurchasePrice(CurrentPlayer)
+
+                '--Update building card text
+                cardText += CardBuilding.GetName() + ControlChars.NewLine
+                cardText += "$" + CardBuilding.GetPurchasePrice().ToString() + " - "
+                cardText += CardBuilding.Jobs.ToString() + " Jobs"
+            End If
 
             ButtonList(i).Text = cardText
         Next
 
-        '-- Reduce cost for this player to wipe the buildings cards by 5 (no lower limit)
-        CurrentPlayer.WipeCost -= DropCostBase
-
-        '--Update wipe card text
+        '-- Update wipe card text
         Dim WipeCost As Integer = CurrentPlayer.GetPlayerWipeCost()
 
-        ubWipe.Text = "$" + WipeCost.ToString() + " - Redraw"
-        '--Update land card text
+        ubWipe.Text = "$" + WipeCost.ToString() + " - Redraw Above"
+        '-- Update land card text
         Dim RoadCost As Integer = RoadCostBase
         ubroad.Text = "$" + RoadCost.ToString() + " - Road"
 
-        '--Update land card text
+        '-- Update land card text
         Dim LandCost As Integer = CurrentPlayer.GetPlayerLandCost()
         ubland.Text = "$" + LandCost.ToString() + " - Land"
 
@@ -1684,6 +1725,7 @@ Public Class MainForm
         End If
 
         SelectedCard = NoCard
+        Cards(ChoiceCard) = Nothing
         SelectedPerson = -1
         SelectedBuilding = -1
         Diary.ClearEvents()
@@ -1759,14 +1801,15 @@ Public Class MainForm
     Private Sub ubcard4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard4.Click
         CardClick(3)
     End Sub
+    Private Sub ubcardChoice_Click(sender As Object, e As EventArgs) Handles ubcardChoice.Click
+        CardClick(ChoiceCard)
+    End Sub
     Private Sub ubroad_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubroad.Click
         CardClick(RoadCard)
     End Sub
-
     Private Sub ubroadmax_Click(sender As Object, e As EventArgs) Handles ubroadmax.Click
         CardClick(RoadMaxCard)
     End Sub
-
     Private Sub ubland_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubland.Click
         CardClick(LandCard)
     End Sub
@@ -1777,11 +1820,19 @@ Public Class MainForm
 
     Public Sub CardClick(ByVal CardNumber As Integer)
 
-        '-- Select the clicked card. If they click on it a second time, deselect it.
+        '-- Select the clicked card. 
         If SelectedCard = CardNumber Then
+            '-- If they click on it a second time, deselect it.
             SelectedCard = NoCard
         Else
             SelectedCard = CardNumber
+
+            '-- If the user selected the Building of Choice card without a building there, consider that selecting no card
+            If SelectedCard = ChoiceCard Then
+                If Cards(CardNumber) Is Nothing Then
+                    SelectedCard = NoCard
+                End If
+            End If
         End If
 
         UpdateCardSelection()
@@ -1789,17 +1840,21 @@ Public Class MainForm
         '-- Display the card text
         Dim cardText As String = ""
         If (SelectedCard >= 0 And SelectedCard < CardCount) Then
-            cardText = Cards(SelectedCard).toString()
+            cardText += Cards(SelectedCard).toString()
         ElseIf SelectedCard = RoadCard Then
-            cardText = "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCostBase.ToString()
+            cardText += "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCostBase.ToString()
         ElseIf SelectedCard = LandCard Then
-            cardText = "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
+            cardText += "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
         ElseIf SelectedCard = WipeCard Then
-            cardText = "Redraw discards the currently available buildings and draws new ones, for the base price of $100. Click anywhere on the map to confirm." + ControlChars.NewLine + ControlChars.NewLine
+            cardText += "Redraw discards the currently available buildings and draws new ones, for the base price of $100. Click anywhere on the map to confirm." + ControlChars.NewLine + ControlChars.NewLine
             cardText += "Like with buildings, the cost drops $5 after every action you take." + ControlChars.NewLine + ControlChars.NewLine
             cardText += "Unlike buildings, the cost is unique to each player and can go below $0."
         ElseIf SelectedCard = RoadMaxCard Then
-            cardText = "Increase road on a square to the maximum level you can afford."
+            cardText += "Increase road on a square to the maximum level you can afford."
+        ElseIf CardNumber = ChoiceCard Then
+            cardText += "You can special order a building of your choice from the dropdown so long as its special order price is within your cap." + ControlChars.NewLine + ControlChars.NewLine
+            cardText += "Your cap increases by $10 after every action you take. If you build a special order your cap drops by the purchase price. "
+            cardText += "Each additional special order of the same building type costs $50 more than the previous."
         End If
         UpdateTextBox(txt_card, cardText)
 
@@ -1826,8 +1881,11 @@ Public Class MainForm
         '-- Disable access to cards banned for this player
         If CurrentPlayer.PlayerType = PlayerHuman Then
             For i As Integer = 0 To Cards.Length - 1
-                If CurrentPlayer.BannedBuildings.Contains(Cards(i).Type) Then
-                    ButtonList(i).Enabled = False
+                Dim CardBuilding As Building = Cards(i)
+                If CardBuilding IsNot Nothing Then
+                    If CurrentPlayer.BannedBuildings.Contains(CardBuilding.Type) Then
+                        ButtonList(i).Enabled = False
+                    End If
                 End If
             Next
         Else
@@ -2061,6 +2119,7 @@ Public Class MainForm
         ButtonList.Add(ubcard2)
         ButtonList.Add(ubcard3)
         ButtonList.Add(ubcard4)
+        ButtonList.Add(ubcardChoice)
         ButtonList.Add(ubroad)
         ButtonList.Add(ubland)
         ButtonList.Add(ubWipe)
@@ -2068,32 +2127,66 @@ Public Class MainForm
     End Sub
 
     Public Sub FillBuildingDropdown()
+
+        DisableDropdownChange = True
+
+        'Dim comboSource As New Dictionary(Of String, String)()
+
+        'For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
+        '    Dim BaseCost As Integer = BuildingGenerator.GetBaseCost(i)
+        '    If BaseCost >= 0 And BaseCost <= CurrentPlayer.ChoiceCost Then 'CurrentPlayer.ChoiceCost
+        '        comboSource.Add(i.ToString(), BuildingGenerator.GetName(i))
+        '    End If
+        'Next
+
+        'If comboSource.Count = 0 Then
+        '    BuildingDropdown.DataSource = Nothing
+        'Else
+        '    BuildingDropdown.DataSource = New BindingSource(comboSource, Nothing)
+        '    BuildingDropdown.DisplayMember = "Value"
+        '    BuildingDropdown.ValueMember = "Key"
+        'End If
+
+        BuildingDropdown.Items.Clear()
         For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
-            BuildingDropdown.Items.Add(BuildingGenerator.GetName(i))
+            Dim BaseCost As Integer = BuildingGenerator.GetBaseCost(i)
+            BuildingDropdown.Items.Add("$" + BaseCost.ToString + " - " + BuildingGenerator.GetName(i))
         Next
+
+        DisableDropdownChange = False
     End Sub
 
     Private Sub BuildingDropdown_SelectedIndexChanged(sender As Object, e As EventArgs) Handles BuildingDropdown.SelectedIndexChanged
 
-        Static ReplaceIndex As Integer = 0
-
-        '-- Add the building of the type selected to the dropdown
-        Dim newBuildingType As Integer = BuildingDropdown.SelectedIndex
-        Dim newBuilding As Building = BuildingGenerator.CreateBuilding(newBuildingType)
-        Cards(ReplaceIndex) = newBuilding
-
-        '-- Rotate through which cards you replace
-        ReplaceIndex += 1
-        If ReplaceIndex >= Cards.Length Then
-            ReplaceIndex = 0
+        If DisableDropdownChange Then
+            Return
         End If
 
-        UpdateCards()
+        If BuildingDropdown.Items.Count > 0 Then
+            '-- Add the building of the type selected to the Choice Card slot
+            'Dim key As String = DirectCast(BuildingDropdown.SelectedItem, KeyValuePair(Of String, String)).Key
+            'Dim value As String = DirectCast(BuildingDropdown.SelectedItem, KeyValuePair(Of String, String)).Value
+            'Dim newBuildingType As Integer = key
+
+            Dim newBuildingType As Integer = BuildingDropdown.SelectedIndex
+            Dim newBuilding As Building = BuildingGenerator.CreateBuilding(newBuildingType)
+
+            If newBuilding.GetPurchasePrice() <= CurrentPlayer.ChoiceCost Then
+                Cards(ChoiceCard) = newBuilding
+            Else
+                Cards(ChoiceCard) = Nothing
+            End If
+
+            UpdateCards(False)
+        End If
+
     End Sub
 
     Private Sub btnCheat_Click(sender As Object, e As EventArgs) Handles btnCheat.Click
-        CurrentPlayer.TotalMoney += 1000000
+        CurrentPlayer.TotalMoney += 100000
+        CurrentPlayer.ChoiceCost += 500
         UpdatePlayers()
+        UpdateCards(True)
     End Sub
 
     Private Sub Label2_Click(sender As Object, e As EventArgs) Handles MarketLabel.Click

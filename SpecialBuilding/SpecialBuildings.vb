@@ -119,8 +119,12 @@ Public Class MallBuilding
     End Sub
 
     Public Overrides Function GetHappinessOdds() As Integer
-        Dim DevelopmentBonus As Integer = (Location.getDevelopment() - 1) * 3
-        Return Happiness_odds + DevelopmentBonus
+        If Location IsNot Nothing Then
+            Dim DevelopmentBonus As Integer = (Location.getDevelopment() - 1) * 3
+            Return Happiness_odds + DevelopmentBonus
+        Else
+            Return MyBase.GetHappinessOdds()
+        End If
     End Function
 End Class
 
