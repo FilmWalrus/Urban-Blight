@@ -33,7 +33,7 @@ Public Class CitySquare
 
     '-- Other Info
     Public NatureCount As Integer = 0
-
+    Public FoodCount As Integer = 0
 
     '-- Averages
     Public AvgHappiness As Integer = 0
@@ -263,6 +263,12 @@ Public Class CitySquare
             End If
         Next
         Return citizensEmployed
+    End Function
+
+    Public Function GetFoodAdjust() As Double
+        '-- Each food building on this location increases the birthrate by 2%
+        Dim FoodAdjust As Double = (FoodCount * 0.02) + 1.0
+        Return FoodAdjust
     End Function
 
     Public Function CountBuildingsByType(ByVal bType As Integer) As Integer

@@ -226,6 +226,94 @@ Public Class ConservationBuilding
     End Sub
 End Class
 
+Public Class FarmBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        If Location.Terrain = TerrainDirt Then '-- Expand at a rate of 2 if on dirt
+            ExpandRate += 1
+        End If
+
+        '-- Make sure there isn't another building of the same type already here
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
+            Return
+        End If
+
+        '-- +1 max health to all Food buildings
+        Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
+        For i As Integer = 0 To BuildingList.Count - 1
+            Dim thisBuilding As Building = BuildingList(i)
+            thisBuilding.Health_adj += 1
+        Next
+    End Sub
+
+    Public Overrides Sub Destroy()
+        '-- Make sure there isn't another building of the same type here
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
+            Return
+        End If
+
+        '-- +1 max health to all Food buildings
+        Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
+        For i As Integer = 0 To BuildingList.Count - 1
+            Dim thisBuilding As Building = BuildingList(i)
+            thisBuilding.Health_adj -= 1
+        Next
+
+        MyBase.Destroy()
+    End Sub
+End Class
+
+Public Class RanchBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        If Location.Terrain = TerrainPlain Then '-- Expand at a rate of 2 if on plains
+            ExpandRate += 1
+        End If
+
+        '-- Make sure there isn't another building of the same type already here
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
+            Return
+        End If
+
+        '-- +1 max health to all Food buildings
+        Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
+        For i As Integer = 0 To BuildingList.Count - 1
+            Dim thisBuilding As Building = BuildingList(i)
+            thisBuilding.Health_adj += 1
+        Next
+    End Sub
+
+    Public Overrides Sub Destroy()
+        '-- Make sure there isn't another building of the same type here
+        If DoesAnotherBuildingOfTheSameTypeExistHere() Then
+            Return
+        End If
+
+        '-- +1 max health to all Food buildings
+        Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
+        For i As Integer = 0 To BuildingList.Count - 1
+            Dim thisBuilding As Building = BuildingList(i)
+            thisBuilding.Health_adj -= 1
+        Next
+
+        MyBase.Destroy()
+    End Sub
+End Class
+
 Public Class ZooBuilding
     Inherits NatureBuilding
 

@@ -193,22 +193,22 @@ Public Class MainForm
         Me.txt_building = New System.Windows.Forms.TextBox()
         Me.btnCheat = New System.Windows.Forms.Button()
         Me.MarketPanel = New System.Windows.Forms.Panel()
+        Me.BuildingDropdown = New System.Windows.Forms.ComboBox()
+        Me.ubcardChoice = New System.Windows.Forms.Button()
         Me.ubland = New System.Windows.Forms.Button()
         Me.ubroadmax = New System.Windows.Forms.Button()
         Me.ubroad = New System.Windows.Forms.Button()
         Me.ubWipe = New System.Windows.Forms.Button()
+        Me.MarketLabel = New System.Windows.Forms.Label()
         Me.ubcard4 = New System.Windows.Forms.Button()
         Me.ubcard3 = New System.Windows.Forms.Button()
         Me.ubcard2 = New System.Windows.Forms.Button()
-        Me.MarketLabel = New System.Windows.Forms.Label()
         Me.ubcard1 = New System.Windows.Forms.Button()
-        Me.BuildingDropdown = New System.Windows.Forms.ComboBox()
         Me.ubEnd = New System.Windows.Forms.Button()
         Me.gbP1 = New System.Windows.Forms.Panel()
         Me.gbP2 = New System.Windows.Forms.Panel()
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
-        Me.ubcardChoice = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCard.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
@@ -657,8 +657,8 @@ Public Class MainForm
         Me.Infotab.Controls.Add(Me.TabPageEvents)
         Me.Infotab.Controls.Add(Me.TabPageCard)
         Me.Infotab.Controls.Add(Me.TabPageCity)
-        Me.Infotab.Controls.Add(Me.TabPagePerson)
         Me.Infotab.Controls.Add(Me.TabPageBuilding)
+        Me.Infotab.Controls.Add(Me.TabPagePerson)
         Me.Infotab.Controls.Add(Me.TabPageGame)
         Me.Infotab.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Infotab.Location = New System.Drawing.Point(935, 161)
@@ -749,6 +749,28 @@ Public Class MainForm
         Me.MarketPanel.Size = New System.Drawing.Size(182, 575)
         Me.MarketPanel.TabIndex = 26
         '
+        'BuildingDropdown
+        '
+        Me.BuildingDropdown.DropDownHeight = 190
+        Me.BuildingDropdown.FormattingEnabled = True
+        Me.BuildingDropdown.IntegralHeight = False
+        Me.BuildingDropdown.Location = New System.Drawing.Point(16, 372)
+        Me.BuildingDropdown.Name = "BuildingDropdown"
+        Me.BuildingDropdown.Size = New System.Drawing.Size(150, 21)
+        Me.BuildingDropdown.TabIndex = 22
+        '
+        'ubcardChoice
+        '
+        Me.ubcardChoice.BackColor = System.Drawing.SystemColors.Control
+        Me.ubcardChoice.FlatStyle = System.Windows.Forms.FlatStyle.System
+        Me.ubcardChoice.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ubcardChoice.Location = New System.Drawing.Point(16, 308)
+        Me.ubcardChoice.Name = "ubcardChoice"
+        Me.ubcardChoice.Size = New System.Drawing.Size(150, 58)
+        Me.ubcardChoice.TabIndex = 30
+        Me.ubcardChoice.Text = "Card5"
+        Me.ubcardChoice.UseVisualStyleBackColor = False
+        '
         'ubland
         '
         Me.ubland.BackColor = System.Drawing.SystemColors.Control
@@ -797,6 +819,18 @@ Public Class MainForm
         Me.ubWipe.Text = "Clear Above"
         Me.ubWipe.UseVisualStyleBackColor = False
         '
+        'MarketLabel
+        '
+        Me.MarketLabel.Anchor = System.Windows.Forms.AnchorStyles.None
+        Me.MarketLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.MarketLabel.Location = New System.Drawing.Point(16, 0)
+        Me.MarketLabel.Name = "MarketLabel"
+        Me.MarketLabel.Size = New System.Drawing.Size(150, 27)
+        Me.MarketLabel.TabIndex = 25
+        Me.MarketLabel.Text = "Market"
+        Me.MarketLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.MarketLabel.Visible = False
+        '
         'ubcard4
         '
         Me.ubcard4.BackColor = System.Drawing.SystemColors.Control
@@ -833,18 +867,6 @@ Public Class MainForm
         Me.ubcard2.Text = "Card2"
         Me.ubcard2.UseVisualStyleBackColor = False
         '
-        'MarketLabel
-        '
-        Me.MarketLabel.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.MarketLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.MarketLabel.Location = New System.Drawing.Point(16, 0)
-        Me.MarketLabel.Name = "MarketLabel"
-        Me.MarketLabel.Size = New System.Drawing.Size(150, 27)
-        Me.MarketLabel.TabIndex = 25
-        Me.MarketLabel.Text = "Market"
-        Me.MarketLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.MarketLabel.Visible = False
-        '
         'ubcard1
         '
         Me.ubcard1.BackColor = System.Drawing.SystemColors.Control
@@ -856,16 +878,6 @@ Public Class MainForm
         Me.ubcard1.TabIndex = 1
         Me.ubcard1.Text = "Card1"
         Me.ubcard1.UseVisualStyleBackColor = False
-        '
-        'BuildingDropdown
-        '
-        Me.BuildingDropdown.DropDownHeight = 190
-        Me.BuildingDropdown.FormattingEnabled = True
-        Me.BuildingDropdown.IntegralHeight = False
-        Me.BuildingDropdown.Location = New System.Drawing.Point(16, 372)
-        Me.BuildingDropdown.Name = "BuildingDropdown"
-        Me.BuildingDropdown.Size = New System.Drawing.Size(150, 21)
-        Me.BuildingDropdown.TabIndex = 22
         '
         'ubEnd
         '
@@ -918,18 +930,6 @@ Public Class MainForm
         Me.gbP4.Name = "gbP4"
         Me.gbP4.Size = New System.Drawing.Size(110, 130)
         Me.gbP4.TabIndex = 30
-        '
-        'ubcardChoice
-        '
-        Me.ubcardChoice.BackColor = System.Drawing.SystemColors.Control
-        Me.ubcardChoice.FlatStyle = System.Windows.Forms.FlatStyle.System
-        Me.ubcardChoice.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ubcardChoice.Location = New System.Drawing.Point(16, 308)
-        Me.ubcardChoice.Name = "ubcardChoice"
-        Me.ubcardChoice.Size = New System.Drawing.Size(150, 58)
-        Me.ubcardChoice.TabIndex = 30
-        Me.ubcardChoice.Text = "Card5"
-        Me.ubcardChoice.UseVisualStyleBackColor = False
         '
         'MainForm
         '
@@ -1208,9 +1208,24 @@ Public Class MainForm
         If e.Button = MouseButtons.Left Then
             Dim BuildSuccess As Boolean = Build()
             UpdateTabs()
-            If DoubleClick Or BuildSuccess Or (Not DontSwitch) Then
+
+            If BuildSuccess Then
+                '-- If the user just built a building, switch to the city tab of the construction location
+                Infotab.SelectedTab = Infotab.TabPages(CityTab)
+            ElseIf DoubleClick Then
+                '-- If the user double-clicks a location, cycle through city, building and person tabs
+                If Infotab.SelectedIndex = CityTab And ClickCity.IsOwned() Then
+                    Infotab.SelectedTab = Infotab.TabPages(BuildingTab)
+                ElseIf Infotab.SelectedIndex = BuildingTab And ClickCity.IsOwned() Then
+                    Infotab.SelectedTab = Infotab.TabPages(PersonTab)
+                Else
+                    Infotab.SelectedTab = Infotab.TabPages(CityTab)
+                End If
+            ElseIf Not DontSwitch Then
+                '-- If the user wasn't looking at the person or building tab when they clicked a location, swtich them to the city tab
                 Infotab.SelectedTab = Infotab.TabPages(CityTab)
             End If
+
         ElseIf e.Button = MouseButtons.Right Then
             '-- Use for view mode?
         End If

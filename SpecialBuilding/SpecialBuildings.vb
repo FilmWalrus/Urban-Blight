@@ -325,3 +325,41 @@ Public Class WelfareBuilding
     End Sub
 
 End Class
+
+Public Class WarehouseBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        EffectText = "storage contracts sold"
+    End Sub
+
+    Public Sub UpdateNeighboringExpandRate(ByVal ChangeRate As Integer)
+
+        '-- Adjust the expansion rate of all buildings on adjacent locations
+        Dim AdjLocations As List(Of CitySquare) = Location.GetTrueAdjacents()
+        For Each theLocation As CitySquare In AdjLocations
+            For Each theBuilding As Building In theLocation.Buildings
+                theBuilding.ExpandRate += ChangeRate
+                AddEffects(1)
+            Next
+        Next
+    End Sub
+
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Increase expansion rate in range 1
+        UpdateNeighboringExpandRate(1)
+    End Sub
+
+    Public Overrides Sub Destroy()
+        '-- Decrease expansion rate in range 1
+        UpdateNeighboringExpandRate(-1)
+
+        MyBase.Destroy()
+
+    End Sub
+
+End Class

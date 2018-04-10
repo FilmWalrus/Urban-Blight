@@ -365,11 +365,11 @@ Public Class BuildingGen
             Case BuildingEnum.Activism_Organization
                 Return 65
             Case BuildingEnum.Airport
-                Return 560
+                Return 510
             Case BuildingEnum.Ambulance_Service
                 Return 280
             Case BuildingEnum.Amusement_Park
-                Return 515
+                Return 455
             Case BuildingEnum.Apartments
                 Return 360
             Case BuildingEnum.Aquarium
@@ -644,9 +644,12 @@ Public Class BuildingGen
                     Return newBuilding
                 Case BuildingEnum.Airport
                     Dim newBuilding As New AirportBuilding(bType, GetBaseCost(bType), 6)
+                    newBuilding.SetHappiness(15, -1)
                     newBuilding.SetMobility(18, 10)
+                    newBuilding.SetHealth(15, -1)
                     newBuilding.AddTag(TagEnum.Transportation)
-                    newBuilding.SetInfo("Though a more expensive option, Airports allow for travel to far-reaching destinations.")
+                    newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.SetInfo("Crowds, queues, and over-priced food that's famously bad, but how else can you reach those far-away destinations that promise relaxation?")
                     newBuilding.SetSpecialAbility("Cities containing Airports are considered adjacent to other citiies containing Airports - both yours and those belonging to other players.")
                     Return newBuilding
                 Case BuildingEnum.Ambulance_Service
@@ -661,8 +664,10 @@ Public Class BuildingGen
                 Case BuildingEnum.Amusement_Park
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 4)
                     newBuilding.SetHappiness(16, 7)
+                    newBuilding.SetHealth(20, -1)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Remember the excitement (mixed with a little terror) that coursed through you at the top of your first roller coaster?  Relive those experiences at the Amusement Park!")
-                    newBuilding.SetSpecialAbility("Positive effects are doubled for minors.")
+                    newBuilding.SetSpecialAbility("Minors visit twice as often as adults.")
                     Return newBuilding
                 Case BuildingEnum.Apartments 'I'm also going to let you write this Special Ability.  I get what you mean but can't figure out a way to phrase it.
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
@@ -697,6 +702,7 @@ Public Class BuildingGen
                 Case BuildingEnum.Bar
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetHappiness(30, 4)
+                    newBuilding.SetHealth(10, 0)
                     newBuilding.SetDrunkenness(30, 6)
                     newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Bars provide a social atmosphere to cheer people up but can result in overindulgence.")
@@ -769,6 +775,7 @@ Public Class BuildingGen
                 Case BuildingEnum.Coffee_Shop
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetHappiness(20, 1)
+                    newBuilding.SetHealth(15, 0)
                     newBuilding.SetMobility(20, 1)
                     newBuilding.SetDrunkenness(40, -1)
                     newBuilding.AddTag(TagEnum.Food)
@@ -905,7 +912,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The effects of a Factory are worse for every 10 population sharing its square.")
                     Return newBuilding
                 Case BuildingEnum.Farm
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New FarmBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetHealth(65, 2)
                     newBuilding.AddTag(TagEnum.Food)
                     newBuilding.AddTag(TagEnum.Nature)
@@ -933,6 +940,7 @@ Public Class BuildingGen
                 Case BuildingEnum.Fishery 'I can't come up with anything here.
                     Dim newBuilding As New ManufacturingBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetHappiness(10, -2)
+                    newBuilding.SetHealth(5, 1)
                     newBuilding.AddTag(TagEnum.Manufacturing)
                     newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("")
@@ -950,6 +958,7 @@ Public Class BuildingGen
                     newBuilding.SetHealth(30, -2)
                     newBuilding.SetMobility(38, 3)
                     newBuilding.AddTag(TagEnum.Transportation)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Gas Stations let your citizens drive futher and explore more.  If only vehicles didn't give off pollution.")
                     newBuilding.SetSpecialAbility("When your citizens travel to the Gas Station, their mobility increases by 8. However, fires on the same square as the Gas Station are worse.")
                     Return newBuilding
@@ -1092,8 +1101,8 @@ Public Class BuildingGen
                     Dim newBuilding As New MallBuilding(bType, GetBaseCost(bType), 5)
                     newBuilding.SetHappiness(35, 3)
                     newBuilding.SetCreativity(20, -3)
-                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.AddTag(TagEnum.Commerce)
+                    newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("A mall provides a tiny bit of happiness for nearly everyone, but can tend to stifle creativity and local flavor.")
                     Return newBuilding
                 Case BuildingEnum.Mass_Transit
@@ -1214,7 +1223,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Ranch
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New RanchBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetHappiness(30, 1)
                     newBuilding.SetHealth(33, 2)
                     newBuilding.AddTag(TagEnum.Food)
@@ -1387,7 +1396,12 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The presence of a University increases chances of employment on the square.")
                     Return newBuilding
                 Case BuildingEnum.Warehouse
-
+                    Dim newBuilding As New WarehouseBuilding(bType, GetBaseCost(bType), 1)
+                    newBuilding.SetMobility(20, -2)
+                    newBuilding.SetCriminality(15, 2)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("When buildings on adjacent locations expand, they add an additional job.")
+                    Return newBuilding
                 Case BuildingEnum.Welfare_Service
                     Dim newBuilding As New WelfareBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetHealth(10, 2)

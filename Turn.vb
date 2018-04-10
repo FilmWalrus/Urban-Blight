@@ -9,6 +9,7 @@
     Public DevelopmentList As New List(Of Building)
     Public HospitalList As New List(Of Building)
     Public CrimePreventerList As New List(Of Building)
+    Public FoodCount As Integer
 
     Public DeadCitizens As New List(Of Citizen)
     Public DestroyedBuildings As New List(Of Building)
@@ -233,7 +234,7 @@
         Dim LocalEventTwins As String = ""
 
         '-- Get the adjustment to reproduction based on AI difficulty level (1.0 if current player is human)
-        Dim ReproduceAdj As Double = CurrentPlayer.GetReproduceAdjustment()
+        Dim PlayerReproduceAdj As Double = CurrentPlayer.GetReproduceAdjustment()
 
         Dim thePerson As Citizen
         For i As Integer = 0 To CitizenList.Count - 1
@@ -242,7 +243,8 @@
 
             '-- Check if nearby buildings (like the maternity ward) affect the birthrate
             Dim MaternityWardAdj As Double = GetMaternityWardAdjust(thePerson)
-            ReproduceAdj *= MaternityWardAdj
+            Dim FoodAdj As Double = thePerson.Residence.GetFoodAdjust()
+            Dim ReproduceAdj As Double = PlayerReproduceAdj * MaternityWardAdj * FoodAdj
 
             If thePerson.WillReproduce(ReproduceAdj) Then
 
@@ -252,7 +254,7 @@
 
                 'Check for twins (very rare)
                 Dim newChild2 As Citizen = Nothing
-                Dim TwinOdds As Double = 14 * MaternityWardAdj
+                Dim TwinOdds As Double = 14 * ReproduceAdj
                 If (GetRandom(0, 1000) < TwinOdds) Then
                     newChild2 = thePerson.Reproduce()
                     CitizenList.Add(newChild2)
@@ -571,9 +573,7 @@
             End If
 
             '-- Check if the building expanded
-            If theBuilding.WillExpand() Then
-                Diary.ExpansionEvents.AddEvent(theBuilding.GetNameAndAddress() + " expanded to capacity " + theBuilding.Jobs.ToString)
-            End If
+            theBuilding.ExpandIfSuccessful()
         Next
 
         '-- Remove buildings that were destroyed

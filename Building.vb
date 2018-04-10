@@ -12,6 +12,7 @@ Public Class Building
 
     Public Age As Integer = 0
     Public Range As Integer = 0
+    Public ExpandRate As Integer = 1
 
     Public Info As String = ""
     Public SpecialAbility As String = ""
@@ -540,7 +541,7 @@ Public Class Building
         Jobs += NewJobs
     End Sub
 
-    Public Overridable Function WillExpand() As Boolean
+    Public Overridable Sub ExpandIfSuccessful()
 
         '-- Building must be at max employment
         If GetEmployeeCount() = Jobs Then
@@ -554,14 +555,12 @@ Public Class Building
 
             If GetRandom(0, oddsRange) <= odds Then '-- Remove equal sign to prevent 0 job businesses from expanding?
                 '--Buildings expand
-                ExpandBuilding(1)
-                Return True
-            Else
-                Return False
+                ExpandBuilding(ExpandRate)
+                Diary.ExpansionEvents.AddEvent(GetNameAndAddress() + " expanded to capacity " + Jobs.ToString)
             End If
         End If
 
-    End Function
+    End Sub
 
     Public Overridable Function UpdateInternal() As Boolean
         Age = Age + TimeIncrement
@@ -614,6 +613,17 @@ Public Class Building
             Next
         End If
 
+        '-- Food Tag: +1 Health for Farm or Ranch
+        If HasTag(BuildingGen.TagEnum.Food) Then
+            Location.FoodCount += 1
+            If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Farm) > 0 Then
+                Health_adj += 1
+            End If
+            If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Ranch) > 0 Then
+                Health_adj += 1
+            End If
+        End If
+
         '-- Government Tag: Update the player's GovernmentBuilding count.
         If HasTag(BuildingGen.TagEnum.Government) Then
             Players(OwnerID).GovernmentCount += 1
@@ -621,7 +631,7 @@ Public Class Building
 
         '-- Monument Tag: Gets twice the visitor odds if a monument is present
         If HasTag(BuildingGen.TagEnum.Monument) Then
-            If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) Then
+            If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) > 0 Then
                 UpdateAllOdds(2.0, True)
             End If
         End If
@@ -631,14 +641,29 @@ Public Class Building
             Location.NatureCount += 1
         End If
 
-        '-- If temp agencies are here, add a job to this building for each
-        Dim TempAgencyList As List(Of Building) = Location.GetBuildingsByType(BuildingGen.BuildingEnum.Temp_Agency)
-        For i As Integer = 0 To TempAgencyList.Count - 1
-            Dim thisTempAgency As Building = TempAgencyList(i)
-            If Not thisTempAgency.Equals(Me) Then
-                Jobs += 1
-                TempAgencyList(i).AddEffects(1)
+        '-- Check all buildings at this location
+        For Each theBuilding As Building In Location.Buildings
+            If theBuilding.Equals(Me) Then
+                Continue For
             End If
+
+            If theBuilding.Type = BuildingGen.BuildingEnum.Temp_Agency Then
+                '-- If temp agencies are here, add a job to this building for each
+                Jobs += 1
+                theBuilding.AddEffects(1)
+            End If
+        Next
+
+        '-- Check all adjacent locations and their buildings
+        Dim AdjLocations As List(Of CitySquare) = Location.GetTrueAdjacents()
+        For Each theLocation As CitySquare In AdjLocations
+            For Each theBuilding As Building In theLocation.Buildings
+                If theBuilding.Type = BuildingGen.BuildingEnum.Warehouse Then
+                    '-- For each adjacent warehouse, up the expansion rate
+                    ExpandRate += 1
+                    theBuilding.AddEffects(1)
+                End If
+            Next
         Next
     End Sub
 
@@ -775,6 +800,11 @@ Public Class Building
             theEmployee.JobBuilding = Nothing
         Next
 
+        '-- Food Tag: +1 Health for Farm or Ranch
+        If HasTag(BuildingGen.TagEnum.Food) Then
+            Location.FoodCount -= 1
+        End If
+
         '-- If this was a government building, lower the player's government count
         If HasTag(BuildingGen.TagEnum.Government) Then
             Players(OwnerID).GovernmentCount -= 1
@@ -845,6 +875,9 @@ Public Class Building
 
         If Range > 0 Then
             BuildingString += "Range: " + GetRange().ToString() + ControlChars.NewLine
+        End If
+        If ExpandRate > 0 Then
+            BuildingString += "Expansion Rate: " + ExpandRate.ToString() + ControlChars.NewLine
         End If
 
         '-- Show job info
