@@ -105,11 +105,9 @@ Public Class MainForm
     Friend WithEvents UltraTabSharedControlsPage1 As TabPage
     Friend WithEvents Infotab As TabControl
     Friend WithEvents TabPageEvents As TabPage
-    Friend WithEvents TabPageCard As TabPage
     Friend WithEvents TabPageCity As TabPage
     Friend WithEvents TabPagePerson As TabPage
     Friend WithEvents txt_event As System.Windows.Forms.TextBox
-    Friend WithEvents txt_card As System.Windows.Forms.TextBox
     Friend WithEvents txt_person As System.Windows.Forms.TextBox
     Friend WithEvents txt_city As System.Windows.Forms.TextBox
     Friend WithEvents ubPBack As System.Windows.Forms.Button
@@ -144,8 +142,6 @@ Public Class MainForm
         Me.TabPageEvents = New System.Windows.Forms.TabPage()
         Me.txt_event = New System.Windows.Forms.TextBox()
         Me.UltraTab2 = New System.Windows.Forms.TabControl()
-        Me.TabPageCard = New System.Windows.Forms.TabPage()
-        Me.txt_card = New System.Windows.Forms.TextBox()
         Me.UltraTab3 = New System.Windows.Forms.TabControl()
         Me.TabPageCity = New System.Windows.Forms.TabPage()
         Me.ubName = New System.Windows.Forms.Button()
@@ -210,7 +206,6 @@ Public Class MainForm
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
         Me.TabPageEvents.SuspendLayout()
-        Me.TabPageCard.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -262,26 +257,6 @@ Public Class MainForm
         Me.UltraTab2.Size = New System.Drawing.Size(200, 100)
         Me.UltraTab2.TabIndex = 0
         Me.UltraTab2.Text = "Card"
-        '
-        'TabPageCard
-        '
-        Me.TabPageCard.Controls.Add(Me.txt_card)
-        Me.TabPageCard.Location = New System.Drawing.Point(4, 24)
-        Me.TabPageCard.Name = "TabPageCard"
-        Me.TabPageCard.Size = New System.Drawing.Size(290, 547)
-        Me.TabPageCard.TabIndex = 0
-        Me.TabPageCard.Text = "Card"
-        '
-        'txt_card
-        '
-        Me.txt_card.AcceptsReturn = True
-        Me.txt_card.AcceptsTab = True
-        Me.txt_card.Location = New System.Drawing.Point(3, 3)
-        Me.txt_card.Multiline = True
-        Me.txt_card.Name = "txt_card"
-        Me.txt_card.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txt_card.Size = New System.Drawing.Size(284, 541)
-        Me.txt_card.TabIndex = 1
         '
         'UltraTab3
         '
@@ -655,7 +630,6 @@ Public Class MainForm
         'Infotab
         '
         Me.Infotab.Controls.Add(Me.TabPageEvents)
-        Me.Infotab.Controls.Add(Me.TabPageCard)
         Me.Infotab.Controls.Add(Me.TabPageCity)
         Me.Infotab.Controls.Add(Me.TabPageBuilding)
         Me.Infotab.Controls.Add(Me.TabPagePerson)
@@ -953,8 +927,6 @@ Public Class MainForm
         Me.Text = "Urban Blight"
         Me.TabPageEvents.ResumeLayout(False)
         Me.TabPageEvents.PerformLayout()
-        Me.TabPageCard.ResumeLayout(False)
-        Me.TabPageCard.PerformLayout()
         Me.TabPageCity.ResumeLayout(False)
         Me.TabPageCity.PerformLayout()
         Me.TabPagePerson.ResumeLayout(False)
@@ -1747,7 +1719,6 @@ Public Class MainForm
         SelectedBuilding = -1
         Diary.ClearEvents()
         UpdateTextBox(txt_event, "")
-        UpdateTextBox(txt_card, "")
         UpdateTextBox(txt_city, "")
         UpdateTextBox(txt_person, "")
         lblPerson.Text = "Displaying 0 of 0"
@@ -1873,9 +1844,9 @@ Public Class MainForm
             cardText += "Your cap increases by $10 after every action you take. If you build a special order your cap drops by the purchase price. "
             cardText += "Each additional special order of the same building type costs $50 more than the previous."
         End If
-        UpdateTextBox(txt_card, cardText)
+        UpdateTextBox(txt_building, cardText)
 
-        Infotab.SelectedTab = Infotab.TabPages(CardTab)
+        Infotab.SelectedTab = Infotab.TabPages(BuildingTab)
     End Sub
 
     Sub UpdateButtonEnables()

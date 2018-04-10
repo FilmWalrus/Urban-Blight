@@ -395,7 +395,7 @@ Public Class BuildingGen
             Case BuildingEnum.Church
                 Return 180
             Case BuildingEnum.City_Wall
-                Return 160
+                Return 100
             Case BuildingEnum.Civic_Center
                 Return 635
             Case BuildingEnum.Coffee_Shop
