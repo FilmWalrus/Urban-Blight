@@ -17,13 +17,17 @@ Public Class Player
 
     '--
     Public WipeCost As Integer = WipeCostBase
-    Public ChoiceCost As Integer = 0
+    Public SpecialOrderCap As Integer = 0
+
+    '-- Special order costs
+    Public SpecialOrderOffsets(BuildingGen.BuildingEnum.BuildingCount) As Integer
 
     '-- Stuff that effects player's choices
     Public LandOptionBuildings As New List(Of Building)
     Public BannedBuildings As New List(Of Integer)
     Public EmbassyCount As Integer = 0
     Public GovernmentCount As Integer = 0
+    Public CommerceCount As Integer = 0
 
     '-- AI stuff
     Public BestMove As CitySquare = Nothing
@@ -37,6 +41,11 @@ Public Class Player
         Score = 0
         TotalMoney = 110
         PlayerType = PlayerHuman
+
+        '-- Zero out the special order offsets
+        For i As Integer = 0 To SpecialOrderOffsets.Length - 1
+            SpecialOrderOffsets(i) = 0
+        Next
     End Sub
 
     Public Sub SetPersonality()
@@ -263,9 +272,13 @@ Public Class Player
         Return WipeCost
     End Function
 
-    Function GetPlayerChoiceCost() As Integer
-        Return ChoiceCost
+    Function GetSpecialOrderCap() As Integer
+        Return SpecialOrderCap
     End Function
+
+    Public Sub UpdateSpecialOrderCap()
+        SpecialOrderCap += (10 + CommerceCount)
+    End Sub
 
     Function IsValidLandExpansion(ByVal theLocation As CitySquare) As Boolean
 
@@ -329,7 +342,7 @@ Public Class Player
         textString += "Territory: " + TotalTerritory.ToString() + ControlChars.NewLine
         textString += "Buildings: " + TotalDevelopment.ToString() + ControlChars.NewLine
         textString += "Score: " + TotalScore.ToString() + ControlChars.NewLine
-        textString += "Cap: $" + ChoiceCost.ToString()
+        textString += "Cap: $" + SpecialOrderCap.ToString()
 
         Return textString
     End Function

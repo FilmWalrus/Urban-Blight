@@ -24,7 +24,7 @@ Public Class MainForm
     Dim RoadMaxCard As Integer = WipeCard + 1
     Dim SelectedCard As Integer = NoCard
     Public ButtonList As New List(Of System.Windows.Forms.Button)
-    Public DisableDropdownChange = True
+    Public DisableDropdownChange As Boolean = True
 
     '--
     Dim SelectedPerson As Integer = -1
@@ -1265,7 +1265,9 @@ Public Class MainForm
             Return False
         ElseIf SelectedCard = ChoiceCard Then
             '-- If you bought a building of your choice, reduce your choice money by the cost
-            CurrentPlayer.ChoiceCost -= CardCost
+            CurrentPlayer.SpecialOrderCap -= CardCost
+            '-- Also increase the special order price of this building type for this player
+            CurrentPlayer.SpecialOrderOffsets(Cards(SelectedCard).Type) += 50
         End If
 
         '-- Pay for construction
@@ -1459,8 +1461,8 @@ Public Class MainForm
             '-- Reduce cost for this player to wipe the buildings cards by 5 (no lower limit)
             CurrentPlayer.WipeCost -= DropCostBase
 
-            '-- Increase the Choice Cost for this player by 10
-            CurrentPlayer.ChoiceCost += 10
+            '-- Increase the Special Order cap for this player
+            CurrentPlayer.UpdateSpecialOrderCap()
 
             '-- Fill the dropdown with the buildings this player can choose
             FillBuildingDropdown()
@@ -1494,7 +1496,7 @@ Public Class MainForm
             If CardBuilding Is Nothing Then
                 '-- Display the player's Choice cost
                 cardText += "Special Order" + ControlChars.NewLine
-                cardText += "$" + CurrentPlayer.GetPlayerChoiceCost().ToString() + " - Cap"
+                cardText += "$" + CurrentPlayer.GetSpecialOrderCap().ToString() + " - Cap"
             Else
                 '-- Adjust the purchase price for this player
                 CardBuilding.AdjPurchasePrice(CurrentPlayer)
@@ -2149,7 +2151,7 @@ Public Class MainForm
 
         BuildingDropdown.Items.Clear()
         For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
-            Dim BaseCost As Integer = BuildingGenerator.GetBaseCost(i)
+            Dim BaseCost As Integer = BuildingGenerator.GetBaseCost(i) + CurrentPlayer.SpecialOrderOffsets(i)
             BuildingDropdown.Items.Add("$" + BaseCost.ToString + " - " + BuildingGenerator.GetName(i))
         Next
 
@@ -2170,8 +2172,10 @@ Public Class MainForm
 
             Dim newBuildingType As Integer = BuildingDropdown.SelectedIndex
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(newBuildingType)
+            Dim SpecialOrderPrice As Integer = newBuilding.BaseCost + CurrentPlayer.SpecialOrderOffsets(newBuildingType)
+            newBuilding.SetMarkdownPrice(SpecialOrderPrice)
 
-            If newBuilding.GetPurchasePrice() <= CurrentPlayer.ChoiceCost Then
+            If newBuilding.GetPurchasePrice() <= CurrentPlayer.GetSpecialOrderCap() Then
                 Cards(ChoiceCard) = newBuilding
             Else
                 Cards(ChoiceCard) = Nothing
@@ -2184,7 +2188,7 @@ Public Class MainForm
 
     Private Sub btnCheat_Click(sender As Object, e As EventArgs) Handles btnCheat.Click
         CurrentPlayer.TotalMoney += 100000
-        CurrentPlayer.ChoiceCost += 500
+        CurrentPlayer.SpecialOrderCap += 500
         UpdatePlayers()
         UpdateCards(True)
     End Sub

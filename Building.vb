@@ -257,6 +257,12 @@ Public Class Building
         UpdateCriminalityAdj(changeValue, multiplier)
     End Sub
 
+    Public Sub SetMarkdownPrice(ByVal NewPrice As Integer)
+        MarkdownCost = NewPrice
+        PurchasePrice = NewPrice
+    End Sub
+
+
 #End Region
 
 #Region " Gets "
@@ -519,6 +525,17 @@ Public Class Building
         Next
     End Sub
 
+    Public Sub MassacreEmployees(ByVal CauseOfDeath As Integer)
+        '-- Kill all employees
+        Dim OriginalStaff As New List(Of Citizen)
+        For i As Integer = 0 To Employees.Count - 1
+            OriginalStaff.Add(Employees(i))
+        Next
+        For i As Integer = 0 To OriginalStaff.Count - 1
+            OriginalStaff(i).Die(CauseOfDeath)
+        Next
+    End Sub
+
     Public Overridable Sub ExpandBuilding(ByVal NewJobs As Integer)
         Jobs += NewJobs
     End Sub
@@ -580,21 +597,38 @@ Public Class Building
             Return
         End If
 
-        '-- If this building had a "Government" tag, update the player's GovernmentBuilding count.
+        '-- Commerce Tag: Update the player's CommerceBuilding count.
+        If HasTag(BuildingGen.TagEnum.Commerce) Then
+            Players(OwnerID).CommerceCount += 1
+        End If
+
+        '-- Criminal Tag: Slaughter all other criminals at this location and destroy their buildings
+        If HasTag(BuildingGen.TagEnum.Criminal) Then
+            Dim CriminalList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Criminal)
+            For Each CriminalOrg As Building In CriminalList
+                If Not CriminalOrg.Equals(Me) Then
+                    Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " wiped out " + CriminalOrg.GetName() + " and their " + CriminalOrg.Employees.Count.ToString() + " members")
+                    CriminalOrg.MassacreEmployees(Turn.DeathCause.Murder)
+                    CriminalOrg.Destroy()
+                End If
+            Next
+        End If
+
+        '-- Government Tag: Update the player's GovernmentBuilding count.
         If HasTag(BuildingGen.TagEnum.Government) Then
             Players(OwnerID).GovernmentCount += 1
         End If
 
-        '-- Buildings with the "Nature" tag update the location's nature count
-        If HasTag(BuildingGen.TagEnum.Nature) Then
-            Location.NatureCount += 1
-        End If
-
-        '-- Buildings with the "Monument" tag get twice the visitor odds if a monument is present
+        '-- Monument Tag: Gets twice the visitor odds if a monument is present
         If HasTag(BuildingGen.TagEnum.Monument) Then
             If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Monument) Then
                 UpdateAllOdds(2.0, True)
             End If
+        End If
+
+        '-- Nature Tag: Update the location's nature count
+        If HasTag(BuildingGen.TagEnum.Nature) Then
+            Location.NatureCount += 1
         End If
 
         '-- If temp agencies are here, add a job to this building for each
@@ -744,6 +778,11 @@ Public Class Building
         '-- If this was a government building, lower the player's government count
         If HasTag(BuildingGen.TagEnum.Government) Then
             Players(OwnerID).GovernmentCount -= 1
+        End If
+
+        '-- If this building has a "Commerce" tag, lower the player's CommerceBuilding count.
+        If HasTag(BuildingGen.TagEnum.Commerce) Then
+            Players(OwnerID).CommerceCount -= 1
         End If
 
         '-- Remove the building from this location

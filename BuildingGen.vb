@@ -65,7 +65,6 @@ Public Class BuildingGen
         Landfill
         Law_Firm
         Library
-        Lottery
         Lumber_Mill
         Mall
         Mass_Transit
@@ -86,8 +85,6 @@ Public Class BuildingGen
         Power_Plant
         Private_Security_Company
         Ranch
-        Real_Estate_Developer
-        Recycling_Center
         Refugee_Camp
         Rehab_Clinic
         Restaurant
@@ -122,6 +119,7 @@ Public Class BuildingGen
         Ad
         Athletic
         Coffee
+        Commerce
         Criminal
         Food
         Franchise
@@ -261,8 +259,6 @@ Public Class BuildingGen
                 Return "Law Firm"
             Case BuildingEnum.Library
                 Return "Library"
-            Case BuildingEnum.Lottery
-                Return "Lottery"
             Case BuildingEnum.Lumber_Mill
                 Return "Lumber Mill"
             Case BuildingEnum.Mall
@@ -303,10 +299,6 @@ Public Class BuildingGen
                 Return "Private Security Company"
             Case BuildingEnum.Ranch
                 Return "Ranch"
-            Case BuildingEnum.Real_Estate_Developer
-                Return "Real Estate Developer"
-            Case BuildingEnum.Recycling_Center
-                Return "Recycling_Center"
             Case BuildingEnum.Refugee_Camp
                 Return "Refugee Camp"
             Case BuildingEnum.Rehab_Clinic
@@ -528,10 +520,6 @@ Public Class BuildingGen
                 Return 300
             Case BuildingEnum.Ranch
                 Return 130
-            Case BuildingEnum.Real_Estate_Developer
-                Return -1
-            Case BuildingEnum.Recycling_Center
-                Return -1
             Case BuildingEnum.Refugee_Camp
                 Return 80
             Case BuildingEnum.Rehab_Clinic
@@ -599,6 +587,8 @@ Public Class BuildingGen
                 Return "Athletic"
             Case TagEnum.Coffee
                 Return "Coffee"
+            Case TagEnum.Commerce
+                Return "Commerce"
             Case TagEnum.Criminal
                 Return "Criminal"
             Case TagEnum.Food
@@ -639,6 +629,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
                     newBuilding.SetIntelligence(20, -2)
                     newBuilding.SetCreativity(10, 2)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Want to boost the effects of local commercial businesses?  Hire an Ad Agency to get those creative juices flowing.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
@@ -691,6 +682,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
                     newBuilding.SetIntelligence(10, 2)
                     newBuilding.SetCreativity(18, 4)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Paris. New York. Dubai. Three cities full of culture and architectural wonders.  Should your city join them?")
                     newBuilding.SetSpecialAbility("The Architecture Firm increases the chances that the 'Wipe Cards' action will cost $0.")
                     Return newBuilding
@@ -714,6 +706,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
                     newBuilding.SetCriminality(50, 3)
                     newBuilding.AddTag(TagEnum.Criminal)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Though dubious in nature, the Black Market can get you what you want.")
                     newBuilding.SetSpecialAbility("Gives owner a permanent 10% cost reduction to a randomly-selected building card (i.e. top right, top left, bottom right, bottom left).")
                     Return newBuilding
@@ -744,6 +737,7 @@ Public Class BuildingGen
                     newBuilding.SetHappiness(50, 3)
                     newBuilding.SetDrunkenness(50, 3)
                     newBuilding.SetCriminality(22, 3)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Roll the dice at the Casino!  Will you hit it big and leave happy or lose it all and drown your sorrows?")
                     newBuilding.SetSpecialAbility("The player will receive a payout for each person that visits the Casino.")
                     Return newBuilding
@@ -768,6 +762,7 @@ Public Class BuildingGen
                     newBuilding.SetHappiness(25, 3)
                     newBuilding.SetIntelligence(25, 3)
                     newBuilding.SetCreativity(25, 3)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Civic Centers provide public spaces and shared landscapes for the free flow of commerce, art, and culture.")
                     newBuilding.SetSpecialAbility("The Civic Center provides the owner with increased odds of positive random events.")
                     Return newBuilding
@@ -806,6 +801,7 @@ Public Class BuildingGen
                     newBuilding.SetHappiness(15, -2)
                     newBuilding.SetDrunkenness(20, 3)
                     newBuilding.SetCreativity(30, -4)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("") '-- Kelley, got a new one for you
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
@@ -858,6 +854,7 @@ Public Class BuildingGen
                     newBuilding.SetCreativity(33, 3)
                     newBuilding.SetCriminality(10, 2)
                     newBuilding.AddTag(TagEnum.Government)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Imports and exports all go through the Customs House.  What new book, art piece, narcotic, or exotic animal will come in today?")
                     newBuilding.SetSpecialAbility("Customs Houses generate revenue for the owner and are more effective for each unique player with an adjacent square.")
                     Return newBuilding
@@ -874,6 +871,7 @@ Public Class BuildingGen
                     newBuilding.SetHappiness(8, 1)
                     newBuilding.SetCreativity(12, -1)
                     newBuilding.AddTag(TagEnum.Franchise)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Make errands eazy and fun at the Department Store - the one-stop shop for all your home and clothing needs.")
                     newBuilding.SetSpecialAbility("Department Stores not only open new branches, they sometimes upgrade into malls.")
                     Return newBuilding
@@ -902,6 +900,7 @@ Public Class BuildingGen
                     Dim newBuilding As New ManufacturingBuilding(bType, GetBaseCost(bType), 5)
                     newBuilding.SetHappiness(16, -3)
                     newBuilding.SetHealth(33, -6)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Factories provide many needed jobs but their monotony can be depressing and their pollution harmful.")
                     newBuilding.SetSpecialAbility("The effects of a Factory are worse for every 10 population sharing its square.")
                     Return newBuilding
@@ -998,6 +997,7 @@ Public Class BuildingGen
                     Return newBuilding
                 Case BuildingEnum.Hospital_Cancer
                     Dim newBuilding As New HospitalCancerBuilding(bType, GetBaseCost(bType), 3)
+                    newBuilding.SetHappiness(10, -5)
                     newBuilding.SetHealth(30, 5)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("The Cancer Ward specializes in providing care and comfort to all those in need.")
@@ -1005,6 +1005,7 @@ Public Class BuildingGen
                     Return newBuilding
                 Case BuildingEnum.Hospital_Emergency
                     Dim newBuilding As New HospitalEmergencyBuilding(bType, GetBaseCost(bType), 3)
+                    newBuilding.SetHappiness(25, -2)
                     newBuilding.SetHealth(30, 5)
                     newBuilding.SetDrunkenness(12, -3)
                     newBuilding.AddTag(TagEnum.Medical)
@@ -1013,6 +1014,7 @@ Public Class BuildingGen
                     Return newBuilding
                 Case BuildingEnum.Hospital_Geriatric
                     Dim newBuilding As New HospitalGeriatricBuilding(bType, GetBaseCost(bType), 3)
+                    newBuilding.SetHappiness(20, -2)
                     newBuilding.SetHealth(30, 3)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("The Geriatric Ward caters to the elderly of society - giving them a place to get the treatment they need.")
@@ -1020,6 +1022,7 @@ Public Class BuildingGen
                     Return newBuilding
                 Case BuildingEnum.Hospital_Maternity
                     Dim newBuilding As New HospitalMaternityBuilding(bType, GetBaseCost(bType), 3)
+                    newBuilding.SetHappiness(20, -2)
                     newBuilding.SetHealth(30, 3)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("When the time comes for your bundle of joy to enter the world, let our years of dedicated service help you experience the joys of parenthood.")
@@ -1027,6 +1030,7 @@ Public Class BuildingGen
                     Return newBuilding
                 Case BuildingEnum.Hospital_Pediatric
                     Dim newBuilding As New HospitalPediatricBuilding(bType, GetBaseCost(bType), 3)
+                    newBuilding.SetHappiness(20, -3)
                     newBuilding.SetHealth(30, 4)
                     newBuilding.AddTag(TagEnum.Medical)
                     newBuilding.SetInfo("The youngest members of society can get the specialized care they need at the Pediatric Ward.")
@@ -1060,7 +1064,6 @@ Public Class BuildingGen
                     newBuilding.SetCreativity(10, 1)
                     newBuilding.SetInfo("")
                     Return newBuilding
-                Case BuildingEnum.Landfill
                 Case BuildingEnum.Law_Firm
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 3)
                     newBuilding.SetHappiness(20, -2)
@@ -1078,8 +1081,6 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Libraries are nice, quiet places for citizens to read, relax, and learn at their own pace.")
                     newBuilding.SetSpecialAbility("Libaries get a stat boost from Colleges and Schools on the same square.")
                     Return newBuilding
-                Case BuildingEnum.Lottery
-
                 Case BuildingEnum.Lumber_Mill
                     Dim newBuilding As New ManufacturingBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetHealth(15, -2)
@@ -1092,6 +1093,7 @@ Public Class BuildingGen
                     newBuilding.SetHappiness(35, 3)
                     newBuilding.SetCreativity(20, -3)
                     newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("A mall provides a tiny bit of happiness for nearly everyone, but can tend to stifle creativity and local flavor.")
                     Return newBuilding
                 Case BuildingEnum.Mass_Transit
@@ -1116,6 +1118,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
                     newBuilding.SetHappiness(18, -4)
                     newBuilding.SetHealth(50, -3)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Monument
@@ -1141,11 +1144,13 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 4)
                     newBuilding.SetHealth(35, -4)
                     newBuilding.SetMobility(75, 1)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Office
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 4)
                     newBuilding.SetCreativity(30, -2)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Offices are a simple source of jobs and infrastructure that tends not to affect citizens noticably.")
                     Return newBuilding
                 Case BuildingEnum.Park
@@ -1216,10 +1221,6 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.SetInfo("")
                     Return newBuilding
-                Case BuildingEnum.Real_Estate_Developer
-
-                Case BuildingEnum.Recycling_Center
-
                 Case BuildingEnum.Refugee_Camp
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetHappiness(20, -2)
@@ -1290,6 +1291,7 @@ Public Class BuildingGen
                 Case BuildingEnum.Skyscraper
                     Dim newBuilding As New SkyscraperBuilding(bType, GetBaseCost(bType), 6)
                     newBuilding.SetIntelligence(30, 1)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Skyscrapers provide tons of jobs and a place for smart minds and ambitious career climbers to collaborate.")
                     Return newBuilding
                 Case BuildingEnum.Stadium
@@ -1309,6 +1311,7 @@ Public Class BuildingGen
                     Dim newBuilding As New StartupIncubatorBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetHappiness(12, 2)
                     newBuilding.SetCreativity(10, 5)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Suburb
@@ -1319,6 +1322,7 @@ Public Class BuildingGen
                     newBuilding.SetIntelligence(10, 2)
                     newBuilding.SetCriminality(10, 2)
                     newBuilding.AddTag(TagEnum.Government)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Taxi_Service
@@ -1331,6 +1335,7 @@ Public Class BuildingGen
                     Dim newBuilding As New TempAgencyBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetHappiness(15, -1)
                     newBuilding.SetIntelligence(15, -1)
+                    newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Textile_Mill
