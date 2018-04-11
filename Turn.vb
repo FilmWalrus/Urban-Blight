@@ -101,13 +101,8 @@
             Dim originalHome As CitySquare = thePerson.Residence
 
             '-- Get the odds for traffic tickets
-            Dim drivingOdds As Integer = 0
-            drivingOdds += thePerson.Criminality / 8.0
-            drivingOdds += thePerson.Drunkenness / 4.0
-            drivingOdds += thePerson.Mobility / 9.0
-
-            Dim parkingOdds As Integer = 1
-            parkingOdds += thePerson.Criminality / 10.0
+            Dim DrivingOdds As Double = thePerson.GetCrimeOdds(CrimeType.TrafficTicket)
+            Dim ParkingOdds As Double = thePerson.GetCrimeOdds(CrimeType.ParkingTicket)
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             Dim locationsInRange As New List(Of CitySquare)
@@ -121,7 +116,7 @@
                 theLocation.VisitHere(thePerson)
 
                 '-- Visit buildings at this location. Apply for jobs if unemployed.
-                VisitBuildings(thePerson, theLocation, parkingOdds, drivingOdds)
+                VisitBuildings(thePerson, theLocation, ParkingOdds, DrivingOdds)
             Next
 
             '-- Consider a change of residence (Warning: this changes the order of locations visited)
@@ -171,10 +166,10 @@
 
             '-- Sort the movement options based on preference for space, culture or jobs
             Dim localPop As Integer = originalHome.getPopulation()
-            If thePerson.Employment = 0 And thePerson.Age >= 16 And GetRandom(0, 30 + thePerson.Mobility) < (38 - localPop) Then
+            If (Not thePerson.IsEmployed()) And (Not thePerson.IsMinor()) And GetRandom(0, 30 + thePerson.GetStat(StatEnum.Mobility)) < (50 - localPop) Then
                 '-- Unemployed adults mostly look for jobs
                 SortType = JobSort
-            ElseIf GetRandom(0, 80 + thePerson.Mobility) < (30 - localPop) Then
+            ElseIf GetRandom(0, 80 + thePerson.GetStat(StatEnum.Mobility)) < (40 - localPop) Then
                 '-- If population isn't a problem head towards the most culture
                 SortType = CultureSort
             Else
@@ -190,7 +185,7 @@
 
                 '-- Happy people are loyal
                 If Not newHome.IsOwned(CurrentPlayer.ID) Then
-                    If NoEmigration Or GetRandom(0, 100) < thePerson.Happiness Then
+                    If NoEmigration Or GetRandom(0, 100) < thePerson.GetStat(StatEnum.Happiness) Then
                         Return
                     End If
                 End If
@@ -280,23 +275,18 @@
             Dim thePerson As Citizen = CitizenList(i)
 
             '-- Handle deaths by natural causes
-            Dim odds As Double = 0.0
-            odds += (thePerson.Age - 20.0) / 4.0
-            If thePerson.Health <= 0 Or GetRandom(0, 100) < odds Then
+            If thePerson.WillDie(DeathCause.NaturalCauses) Then
                 '-- Attempt to save the life of this citizen
                 If Not SaveVictim(thePerson, DeathCause.NaturalCauses) Then
                     If thePerson.Die(DeathCause.NaturalCauses) Then
                         DeadCitizens.Add(thePerson)
-                        Diary.DeathNaturalEvents.AddEvent(thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of natural causes")
                         Continue For '-- Can only die once
                     End If
                 End If
             End If
 
             '-- Handle deaths by illness
-            odds = 0.0
-            odds += (32 - thePerson.Health) / 4.0
-            If GetRandom(0, 100) < odds Then
+            If thePerson.WillDie(DeathCause.Illness) Then
 
                 '-- Attempt to save the life of this citizen
                 If Not SaveVictim(thePerson, DeathCause.Illness) Then
@@ -304,29 +294,17 @@
                     If thePerson.Die(DeathCause.Illness) Then
                         '-- Citizen died
                         DeadCitizens.Add(thePerson)
-                        Diary.DeathIllnessEvents.AddEvent(thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died of illness")
                         Continue For '-- Can only die once
                     End If
                 End If
             End If
 
             '-- Handle deaths by car accident
-            Dim currentLocation As CitySquare = thePerson.Residence
-            odds = 0.0
-            odds += thePerson.Mobility / 10.0
-            odds += thePerson.Drunkenness / 4.0
-            odds += (currentLocation.getPopulation / 5.0)
-            odds -= (currentLocation.Transportation * 2.5)
-            If thePerson.Age < 15 Then
-                odds /= 2.0
-            End If
-
-            If GetRandom(0, 100) <= odds Then
+            If thePerson.WillDie(DeathCause.TrafficAccident) Then
                 '-- Attempt to save the life of this citizen
                 If Not SaveVictim(thePerson, DeathCause.TrafficAccident) Then
                     If thePerson.Die(DeathCause.TrafficAccident) Then
                         DeadCitizens.Add(thePerson)
-                        Diary.DeathTrafficEvents.AddEvent(thePerson.GetNameAndAddress() + ", age " + thePerson.Age.ToString() + ", died in a car accident")
                         Continue For '-- Can only die once
                     End If
                 End If
@@ -356,72 +334,58 @@
             End If
 
             Dim CrimeFlag As Boolean = False
-            Dim TheftAmount As Integer = 0
+            Dim TheftTotal As Integer = 0
             Dim BuildingInsurance As Integer = 0
             Dim PersonalInsurance As Integer = 0
 
             '-- Theft
-            Dim odds As Integer = 0
-            odds += thePerson.Criminality / 3.0
-            odds -= thePerson.Employment / 5.0
-            If GetRandom(0, 100) < odds Then
-                Dim theft As Integer = Math.Max(1, Math.Min(thePerson.Criminality, CurrentPlayer.TotalMoney))
-                If thePerson.CommitCrime(CrimeType.Robbery, theft.ToString()) Then
-                    '-- Attempt to prevent this crime
-                    If Not PreventCrime(thePerson, CrimeType.Robbery) Then
+            If thePerson.WillCommitCrime(CrimeType.Robbery) Then
+                '-- Attempt to prevent this crime
+                If Not PreventCrime(thePerson, CrimeType.Robbery) Then
+
+                    Dim TheftAmount As Integer = Math.Max(1, Math.Min(thePerson.GetStat(StatEnum.Criminality), CurrentPlayer.TotalMoney))
+                    If thePerson.CommitCrime(CrimeType.Robbery, TheftAmount.ToString()) Then
                         CrimeFlag = True
-                        CurrentPlayer.TotalMoney -= theft
-                        TheftAmount = theft
-                        Diary.TheftEvents.AddEvent(thePerson.GetNameAndAddress() + " stole $" + theft.ToString)
+                        CurrentPlayer.TotalMoney -= TheftAmount
+                        TheftTotal += TheftAmount
                         'LocalEventTheft = CountTheft.ToString() + " citizens stole a combined $" + TheftSum.ToString() + "." + ControlChars.NewLine
                     End If
                 End If
-
             End If
 
-            Dim currentLocation As CitySquare = thePerson.Residence
-            Dim buildingCount As Integer = currentLocation.Buildings.Count
-            Dim localPop As Integer = currentLocation.getPopulation()
-
             '-- Arson
-            odds = 0
-            odds += thePerson.Criminality / 8.0
-            odds -= (thePerson.Happiness - 20) / 10.0
-            If GetRandom(0, 150) < odds And buildingCount > 0 And GetRandom(0, 9) < TotalBuildings Then
-                Dim targetBuilding As Building = currentLocation.Buildings(GetRandom(0, buildingCount - 1))
-                If thePerson.CommitCrime(CrimeType.Arson, targetBuilding.GetNameAndAddress()) Then
-                    '-- Attempt to prevent this crime
-                    If Not PreventCrime(thePerson, CrimeType.Arson) Then
+            If thePerson.WillCommitCrime(CrimeType.Arson, TotalBuildings) Then
+
+                Dim CurrentLocation As CitySquare = thePerson.Residence
+                Dim TargetBuilding As Building = CurrentLocation.Buildings(GetRandom(0, CurrentLocation.Buildings.Count - 1))
+
+                '-- Attempt to prevent this crime
+                If Not PreventCrime(thePerson, CrimeType.Arson) Then
+                    If thePerson.CommitCrime(CrimeType.Arson, TargetBuilding.GetNameAndAddress()) Then
+
                         CrimeFlag = True
-                        DestroyedBuildings.Add(targetBuilding)
-                        BuildingInsurance += SafeDivide(targetBuilding.GetBaseCost(), 2.0)
-                        Diary.ArsonEvents.AddEvent(thePerson.GetNameAndAddress() + " burned down the " + targetBuilding.GetNameAndAddress)
+                        DestroyedBuildings.Add(TargetBuilding)
+                        BuildingInsurance += SafeDivide(TargetBuilding.GetBaseCost(), 2.0)
                     End If
                 End If
             End If
 
-
             '-- Murder
-            odds = 0
-            odds += thePerson.Criminality / 6.5
-            odds += thePerson.Drunkenness / 9.0
-            If GetRandom(0, 100) < odds And localPop > 1 Then
+            If thePerson.WillCommitCrime(CrimeType.Murder) Then
+                Dim CurrentLocation As CitySquare = thePerson.Residence
                 Dim theVictim As Citizen = thePerson
                 While (theVictim.Equals(thePerson))
-                    theVictim = currentLocation.People(GetRandom(0, localPop - 1))
+                    theVictim = CurrentLocation.People(GetRandom(0, CurrentLocation.People.Count - 1))
                 End While
 
-                If thePerson.CommitCrime(CrimeType.Murder, theVictim.GetNameAndAddress()) Then
-                    '-- Attempt to prevent this crime
-                    If Not PreventCrime(thePerson, CrimeType.Murder) Then
-                        If theVictim.Die(DeathCause.Murder) Then
+                If Not PreventCrime(thePerson, CrimeType.Murder) Then
+                    If theVictim.Die(DeathCause.Murder) Then
+                        '-- Attempt to prevent this crime
+                        If thePerson.CommitCrime(CrimeType.Murder, theVictim.GetNameAndAddress()) Then
                             CrimeFlag = True
-                            '-- Killing spree potential (especially if the crime paid off)
-                            thePerson.Criminality += GetRandom(4, Math.Min(7, theVictim.Employment / 7.0))
 
                             DeadCitizens.Add(theVictim)
-                            PersonalInsurance += 20
-                            Diary.MurderEvents.AddEvent(thePerson.GetNameAndAddress() + " killed " + theVictim.Name)
+                            PersonalInsurance += SafeDivide(theVictim.GetStat(StatEnum.Employment), 2.0)
                         End If
                     End If
                 End If
@@ -432,7 +396,7 @@
                 Dim theCrimeRing As List(Of Building) = thePerson.Residence.GetBuildingsByType(BuildingGen.BuildingEnum.Crime_Ring)
                 If theCrimeRing.Count > 0 Then
                     '-- Crime rings give you a kickback equal to half the value of the crime
-                    Dim KickbackSum As Integer = SafeDivide(TheftAmount + BuildingInsurance + PersonalInsurance, 2.0)
+                    Dim KickbackSum As Integer = SafeDivide(TheftTotal + BuildingInsurance + PersonalInsurance, 2.0)
                     theCrimeRing(0).AddRevenue(KickbackSum)
                     theCrimeRing(0).AddEffects(1)
                 End If
@@ -557,7 +521,7 @@
 
             If thePerson.JobBuilding IsNot Nothing Then
                 'Update BusinessSuccess of job
-                thePerson.JobBuilding.BusinessSuccess += thePerson.Employment
+                thePerson.JobBuilding.BusinessSuccess += thePerson.GetStat(StatEnum.Employment)
             End If
         Next
 
@@ -779,7 +743,7 @@
 
         '-- Travel outward from this location
         VisitOrder = 0
-        TravelOnward(theLocation, thePerson, thePerson.Mobility)
+        TravelOnward(theLocation, thePerson, thePerson.GetStat(StatEnum.Mobility))
 
         '-- Add every location that was visited during the travel to the visitList
         For i As Integer = 0 To GridWidth

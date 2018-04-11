@@ -29,25 +29,9 @@ Public Class Building
     '-- Minimum employee standards
     Public minAge As Integer = 16
 
-    '-- Effect Change
-    Public Happiness_adj As Integer = 0
-    Public Health_adj As Integer = 0
-    Public Employment_adj As Integer = 0
-    Public Intelligence_adj As Integer = 0
-    Public Creativity_adj As Integer = 0
-    Public Mobility_adj As Integer = 0
-    Public Drunkenness_adj As Integer = 0
-    Public Criminality_adj As Integer = 0
-
-    '-- Effect Odds
-    Public Happiness_odds As Integer = 0
-    Public Health_odds As Integer = 0
-    Public Employment_odds As Integer = 0
-    Public Intelligence_odds As Integer = 0
-    Public Creativity_odds As Integer = 0
-    Public Mobility_odds As Integer = 0
-    Public Drunkenness_odds As Integer = 0
-    Public Criminality_odds As Integer = 0
+    '-- Effect Odds and Max Adjustments
+    Public StatOdds(StatEnum.EnumEnd - 1) As Integer
+    Public StatAdjusts(StatEnum.EnumEnd - 1) As Integer
 
     '-- Visits, Revenue and Upkeep
     Public CurrentVisitors As Integer = 0
@@ -79,39 +63,9 @@ Public Class Building
 #End Region
 
 #Region " Sets "
-    Public Sub SetHappiness(ByVal odds As Integer, ByVal adj As Integer)
-        Happiness_adj = adj
-        Happiness_odds = odds
-    End Sub
-
-    Public Sub SetHealth(ByVal odds As Integer, ByVal adj As Integer)
-        Health_adj = adj
-        Health_odds = odds
-    End Sub
-
-    Public Sub SetIntelligence(ByVal odds As Integer, ByVal adj As Integer)
-        Intelligence_adj = adj
-        Intelligence_odds = odds
-    End Sub
-
-    Public Sub SetCreativity(ByVal odds As Integer, ByVal adj As Integer)
-        Creativity_adj = adj
-        Creativity_odds = odds
-    End Sub
-
-    Public Sub SetMobility(ByVal odds As Integer, ByVal adj As Integer)
-        Mobility_adj = adj
-        Mobility_odds = odds
-    End Sub
-
-    Public Sub SetDrunkenness(ByVal odds As Integer, ByVal adj As Integer)
-        Drunkenness_adj = adj
-        Drunkenness_odds = odds
-    End Sub
-
-    Public Sub SetCriminality(ByVal odds As Integer, ByVal adj As Integer)
-        Criminality_adj = adj
-        Criminality_odds = odds
+    Public Sub SetStat(ByVal StatType As Integer, ByVal Odds As Integer, ByVal Adj As Integer)
+        StatOdds(StatType) = Odds
+        StatAdjusts(StatType) = Adj
     End Sub
 
     Public Sub SetRange(ByVal bRange As Integer)
@@ -126,136 +80,32 @@ Public Class Building
         SpecialAbility = bSpecial + ControlChars.NewLine
     End Sub
 
-    Public Overridable Sub UpdateHappinessOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
+    Public Overridable Sub UpdateStatOdds(ByVal StatType As Integer, ByVal changeValue As Double, ByVal multiplier As Boolean)
         If multiplier Then
-            Happiness_odds *= changeValue
+            StatOdds(StatType) *= changeValue
         Else
-            Happiness_odds += changeValue
+            StatOdds(StatType) += changeValue
         End If
     End Sub
 
-    Public Overridable Sub UpdateHappinessAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
+    Public Overridable Sub UpdateStatAdjusts(ByVal StatType As Integer, ByVal changeValue As Double, ByVal multiplier As Boolean)
         If multiplier Then
-            Happiness_adj *= changeValue
+            StatAdjusts(StatType) *= changeValue
         Else
-            Happiness_adj += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateHealthOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Health_odds *= changeValue
-        Else
-            Health_odds += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateHealthAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Health_adj *= changeValue
-        Else
-            Health_adj += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateIntelligenceOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Intelligence_odds *= changeValue
-        Else
-            Intelligence_odds += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateIntelligenceAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Intelligence_adj *= changeValue
-        Else
-            Intelligence_adj += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateCreativityOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Creativity_odds *= changeValue
-        Else
-            Creativity_odds += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateCreativityAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Creativity_adj *= changeValue
-        Else
-            Creativity_adj += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateMobilityOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Mobility_odds *= changeValue
-        Else
-            Mobility_odds += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateMobilityAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Mobility_adj *= changeValue
-        Else
-            Mobility_adj += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateDrunkennessOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Drunkenness_odds *= changeValue
-        Else
-            Drunkenness_odds += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateDrunkennessAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Drunkenness_adj *= changeValue
-        Else
-            Drunkenness_adj += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateCriminalityOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Criminality_odds *= changeValue
-        Else
-            Criminality_odds += changeValue
-        End If
-    End Sub
-
-    Public Overridable Sub UpdateCriminalityAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        If multiplier Then
-            Criminality_adj *= changeValue
-        Else
-            Criminality_adj += changeValue
+            StatAdjusts(StatType) += changeValue
         End If
     End Sub
 
     Public Overridable Sub UpdateAllOdds(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        UpdateHappinessOdds(changeValue, multiplier)
-        UpdateHealthOdds(changeValue, multiplier)
-        UpdateIntelligenceOdds(changeValue, multiplier)
-        UpdateCreativityOdds(changeValue, multiplier)
-        UpdateMobilityOdds(changeValue, multiplier)
-        UpdateDrunkennessOdds(changeValue, multiplier)
-        UpdateCriminalityOdds(changeValue, multiplier)
+        For i As Integer = 0 To StatEnum.EnumEnd - 1
+            UpdateStatOdds(i, changeValue, multiplier)
+        Next
     End Sub
 
     Public Overridable Sub UpdateAllAdj(ByVal changeValue As Double, ByVal multiplier As Boolean)
-        UpdateHappinessAdj(changeValue, multiplier)
-        UpdateHealthAdj(changeValue, multiplier)
-        UpdateIntelligenceAdj(changeValue, multiplier)
-        UpdateCreativityAdj(changeValue, multiplier)
-        UpdateMobilityAdj(changeValue, multiplier)
-        UpdateDrunkennessAdj(changeValue, multiplier)
-        UpdateCriminalityAdj(changeValue, multiplier)
+        For i As Integer = 0 To StatEnum.EnumEnd - 1
+            UpdateStatAdjusts(i, changeValue, multiplier)
+        Next
     End Sub
 
     Public Sub SetMarkdownPrice(ByVal NewPrice As Integer)
@@ -296,53 +146,12 @@ Public Class Building
         Return Range
     End Function
 
-    Public Overridable Function GetHappinessOdds() As Integer
-        Return Happiness_odds
-    End Function
-    Public Overridable Function GetHappinessAdj() As Integer
-        Return Happiness_adj
+    Public Overridable Function GetStatOdds(ByVal StatType As Integer) As Integer
+        Return StatOdds(StatType)
     End Function
 
-    Public Overridable Function GetHealthOdds() As Integer
-        Return Health_odds
-    End Function
-    Public Overridable Function GetHealthAdj() As Integer
-        Return Health_adj
-    End Function
-
-    Public Overridable Function GetIntelligenceOdds() As Integer
-        Return Intelligence_odds
-    End Function
-    Public Overridable Function GetIntelligenceAdj() As Integer
-        Return Intelligence_adj
-    End Function
-
-    Public Overridable Function GetCreativityOdds() As Integer
-        Return Creativity_odds
-    End Function
-    Public Overridable Function GetCreativityAdj() As Integer
-        Return Creativity_adj
-    End Function
-
-    Public Overridable Function GetMobilityOdds() As Integer
-        Return Mobility_odds
-    End Function
-    Public Overridable Function GetMobilityAdj() As Integer
-        Return Mobility_adj
-    End Function
-
-    Public Overridable Function GetDrunkennessOdds() As Integer
-        Return Drunkenness_odds
-    End Function
-    Public Overridable Function GetDrunkennessAdj() As Integer
-        Return Drunkenness_adj
-    End Function
-
-    Public Overridable Function GetCriminalityOdds() As Integer
-        Return Criminality_odds
-    End Function
-    Public Overridable Function GetCriminalityAdj() As Integer
-        Return Criminality_adj
+    Public Overridable Function GetStatAdjust(ByVal StatType As Integer) As Integer
+        Return StatAdjusts(StatType)
     End Function
 
 #End Region
@@ -367,84 +176,20 @@ Public Class Building
         End If
     End Function
 
-    Public Overridable Sub AffectHappiness(ByRef thePerson As Citizen)
-        If GetHappinessOdds() > 0 Then
-            If GetRandom(0, 100) <= GetHappinessOdds() Then
-                Dim statChange As Integer = GetStatChange(GetHappinessAdj())
-                thePerson.Happiness += statChange
-                thePerson.AddEvent("happiness from visiting " + GetName(), statChange)
-            End If
-        End If
-    End Sub
-
-    Public Overridable Sub AffectHealth(ByRef thePerson As Citizen)
-        If GetHealthOdds() > 0 Then
-            If GetRandom(0, 100) <= GetHealthOdds() Then
-                Dim statChange As Integer = GetStatChange(GetHealthAdj())
-                thePerson.Health += statChange
-                thePerson.AddEvent("health from visiting " + GetName(), statChange)
-            End If
-        End If
-    End Sub
-
-    Public Overridable Sub AffectIntelligence(ByRef thePerson As Citizen)
-        If GetIntelligenceOdds() > 0 Then
-            If GetRandom(0, 100) <= GetIntelligenceOdds() Then
-                Dim statChange As Integer = GetStatChange(GetIntelligenceAdj())
-                thePerson.Intelligence += statChange
-                thePerson.AddEvent("intelligence from visiting " + GetName(), statChange)
-            End If
-        End If
-    End Sub
-
-    Public Overridable Sub AffectCreativity(ByRef thePerson As Citizen)
-        If GetCreativityOdds() > 0 Then
-            If GetRandom(0, 100) <= GetCreativityOdds() Then
-                Dim statChange As Integer = GetStatChange(GetCreativityAdj())
-                thePerson.Creativity += statChange
-                thePerson.AddEvent("creativity from visiting " + GetName(), statChange)
-            End If
-        End If
-    End Sub
-
-    Public Overridable Sub AffectMobility(ByRef thePerson As Citizen)
-        If GetMobilityOdds() > 0 Then
-            If GetRandom(0, 100) <= GetMobilityOdds() Then
-                Dim statChange As Integer = GetStatChange(GetMobilityAdj())
-                thePerson.Mobility += statChange
-                thePerson.AddEvent("mobility from visiting " + GetName(), statChange)
-            End If
-        End If
-    End Sub
-
-    Public Overridable Sub AffectDrunkenness(ByRef thePerson As Citizen)
-        If GetDrunkennessOdds() > 0 Then
-            If GetRandom(0, 100) <= GetDrunkennessOdds() Then
-                Dim statChange As Integer = GetStatChange(GetDrunkennessAdj())
-                thePerson.Drunkenness += statChange
-                thePerson.AddEvent("drunkenness from visiting " + GetName(), statChange)
-            End If
-        End If
-    End Sub
-
-    Public Overridable Sub AffectCriminality(ByRef thePerson As Citizen)
-        If GetCriminalityOdds() > 0 Then
-            If GetRandom(0, 100) <= GetCriminalityOdds() Then
-                Dim statChange As Integer = GetStatChange(GetCriminalityAdj())
-                thePerson.Criminality += statChange
-                thePerson.AddEvent("criminality from visiting " + GetName(), statChange)
+    Public Overridable Sub AffectStat(ByVal StatType As Integer, ByRef thePerson As Citizen)
+        If GetStatOdds(StatType) > 0 Then
+            If GetRandom(0, 100) <= GetStatOdds(StatType) Then
+                Dim statChange As Integer = GetStatChange(GetStatAdjust(StatType))
+                thePerson.OffsetStat(StatType, statChange, "Visited " + GetName())
             End If
         End If
     End Sub
 
     Public Overridable Sub AffectPerson(ByRef thePerson As Citizen)
-        AffectHappiness(thePerson)
-        AffectHealth(thePerson)
-        AffectIntelligence(thePerson)
-        AffectCreativity(thePerson)
-        AffectMobility(thePerson)
-        AffectDrunkenness(thePerson)
-        AffectCriminality(thePerson)
+
+        For i As Integer = 0 To StatEnum.EnumEnd - 1
+            AffectStat(i, thePerson)
+        Next
 
         AddVisitors(1)
     End Sub
@@ -470,23 +215,25 @@ Public Class Building
             Return False
         End If
 
-        If Candidate.Intelligence < 5 Then
+        If Candidate.GetStat(StatEnum.Intelligence) < 5 Then
             Return False
         End If
 
         '-- Check the candidate's qualifications
         Dim Odds As Double = 20
         Odds = Odds + (15 - Math.Abs(Age - 35.0)) / 5.0
-        Odds = Odds + (Candidate.Health / 9.0)
-        Odds = Odds + (Candidate.Happiness / 15.0)
-        Odds = Odds - (Candidate.Drunkenness / 6.0)
-        Odds = Odds - (Candidate.Criminality / 5.0)
-        Odds = Odds + (Candidate.Intelligence / 4.5)
-        Odds = Odds + (Candidate.Creativity / 5.5)
-        Odds = Odds + (Candidate.Mobility / 15.0)
+        Odds = Odds + (Candidate.GetStat(StatEnum.Health) / 9.0)
+        Odds = Odds + (Candidate.GetStat(StatEnum.Happiness) / 15.0)
+        Odds = Odds - (Candidate.GetStat(StatEnum.Drunkenness) / 6.0)
+        Odds = Odds - (Candidate.GetStat(StatEnum.Criminality) / 5.0)
+        Odds = Odds + (Candidate.GetStat(StatEnum.Intelligence) / 4.5)
+        Odds = Odds + (Candidate.GetStat(StatEnum.Creativity) / 5.5)
+        Odds = Odds + (Candidate.GetStat(StatEnum.Mobility) / 15.0)
         If GetRandom(0, 100) <= Odds Then
+            HireEmployee(Candidate)
             Return True
         Else
+            RejectEmployee(Candidate)
             Candidate.AddEvent("Job application rejected by the " + GetNameAndAddress())
             Return False
         End If
@@ -513,6 +260,10 @@ Public Class Building
         If PostEvent Then
             Diary.HireEvents.AddEvent(Employee.GetNameAndAddress() + " took a job at the " + GetNameAndAddress())
         End If
+    End Sub
+
+    Public Sub RejectEmployee(ByRef Candidate As Citizen)
+        Candidate.ApplicationRejected()
     End Sub
 
     Public Sub TransferEmployees(ByRef SourceBuilding As Building)
@@ -617,10 +368,10 @@ Public Class Building
         If HasTag(BuildingGen.TagEnum.Food) Then
             Location.FoodCount += 1
             If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Farm) > 0 Then
-                Health_adj += 1
+                UpdateStatAdjusts(StatEnum.Health, 1, False)
             End If
             If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Ranch) > 0 Then
-                Health_adj += 1
+                UpdateStatAdjusts(StatEnum.Health, 1, False)
             End If
         End If
 
@@ -825,14 +576,10 @@ Public Class Building
     Public Function GetValueForCitizen() As Double
         Dim buildingValue As Double = 0
 
-        '-- Get the value of the building adjusted by the AI's personality
-        buildingValue += (Happiness_odds * Happiness_adj)
-        buildingValue += (Health_odds * Health_adj)
-        buildingValue += (Intelligence_odds * Intelligence_adj)
-        buildingValue += (Creativity_odds * Creativity_adj)
-        buildingValue += (Mobility_odds * Mobility_adj)
-        buildingValue -= (Drunkenness_odds * Drunkenness_adj)
-        buildingValue -= (Criminality_odds * Criminality_adj)
+        '-- Get the value of the building based on its stats
+        For i As Integer = 0 To StatEnum.EnumEnd - 1
+            buildingValue += (StatOdds(i) * StatAdjusts(i))
+        Next
 
         Return buildingValue
 
@@ -842,15 +589,11 @@ Public Class Building
         Dim buildingValue As Double = 0
 
         '-- Get the value of the building adjusted by the AI's personality
-        buildingValue += (Happiness_odds * Happiness_adj / 200.0 * aiBrain.GetStatAdjustment(StatHappiness))
-        buildingValue += (Health_odds * Health_adj / 200.0 * aiBrain.GetStatAdjustment(StatHealth))
-        buildingValue += (Intelligence_odds * Intelligence_adj / 200.0 * aiBrain.GetStatAdjustment(StatIntelligence))
-        buildingValue += (Creativity_odds * Creativity_adj / 200.0 * aiBrain.GetStatAdjustment(StatCreativity))
-        buildingValue += (Mobility_odds * Mobility_adj / 200.0 * aiBrain.GetStatAdjustment(StatMobility))
-        buildingValue -= (Drunkenness_odds * Drunkenness_adj / 200.0 * aiBrain.GetStatAdjustment(StatDrunkenness))
-        buildingValue -= (Criminality_odds * Criminality_adj / 200.0 * aiBrain.GetStatAdjustment(StatCriminality))
+        For i As Integer = 0 To StatEnum.EnumEnd - 1
+            buildingValue += (StatOdds(i) * StatAdjusts(i) / 200.0 * aiBrain.GetStatAdjustment(i))
+        Next
 
-        buildingValue += (Jobs * aiBrain.GetStatAdjustment(StatEmployment))
+        buildingValue += (Jobs * aiBrain.GetStatAdjustment(StatEnum.Employment))
 
         If PurchasePrice <= 0 Then
             Return 9999999.9
@@ -860,6 +603,13 @@ Public Class Building
 
     End Function
 #End Region
+
+    Public Function PrintStat(ByVal StatType As Integer) As String
+        If GetStatOdds(StatType) > 0 Then
+            Return GetStatOdds(StatType).ToString() + "% chance to boost " + GetStatName(StatType).ToString() + " up to " + GetStatAdjust(StatType).ToString() + ControlChars.NewLine
+        End If
+        Return ""
+    End Function
 
     Public Overrides Function toString() As String
         Dim BuildingString As String = ""
@@ -945,27 +695,9 @@ Public Class Building
 
         '-- Show stat info
         If DebugMode Then
-            If Happiness_odds > 0 Then
-                BuildingString += "Happiness: " + GetHappinessOdds().ToString + "% chance boosts up to " + GetHappinessAdj().ToString + ControlChars.NewLine
-            End If
-            If Health_odds > 0 Then
-                BuildingString += "Health: " + GetHealthOdds().ToString + "% chance boosts up to " + GetHealthAdj().ToString + ControlChars.NewLine
-            End If
-            If Intelligence_odds > 0 Then
-                BuildingString += "Intelligence: " + GetIntelligenceOdds().ToString + "% chance boosts up to " + GetIntelligenceAdj().ToString + ControlChars.NewLine
-            End If
-            If Creativity_odds > 0 Then
-                BuildingString += "Creativity: " + GetCreativityOdds().ToString + "% chance boosts up to " + GetCreativityAdj().ToString + ControlChars.NewLine
-            End If
-            If Mobility_odds > 0 Then
-                BuildingString += "Mobility: " + GetMobilityOdds().ToString + "% chance boosts up to " + GetMobilityAdj().ToString + ControlChars.NewLine
-            End If
-            If Drunkenness_odds > 0 Then
-                BuildingString += "Drunkenness: " + GetDrunkennessOdds().ToString + "% chance boosts up to " + GetDrunkennessAdj().ToString + ControlChars.NewLine
-            End If
-            If Criminality_odds > 0 Then
-                BuildingString += "Criminality: " + GetCriminalityOdds().ToString + "% chance boosts up to " + GetCriminalityAdj().ToString + ControlChars.NewLine
-            End If
+            For i As Integer = 0 To StatEnum.EnumEnd - 1
+                BuildingString += PrintStat(i)
+            Next
             BuildingString += ControlChars.NewLine
         End If
 

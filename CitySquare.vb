@@ -32,18 +32,9 @@ Public Class CitySquare
     Public NeighborBuildings As New List(Of Building)
 
     '-- Other Info
+    Public OrderAcquired As Integer = 1
     Public NatureCount As Integer = 0
     Public FoodCount As Integer = 0
-
-    '-- Averages
-    Public AvgHappiness As Integer = 0
-    Public AvgHealth As Integer = 0
-    Public AvgEmployment As Integer = 0
-    Public AvgIntelligence As Integer = 0
-    Public AvgCreativity As Integer = 0
-    Public AvgMobility As Integer = 0
-    Public AvgDrunkenness As Integer = 0
-    Public AvgCriminality As Integer = 0
 
     Public Enum TransportType
         Bike
@@ -123,6 +114,8 @@ Public Class CitySquare
         OwnerID = PlayerID
         '-- Generate random city name
         CityName = Namer.GenerateCityName(Me)
+
+        OrderAcquired = Players(PlayerID).GetPlayerTerritoryCount()
     End Sub
 
     Public Sub SetTerrain(ByVal TerrainType As Integer)
@@ -381,88 +374,67 @@ Public Class CitySquare
         Coastal = False
     End Sub
 
-    Public Sub ComputeAverages()
+    Public Function ComputeAverage(ByVal StatType As Integer, ByVal AdultsOnly As Boolean) As Integer
 
-        Dim currentPop As Integer = getPopulation()
-        AvgHappiness = 0
-        AvgHealth = 0
-        AvgEmployment = 0
-        AvgIntelligence = 0
-        AvgCreativity = 0
-        AvgMobility = 0
-        AvgDrunkenness = 0
-        AvgCriminality = 0
+        Dim AvgStat As Integer = 0
+        Dim PersonCount As Integer = 0
 
-        Dim i As Integer
-        For i = 0 To currentPop - 1
-            People(i).Cap()
-            AvgHappiness += People(i).Happiness
-            AvgHealth += People(i).Health
-            AvgEmployment += People(i).Employment
-            AvgIntelligence += People(i).Intelligence
-            AvgCreativity += People(i).Creativity
-            AvgMobility += People(i).Mobility
-            AvgDrunkenness += People(i).Drunkenness
-            AvgCriminality += People(i).Criminality
+        For Each Person As Citizen In People
+            Person.Cap()
+            If AdultsOnly Then '-- Get an average that includes only adults
+                If Person.IsMinor Then
+                    Continue For
+                End If
+            End If
+            AvgStat += Person.GetStat(StatType)
+            PersonCount += 1
         Next
 
-        AvgHappiness = SafeDivide(AvgHappiness, currentPop)
-        AvgHealth = SafeDivide(AvgHealth, currentPop)
-        AvgEmployment = SafeDivide(AvgEmployment, currentPop)
-        AvgIntelligence = SafeDivide(AvgIntelligence, currentPop)
-        AvgCreativity = SafeDivide(AvgCreativity, currentPop)
-        AvgMobility = SafeDivide(AvgMobility, currentPop)
-        AvgDrunkenness = SafeDivide(AvgDrunkenness, currentPop)
-        AvgCriminality = SafeDivide(AvgCriminality, currentPop)
-    End Sub
+        AvgStat = SafeDivide(AvgStat, PersonCount)
+        Return AvgStat
+    End Function
 
     Public Sub UpdateGridSquare(ByVal CurrentView As Integer)
 
         Dim displayText As String = ""
-        If OwnerID >= 0 Or CurrentView = LocView Then
+        If IsOwned() Or CurrentView = ViewEnum.Coordinates Then
             If OwnerID >= 0 Then
                 GridSquare.BackColor = Players(OwnerID).Flag
-                'GridSquare.TextBackboard = Players(OwnerID).Flag
             End If
             GridSquare.Font = LargeFont
             Select Case (CurrentView)
-                Case PopView
+                Case ViewEnum.Population
                     displayText = getPopulation().ToString
-                Case LocView
+                Case ViewEnum.Coordinates
                     GridSquare.Font = RegularFont
                     displayText = (ColID + 1).ToString() + "," + (RowID + 1).ToString()
-                Case HappinessView
-                    displayText = AvgHappiness.ToString()
-                Case HealthView
-                    displayText = AvgHealth.ToString()
-                Case EmploymentView
-                    displayText = AvgEmployment.ToString()
-                Case IntelligenceView
-                    displayText = AvgIntelligence.ToString()
-                Case CreativityView
-                    displayText = AvgCreativity.ToString()
-                Case MobilityView
-                    displayText = AvgMobility.ToString()
-                Case DrunkennessView
-                    displayText = AvgDrunkenness.ToString()
-                Case CriminalityView
-                    displayText = AvgCriminality.ToString()
-                Case JobView
+                Case ViewEnum.Terrain
+                    displayText = GetTerrainName(Terrain)
+                Case ViewEnum.Order
+                    displayText = OrderAcquired.ToString()
+                Case ViewEnum.HappinessAvg
+                    displayText = ComputeAverage(StatEnum.Happiness, False).ToString()
+                Case ViewEnum.HealthAvg
+                    displayText = ComputeAverage(StatEnum.Health, False).ToString()
+                Case ViewEnum.EmploymentAvg
+                    displayText = ComputeAverage(StatEnum.Employment, False).ToString()
+                Case ViewEnum.IntelligenceAvg
+                    displayText = ComputeAverage(StatEnum.Intelligence, False).ToString()
+                Case ViewEnum.CreativityAvg
+                    displayText = ComputeAverage(StatEnum.Creativity, False).ToString()
+                Case ViewEnum.MobilityAvg
+                    displayText = ComputeAverage(StatEnum.Mobility, False).ToString()
+                Case ViewEnum.DrunkennessAvg
+                    displayText = ComputeAverage(StatEnum.Drunkenness, False).ToString()
+                Case ViewEnum.CriminalityAvg
+                    displayText = ComputeAverage(StatEnum.Criminality, False).ToString()
+                Case ViewEnum.JobsFilled
                     GridSquare.Font = RegularFont
                     displayText = getJobsFilled().ToString + "/" + getJobsTotal.ToString
-                Case RoadView
+                Case ViewEnum.Roads
                     displayText = Transportation.ToString
             End Select
-        Else
-            'TheBoxes(i, j).Appearance.BackColor2 = Color.LightGray
-            displayText = ""
         End If
-
-        'If displayText.Length > 0 Then
-        '    If displayText.Substring(0, 1) = "0" Then
-        '        displayText = ""
-        '    End If
-        'End If
 
         GridSquare.Text = displayText
     End Sub

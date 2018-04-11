@@ -7,20 +7,8 @@
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetHappinessOdds() As Integer
-        Return MyBase.GetHappinessOdds() + NatureBonus
-    End Function
-
-    Public Overrides Function GetHealthOdds() As Integer
-        Return MyBase.GetHealthOdds() + NatureBonus
-    End Function
-
-    Public Overrides Function GetCreativityOdds() As Integer
-        Return MyBase.GetCreativityOdds() + NatureBonus
-    End Function
-
-    Public Overrides Function GetIntelligenceOdds() As Integer
-        Return MyBase.GetIntelligenceOdds() + NatureBonus
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatOdds(StatType) + NatureBonus
     End Function
 
     Public Overridable Sub UpdateNatureBonuses()
@@ -57,36 +45,12 @@ Public Class AquariumBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetHappinessOdds() As Integer
-        Return MyBase.GetHappinessOdds() + AquariumOddsBonus
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatOdds(StatType) + AquariumOddsBonus
     End Function
 
-    Public Overrides Function GetHealthOdds() As Integer
-        Return MyBase.GetHealthOdds() + AquariumOddsBonus
-    End Function
-
-    Public Overrides Function GetCreativityOdds() As Integer
-        Return MyBase.GetCreativityOdds() + AquariumOddsBonus
-    End Function
-
-    Public Overrides Function GetIntelligenceOdds() As Integer
-        Return MyBase.GetIntelligenceOdds() + AquariumOddsBonus
-    End Function
-
-    Public Overrides Function GetHappinessAdj() As Integer
-        Return MyBase.GetHappinessAdj() + AquariumAdjBonus
-    End Function
-
-    Public Overrides Function GetHealthAdj() As Integer
-        Return MyBase.GetHealthAdj() + AquariumAdjBonus
-    End Function
-
-    Public Overrides Function GetCreativityAdj() As Integer
-        Return MyBase.GetCreativityAdj() + AquariumAdjBonus
-    End Function
-
-    Public Overrides Function GetIntelligenceAdj() As Integer
-        Return MyBase.GetIntelligenceAdj() + AquariumAdjBonus
+    Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatAdjust(StatType) + AquariumAdjBonus
     End Function
 
     Public Overrides Sub UpdateNatureBonuses()
@@ -140,36 +104,12 @@ Public Class BotanicalBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetHappinessOdds() As Integer
-        Return MyBase.GetHappinessOdds() + BotanicalOddsBonus
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatOdds(StatType) + BotanicalOddsBonus
     End Function
 
-    Public Overrides Function GetHealthOdds() As Integer
-        Return MyBase.GetHealthOdds() + BotanicalOddsBonus
-    End Function
-
-    Public Overrides Function GetCreativityOdds() As Integer
-        Return MyBase.GetCreativityOdds() + BotanicalOddsBonus
-    End Function
-
-    Public Overrides Function GetIntelligenceOdds() As Integer
-        Return MyBase.GetIntelligenceOdds() + BotanicalOddsBonus
-    End Function
-
-    Public Overrides Function GetHappinessAdj() As Integer
-        Return MyBase.GetHappinessAdj() + BotanicalAdjBonus
-    End Function
-
-    Public Overrides Function GetHealthAdj() As Integer
-        Return MyBase.GetHealthAdj() + BotanicalAdjBonus
-    End Function
-
-    Public Overrides Function GetCreativityAdj() As Integer
-        Return MyBase.GetCreativityAdj() + BotanicalAdjBonus
-    End Function
-
-    Public Overrides Function GetIntelligenceAdj() As Integer
-        Return MyBase.GetIntelligenceAdj() + BotanicalAdjBonus
+    Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatAdjust(StatType) + BotanicalAdjBonus
     End Function
 
     Public Overrides Sub UpdateNatureBonuses()
@@ -249,7 +189,7 @@ Public Class FarmBuilding
         Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
         For i As Integer = 0 To BuildingList.Count - 1
             Dim thisBuilding As Building = BuildingList(i)
-            thisBuilding.Health_adj += 1
+            thisBuilding.UpdateStatAdjusts(StatEnum.Health, 1, False)
         Next
     End Sub
 
@@ -263,7 +203,7 @@ Public Class FarmBuilding
         Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
         For i As Integer = 0 To BuildingList.Count - 1
             Dim thisBuilding As Building = BuildingList(i)
-            thisBuilding.Health_adj -= 1
+            thisBuilding.UpdateStatAdjusts(StatEnum.Health, -1, False)
         Next
 
         MyBase.Destroy()
@@ -293,7 +233,7 @@ Public Class RanchBuilding
         Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
         For i As Integer = 0 To BuildingList.Count - 1
             Dim thisBuilding As Building = BuildingList(i)
-            thisBuilding.Health_adj += 1
+            thisBuilding.UpdateStatAdjusts(StatEnum.Health, 1, False)
         Next
     End Sub
 
@@ -307,7 +247,7 @@ Public Class RanchBuilding
         Dim BuildingList As List(Of Building) = Location.GetBuildingsByTag(BuildingGen.TagEnum.Food)
         For i As Integer = 0 To BuildingList.Count - 1
             Dim thisBuilding As Building = BuildingList(i)
-            thisBuilding.Health_adj -= 1
+            thisBuilding.UpdateStatAdjusts(StatEnum.Health, -1, False)
         Next
 
         MyBase.Destroy()
@@ -324,36 +264,12 @@ Public Class ZooBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetHappinessOdds() As Integer
-        Return MyBase.GetHappinessOdds() + ZooOddsBonus
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatOdds(StatType) + ZooOddsBonus
     End Function
 
-    Public Overrides Function GetHealthOdds() As Integer
-        Return MyBase.GetHealthOdds() + ZooOddsBonus
-    End Function
-
-    Public Overrides Function GetCreativityOdds() As Integer
-        Return MyBase.GetCreativityOdds() + ZooOddsBonus
-    End Function
-
-    Public Overrides Function GetIntelligenceOdds() As Integer
-        Return MyBase.GetIntelligenceOdds() + ZooOddsBonus
-    End Function
-
-    Public Overrides Function GetHappinessAdj() As Integer
-        Return MyBase.GetHappinessAdj() + ZooAdjBonus
-    End Function
-
-    Public Overrides Function GetHealthAdj() As Integer
-        Return MyBase.GetHealthAdj() + ZooAdjBonus
-    End Function
-
-    Public Overrides Function GetCreativityAdj() As Integer
-        Return MyBase.GetCreativityAdj() + ZooAdjBonus
-    End Function
-
-    Public Overrides Function GetIntelligenceAdj() As Integer
-        Return MyBase.GetIntelligenceAdj() + ZooAdjBonus
+    Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatAdjust(StatType) + ZooAdjBonus
     End Function
 
     Public Overrides Sub UpdateNatureBonuses()

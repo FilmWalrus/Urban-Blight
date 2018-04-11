@@ -160,7 +160,7 @@
         End If
 
         Select Case StatType
-            Case StatHappiness
+            Case StatEnum.Happiness
                 If PreferenceList.Contains(AIType.AI_ProHappiness) Then
                     Return StatLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiHappiness) Then
@@ -168,7 +168,7 @@
                 Else
                     Return 1.0
                 End If
-            Case StatHealth
+            Case StatEnum.Health
                 If PreferenceList.Contains(AIType.AI_ProHealth) Then
                     Return StatLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiHealth) Then
@@ -176,7 +176,7 @@
                 Else
                     Return 1.0
                 End If
-            Case StatEmployment
+            Case StatEnum.Employment
                 If PreferenceList.Contains(AIType.AI_ProJob) Then
                     Return 2.0
                 ElseIf PreferenceList.Contains(AIType.AI_AntiJob) Then
@@ -184,7 +184,7 @@
                 Else
                     Return 1.0
                 End If
-            Case StatIntelligence
+            Case StatEnum.Intelligence
                 If PreferenceList.Contains(AIType.AI_ProIntelligence) Then
                     Return StatLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiIntelligence) Then
@@ -192,7 +192,7 @@
                 Else
                     Return 1.0
                 End If
-            Case StatCreativity
+            Case StatEnum.Creativity
                 If PreferenceList.Contains(AIType.AI_ProCreativity) Then
                     Return StatLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiCreativity) Then
@@ -200,7 +200,7 @@
                 Else
                     Return 1.0
                 End If
-            Case StatMobility
+            Case StatEnum.Mobility
                 If PreferenceList.Contains(AIType.AI_ProMobility) Then
                     Return StatLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiMobility) Then
@@ -208,7 +208,7 @@
                 Else
                     Return 1.0
                 End If
-            Case StatCriminality
+            Case StatEnum.Criminality
                 If PreferenceList.Contains(AIType.AI_ProCrime) Then
                     Return StatLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiCrime) Then
@@ -216,7 +216,7 @@
                 Else
                     Return 1.0
                 End If
-            Case StatDrunkenness
+            Case StatEnum.Drunkenness
                 If PreferenceList.Contains(AIType.AI_ProDrunk) Then
                     Return StatLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiDrunk) Then

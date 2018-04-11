@@ -83,8 +83,11 @@ Public Class HospitalBuilding
         End If
     End Function
 
-    Public Overrides Function GetHealthOdds() As Integer
-        Return MyBase.GetHealthOdds() + GetHealthBonus()
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        If StatType = StatEnum.Health Then
+            Return MyBase.GetStatOdds(StatType) + GetHealthBonus()
+        End If
+        Return MyBase.GetStatOdds(StatType)
     End Function
 
     Public Overrides Sub Destroy()

@@ -113,8 +113,8 @@ Public Class CultBuilding
                 Dim RandomBuilding As Building = Location.Buildings(GetRandom(0, Location.Buildings.Count - 1))
                 If Not RandomBuilding.Equals(Me) And RandomBuilding.Employees.Count > 0 Then
                     Dim RandomEmployee As Citizen = RandomBuilding.Employees(GetRandom(0, RandomBuilding.Employees.Count - 1))
-                    RandomEmployee.Intelligence -= 10 '-- Brainwashed
                     HireEmployee(RandomEmployee)
+                    RandomEmployee.OffsetStat(StatEnum.Intelligence, -10, "Brainwashed by cult") '-- Brainwashed
                     Diary.CultEvents.AddEvent(GetNameAndAddress() + " lured in " + RandomEmployee.Name)
                     Exit For
                 End If

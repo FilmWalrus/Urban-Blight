@@ -127,6 +127,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BuildingGen.vb" />
+    <Compile Include="GameLoop.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewGame.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SpecialBuilding\Construction.vb" />
     <Compile Include="EventDiary.vb" />
     <Compile Include="SpecialBuilding\Food.vb" />
@@ -179,6 +185,9 @@
     </Compile>
     <Compile Include="SpecialBuilding\SpecialBuildings.vb" />
     <Compile Include="Start.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views.vb">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="My Project\Resource1.resx">

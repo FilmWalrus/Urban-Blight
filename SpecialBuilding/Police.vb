@@ -24,8 +24,8 @@ Public Class CrimePreventionBuilding
 
     Public Overridable Function GetChanceFatal(ByRef thePerson As Citizen, ByVal crimeType As Integer) As Double
         Dim OddsFatal As Double = ChanceFatal
-        OddsFatal += SafeDivide(thePerson.Criminality, 8.0) '-- Hardened criminals are more likely to die
-        OddsFatal += SafeDivide(thePerson.Drunkenness, 8.0) '-- Criminals are more likely to die if they are drunk
+        OddsFatal += SafeDivide(thePerson.GetStat(StatEnum.Criminality), 8.0) '-- Hardened criminals are more likely to die
+        OddsFatal += SafeDivide(thePerson.GetStat(StatEnum.Drunkenness), 8.0) '-- Criminals are more likely to die if they are drunk
         Return OddsFatal
     End Function
 

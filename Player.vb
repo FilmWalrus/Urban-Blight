@@ -58,63 +58,6 @@ Public Class Player
 
 #Region " Functions "
 
-    Sub UpdateCensusData()
-
-        '-- Set Census values to 0
-        TotalTerritory = 0
-        TotalPopulation = 0
-        TotalDevelopment = 0
-        TotalEmployed = 0
-        TotalJobs = 0
-        TotalScore = 0
-
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                Dim thisLocation As CitySquare = GridArray(i, j)
-
-                If thisLocation.IsOwned(ID) Then
-
-                    '-- Update player territory, population, development, employees, and jobs
-                    TotalTerritory += 1
-                    TotalPopulation += thisLocation.getPopulation()
-                    TotalDevelopment += thisLocation.getDevelopment()
-                    TotalEmployed += thisLocation.getJobsFilled()
-                    TotalJobs += thisLocation.getJobsTotal()
-
-                    '-- Update player score for their citizens
-                    For k As Integer = 0 To thisLocation.getPopulation() - 1
-                        Dim currentCitizen As Citizen = thisLocation.People(k)
-
-                        '-- Computation of individual's value
-                        Dim personPoints As Integer = 0
-                        personPoints += (currentCitizen.Happiness * 2.5)
-                        personPoints += currentCitizen.Health
-                        personPoints += (currentCitizen.Employment * 1.8)
-                        personPoints += currentCitizen.Intelligence
-                        personPoints += currentCitizen.Creativity
-                        personPoints += (currentCitizen.Mobility * 0.5)
-                        personPoints -= (currentCitizen.Criminality * 2.0)
-                        personPoints -= (currentCitizen.Drunkenness * 1.3)
-                        personPoints = SafeDivide(personPoints, 180.0)
-                        If personPoints > 0 Then
-                            personPoints = personPoints ^ 1.6
-                        End If
-                        TotalScore += personPoints
-                    Next
-
-
-                End If
-            Next
-        Next
-
-        '-- Update player score for their territory and development
-        TotalScore += (TotalDevelopment * 4.0)
-        TotalScore += (TotalTerritory * 12.0)
-
-        '-- Update player score for their employment ratio (Up to 20% bonus)
-        TotalScore += (SafeDivide(TotalEmployed, TotalPopulation) * TotalScore * 0.2)
-    End Sub
-
     Function GetPlayerName() As String
         Dim playerName As String = "Player " + (ID + 1).ToString()
         If PlayerType = PlayerHuman Then
@@ -218,39 +161,39 @@ Public Class Player
     End Function
 
     Function GetPlayerScore() As Integer
-        '--Must call getplayer territory and development first
-        Dim sum As Double = 0
-        Dim personPoints As Double
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If GridArray(i, j).IsOwned(ID) Then
-                    For k As Integer = 0 To GridArray(i, j).People.Count - 1
-                        '-- Computation of individual's value
-                        personPoints = 0
-                        personPoints += (GridArray(i, j).People(k).Happiness * 2.5)
-                        personPoints += GridArray(i, j).People(k).Health
-                        personPoints += (GridArray(i, j).People(k).Employment * 1.8)
-                        personPoints += GridArray(i, j).People(k).Intelligence
-                        personPoints += GridArray(i, j).People(k).Creativity
-                        personPoints += (GridArray(i, j).People(k).Mobility * 0.5)
-                        personPoints -= (GridArray(i, j).People(k).Criminality * 2.0)
-                        personPoints -= (GridArray(i, j).People(k).Drunkenness * 1.3)
-                        personPoints = SafeDivide(personPoints, 180.0)
-                        If personPoints > 0 Then
-                            personPoints = personPoints ^ 1.6
-                        End If
-                        sum += personPoints
-                    Next
-                End If
-            Next
+        '-- Set Census values to 0
+        TotalTerritory = 0
+        TotalPopulation = 0
+        TotalDevelopment = 0
+        TotalEmployed = 0
+        TotalJobs = 0
+        TotalScore = 0
+
+        For Each CurrentLocation As CitySquare In GridArray
+            If CurrentLocation.IsOwned(ID) Then
+
+                '-- Update player territory, population, development, employees, and jobs
+                TotalTerritory += 1
+                TotalPopulation += CurrentLocation.getPopulation()
+                TotalDevelopment += CurrentLocation.getDevelopment()
+                TotalEmployed += CurrentLocation.getJobsFilled()
+                TotalJobs += CurrentLocation.getJobsTotal()
+
+                '-- Update player score for their citizens
+                For Each CurrentCitizen As Citizen In CurrentLocation.People
+                    TotalScore += CurrentCitizen.GetCitizenValue()
+                Next
+            End If
         Next
 
-        '-- Computation of total value
-        sum += (TotalDevelopment * 4.0)
-        sum += (TotalTerritory * 12.0)
-        sum += (SafeDivide(TotalEmployed, TotalPopulation) * sum * 0.2)
-        TotalScore = sum
-        Return sum
+        '-- Update player score for their territory and development
+        TotalScore += (TotalDevelopment * 4.0)
+        TotalScore += (TotalTerritory * 12.0)
+
+        '-- Update player score for their employment ratio (Up to 20% bonus)
+        TotalScore += (SafeDivide(TotalEmployed, TotalPopulation) * TotalScore * 0.2)
+
+        Return TotalScore
     End Function
 
     Function GetPlayerLandCost() As Integer
@@ -531,7 +474,7 @@ Public Class Player
             '-- Spendthrifts won't consciously choose an action that will result in a pass
             If Personality.PreferenceList.Contains(AIPersonality.AIType.AI_Spendthrift) Then
                 Dim ChoiceCost As Integer = 0
-                If i <= AIBuilding4 Then
+                If i <= AIBuilding5 And Cards(i) IsNot Nothing Then
                     ChoiceCost = Cards(i).GetPurchasePrice()
                 ElseIf i = AIRoad Then
                     ChoiceCost = RoadCostBase
@@ -554,7 +497,7 @@ Public Class Player
         '-- Save the location of the best move
         If finalDecision = AIPass Then
             BestMove = Nothing
-        ElseIf finalDecision <= AIBuilding4 Then
+        ElseIf finalDecision <= AIBuilding5 Then
             BestMove = bestBuildingLocation
         ElseIf finalDecision = AIRoad Then
             BestMove = bestRoadLocation

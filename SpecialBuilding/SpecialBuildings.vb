@@ -45,17 +45,17 @@ Public Class ChurchBuilding
 
         '-- Small chance of reducing a person's criminality or drunkenness to 0
         Dim odds As Integer = defaultOdds
-        odds += SafeDivide(thePerson.Criminality, 20.0)
+        odds += SafeDivide(thePerson.GetStat(StatEnum.Criminality), 20.0)
         If GetRandom(1, 100) = 1 Then
-            thePerson.Criminality = 0
+            thePerson.SetStat(StatEnum.Criminality, 0)
             thePerson.AddEvent("Religious epiphany reset criminality to 0")
             AddEffects(1)
         End If
 
         odds = defaultOdds
-        odds += SafeDivide(thePerson.Drunkenness, 20.0)
+        odds += SafeDivide(thePerson.GetStat(StatEnum.Drunkenness), 20.0)
         If GetRandom(1, 100) = 1 Then
-            thePerson.Drunkenness = 0
+            thePerson.SetStat(StatEnum.Drunkenness, 0)
             thePerson.AddEvent("Religious epiphany reset drunkenness to 0")
             AddEffects(1)
         End If
@@ -83,12 +83,12 @@ Public Class CorrectionalFacilityBuilding
         MyBase.AffectPerson(thePerson)
 
         '-- Small chance of reducing a person's criminality to 0 (and mobility to 0 as well)
-        If thePerson.Criminality > 10 Then
+        If thePerson.GetStat(StatEnum.Criminality) > 10 Then
             Dim odds As Integer = 1
-            odds += SafeDivide(thePerson.Criminality, 20.0)
+            odds += SafeDivide(thePerson.GetStat(StatEnum.Criminality), 20.0)
             If GetRandom(1, 10) <= odds Then
-                thePerson.Criminality = 0
-                thePerson.Mobility = 0
+                thePerson.SetStat(StatEnum.Criminality, 0)
+                thePerson.SetStat(StatEnum.Mobility, 0)
                 thePerson.AddEvent("Thrown in jail: criminality and mobility set to 0")
                 AddEffects(1)
             End If
@@ -118,13 +118,14 @@ Public Class MallBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetHappinessOdds() As Integer
-        If Location IsNot Nothing Then
-            Dim DevelopmentBonus As Integer = (Location.getDevelopment() - 1) * 3
-            Return Happiness_odds + DevelopmentBonus
-        Else
-            Return MyBase.GetHappinessOdds()
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        If StatType = StatEnum.Happiness Then
+            If Location IsNot Nothing Then
+                Dim DevelopmentBonus As Integer = (Location.getDevelopment() - 1) * 3
+                Return MyBase.GetStatOdds(StatType) + DevelopmentBonus
+            End If
         End If
+        Return MyBase.GetStatOdds(StatType)
     End Function
 End Class
 
@@ -180,13 +181,13 @@ Public Class RehabBuilding
         MyBase.AffectPerson(thePerson)
 
         '-- Small chance of reducing a person's drunkenness to 0 (and mobility to 0 as well)
-        If thePerson.Drunkenness > 10 Then
+        If thePerson.GetStat(StatEnum.Drunkenness) > 10 Then
             Dim odds As Integer = 1
-            odds += SafeDivide(thePerson.Drunkenness, 10.0)
+            odds += SafeDivide(thePerson.GetStat(StatEnum.Drunkenness), 10.0)
             If GetRandom(1, 10) <= odds Then
-                thePerson.Drunkenness = 0
-                thePerson.Mobility = SafeDivide(thePerson.Mobility, 2.0)
-                thePerson.AddEvent("Admitted to rehab: drunkenness reset to 0 and mobility halved")
+                thePerson.SetStat(StatEnum.Drunkenness, 0)
+                thePerson.SetStat(StatEnum.Mobility, SafeDivide(thePerson.GetStat(StatEnum.Mobility), 2.0))
+                thePerson.AddEvent("Thrown in jail: criminality and mobility set to 0")
                 AddEffects(1)
             End If
         End If
@@ -233,40 +234,13 @@ Public Class SkiResortBuilding
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetHappinessOdds() As Integer
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
         If Location IsNot Nothing Then
             If Location.Terrain <> TerrainMountain Then
                 Return 0
             End If
         End If
-        Return MyBase.GetHappinessOdds()
-    End Function
-
-    Public Overrides Function GetHealthOdds() As Integer
-        If Location IsNot Nothing Then
-            If Location.Terrain <> TerrainMountain Then
-                Return 0
-            End If
-        End If
-        Return MyBase.GetHealthOdds()
-    End Function
-
-    Public Overrides Function GetMobilityOdds() As Integer
-        If Location IsNot Nothing Then
-            If Location.Terrain <> TerrainMountain Then
-                Return 0
-            End If
-        End If
-        Return MyBase.GetMobilityOdds()
-    End Function
-
-    Public Overrides Function GetDrunkennessOdds() As Integer
-        If Location IsNot Nothing Then
-            If Location.Terrain <> TerrainMountain Then
-                Return 0
-            End If
-        End If
-        Return MyBase.GetDrunkennessOdds()
+        Return MyBase.GetStatOdds(StatType)
     End Function
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)

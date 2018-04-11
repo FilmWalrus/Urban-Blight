@@ -89,7 +89,7 @@ Public Class GasStationBuilding
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Gas station restores up to 10 endurance, but not to exceed the person's starting mobility plus 10
-        Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.Mobility + EnduranceBoost)
+        Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.GetStat(StatEnum.Mobility) + EnduranceBoost)
         thePerson.AddEvent("Fueled up at " + GetName() + " before continuing on")
         AddEffects(1)
     End Sub
@@ -106,9 +106,9 @@ Public Class HarborBuilding
         EffectText = "passengers transported"
     End Sub
 
-    Public Overrides Sub AffectMobility(ByRef thePerson As Citizen)
-        If Location.Coastal Then '-- Harbors only work on coastal areas
-            MyBase.AffectMobility(thePerson)
+    Public Overrides Sub AffectStat(ByVal StatType As Integer, ByRef thePerson As Citizen)
+        If StatType = StatEnum.Mobility And Location.Coastal Then '-- Harbors only work on coastal areas
+            MyBase.AffectStat(StatType, thePerson)
         End If
     End Sub
 
@@ -194,7 +194,7 @@ Public Class HotelBuilding
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Hotel restores a person to half the mobility
-        Endurance = Math.Max(Endurance, SafeDivide(thePerson.Mobility, 2.0))
+        Endurance = Math.Max(Endurance, SafeDivide(thePerson.GetStat(StatEnum.Mobility), 2.0))
         thePerson.AddEvent("Rested up at " + GetName() + " before continuing on")
         AddEffects(1)
     End Sub
@@ -304,9 +304,9 @@ Public Class SafeHouseBuilding
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Safe house has a chance to add criminality to current endurance, but only up to the sum of the two
-        If thePerson.Criminality >= 10 Then
+        If thePerson.GetStat(StatEnum.Criminality) >= 10 Then
             If GetRandom(1, 100) <= 30 Then
-                Endurance = Math.Min(Endurance + thePerson.Criminality, thePerson.Mobility + thePerson.Criminality)
+                Endurance = Math.Min(Endurance + thePerson.GetStat(StatEnum.Criminality), thePerson.GetStat(StatEnum.Mobility) + thePerson.GetStat(StatEnum.Criminality))
                 thePerson.AddEvent("Laid low at " + GetName() + " before continuing on")
                 AddEffects(1)
             End If
@@ -326,7 +326,7 @@ Public Class SidewalkBuilding
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
         '-- Gas station restores up to 3 endurance, but not to exceed the person's starting mobility plus 3
-        Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.Mobility + EnduranceBoost)
+        Endurance = Math.Min(Endurance + EnduranceBoost, thePerson.GetStat(StatEnum.Mobility) + EnduranceBoost)
         thePerson.AddEvent("Strolled along the " + GetName())
     End Sub
 

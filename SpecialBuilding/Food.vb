@@ -5,13 +5,18 @@
         MyBase.New(bType, bCost, bJobs)
     End Sub
 
-    Public Overrides Function GetHealthAdj() As Integer
-        Dim PopulationBonus As Integer = 0
-        If Location IsNot Nothing Then
-            PopulationBonus = Math.Floor(SafeDivide(Location.getPopulation(), 6.0))
+    Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
+        If StatType = StatEnum.Health Then
+            Dim PopulationBonus As Integer = 0
+            If Location IsNot Nothing Then
+                PopulationBonus = Math.Floor(SafeDivide(Location.getPopulation(), 6.0))
+            End If
+
+            Return MyBase.GetStatAdjust(StatType) + PopulationBonus
+        Else
+            Return MyBase.GetStatAdjust(StatType)
         End If
 
-        Return Health_adj + PopulationBonus
     End Function
 End Class
 

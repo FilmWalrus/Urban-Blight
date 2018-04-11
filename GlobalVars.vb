@@ -60,14 +60,17 @@ Module GlobalVars
     Public Const RoadHighway As Integer = 4
 
     '-- Citizen Stats
-    Public Const StatHappiness As Integer = 0
-    Public Const StatHealth As Integer = 1
-    Public Const StatEmployment As Integer = 2
-    Public Const StatIntelligence As Integer = 3
-    Public Const StatCreativity As Integer = 4
-    Public Const StatMobility As Integer = 5
-    Public Const StatDrunkenness As Integer = 6
-    Public Const StatCriminality As Integer = 7
+    Public Enum StatEnum
+        Happiness
+        Health
+        Employment
+        Intelligence
+        Creativity
+        Mobility
+        Drunkenness
+        Criminality
+        EnumEnd
+    End Enum
 
     '--Tabs
     Public Const EventTab As Integer = 0
@@ -104,18 +107,73 @@ Module GlobalVars
     Public RegularFont As New Font("Franklin Gothic Medium", 12, FontStyle.Regular)
 
     '--Views
-    Public Const PopView As Integer = 0
-    Public Const LocView As Integer = 1
-    Public Const HappinessView As Integer = 2
-    Public Const HealthView As Integer = 3
-    Public Const EmploymentView As Integer = 4
-    Public Const IntelligenceView As Integer = 5
-    Public Const CreativityView As Integer = 6
-    Public Const MobilityView As Integer = 7
-    Public Const DrunkennessView As Integer = 8
-    Public Const CriminalityView As Integer = 9
-    Public Const JobView As Integer = 10
-    Public Const RoadView As Integer = 11
+    Public Enum ViewEnum
+        Population
+        Coordinates
+        Order
+        Terrain
+        Buildings
+        Roads
+
+        JobsTotal
+        JobsFilled
+        JobsUnfilled
+        JobsNeed
+        Minors
+        Elderly
+
+        Employees
+        UnemployedAdults
+        UnemployedTotal
+
+        AgeAvg
+        LifespanAvg
+        MaxAge
+
+        HappinessAvg
+        HealthAvg
+        EmploymentAvg
+        IntelligenceAvg
+        CreativityAvg
+        MobilityAvg
+        DrunkennessAvg
+        CriminalityAvg
+
+        HappinessAvgAdults
+        HealthAvgAdults
+        EmploymentAvgAdults
+        IntelligenceAvgAdults
+        CreativityAvgAdults
+        MobilityAvgAdults
+        DrunkennessAvgAdults
+        CriminalityAvgAdults
+
+        CurrentRevenue
+        TotalRevenue
+        CurrentUpkeep
+        TotalUpkeep
+
+        Athletic
+        Coffee
+        Commerce
+        Criminal
+        Culture
+        Entertainment
+        Food
+        Franchise
+        Government
+        Manufacturing
+        Medical
+        Monument
+        Nature
+        Power
+        Science
+        Security
+        Transport
+        Travel
+
+        EndEnum
+    End Enum
 
     '--
     Public TimeIncrement As Integer = 3
@@ -130,8 +188,9 @@ Module GlobalVars
     Public Const AIBuilding2 As Integer = 1
     Public Const AIBuilding3 As Integer = 2
     Public Const AIBuilding4 As Integer = 3
-    Public Const AIRoad As Integer = 4
-    Public Const AILand As Integer = 5
+    Public Const AIBuilding5 As Integer = 4
+    Public Const AIRoad As Integer = 5
+    Public Const AILand As Integer = 6
 
     '-- Sort Types
     Public Const VisitOrderSort As Integer = 0
@@ -165,6 +224,27 @@ Module GlobalVars
             Return Nothing
         End If
         Return GridArray(Row, Col)
+    End Function
+
+    Public Function GetStatName(ByVal StatType As Integer) As String
+        Select Case StatType
+            Case StatEnum.Happiness
+                Return "Happiness"
+            Case StatEnum.Health
+                Return "Health"
+            Case StatEnum.Employment
+                Return "Employment"
+            Case StatEnum.Creativity
+                Return "Creativity"
+            Case StatEnum.Intelligence
+                Return "Intelligence"
+            Case StatEnum.Criminality
+                Return "Criminality"
+            Case StatEnum.Drunkenness
+                Return "Drunkenness"
+            Case Else
+                Return "Error"
+        End Select
     End Function
 
     Function GetTerrainName(ByVal terrainIndex As Integer, Optional ByVal coastNotLake As Boolean = False) As String

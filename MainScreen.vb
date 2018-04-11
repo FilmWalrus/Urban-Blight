@@ -68,6 +68,8 @@ Public Class MainForm
     Friend WithEvents ubcard4 As Button
     Friend WithEvents ubcard3 As Button
     Friend WithEvents ubcardChoice As Button
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents ViewDropdown As ComboBox
     '--
     Dim init As Boolean = False
 
@@ -117,19 +119,6 @@ Public Class MainForm
     Friend WithEvents txtP2 As System.Windows.Forms.TextBox
     Friend WithEvents txtP3 As System.Windows.Forms.TextBox
     Friend WithEvents txtP4 As System.Windows.Forms.TextBox
-    Friend WithEvents ubPopView As System.Windows.Forms.Button
-    Friend WithEvents ubLocView As System.Windows.Forms.Button
-    Friend WithEvents ubCriminality As System.Windows.Forms.Button
-    Friend WithEvents ubMobility As System.Windows.Forms.Button
-    Friend WithEvents ubDrunkenness As System.Windows.Forms.Button
-    Friend WithEvents ubCreativity As System.Windows.Forms.Button
-    Friend WithEvents ubIntelligence As System.Windows.Forms.Button
-    Friend WithEvents ubEmployment As System.Windows.Forms.Button
-    Friend WithEvents ubHealth As System.Windows.Forms.Button
-    Friend WithEvents ubHappiness As System.Windows.Forms.Button
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents ubJobView As System.Windows.Forms.Button
-    Friend WithEvents ubRoads As System.Windows.Forms.Button
     Friend WithEvents ubName As System.Windows.Forms.Button
     Friend WithEvents TabPageGame As TabPage
     Friend WithEvents ubNew As System.Windows.Forms.Button
@@ -153,19 +142,6 @@ Public Class MainForm
         Me.ubPBack = New System.Windows.Forms.Button()
         Me.txt_person = New System.Windows.Forms.TextBox()
         Me.UltraTab5 = New System.Windows.Forms.TabControl()
-        Me.ubRoads = New System.Windows.Forms.Button()
-        Me.ubJobView = New System.Windows.Forms.Button()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.ubEmployment = New System.Windows.Forms.Button()
-        Me.ubHappiness = New System.Windows.Forms.Button()
-        Me.ubDrunkenness = New System.Windows.Forms.Button()
-        Me.ubIntelligence = New System.Windows.Forms.Button()
-        Me.ubCreativity = New System.Windows.Forms.Button()
-        Me.ubCriminality = New System.Windows.Forms.Button()
-        Me.ubMobility = New System.Windows.Forms.Button()
-        Me.ubHealth = New System.Windows.Forms.Button()
-        Me.ubLocView = New System.Windows.Forms.Button()
-        Me.ubPopView = New System.Windows.Forms.Button()
         Me.UltraTab6 = New System.Windows.Forms.TabControl()
         Me.TabPageGame = New System.Windows.Forms.TabPage()
         Me.txtHint = New System.Windows.Forms.TextBox()
@@ -205,10 +181,11 @@ Public Class MainForm
         Me.gbP2 = New System.Windows.Forms.Panel()
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.ViewDropdown = New System.Windows.Forms.ComboBox()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
         Me.TabPageGame.SuspendLayout()
         Me.Infotab.SuspendLayout()
         Me.TabPageBuilding.SuspendLayout()
@@ -217,6 +194,7 @@ Public Class MainForm
         Me.gbP2.SuspendLayout()
         Me.gbP3.SuspendLayout()
         Me.gbP4.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'UltraTab1
@@ -366,124 +344,6 @@ Public Class MainForm
         Me.UltraTab5.TabIndex = 0
         Me.UltraTab5.Text = "View"
         '
-        'ubRoads
-        '
-        Me.ubRoads.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubRoads.Location = New System.Drawing.Point(15, 60)
-        Me.ubRoads.Name = "ubRoads"
-        Me.ubRoads.Size = New System.Drawing.Size(112, 32)
-        Me.ubRoads.TabIndex = 17
-        Me.ubRoads.Text = "Roads"
-        '
-        'ubJobView
-        '
-        Me.ubJobView.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubJobView.Location = New System.Drawing.Point(151, 12)
-        Me.ubJobView.Name = "ubJobView"
-        Me.ubJobView.Size = New System.Drawing.Size(112, 32)
-        Me.ubJobView.TabIndex = 16
-        Me.ubJobView.Text = "Jobs"
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.BackColor = System.Drawing.Color.LightSlateGray
-        Me.GroupBox1.Controls.Add(Me.ubEmployment)
-        Me.GroupBox1.Controls.Add(Me.ubHappiness)
-        Me.GroupBox1.Controls.Add(Me.ubDrunkenness)
-        Me.GroupBox1.Controls.Add(Me.ubIntelligence)
-        Me.GroupBox1.Controls.Add(Me.ubCreativity)
-        Me.GroupBox1.Controls.Add(Me.ubCriminality)
-        Me.GroupBox1.Controls.Add(Me.ubMobility)
-        Me.GroupBox1.Controls.Add(Me.ubHealth)
-        Me.GroupBox1.Location = New System.Drawing.Point(15, 116)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(248, 184)
-        Me.GroupBox1.TabIndex = 14
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Averages"
-        '
-        'ubEmployment
-        '
-        Me.ubEmployment.Location = New System.Drawing.Point(16, 64)
-        Me.ubEmployment.Name = "ubEmployment"
-        Me.ubEmployment.Size = New System.Drawing.Size(96, 23)
-        Me.ubEmployment.TabIndex = 11
-        Me.ubEmployment.Text = "Employment"
-        '
-        'ubHappiness
-        '
-        Me.ubHappiness.Location = New System.Drawing.Point(16, 24)
-        Me.ubHappiness.Name = "ubHappiness"
-        Me.ubHappiness.Size = New System.Drawing.Size(96, 23)
-        Me.ubHappiness.TabIndex = 13
-        Me.ubHappiness.Text = "Happiness"
-        '
-        'ubDrunkenness
-        '
-        Me.ubDrunkenness.Location = New System.Drawing.Point(16, 144)
-        Me.ubDrunkenness.Name = "ubDrunkenness"
-        Me.ubDrunkenness.Size = New System.Drawing.Size(96, 23)
-        Me.ubDrunkenness.TabIndex = 8
-        Me.ubDrunkenness.Text = "Drunkenness"
-        '
-        'ubIntelligence
-        '
-        Me.ubIntelligence.Location = New System.Drawing.Point(136, 64)
-        Me.ubIntelligence.Name = "ubIntelligence"
-        Me.ubIntelligence.Size = New System.Drawing.Size(96, 23)
-        Me.ubIntelligence.TabIndex = 10
-        Me.ubIntelligence.Text = "Intelligence"
-        '
-        'ubCreativity
-        '
-        Me.ubCreativity.Location = New System.Drawing.Point(16, 104)
-        Me.ubCreativity.Name = "ubCreativity"
-        Me.ubCreativity.Size = New System.Drawing.Size(96, 23)
-        Me.ubCreativity.TabIndex = 9
-        Me.ubCreativity.Text = "Creativity"
-        '
-        'ubCriminality
-        '
-        Me.ubCriminality.Location = New System.Drawing.Point(136, 144)
-        Me.ubCriminality.Name = "ubCriminality"
-        Me.ubCriminality.Size = New System.Drawing.Size(96, 23)
-        Me.ubCriminality.TabIndex = 6
-        Me.ubCriminality.Text = "Criminality"
-        '
-        'ubMobility
-        '
-        Me.ubMobility.Location = New System.Drawing.Point(136, 104)
-        Me.ubMobility.Name = "ubMobility"
-        Me.ubMobility.Size = New System.Drawing.Size(96, 23)
-        Me.ubMobility.TabIndex = 7
-        Me.ubMobility.Text = "Mobility"
-        '
-        'ubHealth
-        '
-        Me.ubHealth.Location = New System.Drawing.Point(136, 24)
-        Me.ubHealth.Name = "ubHealth"
-        Me.ubHealth.Size = New System.Drawing.Size(96, 23)
-        Me.ubHealth.TabIndex = 12
-        Me.ubHealth.Text = "Health"
-        '
-        'ubLocView
-        '
-        Me.ubLocView.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubLocView.Location = New System.Drawing.Point(151, 60)
-        Me.ubLocView.Name = "ubLocView"
-        Me.ubLocView.Size = New System.Drawing.Size(112, 32)
-        Me.ubLocView.TabIndex = 5
-        Me.ubLocView.Text = "Location"
-        '
-        'ubPopView
-        '
-        Me.ubPopView.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubPopView.Location = New System.Drawing.Point(15, 12)
-        Me.ubPopView.Name = "ubPopView"
-        Me.ubPopView.Size = New System.Drawing.Size(112, 32)
-        Me.ubPopView.TabIndex = 4
-        Me.ubPopView.Text = "Population"
-        '
         'UltraTab6
         '
         Me.UltraTab6.Location = New System.Drawing.Point(0, 0)
@@ -495,15 +355,11 @@ Public Class MainForm
         '
         'TabPageGame
         '
-        Me.TabPageGame.Controls.Add(Me.ubRoads)
+        Me.TabPageGame.Controls.Add(Me.GroupBox1)
         Me.TabPageGame.Controls.Add(Me.txtHint)
         Me.TabPageGame.Controls.Add(Me.ubHint)
-        Me.TabPageGame.Controls.Add(Me.ubJobView)
         Me.TabPageGame.Controls.Add(Me.ubQuit)
         Me.TabPageGame.Controls.Add(Me.ubNew)
-        Me.TabPageGame.Controls.Add(Me.GroupBox1)
-        Me.TabPageGame.Controls.Add(Me.ubLocView)
-        Me.TabPageGame.Controls.Add(Me.ubPopView)
         Me.TabPageGame.ForeColor = System.Drawing.SystemColors.ControlText
         Me.TabPageGame.Location = New System.Drawing.Point(4, 24)
         Me.TabPageGame.Name = "TabPageGame"
@@ -515,28 +371,28 @@ Public Class MainForm
         '
         Me.txtHint.AcceptsReturn = True
         Me.txtHint.AcceptsTab = True
-        Me.txtHint.Location = New System.Drawing.Point(13, 323)
+        Me.txtHint.Location = New System.Drawing.Point(13, 220)
         Me.txtHint.Multiline = True
         Me.txtHint.Name = "txtHint"
         Me.txtHint.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtHint.Size = New System.Drawing.Size(264, 136)
+        Me.txtHint.Size = New System.Drawing.Size(266, 136)
         Me.txtHint.TabIndex = 19
         '
         'ubHint
         '
         Me.ubHint.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubHint.Location = New System.Drawing.Point(116, 480)
+        Me.ubHint.Location = New System.Drawing.Point(13, 375)
         Me.ubHint.Name = "ubHint"
-        Me.ubHint.Size = New System.Drawing.Size(67, 48)
+        Me.ubHint.Size = New System.Drawing.Size(266, 48)
         Me.ubHint.TabIndex = 18
         Me.ubHint.Text = "Hint"
         '
         'ubQuit
         '
         Me.ubQuit.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubQuit.Location = New System.Drawing.Point(189, 480)
+        Me.ubQuit.Location = New System.Drawing.Point(171, 480)
         Me.ubQuit.Name = "ubQuit"
-        Me.ubQuit.Size = New System.Drawing.Size(88, 48)
+        Me.ubQuit.Size = New System.Drawing.Size(108, 48)
         Me.ubQuit.TabIndex = 17
         Me.ubQuit.Text = "Quit"
         '
@@ -545,7 +401,7 @@ Public Class MainForm
         Me.ubNew.ForeColor = System.Drawing.SystemColors.ControlText
         Me.ubNew.Location = New System.Drawing.Point(13, 480)
         Me.ubNew.Name = "ubNew"
-        Me.ubNew.Size = New System.Drawing.Size(97, 48)
+        Me.ubNew.Size = New System.Drawing.Size(110, 48)
         Me.ubNew.TabIndex = 16
         Me.ubNew.Text = "New Game"
         '
@@ -905,6 +761,24 @@ Public Class MainForm
         Me.gbP4.Size = New System.Drawing.Size(110, 130)
         Me.gbP4.TabIndex = 30
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.ViewDropdown)
+        Me.GroupBox1.Location = New System.Drawing.Point(13, 12)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(266, 74)
+        Me.GroupBox1.TabIndex = 20
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Views"
+        '
+        'ViewDropdown
+        '
+        Me.ViewDropdown.FormattingEnabled = True
+        Me.ViewDropdown.Location = New System.Drawing.Point(6, 30)
+        Me.ViewDropdown.Name = "ViewDropdown"
+        Me.ViewDropdown.Size = New System.Drawing.Size(254, 23)
+        Me.ViewDropdown.TabIndex = 0
+        '
         'MainForm
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -931,7 +805,6 @@ Public Class MainForm
         Me.TabPageCity.PerformLayout()
         Me.TabPagePerson.ResumeLayout(False)
         Me.TabPagePerson.PerformLayout()
-        Me.GroupBox1.ResumeLayout(False)
         Me.TabPageGame.ResumeLayout(False)
         Me.TabPageGame.PerformLayout()
         Me.Infotab.ResumeLayout(False)
@@ -946,197 +819,14 @@ Public Class MainForm
         Me.gbP3.PerformLayout()
         Me.gbP4.ResumeLayout(False)
         Me.gbP4.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
 
 #End Region
 
-#Region " Initialization "
-    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        '-- Urban Blight begins HERE
-        SetDebugMode(True)
 
-        StartGame()
-    End Sub
-
-    Sub StartGame()
-        '-- Get player count and game type
-        Dim Introduction As New Intro
-        If Introduction.ShowDialog() <> DialogResult.OK Then
-            Me.DialogResult = DialogResult.No
-            Me.Close()
-        End If
-
-        '-- Run setup on the NameGenerator and HintGenerator
-        Namer.FillLists()
-        Hinter.FillLists()
-
-        '-- Fill button list
-        FillButtonList()
-
-        '-- Display title, year, game goal, and current view
-        UpdateTitle()
-
-        '-- Create players
-        CreatePlayers()
-
-        '-- Create the map
-        CreateMapGrid()
-        CreateOpeningCities()
-
-        '-- Display initial player info
-        UpdatePlayers()
-        CurrentPlayerIndex = -1
-
-        '-- Finish initialization
-        init = True
-
-        '-- First player's turn
-        NextPlayer()
-    End Sub
-
-    Sub StartNewGame()
-        Me.DialogResult = DialogResult.Yes
-        Me.Close()
-    End Sub
-
-    Sub CreatePlayers()
-
-        '-- Display Player Info GUIs for active players
-        For i As Integer = 0 To Players.Count - 1
-            Dim thisPlayer As Player = Players(i)
-
-            '-- Display player Info GUIs for active players
-            Dim PlayerVisibility As Boolean = False
-            If thisPlayer.PlayerType <> PlayerNone Then
-                PlayerVisibility = True
-            End If
-
-            If i = 0 Then
-                Players(i).Flag = Flag1
-                gbP1.Visible = PlayerVisibility
-                gbP1.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
-                    p1_details.Visible = False
-                End If
-            ElseIf i = 1 Then
-                Players(i).Flag = Flag2
-                gbP2.Visible = PlayerVisibility
-                gbP2.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
-                    p2_details.Visible = False
-                End If
-            ElseIf i = 2 Then
-                Players(i).Flag = Flag3
-                gbP3.Visible = PlayerVisibility
-                gbP3.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
-                    p3_details.Visible = False
-                End If
-            ElseIf i = 3 Then
-                Players(i).Flag = Flag4
-                gbP4.Visible = PlayerVisibility
-                gbP4.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
-                    p4_details.Visible = False
-                End If
-            End If
-        Next
-
-    End Sub
-
-    Sub CreateMapGrid()
-
-        Dim path As String = My.Application.Info.DirectoryPath
-
-        '-- Location Variables
-        Dim LeftStart As Integer = 16
-        Dim LeftIncrement As Integer = 60
-        Dim TopStart As Integer = 16
-        Dim TopIncrement As Integer = 60
-
-        '-- Create grid of colored labels
-        Dim CurrentX As Integer = LeftStart
-        Dim CurrentY As Integer = TopStart
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-
-                Dim newLocation As New CitySquare(i, j)
-                GridArray(i, j) = newLocation
-
-                '-- Set position and size of grid squares
-                Dim gridSquare As LabelWithTextBorder = newLocation.GridSquare 'Label
-                gridSquare.Location = New System.Drawing.Point(CurrentX, CurrentY)
-                gridSquare.Size = New System.Drawing.Size(LeftIncrement, TopIncrement)
-
-
-
-
-                'ClickBox.Appearance.FontData.SizeInPoints = SmallFont
-                'ClickBox.ContextMenu = ctxTerrain 'Return this if context menu is used
-
-                '-- Add handlers
-                'AddHandler ClickBox.Click, AddressOf LabelClick
-                'AddHandler ClickBox.MouseEnter, AddressOf LabelMouseOver
-                AddHandler gridSquare.MouseUp, AddressOf MapMouseUp
-
-                '-- Add this grid square to the main GUI
-                Me.Controls.Add(gridSquare)
-
-                CurrentX += LeftIncrement
-            Next
-            CurrentX = LeftStart
-            CurrentY += TopIncrement
-        Next
-    End Sub
-
-    Sub CreateOpeningCities()
-        Dim wallBuffer As Integer = 2
-        For i As Integer = 0 To Players.Count - 1
-
-            '-- Make sure this player exists
-            Dim thisPlayer As Player = Players(i)
-            If thisPlayer.PlayerType = PlayerNone Then
-                Continue For
-            End If
-
-            '-- Found opening cities
-            While (True)
-                Dim startX As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
-                Dim startY As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
-                Dim theLocation As CitySquare = GridArray(startX, startY)
-
-                '-- Starting cities can't be on or adjacent to another city
-                If (Not theLocation.IsOwned() And Not GridArray(startX + 1, startY).IsOwned() And Not GridArray(startX - 1, startY).IsOwned() And Not GridArray(startX, startY - 1).IsOwned() And Not GridArray(startX, startY + 1).IsOwned()) Then
-                    theLocation.Occupy(i)
-
-                    '-- Starting cities are always on Plain terrain and start out with free dirt roads
-                    theLocation.SetTerrain(TerrainPlain)
-                    theLocation.AddRoad()
-
-                    ' Create starting population
-                    Dim j As Integer
-                    For j = 0 To StartPop - 1
-                        Dim founder As New Citizen(True)
-                        GridArray(startX, startY).AddPerson(founder)
-                    Next
-
-                    GridArray(startX, startY).GridSquare.BackColor = thisPlayer.Flag
-                    Exit While
-                End If
-            End While
-
-        Next
-
-        '-- Mark terrain by water (has to be after opening cities are founded in case they were on a lake)
-        UpdateCoastline()
-
-        '-- Redraw the grid
-        UpdateGrid()
-    End Sub
-
-#End Region
 
 #Region " Player Actions "
 
@@ -1278,7 +968,7 @@ Public Class MainForm
                 ClickCity.Transportation = RoadDirt
             ElseIf ClickCity.Terrain = TerrainMountain Then
                 '-- Rock effect: free building
-                Dim randNum As Integer = GetRandom(0, CardCount - 1)
+                Dim randNum As Integer = GetRandom(0, ChoiceCard - 1)
                 Dim newBuilding As Building = Cards(randNum)
                 newBuilding.PurchasePrice = 0
                 newBuilding.Location = ClickCity
@@ -1321,111 +1011,7 @@ Public Class MainForm
 
 #End Region
 
-#Region " Game Loop "
-    Sub NextPlayer()
-        '-- Cleanup
-        ResetForNewTurn()
 
-        '--Advance to next player (If last player in round and end condition is met, show Game Over screen)
-        AdvanceToNextPlayer()
-
-        '-- Handle events: births, deaths, movement, employment, crime, taxation, and business expansion
-        EventsHappen()
-
-        '-- Update averages for views and successes for businesses
-        UpdateAverages()
-
-        '-- Update grid, players, and cards
-        UpdateAll()
-
-        '-- Take turn automatically if AI
-        RunAI()
-
-        '-- Display event messages
-        UpdateTextBox(txt_event, Diary.toString())
-        Infotab.SelectedTab = Infotab.TabPages(EventTab)
-        UpdateTabs()
-
-    End Sub
-
-    Sub RunAI()
-
-        '-- Toggle the buttons so humans can't play for the computer
-        UpdateButtonEnables()
-
-        '-- If not an AI bail at this point
-        If CurrentPlayer.PlayerType <> PlayerAI Then
-            Return
-        End If
-
-        Dim AIActionEvents As String = ""
-        Dim AIActionCount As Integer = 0
-
-        '-- Loop until the AI does not have enough money for the action they want to take.
-        Dim ActionSuccess As Boolean = False
-        Do
-            '-- Get the AIs decision (the action they chose and where they chose to make it)
-            Dim AIDecision As Integer = CurrentPlayer.ChooseNextAction(Cards)
-
-            If AIDecision = AIPass Then
-                ActionSuccess = False
-            Else
-                SelectedCard = AIDecision
-                ClickCity = CurrentPlayer.BestMove
-                ActionSuccess = Build()
-            End If
-
-            If ActionSuccess Then
-                AIActionCount += 1
-                If AIDecision >= 0 And AIDecision < CardCount Then
-                    Dim newBuilding As Building = ClickCity.Buildings(ClickCity.Buildings.Count - 1) '-- Get latest building
-                    Diary.AIBuildEvents.AddEvent(CurrentPlayer.GetPlayerName() + " bought a " + newBuilding.GetNameAndAddress())
-                ElseIf AIDecision = RoadCard Then
-                    Diary.AIRoadEvents.AddEvent(CurrentPlayer.GetPlayerName() + " upgraded the road at " + ClickCity.GetName())
-                ElseIf AIDecision = LandCard Then
-                    Diary.AILandEvents.AddEvent(CurrentPlayer.GetPlayerName() + " founded " + ClickCity.GetName() + " at " + ClickCity.GetLocationText())
-                End If
-            ElseIf AIActionCount = 0 Then
-                Diary.AILandEvents.AddEvent(CurrentPlayer.GetPlayerName() + " passed on their turn")
-            End If
-
-        Loop While ActionSuccess
-
-
-    End Sub
-
-    Sub AdvanceToNextPlayer()
-        '-- Move to next human or AI player. 
-        Do
-            CurrentPlayerIndex += 1
-            If CurrentPlayerIndex = Players.Count Then
-                CurrentPlayerIndex = 0
-
-                '-- If this was the end of the round, advance the clock
-                theYear += TimeIncrement
-                UpdateTitle()
-
-                '-- Check for a winner
-                If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
-                    GameOver()
-                End If
-            End If
-            CurrentPlayer = Players(CurrentPlayerIndex)
-        Loop While CurrentPlayer.PlayerType = PlayerNone
-
-        '-- Highlight current player
-        HighlightCurrentPlayer()
-
-        '-- Update player info
-        CurrentPlayer.UpdateCensusData()
-    End Sub
-
-    Sub EventsHappen()
-        Dim TurnEvents As New Turn(CurrentPlayer, theYear)
-        TurnEvents.UpdatePeople()
-    End Sub
-
-#End Region
 
 #Region " Update Info "
     Sub UpdateAll()
@@ -1519,7 +1105,7 @@ Public Class MainForm
         For i As Integer = 0 To Players.Count - 1
             '-- Updates player stats
             Dim thisPlayer As Player = Players(i)
-            thisPlayer.UpdateCensusData()
+            thisPlayer.GetPlayerScore()
 
             '-- Display current player stats
             Dim textString As String = thisPlayer.toString()
@@ -1584,17 +1170,6 @@ Public Class MainForm
         UpdateTextBox(txt_building, buildingText)
     End Sub
 
-    Sub UpdateAverages()
-        Dim sum As Integer = 0
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                If GridArray(i, j).IsOwned(CurrentPlayerIndex) Then
-                    GridArray(i, j).ComputeAverages()
-                End If
-            Next
-        Next
-    End Sub
-
     Sub UpdateTitle()
         Dim PlaceHolderTab As String = "        "
         Dim TitleText As String = "URBAN BLIGHT" + PlaceHolderTab
@@ -1617,20 +1192,7 @@ Public Class MainForm
         End Select
         TitleText += "Goal: " + GoalText.ToString + PlaceHolderTab
 
-        Dim ViewText As String = ""
-        Select Case (ViewText)
-            Case PopView
-                ViewText = "Population"
-            Case LocView
-                ViewText = "Location"
-            Case JobView
-                ViewText = "Jobs"
-            Case RoadView
-                ViewText = "Roads"
-            Case Else
-                ViewText = "Statistics"
-        End Select
-        TitleText += "Current View: " + ViewText.ToString
+        TitleText += "Current View: " + GetViewName(CurrentView).ToString
 
         Me.Text = TitleText
 
@@ -1699,14 +1261,6 @@ Public Class MainForm
 
 #Region " Support "
 
-    Function GetCityName(ByVal i As Integer, ByVal j As Integer) As String
-        If String.Compare(GridArray(i, j).CityName, "") = 0 Then
-            Return "(" + (i + 1).ToString + "," + (j + 1).ToString + ")"
-        Else
-            Return GridArray(i, j).CityName
-        End If
-    End Function
-
     Sub ResetForNewTurn()
         If ClickCity IsNot Nothing Then
             ClickCity.GridSquare.BorderStyle = BorderStyle.FixedSingle
@@ -1722,7 +1276,7 @@ Public Class MainForm
         UpdateTextBox(txt_city, "")
         UpdateTextBox(txt_person, "")
         lblPerson.Text = "Displaying 0 of 0"
-        CurrentView = PopView
+        CurrentView = ViewEnum.Population
 
         '-- Display new hint
         DisplayHint()
@@ -1759,7 +1313,7 @@ Public Class MainForm
 
 #End Region
 
-#Region " Text "
+#Region " Texts, Hints and Rules "
 
     Public Sub UpdateTextBox(ByRef textBox As TextBox, ByVal displayString As String)
         '-- Update the textbox to display text and then deselect it.
@@ -1777,6 +1331,18 @@ Public Class MainForm
 #End Region
 
 #Region " Buttons "
+    Public Sub FillButtonList()
+        ButtonList.Add(ubcard1)
+        ButtonList.Add(ubcard2)
+        ButtonList.Add(ubcard3)
+        ButtonList.Add(ubcard4)
+        ButtonList.Add(ubcardChoice)
+        ButtonList.Add(ubroad)
+        ButtonList.Add(ubland)
+        ButtonList.Add(ubWipe)
+        ButtonList.Add(ubroadmax)
+    End Sub
+
     Private Sub ubcard1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard1.Click
         CardClick(0)
     End Sub
@@ -1969,83 +1535,12 @@ Public Class MainForm
         End If
     End Sub
 
-#Region " Views "
-    Private Sub ubPopView_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPopView.Click
-        CurrentView = PopView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
 
-    Private Sub ubLocView_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubLocView.Click
-        CurrentView = LocView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubJobView_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubJobView.Click
-        CurrentView = JobView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubRoads_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubRoads.Click
-        CurrentView = RoadView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubHappiness_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubHappiness.Click
-        CurrentView = HappinessView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubHealth_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubHealth.Click
-        CurrentView = HealthView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubEmployment_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubEmployment.Click
-        CurrentView = EmploymentView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubIntelligence_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubIntelligence.Click
-        CurrentView = IntelligenceView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubCreativity_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubCreativity.Click
-        CurrentView = CreativityView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubMobility_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubMobility.Click
-        CurrentView = MobilityView
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubDrunkenness_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubDrunkenness.Click
-        CurrentView = DrunkennessView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-
-    Private Sub ubCriminality_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubCriminality.Click
-        CurrentView = CriminalityView
-        UpdateTitle()
-        UpdateGrid()
-    End Sub
-#End Region
 
     Private Sub Infotab_SelectedTabChanged(ByVal sender As System.Object, ByVal e As EventArgs) Handles Infotab.TabIndexChanged
         If init Then
-            If Not (CurrentView = RoadView And SelectedCard = RoadCard) Then
-                CurrentView = PopView
+            If Not (CurrentView = ViewEnum.Roads And SelectedCard = RoadCard) Then
+                CurrentView = ViewEnum.Population
                 UpdateTitle()
                 UpdateGrid()
             End If
@@ -2094,26 +1589,7 @@ Public Class MainForm
 
 #End Region
 
-#Region " Debug Stuff "
-
-    Public Sub SetDebugMode(ByVal debugBool As Boolean)
-        DebugMode = debugBool
-        BuildingDropdown.Visible = DebugMode
-        btnCheat.Visible = DebugMode
-    End Sub
-
-    Public Sub FillButtonList()
-        ButtonList.Add(ubcard1)
-        ButtonList.Add(ubcard2)
-        ButtonList.Add(ubcard3)
-        ButtonList.Add(ubcard4)
-        ButtonList.Add(ubcardChoice)
-        ButtonList.Add(ubroad)
-        ButtonList.Add(ubland)
-        ButtonList.Add(ubWipe)
-        ButtonList.Add(ubroadmax)
-    End Sub
-
+#Region " Special Orders "
     Public Sub FillBuildingDropdown()
 
         DisableDropdownChange = True
@@ -2170,6 +1646,15 @@ Public Class MainForm
             UpdateCards(False)
         End If
 
+    End Sub
+#End Region
+
+#Region " Debug Stuff "
+
+    Public Sub SetDebugMode(ByVal debugBool As Boolean)
+        DebugMode = debugBool
+        BuildingDropdown.Visible = DebugMode
+        btnCheat.Visible = DebugMode
     End Sub
 
     Private Sub btnCheat_Click(sender As Object, e As EventArgs) Handles btnCheat.Click
