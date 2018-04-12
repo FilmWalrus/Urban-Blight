@@ -1,6 +1,12 @@
 ﻿Partial Public Class MainForm
 
 #Region " Game Loop "
+    Sub StartNewTurn()
+        SelectedCard = NoCard
+        UpdateCardSelection()
+        NextPlayer()
+    End Sub
+
     Sub NextPlayer()
         '-- Cleanup
         ResetForNewTurn()

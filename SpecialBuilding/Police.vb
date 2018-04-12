@@ -107,7 +107,7 @@ Public Class FireStationBuilding
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal crimeType As Integer) As Boolean
-        Return crimeType = Turn.CrimeType.Arson '-- Fire departments only prevent arson
+        Return (crimeType = CrimeEnum.Arson) '-- Fire departments only prevent arson
     End Function
 
 End Class
@@ -157,9 +157,9 @@ Public Class PrivateSecurityBuilding
         Dim odds As Double = MyBase.GetChanceFatal(thePerson, crimeType)
 
         Select Case crimeType
-            Case Turn.CrimeType.Murder
+            Case CrimeEnum.Murder
                 odds += 100
-            Case Turn.CrimeType.Arson
+            Case CrimeEnum.Arson
                 odds += 80.0
             Case Else
                 odds += 40.0
@@ -169,7 +169,7 @@ Public Class PrivateSecurityBuilding
     End Function
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal crimeType As Integer) As Boolean
-        If crimeType = Turn.CrimeType.Murder Then '-- Private security specializes in bodyguarding
+        If crimeType = CrimeEnum.Murder Then '-- Private security specializes in bodyguarding
             Return True
         Else
             Return GetRandom(1, 100) < 50

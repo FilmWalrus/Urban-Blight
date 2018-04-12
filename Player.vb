@@ -474,8 +474,10 @@ Public Class Player
             '-- Spendthrifts won't consciously choose an action that will result in a pass
             If Personality.PreferenceList.Contains(AIPersonality.AIType.AI_Spendthrift) Then
                 Dim ChoiceCost As Integer = 0
-                If i <= AIBuilding5 And Cards(i) IsNot Nothing Then
-                    ChoiceCost = Cards(i).GetPurchasePrice()
+                If i <= AIBuilding5 Then
+                    If Cards(i) IsNot Nothing Then
+                        ChoiceCost = Cards(i).GetPurchasePrice()
+                    End If
                 ElseIf i = AIRoad Then
                     ChoiceCost = RoadCostBase
                 ElseIf i = AILand Then

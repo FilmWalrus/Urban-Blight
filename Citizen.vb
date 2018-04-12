@@ -23,11 +23,7 @@ Public Class Citizen
     Public Const ElderAge As Integer = 55
 
     '-- Criminal Record
-    Public ParkingTicketCount As Integer = 0
-    Public DrivingTicketCount As Integer = 0
-    Public RobberyCount As Integer = 0
-    Public ArsonCount As Integer = 0
-    Public MurderCount As Integer = 0
+    Public CrimeCount(CrimeEnum.EnumEnd - 1) As Integer
 
     '-- Financials
     Public Wealth As Integer = 0
@@ -431,23 +427,23 @@ Public Class Citizen
     Function GetDeathOdds(ByVal CauseOfDeath As Integer) As Double
         Dim Odds As Double = 0.0
         Select Case CauseOfDeath
-            Case Turn.DeathCause.Illness
-                Odds = (32.0 - StatEnum.Health) / 4.0
-            Case Turn.DeathCause.Murder
+            Case DeathEnum.Illness
+                Odds = (32.0 - GetStat(StatEnum.Health)) / 4.0
+            Case DeathEnum.Murder
 
-            Case Turn.DeathCause.NaturalCauses
+            Case DeathEnum.NaturalCauses
                 Odds += (Age - 20.0) / 4.0
-            Case Turn.DeathCause.TrafficAccident
+            Case DeathEnum.TrafficAccident
                 Dim currentLocation As CitySquare = Residence
                 Odds = 0.0
-                Odds += StatEnum.Mobility / 10.0
-                Odds += StatEnum.Drunkenness / 4.0
+                Odds += GetStat(StatEnum.Mobility) / 10.0
+                Odds += GetStat(StatEnum.Drunkenness) / 4.0
                 Odds += (currentLocation.getPopulation / 5.0)
                 Odds -= (currentLocation.Transportation * 2.5)
                 If Age < 15 Then
                     Odds /= 2.0
                 End If
-            Case Turn.DeathCause.Unknown
+            Case DeathEnum.Unknown
 
         End Select
         Return Odds
@@ -460,14 +456,14 @@ Public Class Citizen
         End If
 
         Select Case CauseOfDeath
-            Case Turn.DeathCause.Illness
-            Case Turn.DeathCause.Murder
-            Case Turn.DeathCause.NaturalCauses
+            Case DeathEnum.Illness
+            Case DeathEnum.Murder
+            Case DeathEnum.NaturalCauses
                 If StatEnum.Health <= 0 Then
                     Return True
                 End If
-            Case Turn.DeathCause.TrafficAccident
-            Case Turn.DeathCause.Unknown
+            Case DeathEnum.TrafficAccident
+            Case DeathEnum.Unknown
 
         End Select
         Return False
@@ -479,23 +475,29 @@ Public Class Citizen
             JobBuilding.Employees.Remove(Me)
         End If
 
+        '-- Record the age and cause of death at their residence
+        Residence.DeathAges.Add(Age)
+        Residence.DeathCauseCounts(CauseOfDeath) += 1
+
         'Free dead person's residence
         Residence.People.Remove(Me)
 
         '-- Record cause of death
         Select Case CauseOfDeath
-            Case Turn.DeathCause.Illness
+            Case DeathEnum.Illness
                 AddEvent("Died of illness")
                 Diary.DeathIllnessEvents.AddEvent(GetNameAndAddress() + ", age " + Age.ToString() + ", died of illness")
-            Case Turn.DeathCause.Murder
+            Case DeathEnum.Murder
                 AddEvent("Murdered")
-            Case Turn.DeathCause.NaturalCauses
+            Case DeathEnum.NaturalCauses
                 AddEvent("Died of natural causes")
                 Diary.DeathNaturalEvents.AddEvent(GetNameAndAddress() + ", age " + Age.ToString() + ", died of natural causes")
-            Case Turn.DeathCause.TrafficAccident
+            Case DeathEnum.TrafficAccident
                 AddEvent("Died in traffic accident")
                 Diary.DeathTrafficEvents.AddEvent(GetNameAndAddress() + ", age " + Age.ToString() + ", died in a car accident")
-            Case Turn.DeathCause.Unknown
+            Case DeathEnum.ResistingArrest
+                AddEvent("Died resisting arrest")
+            Case DeathEnum.Unknown
                 AddEvent("Died of unknown causes")
         End Select
 
@@ -566,24 +568,24 @@ Public Class Citizen
     Function GetCrimeOdds(ByVal CrimeType As Integer) As Double
         Dim Odds As Double = 0.0
         Select Case CrimeType
-            Case Turn.CrimeType.ParkingTicket
+            Case CrimeEnum.ParkingTicket
                 Odds += GetStat(StatEnum.Criminality) / 10.0
-            Case Turn.CrimeType.TrafficTicket
+            Case CrimeEnum.TrafficTicket
                 Odds += GetStat(StatEnum.Criminality) / 8.0
                 Odds += GetStat(StatEnum.Drunkenness) / 4.0
                 Odds += GetStat(StatEnum.Mobility) / 9.0
-            Case Turn.CrimeType.Robbery
+            Case CrimeEnum.Robbery
                 Odds += GetStat(StatEnum.Criminality) / 3.0
                 Odds -= GetStat(StatEnum.Employment) / 5.0
-            Case Turn.CrimeType.Vandalism
+            Case CrimeEnum.Vandalism
 
-            Case Turn.CrimeType.Arson
+            Case CrimeEnum.Arson
                 Odds += GetStat(StatEnum.Criminality) / 8.0
                 Odds -= (GetStat(StatEnum.Happiness) - 20) / 10.0
-            Case Turn.CrimeType.Murder
+            Case CrimeEnum.Murder
                 Odds += GetStat(StatEnum.Criminality) / 6.5
                 Odds += GetStat(StatEnum.Drunkenness) / 9.0
-            Case Turn.CrimeType.Unknown
+            Case CrimeEnum.Unknown
 
         End Select
         Return Odds
@@ -594,22 +596,23 @@ Public Class Citizen
         Dim MaxRand As Integer = 100
 
         Select Case CrimeType
-            Case Turn.CrimeType.ParkingTicket
-            Case Turn.CrimeType.TrafficTicket
-            Case Turn.CrimeType.Robbery
-            Case Turn.CrimeType.Vandalism
-            Case Turn.CrimeType.Arson
+            Case CrimeEnum.ParkingTicket
+            Case CrimeEnum.TrafficTicket
+                MaxRand = 200
+            Case CrimeEnum.Robbery
+            Case CrimeEnum.Vandalism
+            Case CrimeEnum.Arson
                 '-- No arson if no buildings present. Arson is less likely when the player has few total buildings.
                 If Residence.Buildings.Count = 0 Or GetRandom(0, 9) > OptionalData Then
                     Return False
                 End If
                 MaxRand = 150
-            Case Turn.CrimeType.Murder
+            Case CrimeEnum.Murder
                 '-- Can't murder someone if you are all alone
                 If Residence.People.Count < 2 Then
                     Return False
                 End If
-            Case Turn.CrimeType.Unknown
+            Case CrimeEnum.Unknown
         End Select
 
         If GetRandom(0, MaxRand) < GetCrimeOdds(CrimeType) Then
@@ -625,28 +628,25 @@ Public Class Citizen
             Return False
         End If
 
+        CrimeCount(CrimeType) += 1
+
         '-- Record cause of death
         Select Case CrimeType
-            Case Turn.CrimeType.ParkingTicket
-                ParkingTicketCount += 1
+            Case CrimeEnum.ParkingTicket
                 UnpaidFines += 1
                 AddEvent("Received a parking ticket")
-            Case Turn.CrimeType.TrafficTicket
-                DrivingTicketCount += 1
+            Case CrimeEnum.TrafficTicket
                 UnpaidFines += 2
                 AddEvent("Received a traffic ticket")
-            Case Turn.CrimeType.Robbery
-                RobberyCount += 1
+            Case CrimeEnum.Robbery
                 AddEvent("Stole $" + ExtraText)
                 Diary.TheftEvents.AddEvent(GetNameAndAddress() + " stole $" + ExtraText)
-            Case Turn.CrimeType.Vandalism
+            Case CrimeEnum.Vandalism
                 AddEvent("Vandalized the " + ExtraText)
-            Case Turn.CrimeType.Arson
-                ArsonCount += 1
+            Case CrimeEnum.Arson
                 AddEvent("Burned down the " + ExtraText)
                 Diary.ArsonEvents.AddEvent(Name + " burned down the " + ExtraText)
-            Case Turn.CrimeType.Murder
-                MurderCount += 1
+            Case CrimeEnum.Murder
                 AddEvent("Killed " + ExtraText)
                 Diary.MurderEvents.AddEvent(Name + " killed " + ExtraText)
 
@@ -656,7 +656,7 @@ Public Class Citizen
                 Else
                     OffsetStat(StatEnum.Criminality, GetRandom(0, 3))
                 End If
-            Case Turn.CrimeType.Unknown
+            Case CrimeEnum.Unknown
                 AddEvent("Committed unknown crime")
         End Select
 
@@ -722,6 +722,10 @@ Public Class Citizen
         Return GetStatName(StatType) + ": " + GetStat(StatType).ToString + ControlChars.NewLine
     End Function
 
+    Public Function PrintCrime(ByVal CrimeType As Integer) As String
+        Return GetCrimeName(CrimeType) + ": " + CrimeCount(CrimeType).ToString + ControlChars.NewLine
+    End Function
+
     Public Overrides Function toString() As String
         '-- Print the citizen's name
         Dim PersonString As String = ""
@@ -778,24 +782,14 @@ Public Class Citizen
         End If
 
         '-- Print the citizen's criminal record
-        If ParkingTicketCount + DrivingTicketCount + RobberyCount + ArsonCount + MurderCount > 0 Then
-            PersonString += "Criminal record: " + ControlChars.NewLine
-            If ParkingTicketCount > 0 Then
-                PersonString += "Parking tickets: " + ParkingTicketCount.ToString + ControlChars.NewLine
+        Dim CrimeString As String = ""
+        For i As Integer = 0 To CrimeEnum.EnumEnd - 1
+            If CrimeCount(i) > 0 Then
+                CrimeString += PrintCrime(i).ToString
             End If
-            If DrivingTicketCount > 0 Then
-                PersonString += "Traffic tickets: " + DrivingTicketCount.ToString + ControlChars.NewLine
-            End If
-            If RobberyCount > 0 Then
-                PersonString += "Robbery: " + RobberyCount.ToString + ControlChars.NewLine
-            End If
-            If ArsonCount > 0 Then
-                PersonString += "Arson: " + ArsonCount.ToString + ControlChars.NewLine
-            End If
-            If MurderCount > 0 Then
-                PersonString += "Murder: " + MurderCount.ToString + ControlChars.NewLine
-            End If
-            PersonString += ControlChars.NewLine
+        Next
+        If CrimeString.Length > 0 Then
+            PersonString += CrimeString + ControlChars.NewLine
         End If
 
         '-- Print this person's "life Journey" (everything they did including all stat changes)

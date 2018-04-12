@@ -92,6 +92,31 @@
                 Return "Upkeep This Turn"
             Case ViewEnum.TotalUpkeep
                 Return "Upkeep Total"
+
+            Case ViewEnum.CrimeParkingTicket
+                Return "Parking Tickets"
+            Case ViewEnum.CrimeTrafficTicket
+                Return "Traffic Tickets"
+            Case ViewEnum.CrimeRobbery
+                Return "Robberies"
+            Case ViewEnum.CrimeVandalism
+                Return "Vandalism"
+            Case ViewEnum.CrimeArson
+                Return "Arson"
+            Case ViewEnum.CrimeMurder
+                Return "Murders"
+            Case ViewEnum.DeathNaturalCauses
+                Return "Deaths by Natural Causes"
+            Case ViewEnum.DeathIllness
+                Return "Deaths by Illness"
+            Case ViewEnum.DeathTrafficAccident
+                Return "Deaths by Traffic Accident"
+            Case ViewEnum.DeathMurder
+                Return "Deaths by Murder"
+            Case ViewEnum.DeathResistingArrest
+                Return "Deaths by Resisting Arrest"
+            Case ViewEnum.Ad
+                Return "Advertising Buildings"
             Case ViewEnum.Athletic
                 Return "Athletic Buildings"
             Case ViewEnum.Coffee

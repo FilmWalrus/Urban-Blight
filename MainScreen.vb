@@ -70,6 +70,7 @@ Public Class MainForm
     Friend WithEvents ubcardChoice As Button
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents ViewDropdown As ComboBox
+    Friend WithEvents btnSkip As Button
     '--
     Dim init As Boolean = False
 
@@ -144,6 +145,8 @@ Public Class MainForm
         Me.UltraTab5 = New System.Windows.Forms.TabControl()
         Me.UltraTab6 = New System.Windows.Forms.TabControl()
         Me.TabPageGame = New System.Windows.Forms.TabPage()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.ViewDropdown = New System.Windows.Forms.ComboBox()
         Me.txtHint = New System.Windows.Forms.TextBox()
         Me.ubHint = New System.Windows.Forms.Button()
         Me.ubQuit = New System.Windows.Forms.Button()
@@ -181,12 +184,12 @@ Public Class MainForm
         Me.gbP2 = New System.Windows.Forms.Panel()
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.ViewDropdown = New System.Windows.Forms.ComboBox()
+        Me.btnSkip = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
         Me.TabPageGame.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.Infotab.SuspendLayout()
         Me.TabPageBuilding.SuspendLayout()
         Me.MarketPanel.SuspendLayout()
@@ -194,7 +197,6 @@ Public Class MainForm
         Me.gbP2.SuspendLayout()
         Me.gbP3.SuspendLayout()
         Me.gbP4.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'UltraTab1
@@ -355,6 +357,7 @@ Public Class MainForm
         '
         'TabPageGame
         '
+        Me.TabPageGame.Controls.Add(Me.btnSkip)
         Me.TabPageGame.Controls.Add(Me.GroupBox1)
         Me.TabPageGame.Controls.Add(Me.txtHint)
         Me.TabPageGame.Controls.Add(Me.ubHint)
@@ -366,6 +369,24 @@ Public Class MainForm
         Me.TabPageGame.Size = New System.Drawing.Size(290, 547)
         Me.TabPageGame.TabIndex = 0
         Me.TabPageGame.Text = "Game"
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.ViewDropdown)
+        Me.GroupBox1.Location = New System.Drawing.Point(13, 12)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(266, 74)
+        Me.GroupBox1.TabIndex = 20
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Views"
+        '
+        'ViewDropdown
+        '
+        Me.ViewDropdown.FormattingEnabled = True
+        Me.ViewDropdown.Location = New System.Drawing.Point(6, 30)
+        Me.ViewDropdown.Name = "ViewDropdown"
+        Me.ViewDropdown.Size = New System.Drawing.Size(254, 23)
+        Me.ViewDropdown.TabIndex = 0
         '
         'txtHint
         '
@@ -761,23 +782,14 @@ Public Class MainForm
         Me.gbP4.Size = New System.Drawing.Size(110, 130)
         Me.gbP4.TabIndex = 30
         '
-        'GroupBox1
+        'btnSkip
         '
-        Me.GroupBox1.Controls.Add(Me.ViewDropdown)
-        Me.GroupBox1.Location = New System.Drawing.Point(13, 12)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(266, 74)
-        Me.GroupBox1.TabIndex = 20
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Views"
-        '
-        'ViewDropdown
-        '
-        Me.ViewDropdown.FormattingEnabled = True
-        Me.ViewDropdown.Location = New System.Drawing.Point(6, 30)
-        Me.ViewDropdown.Name = "ViewDropdown"
-        Me.ViewDropdown.Size = New System.Drawing.Size(254, 23)
-        Me.ViewDropdown.TabIndex = 0
+        Me.btnSkip.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.btnSkip.Location = New System.Drawing.Point(13, 121)
+        Me.btnSkip.Name = "btnSkip"
+        Me.btnSkip.Size = New System.Drawing.Size(110, 48)
+        Me.btnSkip.TabIndex = 21
+        Me.btnSkip.Text = "Fast Forward"
         '
         'MainForm
         '
@@ -807,6 +819,7 @@ Public Class MainForm
         Me.TabPagePerson.PerformLayout()
         Me.TabPageGame.ResumeLayout(False)
         Me.TabPageGame.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
         Me.Infotab.ResumeLayout(False)
         Me.TabPageBuilding.ResumeLayout(False)
         Me.TabPageBuilding.PerformLayout()
@@ -819,7 +832,6 @@ Public Class MainForm
         Me.gbP3.PerformLayout()
         Me.gbP4.ResumeLayout(False)
         Me.gbP4.PerformLayout()
-        Me.GroupBox1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -889,7 +901,14 @@ Public Class MainForm
             End If
 
         ElseIf e.Button = MouseButtons.Right Then
-            '-- Use for view mode?
+            '-- Loop through the buildings or persons at a location using right-click
+            If DoubleClick Then
+                If Infotab.SelectedIndex = BuildingTab Then
+                    CycleThroughBuildings(True, True)
+                ElseIf Infotab.SelectedIndex = PersonTab Then
+                    CycleThroughPersons(True, True)
+                End If
+            End If
         End If
 
     End Sub
@@ -1463,63 +1482,103 @@ Public Class MainForm
     End Sub
 
     Private Sub ubEnd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubEnd.Click
-        SelectedCard = NoCard
-        UpdateCardSelection()
-        NextPlayer()
+        StartNewTurn()
     End Sub
 
     '-- Person viewing
     Private Sub ubPBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPBack.Click
-        If ClickCity Is Nothing Then
-            Return
-        End If
-        Dim selectedPop As Integer = ClickCity.getPopulation()
-        If selectedPop > 0 And SelectedPerson > 0 Then
-            SelectedPerson -= 1
-            lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + selectedPop.ToString()
-            If SelectedPerson < selectedPop Then
-                UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).toString())
-            End If
-        End If
+        CycleThroughPersons(False, False)
     End Sub
 
     Private Sub ubPForward_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPForward.Click
+        CycleThroughPersons(True, False)
+    End Sub
+
+    Public Sub CycleThroughPersons(ByVal CycleForward As Boolean, ByVal LoopAround As Boolean)
         If ClickCity Is Nothing Then
             Return
         End If
-        Dim selectedPop As Integer = ClickCity.getPopulation()
-        If selectedPop > 0 And SelectedPerson < selectedPop - 1 Then
-            SelectedPerson += 1
-            lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + selectedPop.ToString()
-            UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).toString())
+
+        Dim CityPopulation As Integer = ClickCity.getPopulation()
+        If CityPopulation = 0 Then
+            Return
         End If
+
+        '-- Cycle forward or backward
+        Dim NewSelectedPerson As Integer = SelectedPerson
+        If CycleForward Then
+            NewSelectedPerson += 1
+        Else
+            NewSelectedPerson -= 1
+        End If
+
+        '-- Optionally loop around
+        If NewSelectedPerson < 0 Then
+            If LoopAround Then
+                NewSelectedPerson = CityPopulation - 1
+            Else
+                Return
+            End If
+        ElseIf NewSelectedPerson >= CityPopulation Then
+            If LoopAround Then
+                NewSelectedPerson = 0
+            Else
+                Return
+            End If
+        End If
+
+        '-- Display the new person information
+        SelectedPerson = NewSelectedPerson
+        lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + CityPopulation.ToString()
+        UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).toString())
     End Sub
 
     '-- Building viewing
     Private Sub ubBBack_Click(sender As Object, e As EventArgs) Handles ubBBack.Click
-        If ClickCity Is Nothing Then
-            Return
-        End If
-        Dim selectedDev As Integer = ClickCity.getDevelopment()
-        If selectedDev > 0 And SelectedBuilding > 0 Then
-            SelectedBuilding -= 1
-            lblBuilding.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + selectedDev.ToString()
-            If SelectedBuilding < selectedDev Then
-                UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).toString())
-            End If
-        End If
+        CycleThroughBuildings(False, False)
     End Sub
 
     Private Sub ubBForward_Click(sender As Object, e As EventArgs) Handles ubBForward.Click
+        CycleThroughBuildings(True, False)
+    End Sub
+
+    Public Sub CycleThroughBuildings(ByVal CycleForward As Boolean, ByVal LoopAround As Boolean)
         If ClickCity Is Nothing Then
             Return
         End If
-        Dim selectedDev As Integer = ClickCity.getDevelopment()
-        If selectedDev > 0 And SelectedBuilding < selectedDev - 1 Then
-            SelectedBuilding += 1
-            lblBuilding.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + selectedDev.ToString()
-            UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).toString())
+
+        Dim CityBuildings As Integer = ClickCity.getDevelopment()
+        If CityBuildings = 0 Then
+            Return
         End If
+
+        '-- Cycle forward or backward
+        Dim NewSelectedBuilding As Integer = SelectedBuilding
+        If CycleForward Then
+            NewSelectedBuilding += 1
+        Else
+            NewSelectedBuilding -= 1
+        End If
+
+        '-- Optionally loop around
+        If NewSelectedBuilding < 0 Then
+            If LoopAround Then
+                NewSelectedBuilding = CityBuildings - 1
+            Else
+                Return
+            End If
+        ElseIf NewSelectedBuilding >= CityBuildings Then
+            If LoopAround Then
+                NewSelectedBuilding = 0
+            Else
+                Return
+            End If
+        End If
+
+        '-- Display the new person information
+        SelectedBuilding = NewSelectedBuilding
+        lblBuilding.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + CityBuildings.ToString()
+        UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).toString())
     End Sub
 
     Private Sub ubNew_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubNew.Click
@@ -1670,6 +1729,15 @@ Public Class MainForm
             Location.UpdateTerrain()
         Next
         UpdateGrid()
+    End Sub
+
+    Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
+        '-- Let the user decide how many turns to skip
+        GameType = InfiniteGame
+        Dim SkipTurns As Integer = InputBox("Skip how many turns?", "Fast Forward")
+        For i As Integer = 0 To SkipTurns - 1
+            StartNewTurn()
+        Next
     End Sub
 
 #End Region

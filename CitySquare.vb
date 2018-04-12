@@ -31,6 +31,10 @@ Public Class CitySquare
     Public Buildings As New List(Of Building)
     Public NeighborBuildings As New List(Of Building)
 
+    '-- Mortality Info
+    Public DeathAges As New List(Of Integer)
+    Public DeathCauseCounts(DeathEnum.EnumEnd - 1) As Integer
+
     '-- Other Info
     Public OrderAcquired As Integer = 1
     Public NatureCount As Integer = 0
@@ -214,13 +218,16 @@ Public Class CitySquare
         Return getJobsTotal() - getJobsFilled()
     End Function
 
-    Public Function getUnemployment() As Integer
+    Public Function getUnemployment(ByVal AdultsOnly As Boolean) As Integer
         '-- We have to actually check every citizen since they might have jobs elsewhere
         Dim citizensUnemployed As Integer = 0
         For i As Integer = 0 To People.Count - 1
             '-- Add up how many citizens unemployed
             Dim currentCitizen As Citizen = People(i)
             If currentCitizen.JobBuilding Is Nothing Then
+                If AdultsOnly And currentCitizen.IsMinor Then
+                    Continue For
+                End If
                 citizensUnemployed += 1
             End If
         Next
@@ -374,6 +381,92 @@ Public Class CitySquare
         Coastal = False
     End Sub
 
+    Public Function GetMinors() As Integer
+        Dim PersonCount As Integer = 0
+        For Each Person As Citizen In People
+            If Person.IsMinor() Then
+                PersonCount += 1
+            End If
+        Next
+        Return PersonCount
+    End Function
+
+    Public Function GetElderly() As Integer
+        Dim PersonCount As Integer = 0
+        For Each Person As Citizen In People
+            If Person.IsElderly() Then
+                PersonCount += 1
+            End If
+        Next
+        Return PersonCount
+    End Function
+
+    Public Function AgeView(ByVal MaxAge As Boolean) As Integer
+
+        Dim AgeStat As Integer = 0
+        Dim PersonCount As Integer = 0
+
+        '-- Calculate average age or maximum age
+        For Each Person As Citizen In People
+            If MaxAge Then
+                If Person.Age > AgeStat Then
+                    AgeStat = Person.Age
+                End If
+            Else
+                AgeStat += Person.Age
+                PersonCount += 1
+            End If
+        Next
+
+        If MaxAge Then
+            Return AgeStat
+        Else
+            Return SafeDivide(AgeStat, PersonCount)
+        End If
+    End Function
+
+    Public Function GetCrimes(ByVal CrimeType As Integer) As Integer
+        '-- Calculate counts of crimes committed by people at this location
+        Dim CrimeCount As Integer = 0
+        For Each Person As Citizen In People
+            CrimeCount += Person.CrimeCount(CrimeType)
+        Next
+        Return CrimeCount
+    End Function
+
+    Public Function GetAverageLifespan() As Integer
+        Dim LifeSpanStat As Integer = 0
+        Dim PersonCount As Integer = 0
+
+        '-- Calculate average age or maximum age
+        For Each DeathAge As Integer In DeathAges
+            LifeSpanStat += DeathAge
+            PersonCount += 1
+        Next
+
+        Return SafeDivide(LifeSpanStat, PersonCount)
+    End Function
+
+    Public Function SumBuildingView(ByVal ViewType As Integer) As Integer
+
+        Dim Sum As Integer = 0
+
+        For Each CurrentBuilding As Building In Buildings
+            Select Case ViewType
+                Case ViewEnum.CurrentRevenue
+                    Sum += CurrentBuilding.CurrentRevenue
+                Case ViewEnum.TotalRevenue
+                    Sum += CurrentBuilding.TotalRevenue
+                Case ViewEnum.CurrentUpkeep
+                    Sum += CurrentBuilding.CurrentUpkeep
+                Case ViewEnum.TotalUpkeep
+                    Sum += CurrentBuilding.TotalUpkeep
+            End Select
+        Next
+
+        Return Sum
+    End Function
+
     Public Function ComputeAverage(ByVal StatType As Integer, ByVal AdultsOnly As Boolean) As Integer
 
         Dim AvgStat As Integer = 0
@@ -405,13 +498,28 @@ Public Class CitySquare
             Select Case (CurrentView)
                 Case ViewEnum.Population
                     displayText = getPopulation().ToString
+                Case ViewEnum.Minors
+                    displayText = GetMinors().ToString
+                Case ViewEnum.Elderly
+                    displayText = GetElderly().ToString
+                Case ViewEnum.Buildings
+                    displayText = getDevelopment().ToString
+                Case ViewEnum.Roads
+                    displayText = Transportation.ToString
                 Case ViewEnum.Coordinates
                     GridSquare.Font = RegularFont
                     displayText = (ColID + 1).ToString() + "," + (RowID + 1).ToString()
                 Case ViewEnum.Terrain
+                    GridSquare.Font = RegularFont
                     displayText = GetTerrainName(Terrain)
                 Case ViewEnum.Order
                     displayText = OrderAcquired.ToString()
+                Case ViewEnum.AgeAvg
+                    displayText = AgeView(False).ToString()
+                Case ViewEnum.MaxAge
+                    displayText = AgeView(True).ToString()
+                Case ViewEnum.LifespanAvg
+                    displayText = GetAverageLifespan().ToString()
                 Case ViewEnum.HappinessAvg
                     displayText = ComputeAverage(StatEnum.Happiness, False).ToString()
                 Case ViewEnum.HealthAvg
@@ -428,11 +536,102 @@ Public Class CitySquare
                     displayText = ComputeAverage(StatEnum.Drunkenness, False).ToString()
                 Case ViewEnum.CriminalityAvg
                     displayText = ComputeAverage(StatEnum.Criminality, False).ToString()
+                Case ViewEnum.HappinessAvgAdults
+                    displayText = ComputeAverage(StatEnum.Happiness, True).ToString()
+                Case ViewEnum.HealthAvgAdults
+                    displayText = ComputeAverage(StatEnum.Health, True).ToString()
+                Case ViewEnum.EmploymentAvgAdults
+                    displayText = ComputeAverage(StatEnum.Employment, True).ToString()
+                Case ViewEnum.IntelligenceAvgAdults
+                    displayText = ComputeAverage(StatEnum.Intelligence, True).ToString()
+                Case ViewEnum.CreativityAvgAdults
+                    displayText = ComputeAverage(StatEnum.Creativity, True).ToString()
+                Case ViewEnum.MobilityAvgAdults
+                    displayText = ComputeAverage(StatEnum.Mobility, True).ToString()
+                Case ViewEnum.DrunkennessAvgAdults
+                    displayText = ComputeAverage(StatEnum.Drunkenness, True).ToString()
+                Case ViewEnum.CriminalityAvgAdults
+                    displayText = ComputeAverage(StatEnum.Criminality, True).ToString()
                 Case ViewEnum.JobsFilled
                     GridSquare.Font = RegularFont
                     displayText = getJobsFilled().ToString + "/" + getJobsTotal.ToString
-                Case ViewEnum.Roads
-                    displayText = Transportation.ToString
+                Case ViewEnum.JobsUnfilled
+                    GridSquare.Font = RegularFont
+                    displayText = getJobsEmpty().ToString + "/" + getJobsTotal.ToString
+                Case ViewEnum.JobsTotal
+                    displayText = getJobsTotal().ToString
+                Case ViewEnum.JobsNeed
+                    displayText = (getUnemployment(True) - getJobsEmpty()).ToString
+                Case ViewEnum.Employees
+                    displayText = getEmployment().ToString
+                Case ViewEnum.UnemployedTotal
+                    displayText = getUnemployment(False).ToString
+                Case ViewEnum.UnemployedAdults
+                    displayText = getUnemployment(True).ToString
+                Case ViewEnum.CurrentRevenue
+                    GridSquare.Font = RegularFont
+                    displayText = SumBuildingView(CurrentView).ToString
+                Case ViewEnum.TotalRevenue
+                    GridSquare.Font = RegularFont
+                    displayText = SumBuildingView(CurrentView).ToString
+                Case ViewEnum.CurrentUpkeep
+                    GridSquare.Font = RegularFont
+                    displayText = SumBuildingView(CurrentView).ToString
+                Case ViewEnum.TotalUpkeep
+                    GridSquare.Font = RegularFont
+                    displayText = SumBuildingView(CurrentView).ToString
+                Case ViewEnum.CrimeParkingTicket
+                    displayText = GetCrimes(CrimeEnum.ParkingTicket).ToString
+                Case ViewEnum.CrimeTrafficTicket
+                    displayText = GetCrimes(CrimeEnum.TrafficTicket).ToString
+                Case ViewEnum.CrimeRobbery
+                    displayText = GetCrimes(CrimeEnum.Robbery).ToString
+                Case ViewEnum.CrimeVandalism
+                    displayText = GetCrimes(CrimeEnum.Vandalism).ToString
+                Case ViewEnum.CrimeArson
+                    displayText = GetCrimes(CrimeEnum.Arson).ToString
+                Case ViewEnum.CrimeMurder
+                    displayText = GetCrimes(CrimeEnum.Murder).ToString
+                Case ViewEnum.DeathNaturalCauses
+                    displayText = DeathCauseCounts(DeathEnum.NaturalCauses).ToString
+                Case ViewEnum.DeathIllness
+                    displayText = DeathCauseCounts(DeathEnum.Illness).ToString
+                Case ViewEnum.DeathTrafficAccident
+                    displayText = DeathCauseCounts(DeathEnum.TrafficAccident).ToString
+                Case ViewEnum.DeathMurder
+                    displayText = DeathCauseCounts(DeathEnum.Murder).ToString
+                Case ViewEnum.DeathResistingArrest
+                    displayText = DeathCauseCounts(DeathEnum.ResistingArrest).ToString
+                Case ViewEnum.Ad
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Ad).ToString
+                Case ViewEnum.Athletic
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Athletic).ToString
+                Case ViewEnum.Coffee
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Coffee).ToString
+                Case ViewEnum.Commerce
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Commerce).ToString
+                Case ViewEnum.Criminal
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Criminal).ToString
+                Case ViewEnum.Food
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Food).ToString
+                Case ViewEnum.Franchise
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Franchise).ToString
+                Case ViewEnum.Government
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Government).ToString
+                Case ViewEnum.Manufacturing
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Manufacturing).ToString
+                Case ViewEnum.Medical
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Medical).ToString
+                Case ViewEnum.Monument
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Monument).ToString
+                Case ViewEnum.Nature
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Nature).ToString
+                Case ViewEnum.Science
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Science).ToString
+                Case ViewEnum.Security
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Security).ToString
+                Case ViewEnum.Transport
+                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Transportation).ToString
             End Select
         End If
 

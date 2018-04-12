@@ -72,6 +72,29 @@ Module GlobalVars
         EnumEnd
     End Enum
 
+    '-- Causes of Death
+    Public Enum DeathEnum
+        NaturalCauses
+        Illness
+        TrafficAccident
+        Murder
+        ResistingArrest
+        Unknown
+        EnumEnd
+    End Enum
+
+    '-- Crimes
+    Public Enum CrimeEnum
+        ParkingTicket
+        TrafficTicket
+        Robbery
+        Vandalism
+        Arson
+        Murder
+        Unknown
+        EnumEnd
+    End Enum
+
     '--Tabs
     Public Const EventTab As Integer = 0
     Public Const CityTab As Integer = 1
@@ -153,6 +176,20 @@ Module GlobalVars
         CurrentUpkeep
         TotalUpkeep
 
+        CrimeParkingTicket
+        CrimeTrafficTicket
+        CrimeRobbery
+        CrimeVandalism
+        CrimeArson
+        CrimeMurder
+
+        DeathNaturalCauses
+        DeathIllness
+        DeathTrafficAccident
+        DeathMurder
+        DeathResistingArrest
+
+        Ad
         Athletic
         Coffee
         Commerce
@@ -238,10 +275,33 @@ Module GlobalVars
                 Return "Creativity"
             Case StatEnum.Intelligence
                 Return "Intelligence"
+            Case StatEnum.Mobility
+                Return "Mobility"
             Case StatEnum.Criminality
                 Return "Criminality"
             Case StatEnum.Drunkenness
                 Return "Drunkenness"
+            Case Else
+                Return "Error"
+        End Select
+    End Function
+
+    Function GetCrimeName(ByVal CrimeType As Integer) As String
+        Select Case CrimeType
+            Case CrimeEnum.ParkingTicket
+                Return "Parking Tickets"
+            Case CrimeEnum.TrafficTicket
+                Return "Traffic Tickets"
+            Case CrimeEnum.Robbery
+                Return "Robbery"
+            Case CrimeEnum.Vandalism
+                Return "Vandalism"
+            Case CrimeEnum.Arson
+                Return "Arson"
+            Case CrimeEnum.Murder
+                Return "Murder"
+            Case CrimeEnum.Unknown
+                Return "Unknown"
             Case Else
                 Return "Error"
         End Select

@@ -115,7 +115,7 @@ Public Class HospitalCancerBuilding
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
-        Return (causeOfDeath = Turn.DeathCause.Illness)
+        Return (causeOfDeath = DeathEnum.Illness)
     End Function
 End Class
 
@@ -127,7 +127,7 @@ Public Class HospitalEmergencyBuilding
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
-        Return (causeOfDeath = Turn.DeathCause.TrafficAccident)
+        Return (causeOfDeath = DeathEnum.TrafficAccident)
     End Function
 End Class
 

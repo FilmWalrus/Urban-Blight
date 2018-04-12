@@ -20,25 +20,6 @@
 
     Public VisitOrder As Integer = 0
 
-    Public Enum DeathCause
-        NaturalCauses
-        Illness
-        TrafficAccident
-        Murder
-        ResistingArrest
-        Unknown
-    End Enum
-
-    Public Enum CrimeType
-        ParkingTicket
-        TrafficTicket
-        Robbery
-        Vandalism
-        Arson
-        Murder
-        Unknown
-    End Enum
-
 #End Region
 
 #Region " Person Events "
@@ -101,8 +82,8 @@
             Dim originalHome As CitySquare = thePerson.Residence
 
             '-- Get the odds for traffic tickets
-            Dim DrivingOdds As Double = thePerson.GetCrimeOdds(CrimeType.TrafficTicket)
-            Dim ParkingOdds As Double = thePerson.GetCrimeOdds(CrimeType.ParkingTicket)
+            Dim DrivingOdds As Double = thePerson.GetCrimeOdds(CrimeEnum.TrafficTicket)
+            Dim ParkingOdds As Double = thePerson.GetCrimeOdds(CrimeEnum.ParkingTicket)
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             Dim locationsInRange As New List(Of CitySquare)
@@ -128,7 +109,7 @@
 
         '-- Issue speeding ticket
         If GetRandom(0, 200) < drivingOdds Then
-            thePerson.CommitCrime(CrimeType.ParkingTicket)
+            thePerson.CommitCrime(CrimeEnum.ParkingTicket)
         End If
 
         '-- Visit each building at this location
@@ -137,7 +118,7 @@
 
             '-- Issue parking ticket
             If GetRandom(0, 200) < parkingOdds Then
-                thePerson.CommitCrime(CrimeType.TrafficTicket)
+                thePerson.CommitCrime(CrimeEnum.TrafficTicket)
             End If
 
             '-- Have person potentially visit each building in range for leisure and change due to external factors
@@ -275,10 +256,10 @@
             Dim thePerson As Citizen = CitizenList(i)
 
             '-- Handle deaths by natural causes
-            If thePerson.WillDie(DeathCause.NaturalCauses) Then
+            If thePerson.WillDie(DeathEnum.NaturalCauses) Then
                 '-- Attempt to save the life of this citizen
-                If Not SaveVictim(thePerson, DeathCause.NaturalCauses) Then
-                    If thePerson.Die(DeathCause.NaturalCauses) Then
+                If Not SaveVictim(thePerson, DeathEnum.NaturalCauses) Then
+                    If thePerson.Die(DeathEnum.NaturalCauses) Then
                         DeadCitizens.Add(thePerson)
                         Continue For '-- Can only die once
                     End If
@@ -286,12 +267,12 @@
             End If
 
             '-- Handle deaths by illness
-            If thePerson.WillDie(DeathCause.Illness) Then
+            If thePerson.WillDie(DeathEnum.Illness) Then
 
                 '-- Attempt to save the life of this citizen
-                If Not SaveVictim(thePerson, DeathCause.Illness) Then
+                If Not SaveVictim(thePerson, DeathEnum.Illness) Then
 
-                    If thePerson.Die(DeathCause.Illness) Then
+                    If thePerson.Die(DeathEnum.Illness) Then
                         '-- Citizen died
                         DeadCitizens.Add(thePerson)
                         Continue For '-- Can only die once
@@ -300,10 +281,10 @@
             End If
 
             '-- Handle deaths by car accident
-            If thePerson.WillDie(DeathCause.TrafficAccident) Then
+            If thePerson.WillDie(DeathEnum.TrafficAccident) Then
                 '-- Attempt to save the life of this citizen
-                If Not SaveVictim(thePerson, DeathCause.TrafficAccident) Then
-                    If thePerson.Die(DeathCause.TrafficAccident) Then
+                If Not SaveVictim(thePerson, DeathEnum.TrafficAccident) Then
+                    If thePerson.Die(DeathEnum.TrafficAccident) Then
                         DeadCitizens.Add(thePerson)
                         Continue For '-- Can only die once
                     End If
@@ -339,12 +320,12 @@
             Dim PersonalInsurance As Integer = 0
 
             '-- Theft
-            If thePerson.WillCommitCrime(CrimeType.Robbery) Then
+            If thePerson.WillCommitCrime(CrimeEnum.Robbery) Then
                 '-- Attempt to prevent this crime
-                If Not PreventCrime(thePerson, CrimeType.Robbery) Then
+                If Not PreventCrime(thePerson, CrimeEnum.Robbery) Then
 
                     Dim TheftAmount As Integer = Math.Max(1, Math.Min(thePerson.GetStat(StatEnum.Criminality), CurrentPlayer.TotalMoney))
-                    If thePerson.CommitCrime(CrimeType.Robbery, TheftAmount.ToString()) Then
+                    If thePerson.CommitCrime(CrimeEnum.Robbery, TheftAmount.ToString()) Then
                         CrimeFlag = True
                         CurrentPlayer.TotalMoney -= TheftAmount
                         TheftTotal += TheftAmount
@@ -354,14 +335,14 @@
             End If
 
             '-- Arson
-            If thePerson.WillCommitCrime(CrimeType.Arson, TotalBuildings) Then
+            If thePerson.WillCommitCrime(CrimeEnum.Arson, TotalBuildings) Then
 
                 Dim CurrentLocation As CitySquare = thePerson.Residence
                 Dim TargetBuilding As Building = CurrentLocation.Buildings(GetRandom(0, CurrentLocation.Buildings.Count - 1))
 
                 '-- Attempt to prevent this crime
-                If Not PreventCrime(thePerson, CrimeType.Arson) Then
-                    If thePerson.CommitCrime(CrimeType.Arson, TargetBuilding.GetNameAndAddress()) Then
+                If Not PreventCrime(thePerson, CrimeEnum.Arson) Then
+                    If thePerson.CommitCrime(CrimeEnum.Arson, TargetBuilding.GetNameAndAddress()) Then
 
                         CrimeFlag = True
                         DestroyedBuildings.Add(TargetBuilding)
@@ -371,19 +352,20 @@
             End If
 
             '-- Murder
-            If thePerson.WillCommitCrime(CrimeType.Murder) Then
+            If thePerson.WillCommitCrime(CrimeEnum.Murder) Then
                 Dim CurrentLocation As CitySquare = thePerson.Residence
                 Dim theVictim As Citizen = thePerson
                 While (theVictim.Equals(thePerson))
                     theVictim = CurrentLocation.People(GetRandom(0, CurrentLocation.People.Count - 1))
                 End While
 
-                If Not PreventCrime(thePerson, CrimeType.Murder) Then
-                    If theVictim.Die(DeathCause.Murder) Then
+                If Not PreventCrime(thePerson, CrimeEnum.Murder) Then
+                    If theVictim.Die(CrimeEnum.Murder) Then
                         '-- Attempt to prevent this crime
-                        If thePerson.CommitCrime(CrimeType.Murder, theVictim.GetNameAndAddress()) Then
+                        If thePerson.CommitCrime(CrimeEnum.Murder, theVictim.GetNameAndAddress()) Then
                             CrimeFlag = True
 
+                            theVictim.Die(DeathEnum.Murder)
                             DeadCitizens.Add(theVictim)
                             PersonalInsurance += SafeDivide(theVictim.GetStat(StatEnum.Employment), 2.0)
                         End If
@@ -698,30 +680,17 @@
 
 #Region " Crime Prevention "
 
-    Function PreventCrime(ByRef theCriminal As Citizen, ByVal criminalAct As Integer) As Boolean
+    Function PreventCrime(ByRef theCriminal As Citizen, ByVal CrimeType As Integer) As Boolean
 
         For i As Integer = 0 To CrimePreventerList.Count - 1
-            Dim PreventionOutcome As Integer = CrimePreventerList(i).PreventCrime(theCriminal, criminalAct)
+            Dim PreventionOutcome As Integer = CrimePreventerList(i).PreventCrime(theCriminal, CrimeType)
             If PreventionOutcome <> CrimePreventionBuilding.PreventionType.Fail Then
                 Dim PreventionText As String = ""
-                PreventionText += theCriminal.Name + "'s "
-                Select Case criminalAct
-                    Case CrimeType.Murder
-                        PreventionText += "murder"
-                    Case CrimeType.Arson
-                        PreventionText += "arson"
-                    Case CrimeType.Vandalism
-                        PreventionText += "vandalism"
-                    Case CrimeType.Robbery
-                        PreventionText += "robbery"
-                    Case Else
-                        PreventionText += "criminal"
-                End Select
-                PreventionText += " plot foiled by " + CrimePreventerList(i).GetName()
+                PreventionText += theCriminal.Name + "'s " + GetCrimeName(CrimeType) + " plot foiled by " + CrimePreventerList(i).GetName()
 
                 '-- Handle criminals killed resisting arrest
                 If PreventionOutcome = CrimePreventionBuilding.PreventionType.SuccessFatal Then
-                    If theCriminal.Die(DeathCause.ResistingArrest) Then
+                    If theCriminal.Die(DeathEnum.ResistingArrest) Then
                         PreventionText += ". Perpetrator killed resisting arrest"
                         DeadCitizens.Add(theCriminal)
                     End If

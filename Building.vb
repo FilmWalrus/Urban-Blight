@@ -358,7 +358,7 @@ Public Class Building
             For Each CriminalOrg As Building In CriminalList
                 If Not CriminalOrg.Equals(Me) Then
                     Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " wiped out " + CriminalOrg.GetName() + " and their " + CriminalOrg.Employees.Count.ToString() + " members")
-                    CriminalOrg.MassacreEmployees(Turn.DeathCause.Murder)
+                    CriminalOrg.MassacreEmployees(DeathEnum.Murder)
                     CriminalOrg.Destroy()
                 End If
             Next
