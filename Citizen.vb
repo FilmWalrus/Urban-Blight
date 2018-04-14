@@ -93,7 +93,7 @@ Public Class Citizen
 
         '-- Create randomly with heriditary influence (need to separate nature vs nurture better)
         SetStat(StatEnum.Happiness, GetRandom(20, 30) + (Parent.GetStat(StatEnum.Happiness) / 9.0))
-        SetStat(StatEnum.Health, GetRandom(Math.Min(40, Parent.GetStat(StatEnum.Health)), 50))
+        SetStat(StatEnum.Health, GetRandom(Math.Min(30, Parent.GetStat(StatEnum.Health)), 50))
         SetStat(StatEnum.Employment, 0)
         SetStat(StatEnum.Intelligence, GetRandom(3, 8 + (Parent.GetStat(StatEnum.Intelligence) / 16.5)))
         SetStat(StatEnum.Creativity, GetRandom(3, 8 + (Parent.GetStat(StatEnum.Creativity) / 16.5)))
@@ -264,19 +264,19 @@ Public Class Citizen
             maxBonus = GetRandom(0, thePop / 8.0)
 
             '-- Primary school
-            statChange = GetRandom(2, 5 + maxBonus)
+            statChange = GetRandom(0, 4 + maxBonus)
             OffsetStat(StatEnum.Intelligence, statChange, "Primary school")
 
-            statChange = GetRandom(2, 4 + maxBonus)
+            statChange = GetRandom(0, 3 + maxBonus)
             OffsetStat(StatEnum.Creativity, statChange, "Primary school")
         End If
         If Age >= 18 And Age <= 25 Then '-- Occurs 3 times
             If GetStat(StatEnum.Intelligence) >= 30 + (thePop / 5.0) Then
                 '-- Higher education. Gets more competitive with population.
-                statChange = GetRandom(1, 5)
+                statChange = GetRandom(1, 4)
                 OffsetStat(StatEnum.Intelligence, statChange, "Community college")
 
-                statChange = GetRandom(1, 5)
+                statChange = GetRandom(1, 4)
                 OffsetStat(StatEnum.Creativity, statChange, "Community college")
             Else
                 statChange = GetRandom(0, 2)
@@ -430,7 +430,6 @@ Public Class Citizen
             Case DeathEnum.Illness
                 Odds = (32.0 - GetStat(StatEnum.Health)) / 4.0
             Case DeathEnum.Murder
-
             Case DeathEnum.NaturalCauses
                 Odds += (Age - 20.0) / 4.0
             Case DeathEnum.TrafficAccident
@@ -451,7 +450,7 @@ Public Class Citizen
 
     Function WillDie(ByVal CauseOfDeath As Integer) As Boolean
 
-        If GetRandom(0, 100) < GetDeathOdds(CauseOfDeath) Then
+        If GetRandom(1, 100) < GetDeathOdds(CauseOfDeath) Then
             Return True
         End If
 
@@ -582,8 +581,8 @@ Public Class Citizen
             Case CrimeEnum.Vandalism
                 '-- Vandalism increases when juveniles flock together
                 Odds += GetStat(StatEnum.Criminality) / 12.0
-                If IsMinor() Then
-                    Odds += Residence.GetMinors()
+                If IsInAgeRange(8, 22) Then
+                    Odds += Residence.GetCitizensInAgeRange(8, 22)
                 End If
             Case CrimeEnum.Arson
                 '-- Arson increases with unhappiness and claustraphobia
@@ -635,7 +634,7 @@ Public Class Citizen
             Return False
         End If
 
-        If GetRandom(0, MaxRand) < GetCrimeOdds(CrimeType) Then
+        If GetRandom(1, MaxRand) < GetCrimeOdds(CrimeType) Then
             Return True
         End If
 
@@ -643,10 +642,6 @@ Public Class Citizen
     End Function
 
     Function CommitCrime(ByVal CrimeType As Integer, ByVal Optional ExtraText As String = "") As Boolean
-
-        If Age < 16 Then
-            Return False
-        End If
 
         CrimeCount(CrimeType) += 1
 
@@ -706,20 +701,16 @@ Public Class Citizen
         Return Name.ToString() + " of " + Residence.GetName()
     End Function
 
+    Public Function IsInAgeRange(ByVal LowerAge As Integer, ByVal UpperAge As Integer) As Boolean
+        Return (LowerAge <= Age And Age <= UpperAge)
+    End Function
+
     Public Function IsMinor() As Boolean
-        If Age < MinorAge Then
-            Return True
-        Else
-            Return False
-        End If
+        Return (Age < MinorAge)
     End Function
 
     Public Function IsElderly() As Boolean
-        If Age >= ElderAge Then
-            Return True
-        Else
-            Return False
-        End If
+        Return (Age >= ElderAge)
     End Function
 
     Public Function GetCitizenValue() As Double

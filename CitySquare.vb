@@ -402,6 +402,16 @@ Public Class CitySquare
         Return PersonCount
     End Function
 
+    Public Function GetCitizensInAgeRange(ByVal LowerAge As Integer, ByVal UpperAge As Integer) As Integer
+        Dim PersonCount As Integer = 0
+        For Each Person As Citizen In People
+            If Person.IsInAgeRange(LowerAge, UpperAge) Then
+                PersonCount += 1
+            End If
+        Next
+        Return PersonCount
+    End Function
+
     Public Function AgeView(ByVal MaxAge As Boolean) As Integer
 
         Dim AgeStat As Integer = 0
@@ -424,6 +434,29 @@ Public Class CitySquare
         Else
             Return SafeDivide(AgeStat, PersonCount)
         End If
+    End Function
+
+    Public Function BuildingsOwnedByPlayer(ByVal PlayerNumber As Integer) As Integer
+        Dim BuildingCount As Integer = 0
+        For Each theBuilding As Building In Buildings
+            If PlayerNumber = -1 Then
+                '-- Count buildings owned by the current player
+                If theBuilding.OwnerID = CurrentPlayerIndex Then
+                    BuildingCount += 1
+                End If
+            ElseIf PlayerNumber = -2 Then
+                '-- Count buildings owned by everyone not the current player
+                If theBuilding.OwnerID <> CurrentPlayerIndex Then
+                    BuildingCount += 1
+                End If
+            Else
+                '-- Count buildings owned by the input player
+                If theBuilding.OwnerID = PlayerNumber Then
+                    BuildingCount += 1
+                End If
+            End If
+        Next
+        Return BuildingCount
     End Function
 
     Public Function GetCrimes(ByVal CrimeType As Integer) As Integer
@@ -603,6 +636,18 @@ Public Class CitySquare
                     displayText = DeathCauseCounts(DeathEnum.Murder).ToString
                 Case ViewEnum.DeathResistingArrest
                     displayText = DeathCauseCounts(DeathEnum.ResistingArrest).ToString
+                Case ViewEnum.BuildingsCurrentPlayer
+                    displayText = BuildingsOwnedByPlayer(-1).ToString
+                Case ViewEnum.BuildingsOtherPlayers
+                    displayText = BuildingsOwnedByPlayer(-2).ToString
+                Case ViewEnum.BuildingsPlayer1
+                    displayText = BuildingsOwnedByPlayer(1).ToString
+                Case ViewEnum.BuildingsPlayer2
+                    displayText = BuildingsOwnedByPlayer(2).ToString
+                Case ViewEnum.BuildingsPlayer3
+                    displayText = BuildingsOwnedByPlayer(3).ToString
+                Case ViewEnum.BuildingsPlayer4
+                    displayText = BuildingsOwnedByPlayer(4).ToString
                 Case ViewEnum.Ad
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Ad).ToString
                 Case ViewEnum.Athletic

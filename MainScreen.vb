@@ -71,6 +71,8 @@ Public Class MainForm
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents ViewDropdown As ComboBox
     Friend WithEvents btnSkip As Button
+    Friend WithEvents ubVForward As Button
+    Friend WithEvents ubVBack As Button
     '--
     Dim init As Boolean = False
 
@@ -185,6 +187,8 @@ Public Class MainForm
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
         Me.btnSkip = New System.Windows.Forms.Button()
+        Me.ubVForward = New System.Windows.Forms.Button()
+        Me.ubVBack = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
@@ -372,10 +376,12 @@ Public Class MainForm
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.ubVForward)
         Me.GroupBox1.Controls.Add(Me.ViewDropdown)
+        Me.GroupBox1.Controls.Add(Me.ubVBack)
         Me.GroupBox1.Location = New System.Drawing.Point(13, 12)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(266, 74)
+        Me.GroupBox1.Size = New System.Drawing.Size(266, 89)
         Me.GroupBox1.TabIndex = 20
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Views"
@@ -383,7 +389,7 @@ Public Class MainForm
         'ViewDropdown
         '
         Me.ViewDropdown.FormattingEnabled = True
-        Me.ViewDropdown.Location = New System.Drawing.Point(6, 30)
+        Me.ViewDropdown.Location = New System.Drawing.Point(6, 25)
         Me.ViewDropdown.Name = "ViewDropdown"
         Me.ViewDropdown.Size = New System.Drawing.Size(254, 23)
         Me.ViewDropdown.TabIndex = 0
@@ -785,11 +791,29 @@ Public Class MainForm
         'btnSkip
         '
         Me.btnSkip.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.btnSkip.Location = New System.Drawing.Point(13, 121)
+        Me.btnSkip.Location = New System.Drawing.Point(13, 142)
         Me.btnSkip.Name = "btnSkip"
         Me.btnSkip.Size = New System.Drawing.Size(110, 48)
         Me.btnSkip.TabIndex = 21
         Me.btnSkip.Text = "Fast Forward"
+        '
+        'ubVForward
+        '
+        Me.ubVForward.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubVForward.Location = New System.Drawing.Point(158, 57)
+        Me.ubVForward.Name = "ubVForward"
+        Me.ubVForward.Size = New System.Drawing.Size(102, 23)
+        Me.ubVForward.TabIndex = 23
+        Me.ubVForward.Text = ">>>"
+        '
+        'ubVBack
+        '
+        Me.ubVBack.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubVBack.Location = New System.Drawing.Point(6, 57)
+        Me.ubVBack.Name = "ubVBack"
+        Me.ubVBack.Size = New System.Drawing.Size(104, 23)
+        Me.ubVBack.TabIndex = 22
+        Me.ubVBack.Text = "<<<"
         '
         'MainForm
         '
@@ -837,8 +861,6 @@ Public Class MainForm
     End Sub
 
 #End Region
-
-
 
 #Region " Player Actions "
 
@@ -907,6 +929,8 @@ Public Class MainForm
                     CycleThroughBuildings(True, True)
                 ElseIf Infotab.SelectedIndex = PersonTab Then
                     CycleThroughPersons(True, True)
+                ElseIf Infotab.SelectedIndex = ViewTab Then
+                    CycleThroughViews(True, True)
                 End If
             End If
         End If
@@ -1029,7 +1053,6 @@ Public Class MainForm
     End Function
 
 #End Region
-
 
 
 #Region " Update Info "

@@ -189,6 +189,13 @@ Module GlobalVars
         DeathMurder
         DeathResistingArrest
 
+        BuildingsCurrentPlayer
+        BuildingsOtherPlayers
+        BuildingsPlayer1
+        BuildingsPlayer2
+        BuildingsPlayer3
+        BuildingsPlayer4
+
         Ad
         Athletic
         Coffee
