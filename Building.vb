@@ -323,6 +323,13 @@ Public Class Building
     Public Overridable Function UpdateInternal() As Boolean
         Age = Age + TimeIncrement
 
+        '-- Decommission old buildings
+        Dim DecomissionOdds As Integer = SafeDivide(Age - 50, TimeIncrement)
+        If GetRandom(1, 100) < DecomissionOdds Then
+            Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " closed after " + Age + " years")
+            Return False
+        End If
+
         '-- Business Success is sum of the employee's employment scores (calculated earlier) divided by the # of jobs
         '-- Plus 1 for every 10 visitors this turn
         BusinessSuccess = SafeDivide(BusinessSuccess, Jobs) + SafeDivide(CurrentVisitors, 10.0)
@@ -350,6 +357,8 @@ Public Class Building
 #Region " Building Effects "
 
     Public Overridable Sub ConstructionEffects()
+        Age = GetRandom(0, TimeIncrement - 1)
+
         If Location Is Nothing Then
             Return
         End If

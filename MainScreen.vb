@@ -147,8 +147,11 @@ Public Class MainForm
         Me.UltraTab5 = New System.Windows.Forms.TabControl()
         Me.UltraTab6 = New System.Windows.Forms.TabControl()
         Me.TabPageGame = New System.Windows.Forms.TabPage()
+        Me.btnSkip = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.ubVForward = New System.Windows.Forms.Button()
         Me.ViewDropdown = New System.Windows.Forms.ComboBox()
+        Me.ubVBack = New System.Windows.Forms.Button()
         Me.txtHint = New System.Windows.Forms.TextBox()
         Me.ubHint = New System.Windows.Forms.Button()
         Me.ubQuit = New System.Windows.Forms.Button()
@@ -186,9 +189,6 @@ Public Class MainForm
         Me.gbP2 = New System.Windows.Forms.Panel()
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
-        Me.btnSkip = New System.Windows.Forms.Button()
-        Me.ubVForward = New System.Windows.Forms.Button()
-        Me.ubVBack = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
@@ -374,6 +374,15 @@ Public Class MainForm
         Me.TabPageGame.TabIndex = 0
         Me.TabPageGame.Text = "Game"
         '
+        'btnSkip
+        '
+        Me.btnSkip.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.btnSkip.Location = New System.Drawing.Point(13, 142)
+        Me.btnSkip.Name = "btnSkip"
+        Me.btnSkip.Size = New System.Drawing.Size(110, 48)
+        Me.btnSkip.TabIndex = 21
+        Me.btnSkip.Text = "Fast Forward"
+        '
         'GroupBox1
         '
         Me.GroupBox1.Controls.Add(Me.ubVForward)
@@ -386,6 +395,15 @@ Public Class MainForm
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Views"
         '
+        'ubVForward
+        '
+        Me.ubVForward.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubVForward.Location = New System.Drawing.Point(158, 57)
+        Me.ubVForward.Name = "ubVForward"
+        Me.ubVForward.Size = New System.Drawing.Size(102, 23)
+        Me.ubVForward.TabIndex = 23
+        Me.ubVForward.Text = ">>>"
+        '
         'ViewDropdown
         '
         Me.ViewDropdown.FormattingEnabled = True
@@ -393,6 +411,15 @@ Public Class MainForm
         Me.ViewDropdown.Name = "ViewDropdown"
         Me.ViewDropdown.Size = New System.Drawing.Size(254, 23)
         Me.ViewDropdown.TabIndex = 0
+        '
+        'ubVBack
+        '
+        Me.ubVBack.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubVBack.Location = New System.Drawing.Point(6, 57)
+        Me.ubVBack.Name = "ubVBack"
+        Me.ubVBack.Size = New System.Drawing.Size(104, 23)
+        Me.ubVBack.TabIndex = 22
+        Me.ubVBack.Text = "<<<"
         '
         'txtHint
         '
@@ -461,7 +488,7 @@ Public Class MainForm
         '
         'p2_details
         '
-        Me.p2_details.Location = New System.Drawing.Point(83, 100)
+        Me.p2_details.Location = New System.Drawing.Point(85, 100)
         Me.p2_details.Name = "p2_details"
         Me.p2_details.Size = New System.Drawing.Size(19, 22)
         Me.p2_details.TabIndex = 4
@@ -787,33 +814,6 @@ Public Class MainForm
         Me.gbP4.Name = "gbP4"
         Me.gbP4.Size = New System.Drawing.Size(110, 130)
         Me.gbP4.TabIndex = 30
-        '
-        'btnSkip
-        '
-        Me.btnSkip.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.btnSkip.Location = New System.Drawing.Point(13, 142)
-        Me.btnSkip.Name = "btnSkip"
-        Me.btnSkip.Size = New System.Drawing.Size(110, 48)
-        Me.btnSkip.TabIndex = 21
-        Me.btnSkip.Text = "Fast Forward"
-        '
-        'ubVForward
-        '
-        Me.ubVForward.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubVForward.Location = New System.Drawing.Point(158, 57)
-        Me.ubVForward.Name = "ubVForward"
-        Me.ubVForward.Size = New System.Drawing.Size(102, 23)
-        Me.ubVForward.TabIndex = 23
-        Me.ubVForward.Text = ">>>"
-        '
-        'ubVBack
-        '
-        Me.ubVBack.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubVBack.Location = New System.Drawing.Point(6, 57)
-        Me.ubVBack.Name = "ubVBack"
-        Me.ubVBack.Size = New System.Drawing.Size(104, 23)
-        Me.ubVBack.TabIndex = 22
-        Me.ubVBack.Text = "<<<"
         '
         'MainForm
         '
@@ -1319,6 +1319,7 @@ Public Class MainForm
         UpdateTextBox(txt_person, "")
         lblPerson.Text = "Displaying 0 of 0"
         CurrentView = ViewEnum.Population
+        ViewDropdown.SelectedIndex = CurrentView
 
         '-- Display new hint
         DisplayHint()
@@ -1757,7 +1758,11 @@ Public Class MainForm
     Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
         '-- Let the user decide how many turns to skip
         GameType = InfiniteGame
-        Dim SkipTurns As Integer = InputBox("Skip how many turns?", "Fast Forward")
+        Dim ReturnString As String = InputBox("Skip how many turns?", "Fast Forward")
+        If ReturnString.Length = 0 Then
+            Return
+        End If
+        Dim SkipTurns As Integer = ReturnString
         For i As Integer = 0 To SkipTurns - 1
             StartNewTurn()
         Next
