@@ -80,6 +80,7 @@ Public Class EventDiary
     Public ResistingArrestEvents As New DiaryPage("criminals died resisting arrest.")
     Public TheftEvents As New DiaryPage("citizens stole public funds.")
     Public ArsonEvents As New DiaryPage("buildings torched.")
+    Public VandalismEvents As New DiaryPage("buildings vandalized.")
     Public MurderEvents As New DiaryPage("citizens murdered.")
 
     Public TaxEvents As New DiaryPage("")
@@ -118,6 +119,7 @@ Public Class EventDiary
         CrimesPeventedEvents.ClearPage()
         ResistingArrestEvents.ClearPage()
         TheftEvents.ClearPage()
+        VandalismEvents.ClearPage()
         ArsonEvents.ClearPage()
         MurderEvents.ClearPage()
 
@@ -163,6 +165,7 @@ Public Class EventDiary
         PrintEvent(CrimesPeventedEvents.toString())
         PrintEvent(ResistingArrestEvents.toString())
         PrintEvent(TheftEvents.toString())
+        PrintEvent(VandalismEvents.toString())
         PrintEvent(ArsonEvents.toString())
         PrintEvent(MurderEvents.toString(), True)
 

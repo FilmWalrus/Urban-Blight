@@ -309,11 +309,6 @@
         For i As Integer = 0 To citizenCount - 1
             thePerson = CitizenList(i)
 
-            '-- No crime for extreme youths
-            If (thePerson.Age < 16) Then
-                Continue For
-            End If
-
             Dim CrimeFlag As Boolean = False
             Dim TheftTotal As Integer = 0
             Dim BuildingInsurance As Integer = 0
@@ -330,6 +325,25 @@
                         CurrentPlayer.TotalMoney -= TheftAmount
                         TheftTotal += TheftAmount
                         'LocalEventTheft = CountTheft.ToString() + " citizens stole a combined $" + TheftSum.ToString() + "." + ControlChars.NewLine
+                    End If
+                End If
+            End If
+
+            '-- Vandalism
+            If thePerson.WillCommitCrime(CrimeEnum.Vandalism, TotalBuildings) Then
+
+                Dim CurrentLocation As CitySquare = thePerson.Residence
+                Dim TargetBuilding As Building = CurrentLocation.Buildings(GetRandom(0, CurrentLocation.Buildings.Count - 1))
+
+                '-- Attempt to prevent this crime
+                If TargetBuilding.Jobs > 1 Then
+                    If Not PreventCrime(thePerson, CrimeEnum.Vandalism) Then
+                        If thePerson.CommitCrime(CrimeEnum.Vandalism, TargetBuilding.GetNameAndAddress()) Then
+
+                            CrimeFlag = True
+                            TargetBuilding.CutBack(1)
+                            BuildingInsurance += SafeDivide(TargetBuilding.GetBaseCost(), 40.0)
+                        End If
                     End If
                 End If
             End If

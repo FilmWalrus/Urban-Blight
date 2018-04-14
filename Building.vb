@@ -292,6 +292,13 @@ Public Class Building
         Jobs += NewJobs
     End Sub
 
+    Public Overridable Sub CutBack(ByVal JobReduction As Integer)
+        Jobs -= JobReduction
+        While Employees.Count > Jobs
+            Employees(0).Fired()
+        End While
+    End Sub
+
     Public Overridable Sub ExpandIfSuccessful()
 
         '-- Building must be at max employment

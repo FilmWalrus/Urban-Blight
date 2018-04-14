@@ -69,7 +69,7 @@ Public Class Citizen
             SetStat(StatEnum.Criminality, GetRandom(0, 10))
         Else
             '-- Newborn
-            Age = 1
+            Age = GetRandom(1, TimeIncrement)
             SetStat(StatEnum.Happiness, GetRandom(25, 35))
             SetStat(StatEnum.Health, GetRandom(40, 50))
             SetStat(StatEnum.Intelligence, GetRandom(3, 10))
@@ -571,18 +571,27 @@ Public Class Citizen
             Case CrimeEnum.ParkingTicket
                 Odds += GetStat(StatEnum.Criminality) / 10.0
             Case CrimeEnum.TrafficTicket
+                '-- Traffic accidents increase with alcohol and frequent travelling
                 Odds += GetStat(StatEnum.Criminality) / 8.0
                 Odds += GetStat(StatEnum.Drunkenness) / 4.0
                 Odds += GetStat(StatEnum.Mobility) / 9.0
             Case CrimeEnum.Robbery
+                '-- Robbery increase with unemployment
                 Odds += GetStat(StatEnum.Criminality) / 3.0
                 Odds -= GetStat(StatEnum.Employment) / 5.0
             Case CrimeEnum.Vandalism
-
+                '-- Vandalism increases when juveniles flock together
+                Odds += GetStat(StatEnum.Criminality) / 12.0
+                If IsMinor() Then
+                    Odds += Residence.GetMinors()
+                End If
             Case CrimeEnum.Arson
+                '-- Arson increases with unhappiness and claustraphobia
                 Odds += GetStat(StatEnum.Criminality) / 8.0
                 Odds -= (GetStat(StatEnum.Happiness) - 20) / 10.0
+                Odds += (Residence.getDevelopment() - 2)
             Case CrimeEnum.Murder
+                '-- Murder increases when drunk and angry?
                 Odds += GetStat(StatEnum.Criminality) / 6.5
                 Odds += GetStat(StatEnum.Drunkenness) / 9.0
             Case CrimeEnum.Unknown
@@ -593,6 +602,7 @@ Public Class Citizen
 
     Function WillCommitCrime(ByVal CrimeType As Integer, ByVal Optional OptionalData As Integer = 0) As Boolean
 
+        Dim MinCrimeAge As Integer = MinorAge
         Dim MaxRand As Integer = 100
 
         Select Case CrimeType
@@ -601,6 +611,11 @@ Public Class Citizen
                 MaxRand = 200
             Case CrimeEnum.Robbery
             Case CrimeEnum.Vandalism
+                '-- No vandalism if no buildings present.
+                MinCrimeAge = 8
+                If Residence.Buildings.Count = 0 Then
+                    Return False
+                End If
             Case CrimeEnum.Arson
                 '-- No arson if no buildings present. Arson is less likely when the player has few total buildings.
                 If Residence.Buildings.Count = 0 Or GetRandom(0, 9) > OptionalData Then
@@ -614,6 +629,11 @@ Public Class Citizen
                 End If
             Case CrimeEnum.Unknown
         End Select
+
+        '-- No crime for extreme youths
+        If Age < MinCrimeAge Then
+            Return False
+        End If
 
         If GetRandom(0, MaxRand) < GetCrimeOdds(CrimeType) Then
             Return True
@@ -643,6 +663,7 @@ Public Class Citizen
                 Diary.TheftEvents.AddEvent(GetNameAndAddress() + " stole $" + ExtraText)
             Case CrimeEnum.Vandalism
                 AddEvent("Vandalized the " + ExtraText)
+                Diary.VandalismEvents.AddEvent(Name + " vandalized the " + ExtraText)
             Case CrimeEnum.Arson
                 AddEvent("Burned down the " + ExtraText)
                 Diary.ArsonEvents.AddEvent(Name + " burned down the " + ExtraText)

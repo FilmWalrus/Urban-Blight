@@ -381,6 +381,7 @@ Public Class CitySquare
         Coastal = False
     End Sub
 
+#Region " View Data "
     Public Function GetMinors() As Integer
         Dim PersonCount As Integer = 0
         For Each Person As Citizen In People
@@ -637,6 +638,7 @@ Public Class CitySquare
 
         GridSquare.Text = displayText
     End Sub
+#End Region
 
     Public Function GetLocationText() As String
         Return "(" + (RowID + 1).ToString + "," + (ColID + 1).ToString + ")"
