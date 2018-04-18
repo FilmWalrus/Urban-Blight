@@ -3,34 +3,13 @@ Imports System.Drawing
 Module GlobalVars
 
 #Region " Global Variables "
-    '-- DEBUG MODE
-    Public DebugMode As Boolean = False
 
     '--Gameplay
-    Public PlayerCount As Integer = 1
+    Public UrbanBlight As New Main()
     Public GameType As Integer = 1
     Public GoalNumber As Integer = 0
     Public LastCityName As String = ""
-
-    '--GameTypes
-    Public Const ScoreGame As Integer = 0
-    Public Const TerritoryGame As Integer = 1
-    Public Const PopulationGame As Integer = 2
-    Public Const DevelopmentGame As Integer = 3
-    Public Const YearGame As Integer = 4
-    Public Const InfiniteGame As Integer = 5
-
-    '--Player Types
-    Public Const PlayerNone As Integer = 0
-    Public Const PlayerHuman As Integer = 1
-    Public Const PlayerAI As Integer = 2
-
-    '--Players
-    Public Players As New List(Of Player)
-    Public Const MaxPlayers As Integer = 4
-    Public CurrentPlayerIndex As Integer = 0
-
-    '--Cards (Buildings available to buy)
+    Public SortType As Integer = 0
 
     Public Const RoadCostBase As Integer = 50
     Public Const WipeCostBase As Integer = 100
@@ -41,23 +20,84 @@ Module GlobalVars
     Public Const GridHeight As Integer = 11 '-- 0 to 12
     Public GridArray(GridWidth, GridHeight) As CitySquare
 
+    '--Players
+    Public PlayerCount As Integer = 1
+    Public Players As New List(Of Player)
+    Public Const MaxPlayers As Integer = 4
+    Public CurrentPlayer As Player = Nothing
+
+    '-- Cards (Buildings available)
+    Public Cards(CardEnum.BuildingSpecialOrder) As Building
+    Public BuildingGenerator As New BuildingGen()
+
+    '--
+    Public TimeIncrement As Integer = 3
+    Public EventLimit As Integer = 5
+    Public Namer As New NameGenerator
+    Public Hinter As New HintGenerator
+    Public Diary As New EventDiary
+
+    '-- DEBUG MODE
+    Public DebugMode As Boolean = False
+
+#End Region
+
+#Region " Enums "
+
+    '--GameTypes
+    Public Enum GameEnum
+        Score
+        Territory
+        Population
+        Development
+        Year
+        Infinite
+    End Enum
+
+    '--Player Types
+    Public Enum PlayerTypeEnum
+        None
+        Human
+        AI
+    End Enum
+
+    '--Buttons (Main player actions)
+    Public Enum CardEnum
+        NoCard = -1
+        Building1
+        Building2
+        Building3
+        Building4
+        BuildingSpecialOrder
+        Road
+        Land
+        WipeBuildings
+        RoadMax
+        EndEnum
+    End Enum
+
     '--Terrain (There are 8 types)
-    Public Const TerrainPlain As Integer = 0
-    Public Const TerrainDirt As Integer = 1
-    Public Const TerrainForest As Integer = 2
-    Public Const TerrainMountain As Integer = 3
-    Public Const TerrainLake As Integer = 4
-    Public Const TerrainSwamp As Integer = 5
-    Public Const TerrainTownship As Integer = 6
-    Public Const TerrainDesert As Integer = 7
-    Public Const TerrainMax As Integer = 7
+    Public Enum TerrainEnum
+        Plain
+        Dirt
+        Forest
+        Mountain
+        Lake
+        Swamp
+        Township
+        Desert
+        EndEnum
+    End Enum
 
     '--Roads
-    Public Const RoadNone As Integer = 0
-    Public Const RoadDirt As Integer = 1
-    Public Const RoadGravel As Integer = 2
-    Public Const RoadPaved As Integer = 3
-    Public Const RoadHighway As Integer = 4
+    Public Enum RoadEnum
+        None
+        Dirt
+        Gravel
+        Paved
+        Highway
+        EndEnum
+    End Enum
 
     '-- Citizen Stats
     Public Enum StatEnum
@@ -85,8 +125,8 @@ Module GlobalVars
 
     '-- Crimes
     Public Enum CrimeEnum
-        ParkingTicket
-        TrafficTicket
+        Parking_Tickets
+        Traffic_Tickets
         Robbery
         Vandalism
         Arson
@@ -96,12 +136,120 @@ Module GlobalVars
     End Enum
 
     '--Tabs
-    Public Const EventTab As Integer = 0
-    Public Const CityTab As Integer = 1
-    Public Const BuildingTab As Integer = 2
-    Public Const PersonTab As Integer = 3
-    Public Const ViewTab As Integer = 4
+    Public Enum TabsEnum
+        Events
+        City
+        Building
+        Person
+        Game
+        EnumEnd
+    End Enum
 
+    '--Views
+    Public Enum ViewEnum
+        Population
+        Coordinates
+        Order
+        Terrain
+        Buildings
+        Roads
+
+        Jobs_Total
+        Jobs_Filled
+        Jobs_Unfilled
+        Jobs_Needed
+        Minors
+        Elderly
+
+        Employees
+        Unemployed_Adults
+        Unemployed_Total
+
+        Average_Age
+        Average_Lifespan
+        Oldest_Person
+
+        Average_Happiness
+        Average_Health
+        Average_Employment
+        Average_Intelligence
+        Average_Creativity
+        Average_Mobility
+        Average_Drunkenness
+        Average_Criminality
+
+        Average_Adult_Happiness
+        Average_Adult_Health
+        Average_Adult_Employment
+        Average_Adult_Intelligence
+        Average_Adult_Creativity
+        Average_Adult_Mobility
+        Average_Adult_Drunkenness
+        Average_Adult_Criminality
+
+        Revenue_This_Turn
+        Total_Revenue
+        Upkeep_This_Turn
+        Total_Upkeep
+
+        Parking_Tickets
+        Traffic_Tickets
+        Robberies
+        Vandalisms
+        Arsons
+        Murders
+
+        Deaths_by_Natural_Causes
+        Deaths_by_Illness
+        Deaths_by_Traffic_Accident
+        Deaths_by_Murder
+        Deaths_by_Resisting_Arrest
+
+        Buildings_owned_by_current_player
+        Buildings_owned_by_other_players
+        Buildings_owned_by_Player_1
+        Buildings_owned_by_Player_2
+        Buildings_owned_by_Player_3
+        Buildings_owned_by_Player_4
+
+        Buildings_Created
+        Buildings_Founded_by_Citizens
+        Buildings_Closed
+
+        Athletic_Buildings
+        Coffee_Buildings
+        Commerce_Buildings
+        Criminal_Buildings
+        Culture_Buildings
+        Entertainment_Buildings
+        Food_Buildings
+        Franchise_Buildings
+        Government_Buildings
+        Manufacturing_Buildings
+        Medical_Buildings
+        Monument_Buildings
+        Nature_Buildings
+        Power_Buildings
+        Science_Buildings
+        Security_Buildings
+        Transport_Buildings
+        Travel_Buildings
+
+        EndEnum
+    End Enum
+
+
+    '-- Sort Types (Add more?)
+    Public Enum CitySortEnum
+        VisitOrder
+        Population
+        Jobs
+        Culture
+    End Enum
+
+#End Region
+
+#Region " Colors "
     '--Colors
     Public Flag1 As Color = Color.Red 'Color.IndianRed
     Public Flag2 As Color = Color.DarkViolet 'Color.MediumPurple Color.DarkOrchid
@@ -121,130 +269,15 @@ Module GlobalVars
     Public ColorPlayerSelected As Color = Color.Gold 'Color.LemonChiffon
     Public ColorPlayerUnselected As Color = Color.White
     Public ColorFlip As Boolean = False
+#End Region
 
+#Region " Fonts "
     '--Fonts
     'Dim newBold As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Bold)
     'Dim newRegular As New Font(ubEnd.Font.FontFamily, ubEnd.Font.Size, FontStyle.Regular)
     Public DemoFont As New Font("Franklin Gothic Medium", 18, FontStyle.Regular)
     Public LargeFont As New Font("Franklin Gothic Medium", 14, FontStyle.Regular)
     Public RegularFont As New Font("Franklin Gothic Medium", 12, FontStyle.Regular)
-
-    '--Views
-    Public Enum ViewEnum
-        Population
-        Coordinates
-        Order
-        Terrain
-        Buildings
-        Roads
-
-        JobsTotal
-        JobsFilled
-        JobsUnfilled
-        JobsNeed
-        Minors
-        Elderly
-
-        Employees
-        UnemployedAdults
-        UnemployedTotal
-
-        AgeAvg
-        LifespanAvg
-        MaxAge
-
-        HappinessAvg
-        HealthAvg
-        EmploymentAvg
-        IntelligenceAvg
-        CreativityAvg
-        MobilityAvg
-        DrunkennessAvg
-        CriminalityAvg
-
-        HappinessAvgAdults
-        HealthAvgAdults
-        EmploymentAvgAdults
-        IntelligenceAvgAdults
-        CreativityAvgAdults
-        MobilityAvgAdults
-        DrunkennessAvgAdults
-        CriminalityAvgAdults
-
-        CurrentRevenue
-        TotalRevenue
-        CurrentUpkeep
-        TotalUpkeep
-
-        CrimeParkingTicket
-        CrimeTrafficTicket
-        CrimeRobbery
-        CrimeVandalism
-        CrimeArson
-        CrimeMurder
-
-        DeathNaturalCauses
-        DeathIllness
-        DeathTrafficAccident
-        DeathMurder
-        DeathResistingArrest
-
-        BuildingsCurrentPlayer
-        BuildingsOtherPlayers
-        BuildingsPlayer1
-        BuildingsPlayer2
-        BuildingsPlayer3
-        BuildingsPlayer4
-
-        Ad
-        Athletic
-        Coffee
-        Commerce
-        Criminal
-        Culture
-        Entertainment
-        Food
-        Franchise
-        Government
-        Manufacturing
-        Medical
-        Monument
-        Nature
-        Power
-        Science
-        Security
-        Transport
-        Travel
-
-        EndEnum
-    End Enum
-
-    '--
-    Public TimeIncrement As Integer = 3
-    Public EventLimit As Integer = 5
-    Public Namer As New NameGenerator
-    Public Hinter As New HintGenerator
-    Public Diary As New EventDiary
-
-    '-- AI Decisions
-    Public Const AIPass As Integer = -1
-    Public Const AIBuilding1 As Integer = 0
-    Public Const AIBuilding2 As Integer = 1
-    Public Const AIBuilding3 As Integer = 2
-    Public Const AIBuilding4 As Integer = 3
-    Public Const AIBuilding5 As Integer = 4
-    Public Const AIRoad As Integer = 5
-    Public Const AILand As Integer = 6
-
-    '-- Sort Types
-    Public Const VisitOrderSort As Integer = 0
-    Public Const PopSort As Integer = 1
-    Public Const JobSort As Integer = 2
-    Public Const CultureSort As Integer = 3
-    Public SortType As Integer = 0
-
-    '-- Building Stuff
-    Public BuildingGenerator As New BuildingGen()
 #End Region
 
 #Region " Global Functions "
@@ -271,75 +304,27 @@ Module GlobalVars
     End Function
 
     Public Function GetStatName(ByVal StatType As Integer) As String
-        Select Case StatType
-            Case StatEnum.Happiness
-                Return "Happiness"
-            Case StatEnum.Health
-                Return "Health"
-            Case StatEnum.Employment
-                Return "Employment"
-            Case StatEnum.Creativity
-                Return "Creativity"
-            Case StatEnum.Intelligence
-                Return "Intelligence"
-            Case StatEnum.Mobility
-                Return "Mobility"
-            Case StatEnum.Criminality
-                Return "Criminality"
-            Case StatEnum.Drunkenness
-                Return "Drunkenness"
-            Case Else
-                Return "Error"
-        End Select
+        Dim StatString As String = CType(StatType, StatEnum).ToString()
+        StatString = StatString.Replace("_", " ")
+        Return StatString
     End Function
 
     Function GetCrimeName(ByVal CrimeType As Integer) As String
-        Select Case CrimeType
-            Case CrimeEnum.ParkingTicket
-                Return "Parking Tickets"
-            Case CrimeEnum.TrafficTicket
-                Return "Traffic Tickets"
-            Case CrimeEnum.Robbery
-                Return "Robbery"
-            Case CrimeEnum.Vandalism
-                Return "Vandalism"
-            Case CrimeEnum.Arson
-                Return "Arson"
-            Case CrimeEnum.Murder
-                Return "Murder"
-            Case CrimeEnum.Unknown
-                Return "Unknown"
-            Case Else
-                Return "Error"
-        End Select
+        Dim CrimeString As String = CType(CrimeType, CrimeEnum).ToString()
+        CrimeString = CrimeString.Replace("_", " ")
+        Return CrimeString
     End Function
 
     Function GetTerrainName(ByVal terrainIndex As Integer, Optional ByVal coastNotLake As Boolean = False) As String
-        Select Case (terrainIndex)
-            Case TerrainPlain
-                Return "Plain"
-            Case TerrainDirt
-                Return "Dirt"
-            Case TerrainForest
-                Return "Forest"
-            Case TerrainMountain
-                Return "Mountain"
-            Case TerrainLake
-                If coastNotLake Then
-                    Return "Coastal"
-                Else
-                    Return "Lake"
-                End If
-            Case TerrainSwamp
-                Return "Swamp"
-            Case TerrainDesert
-                Return "Desert"
-            Case TerrainTownship
-                Return "Township"
-            Case Else
-                Return "None"
-        End Select
+        Dim TerrainString As String = CType(terrainIndex, TerrainEnum).ToString()
+        TerrainString = TerrainString.Replace("_", " ")
+        Return TerrainString
+    End Function
 
+    Public Function GetViewName(ByVal ViewType As Integer) As String
+        Dim ViewString As String = CType(ViewType, ViewEnum).ToString()
+        ViewString = ViewString.Replace("_", " ")
+        Return ViewString
     End Function
 
 #End Region

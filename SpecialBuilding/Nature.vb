@@ -61,7 +61,7 @@ Public Class AquariumBuilding
         Dim AdjLocations As List(Of CitySquare) = Location.GetTrueAdjacents()
         AdjLocations.Add(Location)
         For Each theLocation As CitySquare In AdjLocations
-            If theLocation.Terrain = TerrainLake Then
+            If theLocation.Terrain = TerrainEnum.Lake Then
                 AdjLakeCount += 1
             End If
         Next
@@ -73,7 +73,7 @@ Public Class AquariumBuilding
             If theLocation.IsOwned(Me.OwnerID) Then
                 Dim AdjLocations2 As List(Of CitySquare) = theLocation.GetTrueAdjacents()
                 For Each theLocation2 As CitySquare In AdjLocations2
-                    If theLocation2.Terrain = TerrainLake Then
+                    If theLocation2.Terrain = TerrainEnum.Lake Then
                         CoastCount += 1
                     End If
                 Next
@@ -120,7 +120,7 @@ Public Class BotanicalBuilding
         Dim AdjLocations As List(Of CitySquare) = Location.GetTrueAdjacents()
         AdjLocations.Add(Location)
         For Each theLocation As CitySquare In AdjLocations
-            If theLocation.Terrain = TerrainForest Then
+            If theLocation.Terrain = TerrainEnum.Forest Then
                 AdjForestCount += 1
             End If
         Next
@@ -130,7 +130,7 @@ Public Class BotanicalBuilding
         Dim ForestCount As Integer = 0
         For Each theLocation As CitySquare In GridArray
             If theLocation.IsOwned(Me.OwnerID) Then
-                If theLocation.Terrain = TerrainForest Then
+                If theLocation.Terrain = TerrainEnum.Forest Then
                     ForestCount += 1
                 End If
             End If
@@ -162,7 +162,7 @@ Public Class ConservationBuilding
         MyBase.ConstructionEffects()
 
         '-- Change the location terrain type to forest
-        Location.SetTerrain(TerrainForest)
+        Location.SetTerrain(TerrainEnum.Forest)
     End Sub
 End Class
 
@@ -176,7 +176,7 @@ Public Class FarmBuilding
     Public Overrides Sub ConstructionEffects()
         MyBase.ConstructionEffects()
 
-        If Location.Terrain = TerrainDirt Then '-- Expand at a rate of 2 if on dirt
+        If Location.Terrain = TerrainEnum.Dirt Then '-- Expand at a rate of 2 if on dirt
             ExpandRate += 1
         End If
 
@@ -220,7 +220,7 @@ Public Class RanchBuilding
     Public Overrides Sub ConstructionEffects()
         MyBase.ConstructionEffects()
 
-        If Location.Terrain = TerrainPlain Then '-- Expand at a rate of 2 if on plains
+        If Location.Terrain = TerrainEnum.Plain Then '-- Expand at a rate of 2 if on plains
             ExpandRate += 1
         End If
 

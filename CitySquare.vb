@@ -18,18 +18,21 @@ Public Class CitySquare
     Public GridSquare As LabelWithTextBorder = Nothing
 
     '-- Terrain
-    Public Terrain As Integer = TerrainPlain
+    Public Terrain As Integer = TerrainEnum.Plain
     Public Coastal As Boolean = False
 
     '-- Residents
     Public People As New List(Of Citizen)
 
     '-- Roads
-    Public Transportation As Integer = RoadNone
+    Public Transportation As Integer = RoadEnum.None
 
     '-- Buildings
     Public Buildings As New List(Of Building)
     Public NeighborBuildings As New List(Of Building)
+    Public BuildingHistory As Integer = 0
+    Public FoundedHistory As Integer = 0
+    Public ClosedHistory As Integer = 0
 
     '-- Mortality Info
     Public DeathAges As New List(Of Integer)
@@ -62,46 +65,46 @@ Public Class CitySquare
         '-- Randomly determine the terrain type
         Dim tempNum As Integer = GetRandom(1, 100)
         If tempNum <= 10 Then
-            Terrain = TerrainForest
+            Terrain = TerrainEnum.Forest
         ElseIf tempNum <= 20 Then
-            Terrain = TerrainMountain
+            Terrain = TerrainEnum.Mountain
         ElseIf tempNum <= 27 Then
-            Terrain = TerrainDirt
+            Terrain = TerrainEnum.Dirt
         ElseIf tempNum <= 32 Then
-            Terrain = TerrainDesert
+            Terrain = TerrainEnum.Desert
         ElseIf tempNum <= 38 Then
-            Terrain = TerrainSwamp
+            Terrain = TerrainEnum.Swamp
         ElseIf tempNum <= 44 Then
-            Terrain = TerrainTownship
+            Terrain = TerrainEnum.Township
         ElseIf tempNum <= 52 Then
-            Terrain = TerrainLake
+            Terrain = TerrainEnum.Lake
         Else
-            Terrain = TerrainPlain
+            Terrain = TerrainEnum.Plain
         End If
 
         '-- Create the GUI label/button that represents this citySquare
         GridSquare = New LabelWithTextBorder
         UpdateTerrain()
         'Select Case (Terrain)
-        '    Case TerrainPlain
+        '    Case TerrainEnum.Plain
         '        GridSquare.BackColor = ColorPlain
-        '    Case TerrainDirt
+        '    Case TerrainEnum.Dirt
         '        GridSquare.BackColor = ColorPlain
         '        'GridSquare.BackColor = ColorDirt
-        '    Case TerrainForest
+        '    Case TerrainEnum.Forest
         '        GridSquare.BackColor = ColorPlain
         '        'GridSquare.BackColor = ColorForest
-        '    Case TerrainMountain
+        '    Case TerrainEnum.Mountain
         '        GridSquare.BackColor = ColorPlain
         '        'GridSquare.BackColor = ColorMountain
-        '    Case TerrainLake
+        '    Case TerrainEnum.Lake
         '        GridSquare.BackColor = ColorOcean
-        '    Case TerrainSwamp
+        '    Case TerrainEnum.Swamp
         '        GridSquare.BackColor = ColorSwamp
-        '    Case TerrainTownship
+        '    Case TerrainEnum.Township
         '        GridSquare.BackColor = ColorPlain
         '        'GridSquare.BackColor = ColorTownship
-        '    Case TerrainDesert
+        '    Case TerrainEnum.Desert
         '        GridSquare.BackColor = ColorPlain
         '        'GridSquare.BackColor = ColorDesert
         'End Select
@@ -133,45 +136,45 @@ Public Class CitySquare
         Dim randImageIndex As Integer = GetRandom(1, 2)
 
         Select Case Terrain
-            Case TerrainPlain
+            Case TerrainEnum.Plain
                 If GetRandom(1, 20) = 1 Then
                     GridSquare.Image = My.Resources.ResourceManager.GetObject("Flowers1")
                 Else
                     GridSquare.Image = Nothing
                 End If
-            Case TerrainForest
+            Case TerrainEnum.Forest
                 GridSquare.Image = My.Resources.ResourceManager.GetObject("Forest" + GetRandom(1, 3).ToString)
-            Case TerrainMountain
+            Case TerrainEnum.Mountain
                 GridSquare.Image = My.Resources.ResourceManager.GetObject("Mountain" + GetRandom(1, 3).ToString)
-            Case TerrainLake
+            Case TerrainEnum.Lake
                 GridSquare.Image = My.Resources.ResourceManager.GetObject("Lake1")
-            Case TerrainTownship
+            Case TerrainEnum.Township
                 GridSquare.Image = My.Resources.ResourceManager.GetObject("Township" + GetRandom(1, 3).ToString)
-            Case TerrainDesert
+            Case TerrainEnum.Desert
                 GridSquare.Image = My.Resources.ResourceManager.GetObject("Desert1")
-            Case TerrainDirt
+            Case TerrainEnum.Dirt
                 GridSquare.Image = My.Resources.ResourceManager.GetObject("Dirt" + GetRandom(1, 3).ToString)
-            Case TerrainSwamp
+            Case TerrainEnum.Swamp
                 GridSquare.Image = My.Resources.ResourceManager.GetObject("Swamp" + GetRandom(1, 2).ToString)
         End Select
 
         '-- Old graphics: Just color, no image
         'Select Case (Terrain)
-        '    Case TerrainPlain
+        '    Case TerrainEnum.Plain
         '        GridSquare.BackColor = ColorPlain
-        '    Case TerrainDirt
+        '    Case TerrainEnum.Dirt
         '        GridSquare.BackColor = ColorDirt
-        '    Case TerrainForest
+        '    Case TerrainEnum.Forest
         '        GridSquare.BackColor = ColorForest
-        '    Case TerrainMountain
+        '    Case TerrainEnum.Mountain
         '        GridSquare.BackColor = ColorMountain
-        '    Case TerrainLake
+        '    Case TerrainEnum.Lake
         '        GridSquare.BackColor = ColorOcean
-        '    Case TerrainSwamp
+        '    Case TerrainEnum.Swamp
         '        GridSquare.BackColor = ColorSwamp
-        '    Case TerrainTownship
+        '    Case TerrainEnum.Township
         '        GridSquare.BackColor = ColorTownship
-        '    Case TerrainDesert
+        '    Case TerrainEnum.Desert
         '        GridSquare.BackColor = ColorDesert
         'End Select
     End Sub
@@ -342,12 +345,18 @@ Public Class CitySquare
         NewBuilding.OwnerID = PlayerIndex
         Buildings.Add(NewBuilding)
         NewBuilding.ConstructionEffects()
+
+        '-- Record the history of how many buildings were built here
+        BuildingHistory += 1
+        If NewBuilding.Founder IsNot Nothing Then
+            FoundedHistory += 1
+        End If
     End Sub
 
     Public Sub AddRoad()
         Transportation = Transportation + 1
-        If Transportation > RoadHighway Then
-            Transportation = RoadHighway
+        If Transportation > RoadEnum.Highway Then
+            Transportation = RoadEnum.Highway
         End If
     End Sub
 
@@ -364,7 +373,7 @@ Public Class CitySquare
     Sub UpdateCoastline()
 
         '-- Lakes can't be coastal
-        If Terrain = TerrainLake Then
+        If Terrain = TerrainEnum.Lake Then
             Coastal = False
             Return
         End If
@@ -373,7 +382,7 @@ Public Class CitySquare
         Dim adjacentList As List(Of CitySquare) = GetTrueAdjacents()
         For i As Integer = 0 To adjacentList.Count - 1
             Dim neighborLocation As CitySquare = adjacentList(i)
-            If neighborLocation.Terrain = TerrainLake Then
+            If neighborLocation.Terrain = TerrainEnum.Lake Then
                 Coastal = True
                 Return
             End If
@@ -441,12 +450,12 @@ Public Class CitySquare
         For Each theBuilding As Building In Buildings
             If PlayerNumber = -1 Then
                 '-- Count buildings owned by the current player
-                If theBuilding.OwnerID = CurrentPlayerIndex Then
+                If theBuilding.OwnerID = CurrentPlayer.ID Then
                     BuildingCount += 1
                 End If
             ElseIf PlayerNumber = -2 Then
                 '-- Count buildings owned by everyone not the current player
-                If theBuilding.OwnerID <> CurrentPlayerIndex Then
+                If theBuilding.OwnerID <> CurrentPlayer.ID Then
                     BuildingCount += 1
                 End If
             Else
@@ -487,13 +496,13 @@ Public Class CitySquare
 
         For Each CurrentBuilding As Building In Buildings
             Select Case ViewType
-                Case ViewEnum.CurrentRevenue
+                Case ViewEnum.Revenue_This_Turn
                     Sum += CurrentBuilding.CurrentRevenue
-                Case ViewEnum.TotalRevenue
+                Case ViewEnum.Total_Revenue
                     Sum += CurrentBuilding.TotalRevenue
-                Case ViewEnum.CurrentUpkeep
+                Case ViewEnum.Upkeep_This_Turn
                     Sum += CurrentBuilding.CurrentUpkeep
-                Case ViewEnum.TotalUpkeep
+                Case ViewEnum.Total_Upkeep
                     Sum += CurrentBuilding.TotalUpkeep
             End Select
         Next
@@ -521,15 +530,15 @@ Public Class CitySquare
         Return AvgStat
     End Function
 
-    Public Sub UpdateGridSquare(ByVal CurrentView As Integer)
+    Public Sub UpdateGridSquare(ByVal SelectedView As Integer)
 
         Dim displayText As String = ""
-        If IsOwned() Or CurrentView = ViewEnum.Coordinates Then
+        If IsOwned() Or SelectedView = ViewEnum.Coordinates Then
             If OwnerID >= 0 Then
                 GridSquare.BackColor = Players(OwnerID).Flag
             End If
             GridSquare.Font = LargeFont
-            Select Case (CurrentView)
+            Select Case (SelectedView)
                 Case ViewEnum.Population
                     displayText = getPopulation().ToString
                 Case ViewEnum.Minors
@@ -548,135 +557,148 @@ Public Class CitySquare
                     displayText = GetTerrainName(Terrain)
                 Case ViewEnum.Order
                     displayText = OrderAcquired.ToString()
-                Case ViewEnum.AgeAvg
+
+                Case ViewEnum.Average_Age
                     displayText = AgeView(False).ToString()
-                Case ViewEnum.MaxAge
+                Case ViewEnum.Oldest_Person
                     displayText = AgeView(True).ToString()
-                Case ViewEnum.LifespanAvg
+                Case ViewEnum.Average_Lifespan
                     displayText = GetAverageLifespan().ToString()
-                Case ViewEnum.HappinessAvg
+
+                Case ViewEnum.Average_Happiness
                     displayText = ComputeAverage(StatEnum.Happiness, False).ToString()
-                Case ViewEnum.HealthAvg
+                Case ViewEnum.Average_Health
                     displayText = ComputeAverage(StatEnum.Health, False).ToString()
-                Case ViewEnum.EmploymentAvg
+                Case ViewEnum.Average_Employment
                     displayText = ComputeAverage(StatEnum.Employment, False).ToString()
-                Case ViewEnum.IntelligenceAvg
+                Case ViewEnum.Average_Intelligence
                     displayText = ComputeAverage(StatEnum.Intelligence, False).ToString()
-                Case ViewEnum.CreativityAvg
+                Case ViewEnum.Average_Creativity
                     displayText = ComputeAverage(StatEnum.Creativity, False).ToString()
-                Case ViewEnum.MobilityAvg
+                Case ViewEnum.Average_Mobility
                     displayText = ComputeAverage(StatEnum.Mobility, False).ToString()
-                Case ViewEnum.DrunkennessAvg
+                Case ViewEnum.Average_Drunkenness
                     displayText = ComputeAverage(StatEnum.Drunkenness, False).ToString()
-                Case ViewEnum.CriminalityAvg
+                Case ViewEnum.Average_Criminality
                     displayText = ComputeAverage(StatEnum.Criminality, False).ToString()
-                Case ViewEnum.HappinessAvgAdults
+                Case ViewEnum.Average_Adult_Happiness
                     displayText = ComputeAverage(StatEnum.Happiness, True).ToString()
-                Case ViewEnum.HealthAvgAdults
+                Case ViewEnum.Average_Adult_Health
                     displayText = ComputeAverage(StatEnum.Health, True).ToString()
-                Case ViewEnum.EmploymentAvgAdults
+                Case ViewEnum.Average_Adult_Employment
                     displayText = ComputeAverage(StatEnum.Employment, True).ToString()
-                Case ViewEnum.IntelligenceAvgAdults
+                Case ViewEnum.Average_Adult_Intelligence
                     displayText = ComputeAverage(StatEnum.Intelligence, True).ToString()
-                Case ViewEnum.CreativityAvgAdults
+                Case ViewEnum.Average_Adult_Creativity
                     displayText = ComputeAverage(StatEnum.Creativity, True).ToString()
-                Case ViewEnum.MobilityAvgAdults
+                Case ViewEnum.Average_Adult_Mobility
                     displayText = ComputeAverage(StatEnum.Mobility, True).ToString()
-                Case ViewEnum.DrunkennessAvgAdults
+                Case ViewEnum.Average_Adult_Drunkenness
                     displayText = ComputeAverage(StatEnum.Drunkenness, True).ToString()
-                Case ViewEnum.CriminalityAvgAdults
+                Case ViewEnum.Average_Adult_Criminality
                     displayText = ComputeAverage(StatEnum.Criminality, True).ToString()
-                Case ViewEnum.JobsFilled
+
+                Case ViewEnum.Jobs_Filled
                     GridSquare.Font = RegularFont
                     displayText = getJobsFilled().ToString + "/" + getJobsTotal.ToString
-                Case ViewEnum.JobsUnfilled
+                Case ViewEnum.Jobs_Unfilled
                     GridSquare.Font = RegularFont
                     displayText = getJobsEmpty().ToString + "/" + getJobsTotal.ToString
-                Case ViewEnum.JobsTotal
+                Case ViewEnum.Jobs_Total
                     displayText = getJobsTotal().ToString
-                Case ViewEnum.JobsNeed
+                Case ViewEnum.Jobs_Needed
                     displayText = (getUnemployment(True) - getJobsEmpty()).ToString
                 Case ViewEnum.Employees
                     displayText = getEmployment().ToString
-                Case ViewEnum.UnemployedTotal
+                Case ViewEnum.Unemployed_Total
                     displayText = getUnemployment(False).ToString
-                Case ViewEnum.UnemployedAdults
+                Case ViewEnum.Unemployed_Adults
                     displayText = getUnemployment(True).ToString
-                Case ViewEnum.CurrentRevenue
+
+                Case ViewEnum.Revenue_This_Turn
                     GridSquare.Font = RegularFont
-                    displayText = SumBuildingView(CurrentView).ToString
-                Case ViewEnum.TotalRevenue
+                    displayText = SumBuildingView(SelectedView).ToString
+                Case ViewEnum.Total_Revenue
                     GridSquare.Font = RegularFont
-                    displayText = SumBuildingView(CurrentView).ToString
-                Case ViewEnum.CurrentUpkeep
+                    displayText = SumBuildingView(SelectedView).ToString
+                Case ViewEnum.Upkeep_This_Turn
                     GridSquare.Font = RegularFont
-                    displayText = SumBuildingView(CurrentView).ToString
-                Case ViewEnum.TotalUpkeep
+                    displayText = SumBuildingView(SelectedView).ToString
+                Case ViewEnum.Total_Upkeep
                     GridSquare.Font = RegularFont
-                    displayText = SumBuildingView(CurrentView).ToString
-                Case ViewEnum.CrimeParkingTicket
-                    displayText = GetCrimes(CrimeEnum.ParkingTicket).ToString
-                Case ViewEnum.CrimeTrafficTicket
-                    displayText = GetCrimes(CrimeEnum.TrafficTicket).ToString
-                Case ViewEnum.CrimeRobbery
+                    displayText = SumBuildingView(SelectedView).ToString
+
+                Case ViewEnum.Parking_Tickets
+                    displayText = GetCrimes(CrimeEnum.Parking_Tickets).ToString
+                Case ViewEnum.Traffic_Tickets
+                    displayText = GetCrimes(CrimeEnum.Traffic_Tickets).ToString
+                Case ViewEnum.Robberies
                     displayText = GetCrimes(CrimeEnum.Robbery).ToString
-                Case ViewEnum.CrimeVandalism
+                Case ViewEnum.Vandalisms
                     displayText = GetCrimes(CrimeEnum.Vandalism).ToString
-                Case ViewEnum.CrimeArson
+                Case ViewEnum.Arsons
                     displayText = GetCrimes(CrimeEnum.Arson).ToString
-                Case ViewEnum.CrimeMurder
+                Case ViewEnum.Murders
                     displayText = GetCrimes(CrimeEnum.Murder).ToString
-                Case ViewEnum.DeathNaturalCauses
+
+                Case ViewEnum.Deaths_by_Natural_Causes
                     displayText = DeathCauseCounts(DeathEnum.NaturalCauses).ToString
-                Case ViewEnum.DeathIllness
+                Case ViewEnum.Deaths_by_Illness
                     displayText = DeathCauseCounts(DeathEnum.Illness).ToString
-                Case ViewEnum.DeathTrafficAccident
+                Case ViewEnum.Deaths_by_Traffic_Accident
                     displayText = DeathCauseCounts(DeathEnum.TrafficAccident).ToString
-                Case ViewEnum.DeathMurder
+                Case ViewEnum.Deaths_by_Murder
                     displayText = DeathCauseCounts(DeathEnum.Murder).ToString
-                Case ViewEnum.DeathResistingArrest
+                Case ViewEnum.Deaths_by_Resisting_Arrest
                     displayText = DeathCauseCounts(DeathEnum.ResistingArrest).ToString
-                Case ViewEnum.BuildingsCurrentPlayer
+
+                Case ViewEnum.Buildings_owned_by_current_player
                     displayText = BuildingsOwnedByPlayer(-1).ToString
-                Case ViewEnum.BuildingsOtherPlayers
+                Case ViewEnum.Buildings_owned_by_other_players
                     displayText = BuildingsOwnedByPlayer(-2).ToString
-                Case ViewEnum.BuildingsPlayer1
+                Case ViewEnum.Buildings_owned_by_Player_1
                     displayText = BuildingsOwnedByPlayer(1).ToString
-                Case ViewEnum.BuildingsPlayer2
+                Case ViewEnum.Buildings_owned_by_Player_2
                     displayText = BuildingsOwnedByPlayer(2).ToString
-                Case ViewEnum.BuildingsPlayer3
+                Case ViewEnum.Buildings_owned_by_Player_3
                     displayText = BuildingsOwnedByPlayer(3).ToString
-                Case ViewEnum.BuildingsPlayer4
+                Case ViewEnum.Buildings_owned_by_Player_4
                     displayText = BuildingsOwnedByPlayer(4).ToString
-                Case ViewEnum.Ad
-                    displayText = CountBuildingsByTag(BuildingGen.TagEnum.Ad).ToString
-                Case ViewEnum.Athletic
+
+                Case ViewEnum.Buildings_Created
+                    displayText = BuildingHistory.ToString
+                Case ViewEnum.Buildings_Founded_by_Citizens
+                    displayText = FoundedHistory.ToString
+                Case ViewEnum.Buildings_Closed
+                    displayText = ClosedHistory.ToString
+
+                Case ViewEnum.Athletic_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Athletic).ToString
-                Case ViewEnum.Coffee
+                Case ViewEnum.Coffee_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Coffee).ToString
-                Case ViewEnum.Commerce
+                Case ViewEnum.Commerce_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Commerce).ToString
-                Case ViewEnum.Criminal
+                Case ViewEnum.Criminal_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Criminal).ToString
-                Case ViewEnum.Food
+                Case ViewEnum.Food_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Food).ToString
-                Case ViewEnum.Franchise
+                Case ViewEnum.Franchise_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Franchise).ToString
-                Case ViewEnum.Government
+                Case ViewEnum.Government_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Government).ToString
-                Case ViewEnum.Manufacturing
+                Case ViewEnum.Manufacturing_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Manufacturing).ToString
-                Case ViewEnum.Medical
+                Case ViewEnum.Medical_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Medical).ToString
-                Case ViewEnum.Monument
+                Case ViewEnum.Monument_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Monument).ToString
-                Case ViewEnum.Nature
+                Case ViewEnum.Nature_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Nature).ToString
-                Case ViewEnum.Science
+                Case ViewEnum.Science_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Science).ToString
-                Case ViewEnum.Security
+                Case ViewEnum.Security_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Security).ToString
-                Case ViewEnum.Transport
+                Case ViewEnum.Transport_Buildings
                     displayText = CountBuildingsByTag(BuildingGen.TagEnum.Transportation).ToString
             End Select
         End If
@@ -701,21 +723,21 @@ Public Class CitySquare
 
         CityString += GetTerrainName(Terrain)
         Select Case (Terrain)
-            Case TerrainPlain
+            Case TerrainEnum.Plain
                 TerrainString = ControlChars.NewLine + "Plains are the default land type. They have no special effects."
-            Case TerrainDirt
+            Case TerrainEnum.Dirt
                 TerrainString = ControlChars.NewLine + "Dirt makes for a mind-numbingly boring place to live, but it's low upkeep and you start with free roads."
-            Case TerrainForest
+            Case TerrainEnum.Forest
                 TerrainString = ControlChars.NewLine + "The natural beauty and fresh air of forests improve the health and happiness of local citizens."
-            Case TerrainMountain
+            Case TerrainEnum.Mountain
                 TerrainString = ControlChars.NewLine + "Mountains make travel difficult but provide inspiring views. The ready access to construction material mean a free random building."
-            Case TerrainLake
+            Case TerrainEnum.Lake
                 TerrainString = ControlChars.NewLine + "Swimming and sailing are fun, but lakes can't be built on. Adjacent coastal regions get a boost to happiness."
-            Case TerrainSwamp
+            Case TerrainEnum.Swamp
                 TerrainString = ControlChars.NewLine + "Swamps are free to buy, but a bit expensive to maintain. The foul-smelling, mosquito-ridden bogs aren't great for your health."
-            Case TerrainDesert
+            Case TerrainEnum.Desert
                 TerrainString = ControlChars.NewLine + "You can drive as fast as you want in the empty, wind-swept desert. And you get a 50% rebate on the land, but it's hard to convince anyone to move in."
-            Case TerrainTownship
+            Case TerrainEnum.Township
                 TerrainString = ControlChars.NewLine + "Townships provide free population when you incorporate them, but they also take a cut of the taxes in that location."
         End Select
         If Coastal Then
@@ -733,15 +755,15 @@ Public Class CitySquare
             CityString += "Jobs: " + getJobsFilled().ToString + "/" + getJobsTotal().ToString + ControlChars.NewLine
             CityString += "Transportation: "
             Select Case (Transportation)
-                Case RoadNone
+                Case RoadEnum.None
                     CityString += "None" + ControlChars.NewLine
-                Case RoadDirt
+                Case RoadEnum.Dirt
                     CityString += "Dirt" + ControlChars.NewLine
-                Case RoadGravel
+                Case RoadEnum.Gravel
                     CityString += "Gravel" + ControlChars.NewLine
-                Case RoadPaved
+                Case RoadEnum.Paved
                     CityString += "Paved" + ControlChars.NewLine
-                Case RoadHighway
+                Case RoadEnum.Highway
                     CityString += "Highway" + ControlChars.NewLine
             End Select
             '--Building details
@@ -767,15 +789,15 @@ Public Class CitySquare
         Dim city1, city2 As Integer
         Dim temp As CitySquare = CType(obj, CitySquare)
 
-        If SortType = VisitOrderSort Then
+        If SortType = CitySortEnum.VisitOrder Then
             '-- Sort the locations in the order visited
             city1 = getVisitOrder()
             city2 = temp.getVisitOrder()
-        ElseIf SortType = PopSort Then
+        ElseIf SortType = CitySortEnum.Population Then
             '-- Always head for least populated area (choose randomly if tied)
             city1 = getPopulation()
             city2 = temp.getPopulation()
-        ElseIf SortType = CultureSort Then
+        ElseIf SortType = CitySortEnum.Culture Then
             '-- Head for most developed region (choose randomly if tied)
             city1 = -getCulture()
             city2 = -temp.getCulture()

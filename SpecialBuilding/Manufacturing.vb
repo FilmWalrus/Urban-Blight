@@ -12,15 +12,15 @@ Public Class ManufacturingBuilding
 
         '-- Double the number of manufacturing jobs if on the correct terrain type.
         Dim JobMultiplier As Integer = 1
-        If Type = BuildingGen.BuildingEnum.Cartel And Location.Terrain = TerrainDirt Then
+        If Type = BuildingGen.BuildingEnum.Cartel And Location.Terrain = TerrainEnum.Dirt Then
             JobMultiplier *= 2
         ElseIf Type = BuildingGen.BuildingEnum.Fishery And Location.Coastal Then
             JobMultiplier *= 2
-        ElseIf Type = BuildingGen.BuildingEnum.Lumber_Mill And Location.Terrain = TerrainForest Then
+        ElseIf Type = BuildingGen.BuildingEnum.Lumber_Mill And Location.Terrain = TerrainEnum.Forest Then
             JobMultiplier *= 2
-        ElseIf Type = BuildingGen.BuildingEnum.Steel_Mill And Location.Terrain = TerrainMountain Then
+        ElseIf Type = BuildingGen.BuildingEnum.Steel_Mill And Location.Terrain = TerrainEnum.Mountain Then
             JobMultiplier *= 2
-        ElseIf Type = BuildingGen.BuildingEnum.Textile_Mill And Location.Terrain = TerrainPlain Then
+        ElseIf Type = BuildingGen.BuildingEnum.Textile_Mill And Location.Terrain = TerrainEnum.Plain Then
             JobMultiplier *= 2
         End If
 

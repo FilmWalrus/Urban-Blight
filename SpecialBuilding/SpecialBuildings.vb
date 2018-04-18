@@ -236,7 +236,7 @@ Public Class SkiResortBuilding
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
         If Location IsNot Nothing Then
-            If Location.Terrain <> TerrainMountain Then
+            If Location.Terrain <> TerrainEnum.Mountain Then
                 Return 0
             End If
         End If
@@ -245,14 +245,14 @@ Public Class SkiResortBuilding
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
         '-- Only affect citizens if built on mountain
-        If Location.Terrain = TerrainMountain Then
+        If Location.Terrain = TerrainEnum.Mountain Then
             MyBase.AffectPerson(thePerson)
         End If
     End Sub
 
     Public Overrides Function WillHire(ByRef Candidate As Citizen) As Boolean
         '-- Only hire citizens if built on mountain
-        If Location.Terrain = TerrainMountain Then
+        If Location.Terrain = TerrainEnum.Mountain Then
             Return MyBase.WillHire(Candidate)
         Else
             Return False

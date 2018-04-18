@@ -242,7 +242,7 @@
         End If
 
         Select Case TerrainType
-            Case TerrainPlain
+            Case TerrainEnum.Plain
                 If PreferenceList.Contains(AIType.AI_ProPlain) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiPlain) Then
@@ -250,7 +250,7 @@
                 Else
                     Return 1.0
                 End If
-            Case TerrainDirt
+            Case TerrainEnum.Dirt
                 If PreferenceList.Contains(AIType.AI_ProDirt) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiDirt) Then
@@ -258,7 +258,7 @@
                 Else
                     Return 1.0
                 End If
-            Case TerrainForest
+            Case TerrainEnum.Forest
                 If PreferenceList.Contains(AIType.AI_ProForest) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiForest) Then
@@ -266,7 +266,7 @@
                 Else
                     Return 1.0
                 End If
-            Case TerrainMountain
+            Case TerrainEnum.Mountain
                 If PreferenceList.Contains(AIType.AI_ProMountain) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiMountain) Then
@@ -274,7 +274,7 @@
                 Else
                     Return 1.0
                 End If
-            Case TerrainLake
+            Case TerrainEnum.Lake
                 If PreferenceList.Contains(AIType.AI_ProCoast) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiCoast) Then
@@ -282,7 +282,7 @@
                 Else
                     Return 1.0
                 End If
-            Case TerrainSwamp
+            Case TerrainEnum.Swamp
                 If PreferenceList.Contains(AIType.AI_ProSwamp) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiSwamp) Then
@@ -290,7 +290,7 @@
                 Else
                     Return 1.0
                 End If
-            Case TerrainDesert
+            Case TerrainEnum.Desert
                 If PreferenceList.Contains(AIType.AI_ProDesert) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiDesert) Then
@@ -298,7 +298,7 @@
                 Else
                     Return 1.0
                 End If
-            Case TerrainTownship
+            Case TerrainEnum.Township
                 If PreferenceList.Contains(AIType.AI_ProTownship) Then
                     Return TerrainLiked
                 ElseIf PreferenceList.Contains(AIType.AI_AntiTownship) Then

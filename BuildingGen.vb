@@ -19,6 +19,7 @@ Public Class BuildingGen
         Black_Market
         Botanical_Garden
         Campsite
+        Cancer_Hospital
         Cartel
         Casino
         Church
@@ -39,6 +40,7 @@ Public Class BuildingGen
         Department_Store
         Detective_Agency
         Embassy
+        Emergency_Hospital
         Exurb
         Factory
         Farm
@@ -47,18 +49,13 @@ Public Class BuildingGen
         Fishery
         Freeway
         Gas_Station
+        Geriatric_Hospital
         Golf_Course
         Government_Bureau
         Graveyard
         Grocery_Store
         Gym
         Harbor
-        Hospital_Cancer
-        Hospital_Emergency
-        Hospital_Geriatric
-        Hospital_Maternity
-        Hospital_Pediatric
-        Hospital_Research
         Hotel
         Laboratory
         Land_Developer
@@ -68,6 +65,7 @@ Public Class BuildingGen
         Lumber_Mill
         Mall
         Mass_Transit
+        Maternity_Hospital
         Mine
         Monument
         Military_Base
@@ -78,6 +76,7 @@ Public Class BuildingGen
         Park
         Parking_Garage
         Parking_Lot
+        Pediatric_Hospital
         Pharmacy
         Police_Station
         Polling_Place
@@ -87,6 +86,7 @@ Public Class BuildingGen
         Ranch
         Refugee_Camp
         Rehab_Clinic
+        Research_Hospital
         Restaurant
         Retirement_Home
         Safe_House
@@ -116,7 +116,6 @@ Public Class BuildingGen
     End Enum
 
     Public Enum TagEnum
-        Ad
         Athletic
         Coffee
         Commerce
@@ -138,224 +137,15 @@ Public Class BuildingGen
 #Region " Functions "
 
     Public Function GetName(ByVal bType As Integer) As String
-        Select Case bType
-            Case BuildingEnum.Ad_Agency
-                Return "Ad Agency"
-            Case BuildingEnum.Activism_Organization
-                Return "Activism Organization"
-            Case BuildingEnum.Airport
-                Return "Airport"
-            Case BuildingEnum.Ambulance_Service
-                Return "Ambulance Service"
-            Case BuildingEnum.Amusement_Park
-                Return "Amusement Park"
-            Case BuildingEnum.Apartments
-                Return "Apartments"
-            Case BuildingEnum.Aquarium
-                Return "Aquarium"
-            Case BuildingEnum.Architecture_Firm
-                Return "Architecture Firm"
-            Case BuildingEnum.Art_Gallery
-                Return "Art Gallery"
-            Case BuildingEnum.Bank
-                Return "Bank"
-            Case BuildingEnum.Bar
-                Return "Bar"
-            Case BuildingEnum.Black_Market
-                Return "Black Market"
-            Case BuildingEnum.Botanical_Garden
-                Return "Botanical Garden"
-            Case BuildingEnum.Campsite
-                Return "Campsite"
-            Case BuildingEnum.Cartel
-                Return "Cartel"
-            Case BuildingEnum.Casino
-                Return "Casino"
-            Case BuildingEnum.Church
-                Return "Church"
-            Case BuildingEnum.City_Wall
-                Return "City Wall"
-            Case BuildingEnum.Civic_Center
-                Return "Civic Center"
-            Case BuildingEnum.Coffee_Shop
-                Return "Coffee Shop"
-            Case BuildingEnum.Community_Center
-                Return "Community Center"
-            Case BuildingEnum.Concert_Venue
-                Return "Concert Venue"
-            Case BuildingEnum.Conglomerate
-                Return "Conglomerate"
-            Case BuildingEnum.Conservation_Area
-                Return "Conservation Area"
-            Case BuildingEnum.Construction_Site
-                Return "Construction Site"
-            Case BuildingEnum.Correctional_Facility
-                Return "Correctional Facility"
-            Case BuildingEnum.Courthouse
-                Return "Courthouse"
-            Case BuildingEnum.Crime_Ring
-                Return "Crime Ring"
-            Case BuildingEnum.Cult
-                Return "Cult"
-            Case BuildingEnum.Customs_House
-                Return "Customs House"
-            Case BuildingEnum.Daycare_Center
-                Return "Daycare Center"
-            Case BuildingEnum.Department_Store
-                Return "Department Store"
-            Case BuildingEnum.Detective_Agency
-                Return "Detective Agency"
-            Case BuildingEnum.Embassy
-                Return "Embassy"
-            Case BuildingEnum.Exurb
-                Return "Exurb"
-            Case BuildingEnum.Factory
-                Return "Factory"
-            Case BuildingEnum.Farm
-                Return "Farm"
-            Case BuildingEnum.Fast_Food_Chain
-                Return "Fast Food Chain"
-            Case BuildingEnum.Fire_Station
-                Return "Fire Station"
-            Case BuildingEnum.Fishery
-                Return "Fishery"
-            Case BuildingEnum.Freeway
-                Return "Freeway"
-            Case BuildingEnum.Gas_Station
-                Return "Gas Station"
-            Case BuildingEnum.Golf_Course
-                Return "Golf Course"
-            Case BuildingEnum.Government_Bureau
-                Return "Government Bureau"
-            Case BuildingEnum.Graveyard
-                Return "Graveyard"
-            Case BuildingEnum.Grocery_Store
-                Return "Grocery Store"
-            Case BuildingEnum.Gym
-                Return "Gym"
-            Case BuildingEnum.Harbor
-                Return "Harbor"
-            Case BuildingEnum.Hospital_Cancer
-                Return "Hospital - Cancer Ward"
-            Case BuildingEnum.Hospital_Emergency
-                Return "Hospital - Emergency Ward"
-            Case BuildingEnum.Hospital_Geriatric
-                Return "Hospital - Geriatric Ward"
-            Case BuildingEnum.Hospital_Maternity
-                Return "Hospital - Maternity Ward"
-            Case BuildingEnum.Hospital_Pediatric
-                Return "Hospital - Pediatric Ward"
-            Case BuildingEnum.Hospital_Research
-                Return "Hospital - Research"
-            Case BuildingEnum.Hotel
-                Return "Hotel"
-            Case BuildingEnum.Laboratory
-                Return "Laboratory"
-            Case BuildingEnum.Land_Developer
-                Return "Land Developer"
-            Case BuildingEnum.Landfill
-                Return "Landfill"
-            Case BuildingEnum.Law_Firm
-                Return "Law Firm"
-            Case BuildingEnum.Library
-                Return "Library"
-            Case BuildingEnum.Lumber_Mill
-                Return "Lumber Mill"
-            Case BuildingEnum.Mall
-                Return "Mall"
-            Case BuildingEnum.Mass_Transit
-                Return "Mass Transit"
-            Case BuildingEnum.Mine
-                Return "Mine"
-            Case BuildingEnum.Monument
-                Return "Monument"
-            Case BuildingEnum.Military_Base
-                Return "Military Base"
-            Case BuildingEnum.Museum
-                Return "Museum"
-            Case BuildingEnum.Observatory
-                Return "Observatory"
-            Case BuildingEnum.Oil_Well
-                Return "Oil Well"
-            Case BuildingEnum.Office
-                Return "Office"
-            Case BuildingEnum.Park
-                Return "Park"
-            Case BuildingEnum.Parking_Garage
-                Return "Parking Garage"
-            Case BuildingEnum.Parking_Lot
-                Return "Parking Lot"
-            Case BuildingEnum.Pharmacy
-                Return "Pharmacy"
-            Case BuildingEnum.Police_Station
-                Return "Police Station"
-            Case BuildingEnum.Polling_Place
-                Return "Polling Place"
-            Case BuildingEnum.Post_Office
-                Return "Post Office"
-            Case BuildingEnum.Power_Plant
-                Return "Power Plant"
-            Case BuildingEnum.Private_Security_Company
-                Return "Private Security Company"
-            Case BuildingEnum.Ranch
-                Return "Ranch"
-            Case BuildingEnum.Refugee_Camp
-                Return "Refugee Camp"
-            Case BuildingEnum.Rehab_Clinic
-                Return "Rehab Clinic"
-            Case BuildingEnum.Restaurant
-                Return "Restaurant"
-            Case BuildingEnum.Retirement_Home
-                Return "Retirement Home"
-            Case BuildingEnum.Safe_House
-                Return "Safe House"
-            Case BuildingEnum.School
-                Return "School"
-            Case BuildingEnum.Shipping_Center
-                Return "Shipping Center"
-            Case BuildingEnum.Sidewalks
-                Return "Sidewalks"
-            Case BuildingEnum.Ski_Resort
-                Return "Ski Resort"
-            Case BuildingEnum.Skyscraper
-                Return "Skyscraper"
-            Case BuildingEnum.Stadium
-                Return "Stadium"
-            Case BuildingEnum.Startup_Incubator
-                Return "Startup Incubator"
-            Case BuildingEnum.Steel_Mill
-                Return "Steel Mill"
-            Case BuildingEnum.Suburb
-                Return "Suburb"
-            Case BuildingEnum.Tax_Assessor
-                Return "Tax Assessor"
-            Case BuildingEnum.Taxi_Service
-                Return "Taxi Service"
-            Case BuildingEnum.Temp_Agency
-                Return "Temp Agency"
-            Case BuildingEnum.Textile_Mill
-                Return "Textile Mill"
-            Case BuildingEnum.Theater
-                Return "Theater"
-            Case BuildingEnum.Think_Tank
-                Return "Think Tank"
-            Case BuildingEnum.Toll_Booth
-                Return "Toll Booth"
-            Case BuildingEnum.Tourism_Agency
-                Return "Tourism Agency"
-            Case BuildingEnum.TV_Station
-                Return "TV Station"
-            Case BuildingEnum.University
-                Return "University"
-            Case BuildingEnum.Warehouse
-                Return "Warehouse"
-            Case BuildingEnum.Welfare_Service
-                Return "Welfare Service"
-            Case BuildingEnum.Zoo
-                Return "Zoo"
-            Case Else
-                Return ""
-        End Select
+        Dim BuildingString As String = CType(bType, BuildingEnum).ToString()
+        BuildingString = BuildingString.Replace("_", " ")
+        Return BuildingString
+    End Function
+
+    Public Function GetTagName(ByVal Tag As Integer) As String
+        Dim TagString As String = CType(Tag, TagEnum).ToString()
+        TagString = TagString.Replace("_", " ")
+        Return TagString
     End Function
 
     Public Function GetBaseCost(ByVal bType As Integer) As Integer
@@ -456,17 +246,17 @@ Public Class BuildingGen
                 Return 95
             Case BuildingEnum.Harbor
                 Return 95
-            Case BuildingEnum.Hospital_Cancer
+            Case BuildingEnum.Cancer_Hospital
                 Return 270
-            Case BuildingEnum.Hospital_Emergency
+            Case BuildingEnum.Emergency_Hospital
                 Return 240
-            Case BuildingEnum.Hospital_Geriatric
+            Case BuildingEnum.Geriatric_Hospital
                 Return 200
-            Case BuildingEnum.Hospital_Maternity
+            Case BuildingEnum.Maternity_Hospital
                 Return 250
-            Case BuildingEnum.Hospital_Pediatric
+            Case BuildingEnum.Pediatric_Hospital
                 Return 190
-            Case BuildingEnum.Hospital_Research
+            Case BuildingEnum.Research_Hospital
                 Return 260
             Case BuildingEnum.Hotel
                 Return 275
@@ -576,43 +366,6 @@ Public Class BuildingGen
                 Return 410
             Case Else
                 Return -1
-        End Select
-    End Function
-
-    Public Function GetTagName(ByVal Tag As Integer) As String
-        Select Case Tag
-            Case TagEnum.Ad
-                Return "Advertises"
-            Case TagEnum.Athletic
-                Return "Athletic"
-            Case TagEnum.Coffee
-                Return "Coffee"
-            Case TagEnum.Commerce
-                Return "Commerce"
-            Case TagEnum.Criminal
-                Return "Criminal"
-            Case TagEnum.Food
-                Return "Food"
-            Case TagEnum.Franchise
-                Return "Franchise"
-            Case TagEnum.Government
-                Return "Government"
-            Case TagEnum.Manufacturing
-                Return "Manufacturing"
-            Case TagEnum.Medical
-                Return "Medical"
-            Case TagEnum.Monument
-                Return "Monument"
-            Case TagEnum.Nature
-                Return "Nature"
-            Case TagEnum.Science
-                Return "Science"
-            Case TagEnum.Security
-                Return "Security"
-            Case TagEnum.Transportation
-                Return "Transportation"
-            Case Else
-                Return ""
         End Select
     End Function
 
@@ -1004,7 +757,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Harbors add color and commerce to coastal life.  Passengers travel and sightsee.  Sailors work and carouse.  Goods flow in and out, and a maybe little contraband sneaks through.")
                     newBuilding.SetSpecialAbility("Harbors only provide mobility on Coastal tiles.  The owner can expand their land to anywhere reachable over water from the harbor.  Citizens can similarly sail from the harbor to any coast.")
                     Return newBuilding
-                Case BuildingEnum.Hospital_Cancer
+                Case BuildingEnum.Cancer_Hospital
                     Dim newBuilding As New HospitalCancerBuilding(bType, GetBaseCost(bType), 3)
                     newBuilding.SetStat(StatEnum.Happiness, 10, -5)
                     newBuilding.SetStat(StatEnum.Health, 30, 5)
@@ -1012,7 +765,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("The Cancer Ward specializes in providing care and comfort to all those in need.")
                     newBuilding.SetSpecialAbility("The Cancer Ward reduces the effect of outbreaks and increases the chances of preventing death caused by illness.  Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
-                Case BuildingEnum.Hospital_Emergency
+                Case BuildingEnum.Emergency_Hospital
                     Dim newBuilding As New HospitalEmergencyBuilding(bType, GetBaseCost(bType), 3)
                     newBuilding.SetStat(StatEnum.Happiness, 25, -2)
                     newBuilding.SetStat(StatEnum.Health, 30, 5)
@@ -1021,7 +774,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Car accident? Second-degree burn? Drunken jigsaw mishap? The Emergency Ward can sort you out and sober you up.")
                     newBuilding.SetSpecialAbility("The Emergency Ward decreases the chances that your citizens will be killed in traffic accidents.  Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
-                Case BuildingEnum.Hospital_Geriatric
+                Case BuildingEnum.Geriatric_Hospital
                     Dim newBuilding As New HospitalGeriatricBuilding(bType, GetBaseCost(bType), 3)
                     newBuilding.SetStat(StatEnum.Happiness, 20, -2)
                     newBuilding.SetStat(StatEnum.Health, 30, 3)
@@ -1029,7 +782,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("The Geriatric Ward caters to the elderly of society - giving them a place to get the treatment they need.")
                     newBuilding.SetSpecialAbility("The Geriatric Ward boosts the chances of the elderly at having a longer life. Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
-                Case BuildingEnum.Hospital_Maternity
+                Case BuildingEnum.Maternity_Hospital
                     Dim newBuilding As New HospitalMaternityBuilding(bType, GetBaseCost(bType), 3)
                     newBuilding.SetStat(StatEnum.Happiness, 20, -2)
                     newBuilding.SetStat(StatEnum.Health, 30, 3)
@@ -1037,7 +790,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("When the time comes for your bundle of joy to enter the world, let our years of dedicated service help you experience the joys of parenthood.")
                     newBuilding.SetSpecialAbility("The Maternity Ward increases the birthrate within range one of the building. Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
-                Case BuildingEnum.Hospital_Pediatric
+                Case BuildingEnum.Pediatric_Hospital
                     Dim newBuilding As New HospitalPediatricBuilding(bType, GetBaseCost(bType), 3)
                     newBuilding.SetStat(StatEnum.Happiness, 20, -3)
                     newBuilding.SetStat(StatEnum.Health, 30, 4)
@@ -1045,7 +798,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("The youngest members of society can get the specialized care they need at the Pediatric Ward.")
                     newBuilding.SetSpecialAbility("The Pediatric Ward boost the chances of the youths at being saved from death.  Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
-                Case BuildingEnum.Hospital_Research
+                Case BuildingEnum.Research_Hospital
                     Dim newBuilding As New HospitalBuilding(bType, GetBaseCost(bType), 3)
                     newBuilding.SetStat(StatEnum.Health, 5, 10)
                     newBuilding.SetStat(StatEnum.Intelligence, 40, 5)

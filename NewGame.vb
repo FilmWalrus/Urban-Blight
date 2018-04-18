@@ -5,6 +5,8 @@
         '-- Urban Blight begins HERE
         SetDebugMode(True)
 
+        UrbanBlight.MyGUI = Me
+
         StartGame()
     End Sub
 
@@ -34,15 +36,11 @@
         CreateMapGrid()
         CreateOpeningCities()
 
-        '-- Display initial player info
-        UpdatePlayers()
-        CurrentPlayerIndex = -1
-
         '-- Finish initialization
         init = True
 
         '-- First player's turn
-        NextPlayer()
+        UrbanBlight.StartTurn()
     End Sub
 
     Sub StartNewGame()
@@ -58,7 +56,7 @@
 
             '-- Display player Info GUIs for active players
             Dim PlayerVisibility As Boolean = False
-            If thisPlayer.PlayerType <> PlayerNone Then
+            If thisPlayer.PlayerType <> PlayerTypeEnum.None Then
                 PlayerVisibility = True
             End If
 
@@ -66,33 +64,35 @@
                 Players(i).Flag = Flag1
                 gbP1.Visible = PlayerVisibility
                 gbP1.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
+                If thisPlayer.PlayerType = PlayerTypeEnum.Human Then
                     p1_details.Visible = False
                 End If
             ElseIf i = 1 Then
                 Players(i).Flag = Flag2
                 gbP2.Visible = PlayerVisibility
                 gbP2.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
+                If thisPlayer.PlayerType = PlayerTypeEnum.Human Then
                     p2_details.Visible = False
                 End If
             ElseIf i = 2 Then
                 Players(i).Flag = Flag3
                 gbP3.Visible = PlayerVisibility
                 gbP3.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
+                If thisPlayer.PlayerType = PlayerTypeEnum.Human Then
                     p3_details.Visible = False
                 End If
             ElseIf i = 3 Then
                 Players(i).Flag = Flag4
                 gbP4.Visible = PlayerVisibility
                 gbP4.BackColor = thisPlayer.Flag
-                If thisPlayer.PlayerType = PlayerHuman Then
+                If thisPlayer.PlayerType = PlayerTypeEnum.Human Then
                     p4_details.Visible = False
                 End If
             End If
         Next
 
+        '-- Player 1 goes first
+        UrbanBlight.SetCurrentPlayer(Players(0))
     End Sub
 
     Sub CreateMapGrid()
@@ -135,19 +135,22 @@
     End Sub
 
     Sub CreateOpeningCities()
-        Dim wallBuffer As Integer = 2
+
+        Dim StartingPopulation As Integer = 4
+        Dim WallBuffer As Integer = 2
+
         For i As Integer = 0 To Players.Count - 1
 
             '-- Make sure this player exists
             Dim thisPlayer As Player = Players(i)
-            If thisPlayer.PlayerType = PlayerNone Then
+            If thisPlayer.PlayerType = PlayerTypeEnum.None Then
                 Continue For
             End If
 
             '-- Found opening cities
             While (True)
-                Dim startX As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
-                Dim startY As Integer = GetRandom(wallBuffer, GridWidth - wallBuffer)
+                Dim startX As Integer = GetRandom(WallBuffer, GridWidth - WallBuffer)
+                Dim startY As Integer = GetRandom(WallBuffer, GridWidth - WallBuffer)
                 Dim theLocation As CitySquare = GridArray(startX, startY)
 
                 '-- Starting cities can't be on or adjacent to another city
@@ -155,12 +158,12 @@
                     theLocation.Occupy(i)
 
                     '-- Starting cities are always on Plain terrain and start out with free dirt roads
-                    theLocation.SetTerrain(TerrainPlain)
+                    theLocation.SetTerrain(TerrainEnum.Plain)
                     theLocation.AddRoad()
 
-                    ' Create starting population
+                    '-- Create starting population
                     Dim j As Integer
-                    For j = 0 To StartPop - 1
+                    For j = 0 To StartingPopulation - 1
                         Dim founder As New Citizen(True)
                         GridArray(startX, startY).AddPerson(founder)
                     Next
@@ -176,7 +179,22 @@
         UpdateCoastline()
 
         '-- Redraw the grid
-        UpdateGrid()
+        UrbanBlight.UpdateGrid()
+    End Sub
+
+    Sub UpdateCoastline()
+        For i As Integer = 0 To GridWidth
+            For j As Integer = 0 To GridHeight
+                Dim location As CitySquare = GridArray(i, j)
+                location.UpdateCoastline()
+            Next
+        Next
+    End Sub
+
+    Public Sub FillViewDropdownList()
+        For i As Integer = 0 To ViewEnum.EndEnum - 1
+            ViewDropdown.Items.Add(GetViewName(i))
+        Next
     End Sub
 
 #End Region

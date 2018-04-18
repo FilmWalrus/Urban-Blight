@@ -515,15 +515,15 @@ Public Class Intro
 
     Private Sub ubBegin_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubBegin.Click
         Select Case (GameType)
-            Case ScoreGame
+            Case GameEnum.Score
                 GoalNumber = numScore.Value
-            Case TerritoryGame
+            Case GameEnum.Territory
                 GoalNumber = numTerritory.Value
-            Case PopulationGame
+            Case GameEnum.Population
                 GoalNumber = numPopulation.Value
-            Case DevelopmentGame
+            Case GameEnum.Development
                 GoalNumber = numBuildings.Value
-            Case YearGame
+            Case GameEnum.Year
                 GoalNumber = numYear.Value
         End Select
         Me.DialogResult = DialogResult.OK
@@ -531,56 +531,56 @@ Public Class Intro
     End Sub
 
     Private Sub rbScore_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rbScore.CheckedChanged
-        GameType = ScoreGame
+        GameType = GameEnum.Score
         GoalNumber = numScore.Value
     End Sub
 
     Private Sub rbTerritory_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rbTerritory.CheckedChanged
-        GameType = TerritoryGame
+        GameType = GameEnum.Territory
         GoalNumber = numTerritory.Value
     End Sub
 
     Private Sub rbPopulation_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rbPopulation.CheckedChanged
-        GameType = PopulationGame
+        GameType = GameEnum.Population
         GoalNumber = numPopulation.Value
     End Sub
 
     Private Sub rbBuildings_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rbBuildings.CheckedChanged
-        GameType = DevelopmentGame
+        GameType = GameEnum.Development
         GoalNumber = numYear.Value
     End Sub
 
     Private Sub rbYear_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles rbYear.CheckedChanged
-        GameType = YearGame
+        GameType = GameEnum.Year
         GoalNumber = numYear.Value
     End Sub
 
     Private Sub numScore_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles numScore.ValueChanged
-        If GameType = ScoreGame Then
+        If GameType = GameEnum.Score Then
             GoalNumber = numScore.Value
         End If
     End Sub
 
     Private Sub numTerritory_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles numTerritory.ValueChanged
-        If GameType = TerritoryGame Then
+        If GameType = GameEnum.Territory Then
             GoalNumber = numTerritory.Value
         End If
     End Sub
 
     Private Sub numPopulation_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles numPopulation.ValueChanged
-        If GameType = PopulationGame Then
+        If GameType = GameEnum.Population Then
             GoalNumber = numPopulation.Value
         End If
     End Sub
 
     Private Sub numBuildings_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles numBuildings.ValueChanged
-        If GameType = DevelopmentGame Then
+        If GameType = GameEnum.Development Then
             GoalNumber = numBuildings.Value
         End If
     End Sub
 
     Private Sub numYear_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles numYear.ValueChanged
-        If GameType = YearGame Then
+        If GameType = GameEnum.Year Then
             GoalNumber = numYear.Value
         End If
     End Sub
@@ -590,67 +590,67 @@ Public Class Intro
 #Region " Player Types "
 
     Private Sub p1_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p1_rb_human.CheckedChanged
-        UpdatePlayerType(0, PlayerHuman)
+        UpdatePlayerType(0, PlayerTypeEnum.Human)
     End Sub
 
     Private Sub p1_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p1_rb_robot.CheckedChanged
-        UpdatePlayerType(0, PlayerAI)
+        UpdatePlayerType(0, PlayerTypeEnum.AI)
     End Sub
 
     Private Sub p1_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p1_rb_none.CheckedChanged
-        UpdatePlayerType(0, PlayerNone)
+        UpdatePlayerType(0, PlayerTypeEnum.None)
     End Sub
 
     Private Sub p2_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p2_rb_human.CheckedChanged
-        UpdatePlayerType(1, PlayerHuman)
+        UpdatePlayerType(1, PlayerTypeEnum.Human)
     End Sub
 
     Private Sub p2_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p2_rb_robot.CheckedChanged
-        UpdatePlayerType(1, PlayerAI)
+        UpdatePlayerType(1, PlayerTypeEnum.AI)
     End Sub
 
     Private Sub p2_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p2_rb_none.CheckedChanged
-        UpdatePlayerType(1, PlayerNone)
+        UpdatePlayerType(1, PlayerTypeEnum.None)
     End Sub
 
     Private Sub p3_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p3_rb_human.CheckedChanged
-        UpdatePlayerType(2, PlayerHuman)
+        UpdatePlayerType(2, PlayerTypeEnum.Human)
     End Sub
 
     Private Sub p3_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p3_rb_robot.CheckedChanged
-        UpdatePlayerType(2, PlayerAI)
+        UpdatePlayerType(2, PlayerTypeEnum.AI)
     End Sub
 
     Private Sub p3_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p3_rb_none.CheckedChanged
-        UpdatePlayerType(2, PlayerNone)
+        UpdatePlayerType(2, PlayerTypeEnum.None)
     End Sub
 
     Private Sub p4_rb_human_CheckedChanged(sender As Object, e As EventArgs) Handles p4_rb_human.CheckedChanged
-        UpdatePlayerType(3, PlayerHuman)
+        UpdatePlayerType(3, PlayerTypeEnum.Human)
     End Sub
 
     Private Sub p4_rb_robot_CheckedChanged(sender As Object, e As EventArgs) Handles p4_rb_robot.CheckedChanged
-        UpdatePlayerType(3, PlayerAI)
+        UpdatePlayerType(3, PlayerTypeEnum.AI)
     End Sub
 
     Private Sub p4_rb_none_CheckedChanged(sender As Object, e As EventArgs) Handles p4_rb_none.CheckedChanged
-        UpdatePlayerType(3, PlayerNone)
+        UpdatePlayerType(3, PlayerTypeEnum.None)
     End Sub
 
     Private Sub AI_label1_Click(sender As Object, e As EventArgs) Handles AI_label1.Click
-        UpdatePlayerAI(0)
+        UpdatePlayerType(0)
     End Sub
 
     Private Sub AI_label2_Click(sender As Object, e As EventArgs) Handles AI_label2.Click
-        UpdatePlayerAI(1)
+        UpdatePlayerType(1)
     End Sub
 
     Private Sub AI_label3_Click(sender As Object, e As EventArgs) Handles AI_label3.Click
-        UpdatePlayerAI(2)
+        UpdatePlayerType(2)
     End Sub
 
     Private Sub AI_label4_Click(sender As Object, e As EventArgs) Handles AI_label4.Click
-        UpdatePlayerAI(3)
+        UpdatePlayerType(3)
     End Sub
 
     Private Sub UpdatePlayerType(ByVal playerIndex As Integer, ByVal playerType As Integer)
@@ -659,12 +659,12 @@ Public Class Intro
         currentPlayer.PlayerType = playerType
 
         '-- Generate a new player personality and display
-        UpdatePlayerAI(currentPlayer)
+        UpdatePlayerType(currentPlayer)
 
         '-- Must have at least 1 player to begin
         Dim playerCount As Integer = 0
         For i As Integer = 0 To MaxPlayers - 1
-            If Players(i).PlayerType <> PlayerNone Then
+            If Players(i).PlayerType <> PlayerTypeEnum.None Then
                 playerCount += 1
             End If
         Next
@@ -675,15 +675,15 @@ Public Class Intro
         End If
     End Sub
 
-    Private Sub UpdatePlayerAI(ByVal playerIndex As Integer)
+    Private Sub UpdatePlayerType(ByVal playerIndex As Integer)
         Dim currentPlayer As Player = Players(playerIndex)
-        UpdatePlayerAI(currentPlayer)
+        UpdatePlayerType(currentPlayer)
     End Sub
 
-    Private Sub UpdatePlayerAI(ByRef thisPlayer As Player)
+    Private Sub UpdatePlayerType(ByRef thisPlayer As Player)
 
         Dim AIText As String = ""
-        If thisPlayer.PlayerType = PlayerAI Then
+        If thisPlayer.PlayerType = PlayerTypeEnum.AI Then
             '-- Generate a new player personality and display
             thisPlayer.SetPersonality()
             AIText = thisPlayer.Personality.toString()

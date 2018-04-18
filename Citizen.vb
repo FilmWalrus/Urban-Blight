@@ -26,6 +26,8 @@ Public Class Citizen
     Public CrimeCount(CrimeEnum.EnumEnd - 1) As Integer
 
     '-- Financials
+    Public BuildingsFounded As New List(Of Building)
+    Public CountFounded As Integer = 0
     Public Wealth As Integer = 0
     Public UnpaidFines As Integer = 0
     Public UnpaidUpkeep As Integer = 0
@@ -152,6 +154,21 @@ Public Class Citizen
         End If
     End Sub
 
+    Public Sub FoundBuilding(Optional ByVal newBuildingId As Integer = -1)
+        '-- Found a new building at the resident location of this citizen
+        Dim newBuilding As Building = BuildingGenerator.CreateBuilding(newBuildingId)
+        newBuilding.Founder = Me
+        newBuilding.PurchasePrice = 0
+        Residence.AddBuilding(newBuilding, Residence.OwnerID)
+
+        '-- Record this citizen as the founder
+        BuildingsFounded.Add(newBuilding)
+        CountFounded += 1
+
+        '-- Post event
+        Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " founded a " + newBuilding.GetName())
+        AddEvent("Founded a " + newBuilding.GetName())
+    End Sub
 
     Public Sub UpdateInternal()
         Dim maxBonus, maxLoss As Double
@@ -358,25 +375,25 @@ Public Class Citizen
 
         '-- Terrain
         Select Case (Residence.Terrain)
-            Case TerrainForest
+            Case TerrainEnum.Forest
                 statChange = GetRandom(1, 3)
                 OffsetStat(StatEnum.Happiness, statChange, GetTerrainName(Residence.Terrain) + " life")
 
                 statChange = GetRandom(1, 3)
                 OffsetStat(StatEnum.Health, statChange, GetTerrainName(Residence.Terrain) + " life")
-            Case TerrainMountain
+            Case TerrainEnum.Mountain
                 statChange = GetRandom(1, 3)
                 OffsetStat(StatEnum.Creativity, statChange, GetTerrainName(Residence.Terrain) + " life")
 
                 statChange = GetRandom(0, 2)
                 OffsetStat(StatEnum.Mobility, -statChange, GetTerrainName(Residence.Terrain) + " life")
-            Case TerrainSwamp
+            Case TerrainEnum.Swamp
                 statChange = GetRandom(2, 4)
                 OffsetStat(StatEnum.Health, -statChange, GetTerrainName(Residence.Terrain) + " life")
-            Case TerrainDirt
+            Case TerrainEnum.Dirt
                 statChange = GetRandom(0, 2)
                 OffsetStat(StatEnum.Creativity, -statChange, GetTerrainName(Residence.Terrain) + " life")
-            Case TerrainDesert
+            Case TerrainEnum.Desert
                 statChange = GetRandom(1, 3)
                 OffsetStat(StatEnum.Mobility, statChange, GetTerrainName(Residence.Terrain) + " life")
         End Select
@@ -388,6 +405,11 @@ Public Class Citizen
 
         '-- Cap all values between 0 and 100
         Cap()
+
+        '-- Found new buildings
+        If Not IsMinor() And GetRandom(1, 2000) < GetStat(StatEnum.Intelligence) Then
+            FoundBuilding(-1)
+        End If
 
     End Sub
 
@@ -567,9 +589,9 @@ Public Class Citizen
     Function GetCrimeOdds(ByVal CrimeType As Integer) As Double
         Dim Odds As Double = 0.0
         Select Case CrimeType
-            Case CrimeEnum.ParkingTicket
+            Case CrimeEnum.Parking_Tickets
                 Odds += GetStat(StatEnum.Criminality) / 10.0
-            Case CrimeEnum.TrafficTicket
+            Case CrimeEnum.Traffic_Tickets
                 '-- Traffic accidents increase with alcohol and frequent travelling
                 Odds += GetStat(StatEnum.Criminality) / 8.0
                 Odds += GetStat(StatEnum.Drunkenness) / 4.0
@@ -605,8 +627,8 @@ Public Class Citizen
         Dim MaxRand As Integer = 100
 
         Select Case CrimeType
-            Case CrimeEnum.ParkingTicket
-            Case CrimeEnum.TrafficTicket
+            Case CrimeEnum.Parking_Tickets
+            Case CrimeEnum.Traffic_Tickets
                 MaxRand = 200
             Case CrimeEnum.Robbery
             Case CrimeEnum.Vandalism
@@ -647,10 +669,10 @@ Public Class Citizen
 
         '-- Record cause of death
         Select Case CrimeType
-            Case CrimeEnum.ParkingTicket
+            Case CrimeEnum.Parking_Tickets
                 UnpaidFines += 1
                 AddEvent("Received a parking ticket")
-            Case CrimeEnum.TrafficTicket
+            Case CrimeEnum.Traffic_Tickets
                 UnpaidFines += 2
                 AddEvent("Received a traffic ticket")
             Case CrimeEnum.Robbery

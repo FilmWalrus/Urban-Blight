@@ -824,7 +824,7 @@ Public Class NameGenerator
             Dim terrainIndex As Integer = theLocation.Terrain
             If theLocation.Coastal Then
                 If GetRandom(0, 1) = 0 Then
-                    terrainIndex = TerrainLake
+                    terrainIndex = TerrainEnum.Lake
                 End If
             End If
 

@@ -1,7 +1,7 @@
 Public Class Player
 
 #Region " Variables "
-    Public PlayerType As Integer = PlayerHuman
+    Public PlayerType As Integer = PlayerTypeEnum.Human
     Public ID As Integer = 0
     Public Score As Integer = 0
     Public Flag As System.Drawing.Color = System.Drawing.Color.Black
@@ -40,7 +40,7 @@ Public Class Player
         ID = myID
         Score = 0
         TotalMoney = 110
-        PlayerType = PlayerHuman
+        PlayerType = PlayerTypeEnum.Human
 
         '-- Zero out the special order offsets
         For i As Integer = 0 To SpecialOrderOffsets.Length - 1
@@ -49,7 +49,7 @@ Public Class Player
     End Sub
 
     Public Sub SetPersonality()
-        If PlayerType = PlayerAI Then
+        If PlayerType = PlayerTypeEnum.AI Then
             Personality = New AIPersonality()
         End If
     End Sub
@@ -60,9 +60,9 @@ Public Class Player
 
     Function GetPlayerName() As String
         Dim playerName As String = "Player " + (ID + 1).ToString()
-        If PlayerType = PlayerHuman Then
+        If PlayerType = PlayerTypeEnum.Human Then
             playerName += ", Human"
-        ElseIf PlayerType = PlayerAI Then
+        ElseIf PlayerType = PlayerTypeEnum.AI Then
             playerName += ", AI"
         Else
             playerName += ", ?"
@@ -129,7 +129,7 @@ Public Class Player
                 Dim thisLocation As CitySquare = GridArray(i, j)
 
                 '-- No one can already owns this location and it can't be a lake
-                If Not thisLocation.IsOwned() And thisLocation.Terrain <> TerrainLake Then
+                If Not thisLocation.IsOwned() And thisLocation.Terrain <> TerrainEnum.Lake Then
 
                     '-- The current player must own an adjacent location
                     Dim adjacentList As List(Of CitySquare) = thisLocation.GetAdjacents()
@@ -202,7 +202,7 @@ Public Class Player
             For j As Integer = 0 To GridHeight
                 Dim theLocation As CitySquare = GridArray(i, j)
                 If theLocation.IsOwned(ID) Then
-                    If theLocation.Terrain <> TerrainSwamp Then
+                    If theLocation.Terrain <> TerrainEnum.Swamp Then
                         landCost += 20
                     End If
                 End If
@@ -226,7 +226,7 @@ Public Class Player
     Function IsValidLandExpansion(ByVal theLocation As CitySquare) As Boolean
 
         '-- You can not expand onto occupied land or water
-        If theLocation.IsOwned() Or theLocation.Terrain = TerrainLake Then
+        If theLocation.IsOwned() Or theLocation.Terrain = TerrainEnum.Lake Then
             Return False
         End If
 
@@ -297,7 +297,7 @@ Public Class Player
 
         '-- Misers often just hoard their money
         If Personality.BeMiserly() Then
-            Return AIPass
+            Return CardEnum.NoCard
         End If
 
         Dim roadNeed As Double = 0.0
@@ -331,7 +331,7 @@ Public Class Player
 
         '-- Calculate the need for more roads (on a 0 to 100 scale)
         Dim averageRoadLevel As Double = SafeDivide(roadLevelTotal, citizenList.Count)
-        roadNeed = 100 * SafeDivide(CDbl(RoadHighway) - averageRoadLevel, RoadHighway) * Personality.GetRoadAdjustment()
+        roadNeed = 100 * SafeDivide(CDbl(RoadEnum.Highway) - averageRoadLevel, RoadEnum.Highway) * Personality.GetRoadAdjustment()
 
         '-- Calculate the need for more land (on a 0 to 100+ scale with 100)
         ' 100 being an average population of 20 per square
@@ -355,7 +355,7 @@ Public Class Player
             End If
 
             '-- Check if this is the location in most need of roads
-            Dim thisRoadUtility As Double = ((RoadHighway - thisLocation.Transportation) / RoadHighway * thisLocation.getPopulation())
+            Dim thisRoadUtility As Double = ((RoadEnum.Highway - thisLocation.Transportation) / RoadEnum.Highway * thisLocation.getPopulation())
             thisRoadUtility *= Personality.GetDecisionAdjustment()
             If thisRoadUtility > maxRoadUtility Then
                 maxRoadUtility = thisRoadUtility
@@ -370,14 +370,20 @@ Public Class Player
         Dim cardWeightSum As Double = 0
         For i As Integer = 0 To Cards.Length - 1
             Dim theBuilding As Building = Cards(i)
+
+            '-- Skip empty cards
             If theBuilding Is Nothing Then
+                cardDecisionWeights(i) = -2.0
                 Continue For
             End If
+
+            '-- Skip buildings banned for this player
             If BannedBuildings.Contains(theBuilding.Type) Then
                 cardDecisionWeights(i) = -2.0 '-- AI can't build banned buildings
             Else
                 cardDecisionWeights(i) = buildingNeed * theBuilding.GetValueForAI(Personality)
             End If
+
             cardWeightSum += cardDecisionWeights(i)
         Next
         Dim cardWeightAvg As Double = SafeDivide(cardWeightSum, Cards.Length)
@@ -411,21 +417,21 @@ Public Class Player
             Dim terrainBonus As Double = 0.0
             Dim landCostAdj As Double = landCostBase
             Select Case (thisLocation.Terrain)
-                Case TerrainDirt
+                Case TerrainEnum.Dirt
                     landCostAdj -= RoadCostBase '-- Free road
                     landUtility *= 0.95 '-- Lower creativity
-                Case TerrainForest
+                Case TerrainEnum.Forest
                     landUtility *= 1.25 '-- People are happier
-                Case TerrainMountain
+                Case TerrainEnum.Mountain
                     terrainBonus = cardWeightAvg '-- Card decision weight of average building available
                     landUtility *= 0.85 '-- Lower mobility
-                Case TerrainSwamp
+                Case TerrainEnum.Swamp
                     landCostAdj = 10 '-- Cost is actually 0
                     landUtility *= 0.5 '-- Unhappy, unhealthy, high upkeep
-                Case TerrainTownship
+                Case TerrainEnum.Township
                     landUtility *= 0.8 '-- Tax loss
                     terrainBonus += 2 '-- Free population
-                Case TerrainDesert
+                Case TerrainEnum.Desert
                     landCostAdj *= 0.5 '-- 50% rebate
                     landUtility *= 0.75 '-- Less chance of drawing population
             End Select
@@ -440,7 +446,7 @@ Public Class Player
             '-- Adjust the desirability of this terrain based on the AI's personality
             thisLandUtility *= Personality.GetTerrainAdjustment(thisLocation.Terrain)
             If thisLocation.Coastal Then
-                thisLandUtility *= Personality.GetTerrainAdjustment(TerrainLake)
+                thisLandUtility *= Personality.GetTerrainAdjustment(TerrainEnum.Lake)
             End If
             thisLandUtility *= Personality.GetDecisionAdjustment()
 
@@ -448,7 +454,7 @@ Public Class Player
             If thisLandUtility > maxLandUtility Then
                 maxLandUtility = thisLandUtility
                 bestLandLocation = thisLocation
-                If thisLocation.Terrain = TerrainSwamp Then
+                If thisLocation.Terrain = TerrainEnum.Swamp Then
                     bestLandCost = 0
                 Else
                     bestLandCost = landCostAdj
@@ -468,19 +474,19 @@ Public Class Player
 
         '-- Determine the best action to take by comparing all previous choices
         Dim bestDecisionWeight As Double = -1.0
-        Dim finalDecision As Integer = AIPass
+        Dim finalDecision As Integer = CardEnum.NoCard
         For i As Integer = 0 To decisionWeights.Count - 1
 
             '-- Spendthrifts won't consciously choose an action that will result in a pass
             If Personality.PreferenceList.Contains(AIPersonality.AIType.AI_Spendthrift) Then
                 Dim ChoiceCost As Integer = 0
-                If i <= AIBuilding5 Then
+                If i <= CardEnum.BuildingSpecialOrder Then
                     If Cards(i) IsNot Nothing Then
                         ChoiceCost = Cards(i).GetPurchasePrice()
                     End If
-                ElseIf i = AIRoad Then
+                ElseIf i = CardEnum.Road Then
                     ChoiceCost = RoadCostBase
-                ElseIf i = AILand Then
+                ElseIf i = CardEnum.Land Then
                     ChoiceCost = bestLandCost
                 End If
 
@@ -497,13 +503,13 @@ Public Class Player
         Next
 
         '-- Save the location of the best move
-        If finalDecision = AIPass Then
+        If finalDecision = CardEnum.NoCard Then
             BestMove = Nothing
-        ElseIf finalDecision <= AIBuilding5 Then
+        ElseIf finalDecision <= CardEnum.BuildingSpecialOrder Then
             BestMove = bestBuildingLocation
-        ElseIf finalDecision = AIRoad Then
+        ElseIf finalDecision = CardEnum.Road Then
             BestMove = bestRoadLocation
-        ElseIf finalDecision = AILand Then
+        ElseIf finalDecision = CardEnum.Land Then
             BestMove = bestLandLocation
         Else
             BestMove = Nothing
@@ -511,7 +517,7 @@ Public Class Player
 
         '-- If for any reason no best move was selected, make sure the action is set to Pass
         If BestMove Is Nothing Then
-            finalDecision = AIPass
+            finalDecision = CardEnum.NoCard
         End If
 
         Return finalDecision
@@ -519,7 +525,7 @@ Public Class Player
     End Function
 
     Public Function GetReproduceAdjustment() As Double
-        If PlayerType = PlayerAI Then
+        If PlayerType = PlayerTypeEnum.AI Then
             Return Personality.GetReproduceAdjustment()
         Else
             Return 1.0
@@ -527,7 +533,7 @@ Public Class Player
     End Function
 
     Public Function GetTaxAdjustment() As Double
-        If PlayerType = PlayerAI Then
+        If PlayerType = PlayerTypeEnum.AI Then
             Return Personality.GetTaxAdjustment()
         Else
             Return 1.0

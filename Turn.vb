@@ -1,8 +1,6 @@
 ﻿Public Class Turn
 
 #Region " Variables "
-    Public CurrentPlayer As Player = Nothing
-
     Public CitizenList As New List(Of Citizen)
     Public LocationList As New List(Of CitySquare)
 
@@ -24,9 +22,7 @@
 
 #Region " Person Events "
 
-    Public Sub New(ByRef thePlayer As Player, ByVal theYear As Integer)
-        CurrentPlayer = thePlayer
-
+    Public Sub New(ByVal theYear As Integer)
         If theYear < 10 Then
             ' Don't let anyone die in the first few turns. It unbalances the game too much.
             NoDeath = True
@@ -82,8 +78,8 @@
             Dim originalHome As CitySquare = thePerson.Residence
 
             '-- Get the odds for traffic tickets
-            Dim DrivingOdds As Double = thePerson.GetCrimeOdds(CrimeEnum.TrafficTicket)
-            Dim ParkingOdds As Double = thePerson.GetCrimeOdds(CrimeEnum.ParkingTicket)
+            Dim DrivingOdds As Double = thePerson.GetCrimeOdds(CrimeEnum.Traffic_Tickets)
+            Dim ParkingOdds As Double = thePerson.GetCrimeOdds(CrimeEnum.Parking_Tickets)
 
             'Find all the locations within range (based on the person's mobiility and the quality of roads)
             Dim locationsInRange As New List(Of CitySquare)
@@ -109,7 +105,7 @@
 
         '-- Issue speeding ticket
         If GetRandom(0, 200) < drivingOdds Then
-            thePerson.CommitCrime(CrimeEnum.ParkingTicket)
+            thePerson.CommitCrime(CrimeEnum.Parking_Tickets)
         End If
 
         '-- Visit each building at this location
@@ -118,7 +114,7 @@
 
             '-- Issue parking ticket
             If GetRandom(0, 200) < parkingOdds Then
-                thePerson.CommitCrime(CrimeEnum.TrafficTicket)
+                thePerson.CommitCrime(CrimeEnum.Traffic_Tickets)
             End If
 
             '-- Have person potentially visit each building in range for leisure and change due to external factors
@@ -149,13 +145,13 @@
             Dim localPop As Integer = originalHome.getPopulation()
             If (Not thePerson.IsEmployed()) And (Not thePerson.IsMinor()) And GetRandom(0, 30 + thePerson.GetStat(StatEnum.Mobility)) < (50 - localPop) Then
                 '-- Unemployed adults mostly look for jobs
-                SortType = JobSort
+                SortType = CitySortEnum.Jobs
             ElseIf GetRandom(0, 80 + thePerson.GetStat(StatEnum.Mobility)) < (40 - localPop) Then
                 '-- If population isn't a problem head towards the most culture
-                SortType = CultureSort
+                SortType = CitySortEnum.Culture
             Else
                 '-- If local population is high, head to lower population area
-                SortType = PopSort
+                SortType = CitySortEnum.Population
             End If
 
             locationsInRange.Sort()
@@ -172,7 +168,7 @@
                 End If
 
                 '-- People are reluctant to move to the desert
-                If newHome.Terrain = TerrainDesert Then
+                If newHome.Terrain = TerrainEnum.Desert Then
                     If GetRandom(0, 1) = 0 Then
                         Return
                     End If
@@ -438,7 +434,7 @@
             upkeep += thePerson.CollectUpkeep()
 
             '-- Townships take their cut
-            If thePerson.Residence.Terrain = TerrainTownship Then
+            If thePerson.Residence.Terrain = TerrainEnum.Township Then
                 personalTax = Math.Floor(personalTax * 0.8)
             End If
 
@@ -464,9 +460,9 @@
         For i As Integer = 0 To LocationList.Count - 1
             Dim theLocation As CitySquare = LocationList(i)
 
-            If theLocation.Terrain = TerrainDirt Then '-- Dirt has lower upkeep
+            If theLocation.Terrain = TerrainEnum.Dirt Then '-- Dirt has lower upkeep
                 upkeep += 8
-            ElseIf theLocation.Terrain = TerrainSwamp Then '-- Swamp has higher upkeep
+            ElseIf theLocation.Terrain = TerrainEnum.Swamp Then '-- Swamp has higher upkeep
                 upkeep += 15
             Else
                 upkeep += 10
@@ -487,7 +483,7 @@
 
         '-- Choose between "You" and "They" based on if the player is human or robot
         Dim Pronoun As String = "You"
-        If CurrentPlayer.PlayerType = PlayerAI Then
+        If CurrentPlayer.PlayerType = PlayerTypeEnum.AI Then
             Pronoun = "They"
         End If
 
@@ -739,7 +735,7 @@
         Next
 
         '-- Sort the locations by the order the citizen visited them
-        SortType = VisitOrderSort
+        SortType = CitySortEnum.VisitOrder
         visitList.Sort()
     End Sub
 
@@ -767,7 +763,7 @@
         Endurance -= theLocation.DragLoss
 
         '-- Mountains also slow travel
-        If theLocation.Terrain = TerrainMountain Then
+        If theLocation.Terrain = TerrainEnum.Mountain Then
             Endurance -= 6
         End If
 

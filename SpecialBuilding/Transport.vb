@@ -137,7 +137,7 @@ Public Class HarborBuilding
 
     Public Sub GatherCoast(ByRef theLocation As CitySquare)
         '-- Travel only over water we have not yet visited
-        If theLocation.Terrain <> TerrainLake Or theLocation.VisitedKey > 0 Then
+        If theLocation.Terrain <> TerrainEnum.Lake Or theLocation.VisitedKey > 0 Then
             Return
         End If
         theLocation.VisitedKey = 1
@@ -145,7 +145,7 @@ Public Class HarborBuilding
         Dim AdjLocations As List(Of CitySquare) = theLocation.GetTrueAdjacents()
         For i As Integer = 0 To AdjLocations.Count - 1
             Dim AdjLocation As CitySquare = AdjLocations(i)
-            If AdjLocation.Terrain = TerrainLake Then
+            If AdjLocation.Terrain = TerrainEnum.Lake Then
                 '-- If adjacent to water keep sailing
                 GatherCoast(AdjLocation)
             Else

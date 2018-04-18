@@ -4,36 +4,10 @@ Public Class MainForm
     Inherits System.Windows.Forms.Form
 
 #Region " Variables "
-    '--
-    Dim ClickCity As CitySquare = Nothing
 
-    '--
-    Public CurrentPlayer As Player = Nothing
-
-    '--
-    Dim WinFlag As Boolean = False
-
-    '--
-    Dim CardCount As Integer = 5
-    Public Cards(CardCount - 1) As Building
-    Dim NoCard As Integer = -1
-    Dim ChoiceCard As Integer = CardCount - 1
-    Dim RoadCard As Integer = ChoiceCard + 1
-    Dim LandCard As Integer = RoadCard + 1
-    Dim WipeCard As Integer = LandCard + 1
-    Dim RoadMaxCard As Integer = WipeCard + 1
-    Dim SelectedCard As Integer = NoCard
     Public ButtonList As New List(Of System.Windows.Forms.Button)
+
     Public DisableDropdownChange As Boolean = True
-
-    '--
-    Dim SelectedPerson As Integer = -1
-    Dim SelectedBuilding As Integer = -1
-    Dim CurrentView As Integer = 0
-
-    '--
-    Dim theYear As Integer = 1
-    Dim StartPop As Integer = 4
 
     Friend WithEvents UltraTab1 As TabControl
     Friend WithEvents UltraTab2 As TabControl
@@ -73,6 +47,7 @@ Public Class MainForm
     Friend WithEvents btnSkip As Button
     Friend WithEvents ubVForward As Button
     Friend WithEvents ubVBack As Button
+    Friend WithEvents ubCloseBuilding As Button
     '--
     Dim init As Boolean = False
 
@@ -122,7 +97,7 @@ Public Class MainForm
     Friend WithEvents txtP2 As System.Windows.Forms.TextBox
     Friend WithEvents txtP3 As System.Windows.Forms.TextBox
     Friend WithEvents txtP4 As System.Windows.Forms.TextBox
-    Friend WithEvents ubName As System.Windows.Forms.Button
+    Friend WithEvents ubRename As System.Windows.Forms.Button
     Friend WithEvents TabPageGame As TabPage
     Friend WithEvents ubNew As System.Windows.Forms.Button
     Friend WithEvents ubQuit As System.Windows.Forms.Button
@@ -136,7 +111,7 @@ Public Class MainForm
         Me.UltraTab2 = New System.Windows.Forms.TabControl()
         Me.UltraTab3 = New System.Windows.Forms.TabControl()
         Me.TabPageCity = New System.Windows.Forms.TabPage()
-        Me.ubName = New System.Windows.Forms.Button()
+        Me.ubRename = New System.Windows.Forms.Button()
         Me.txt_city = New System.Windows.Forms.TextBox()
         Me.UltraTab4 = New System.Windows.Forms.TabControl()
         Me.TabPagePerson = New System.Windows.Forms.TabPage()
@@ -189,6 +164,7 @@ Public Class MainForm
         Me.gbP2 = New System.Windows.Forms.Panel()
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
+        Me.ubCloseBuilding = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
@@ -253,7 +229,7 @@ Public Class MainForm
         '
         'TabPageCity
         '
-        Me.TabPageCity.Controls.Add(Me.ubName)
+        Me.TabPageCity.Controls.Add(Me.ubRename)
         Me.TabPageCity.Controls.Add(Me.txt_city)
         Me.TabPageCity.Location = New System.Drawing.Point(4, 24)
         Me.TabPageCity.Name = "TabPageCity"
@@ -261,14 +237,14 @@ Public Class MainForm
         Me.TabPageCity.TabIndex = 0
         Me.TabPageCity.Text = "City"
         '
-        'ubName
+        'ubRename
         '
-        Me.ubName.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubName.Location = New System.Drawing.Point(206, 13)
-        Me.ubName.Name = "ubName"
-        Me.ubName.Size = New System.Drawing.Size(57, 24)
-        Me.ubName.TabIndex = 21
-        Me.ubName.Text = "Name"
+        Me.ubRename.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubRename.Location = New System.Drawing.Point(192, 13)
+        Me.ubRename.Name = "ubRename"
+        Me.ubRename.Size = New System.Drawing.Size(71, 24)
+        Me.ubRename.TabIndex = 21
+        Me.ubRename.Text = "Rename"
         '
         'txt_city
         '
@@ -553,6 +529,7 @@ Public Class MainForm
         '
         'TabPageBuilding
         '
+        Me.TabPageBuilding.Controls.Add(Me.ubCloseBuilding)
         Me.TabPageBuilding.Controls.Add(Me.lblBuilding)
         Me.TabPageBuilding.Controls.Add(Me.ubBForward)
         Me.TabPageBuilding.Controls.Add(Me.ubBBack)
@@ -815,6 +792,15 @@ Public Class MainForm
         Me.gbP4.Size = New System.Drawing.Size(110, 130)
         Me.gbP4.TabIndex = 30
         '
+        'ubCloseBuilding
+        '
+        Me.ubCloseBuilding.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubCloseBuilding.Location = New System.Drawing.Point(192, 13)
+        Me.ubCloseBuilding.Name = "ubCloseBuilding"
+        Me.ubCloseBuilding.Size = New System.Drawing.Size(71, 24)
+        Me.ubCloseBuilding.TabIndex = 22
+        Me.ubCloseBuilding.Text = "Close"
+        '
         'MainForm
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -870,6 +856,8 @@ Public Class MainForm
         Dim X, Y As Integer
         GetCoords(X, Y, TheBox.Tag)
 
+        Dim ClickCity As CitySquare = UrbanBlight.GetSelectedCity()
+
         '-- Deselect the previous grid box
         Dim DoubleClick As Boolean = False
         If ClickCity IsNot Nothing Then
@@ -881,268 +869,66 @@ Public Class MainForm
 
         '-- Update the most recently clicked on box and its info
         ClickCity = GridArray(X, Y)
+        If Not DoubleClick Then
+            UrbanBlight.SetSelectedCity(ClickCity)
+            UrbanBlight.SetSelectedBuilding(0)
+            UrbanBlight.SetSelectedPerson(0)
+        End If
 
         '-- Select the newly clicked on grid box
         ClickCity.GridSquare.BorderStyle = BorderStyle.Fixed3D
 
         '-- Don't let players rename each other's cities!
-        If ClickCity.IsOwned(CurrentPlayerIndex) Then
-            ubName.Visible = True
+        If ClickCity.IsOwned(CurrentPlayer.ID) Then
+            ubRename.Visible = True
         Else
-            ubName.Visible = False
+            ubRename.Visible = False
         End If
 
-        '-- Don't switch to the city tab by default if user was looking at people or buildings
-        Dim DontSwitch As Boolean = False
-        If ClickCity.IsOwned() Then
-            If Infotab.SelectedIndex = PersonTab Or Infotab.SelectedIndex = BuildingTab Then
-                DontSwitch = True
-            End If
-        End If
-
-        '-- Switch to the city tab when the user clicks on a grid square
         If e.Button = MouseButtons.Left Then
-            Dim BuildSuccess As Boolean = Build()
-            UpdateTabs()
+            Dim BuildSuccess As Boolean = UrbanBlight.Build()
 
             If BuildSuccess Then
                 '-- If the user just built a building, switch to the city tab of the construction location
-                Infotab.SelectedTab = Infotab.TabPages(CityTab)
+                Infotab.SelectedTab = Infotab.TabPages(TabsEnum.City)
             ElseIf DoubleClick Then
                 '-- If the user double-clicks a location, cycle through city, building and person tabs
-                If Infotab.SelectedIndex = CityTab And ClickCity.IsOwned() Then
-                    Infotab.SelectedTab = Infotab.TabPages(BuildingTab)
-                ElseIf Infotab.SelectedIndex = BuildingTab And ClickCity.IsOwned() Then
-                    Infotab.SelectedTab = Infotab.TabPages(PersonTab)
+                If Infotab.SelectedIndex = TabsEnum.City And ClickCity.IsOwned() Then
+                    Infotab.SelectedTab = Infotab.TabPages(TabsEnum.Building)
+                ElseIf Infotab.SelectedIndex = TabsEnum.Building And ClickCity.IsOwned() Then
+                    Infotab.SelectedTab = Infotab.TabPages(TabsEnum.Person)
                 Else
-                    Infotab.SelectedTab = Infotab.TabPages(CityTab)
+                    Infotab.SelectedTab = Infotab.TabPages(TabsEnum.City)
                 End If
-            ElseIf Not DontSwitch Then
-                '-- If the user wasn't looking at the person or building tab when they clicked a location, swtich them to the city tab
-                Infotab.SelectedTab = Infotab.TabPages(CityTab)
+            ElseIf ClickCity.IsOwned() Then
+                '- Show the information for this city
+                If Infotab.SelectedIndex <> TabsEnum.Building And Infotab.SelectedIndex <> TabsEnum.Person Then
+                    '-- If the user wasn't looking at the person or building tab when they clicked a location, switch them to the city tab
+                    Infotab.SelectedTab = Infotab.TabPages(TabsEnum.City)
+                End If
+            Else
+                '-- Show information for the terrain
+                Infotab.SelectedTab = Infotab.TabPages(TabsEnum.City)
             End If
 
         ElseIf e.Button = MouseButtons.Right Then
             '-- Loop through the buildings or persons at a location using right-click
             If DoubleClick Then
-                If Infotab.SelectedIndex = BuildingTab Then
-                    CycleThroughBuildings(True, True)
-                ElseIf Infotab.SelectedIndex = PersonTab Then
-                    CycleThroughPersons(True, True)
-                ElseIf Infotab.SelectedIndex = ViewTab Then
-                    CycleThroughViews(True, True)
+                If Infotab.SelectedIndex = TabsEnum.Building Then
+                    UrbanBlight.CycleThroughBuildings(True, True)
+                ElseIf Infotab.SelectedIndex = TabsEnum.Person Then
+                    UrbanBlight.CycleThroughPersons(True, True)
+                ElseIf Infotab.SelectedIndex = TabsEnum.Game Then
+                    UrbanBlight.CycleThroughViews(True, True)
                 End If
             End If
         End If
 
     End Sub
-
-    Function Build() As Boolean
-        Dim UpdateNeeded As Boolean = False
-        Dim SpendingMoney As Integer = Players(CurrentPlayerIndex).TotalMoney
-
-        '-- What is the cost of this card?
-        Dim CardCost As Integer = 0
-        If SelectedCard = RoadCard Or SelectedCard = RoadMaxCard Then
-            CardCost = RoadCostBase
-        ElseIf SelectedCard = LandCard Then
-            If ClickCity.Terrain = TerrainSwamp Then
-                CardCost = 0 '-- Swamps are free!
-            Else
-                CardCost = CurrentPlayer.GetPlayerLandCost()
-            End If
-        ElseIf SelectedCard = WipeCard Then
-            CardCost = CurrentPlayer.GetPlayerWipeCost()
-        ElseIf SelectedCard >= 0 And SelectedCard < Cards.Length Then
-            If Cards(SelectedCard) Is Nothing Then
-                Return False
-            End If
-            CardCost = Cards(SelectedCard).GetPurchasePrice()
-        Else
-            Return False
-        End If
-
-        '-- Was the selected CitySquare valid?
-        If SelectedCard = LandCard Then
-            '-- For Land cards they must be unowned, adjacent to land the player already owns, and not a lake
-            If Not CurrentPlayer.IsValidLandExpansion(ClickCity) Then
-                Return False
-            End If
-        ElseIf SelectedCard >= 0 And SelectedCard < Cards.Length Then
-            '-- For road cards the location must be owned by the player or, with an embassy, another player
-            If Not CurrentPlayer.IsValidBuild(ClickCity, CardCost) Then
-                Return False
-            End If
-        ElseIf SelectedCard = RoadCard Or SelectedCard = RoadMaxCard Then
-            '-- For Roads the player must already own the land and highway can't already be present
-            If (Not ClickCity.IsOwned(CurrentPlayerIndex)) Or ClickCity.Transportation = RoadHighway Then
-                Return False
-            End If
-        End If
-
-        '-- Can the player afford it?
-        If CardCost > SpendingMoney Then
-            Return False
-        ElseIf SelectedCard = ChoiceCard Then
-            '-- If you bought a building of your choice, reduce your choice money by the cost
-            CurrentPlayer.SpecialOrderCap -= CardCost
-            '-- Also increase the special order price of this building type for this player
-            CurrentPlayer.SpecialOrderOffsets(Cards(SelectedCard).Type) += 50
-        End If
-
-        '-- Pay for construction
-        CurrentPlayer.TotalMoney -= CardCost
-        UpdateNeeded = True
-
-        '-- Do construction
-        If SelectedCard = RoadCard Or SelectedCard = RoadMaxCard Then
-            '-- Upgrade Road
-            ClickCity.AddRoad()
-        ElseIf SelectedCard = LandCard Then
-            '-- Expand Territory
-            ClickCity.Occupy(CurrentPlayerIndex)
-
-            '-- Handle special terrain bonuses
-            If ClickCity.Terrain = TerrainDesert Then
-                '-- Desert effect: rebate
-                CurrentPlayer.TotalMoney += SafeDivide(CardCost, 2)
-            ElseIf ClickCity.Terrain = TerrainDirt Then
-                '-- Dirt effect: free road
-                ClickCity.Transportation = RoadDirt
-            ElseIf ClickCity.Terrain = TerrainMountain Then
-                '-- Rock effect: free building
-                Dim randNum As Integer = GetRandom(0, ChoiceCard - 1)
-                Dim newBuilding As Building = Cards(randNum)
-                newBuilding.PurchasePrice = 0
-                newBuilding.Location = ClickCity
-                ClickCity.AddBuilding(newBuilding, CurrentPlayerIndex)
-                Cards(randNum) = Nothing
-            ElseIf ClickCity.Terrain = TerrainTownship Then
-                '-- Township effect: free population
-                Dim maxFreePopulation As Integer = Math.Min(10, Math.Floor(SafeDivide(CurrentPlayer.GetPlayerPopulationCount(), 15.0)) + 2)
-                Dim randNum As Integer = GetRandom(2, maxFreePopulation)
-                For i As Integer = 0 To randNum - 1
-                    Dim founder As New Citizen(True)
-                    ClickCity.AddPerson(founder)
-                Next
-            End If
-        ElseIf SelectedCard >= 0 And SelectedCard < Cards.Length Then
-            '-- Create Building
-            Cards(SelectedCard).PurchasePrice = CardCost
-            ClickCity.AddBuilding(Cards(SelectedCard), CurrentPlayerIndex)
-            Cards(SelectedCard) = Nothing
-        ElseIf SelectedCard = WipeCard Then
-            For i As Integer = 0 To Cards.Length - 1
-                Cards(i) = Nothing
-            Next
-            CurrentPlayer.WipeCost = WipeCostBase + 5
-        End If
-
-        '-- Update grid, cards, and players
-        If UpdateNeeded Then
-            '-- If road max was selected keep building more road
-            If SelectedCard = RoadMaxCard Then
-                Build()
-            End If
-            SelectedCard = NoCard
-
-            UpdateAll()
-        End If
-
-        Return True
-    End Function
 
 #End Region
 
-
-#Region " Update Info "
-    Sub UpdateAll()
-        UpdateGrid()
-        UpdateCards(True)
-        UpdateCardSelection()
-        UpdatePlayers()
-    End Sub
-
-    Sub UpdateGrid()
-        For Each CurrentLocation As CitySquare In GridArray
-            CurrentLocation.UpdateGridSquare(CurrentView)
-        Next
-    End Sub
-
-    Sub UpdateCards(ByVal DropPrices As Boolean)
-
-        '-- Adjust cost of redraw and building of your choice
-        If DropPrices Then
-            '-- Reduce cost for this player to wipe the buildings cards by 5 (no lower limit)
-            CurrentPlayer.WipeCost -= DropCostBase
-
-            '-- Increase the Special Order cap for this player
-            CurrentPlayer.UpdateSpecialOrderCap()
-
-            '-- Fill the dropdown with the buildings this player can choose
-            FillBuildingDropdown()
-        End If
-
-        '-- Adjust costs of building market and refill if any are missing
-        For i As Integer = 0 To Cards.Length - 1
-            Dim CardBuilding As Building = Cards(i)
-
-            If CardBuilding Is Nothing Then
-                If i <> ChoiceCard Then
-                    '--Increase hand to full
-                    CardBuilding = BuildingGenerator.CreateBuilding(-1)
-                    Cards(i) = CardBuilding
-                End If
-            Else
-                '-- If no player bought this building even for free, replace it
-                If CardBuilding.IsBuildingUnwanted(CurrentPlayer) Then
-                    Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
-                    Cards(i) = newBuilding
-                End If
-
-                If DropPrices Then
-                    '-- Reduce cost of available buildings
-                    CardBuilding.DropPrice()
-                End If
-            End If
-
-            Dim cardText As String = ""
-
-            If CardBuilding Is Nothing Then
-                '-- Display the player's Choice cost
-                cardText += "Special Order" + ControlChars.NewLine
-                cardText += "$" + CurrentPlayer.GetSpecialOrderCap().ToString() + " - Cap"
-            Else
-                '-- Adjust the purchase price for this player
-                CardBuilding.AdjPurchasePrice(CurrentPlayer)
-
-                '--Update building card text
-                cardText += CardBuilding.GetName() + ControlChars.NewLine
-                cardText += "$" + CardBuilding.GetPurchasePrice().ToString() + " - "
-                cardText += CardBuilding.Jobs.ToString() + " Jobs"
-            End If
-
-            ButtonList(i).Text = cardText
-        Next
-
-        '-- Update wipe card text
-        Dim WipeCost As Integer = CurrentPlayer.GetPlayerWipeCost()
-
-        ubWipe.Text = "$" + WipeCost.ToString() + " - Redraw Above"
-        '-- Update land card text
-        Dim RoadCost As Integer = RoadCostBase
-        ubroad.Text = "$" + RoadCost.ToString() + " - Road"
-
-        '-- Update land card text
-        Dim LandCost As Integer = CurrentPlayer.GetPlayerLandCost()
-        ubland.Text = "$" + LandCost.ToString() + " - Land"
-
-        '-- Set whether the building buttons are enabled for this player
-        UpdateButtonEnables()
-
-    End Sub
-
-    Sub UpdatePlayers()
+    Sub DisplayPlayerText()
 
         For i As Integer = 0 To Players.Count - 1
             '-- Updates player stats
@@ -1162,184 +948,51 @@ Public Class MainForm
             End If
 
             '-- Check if player won
-            If GameType = ScoreGame And thisPlayer.TotalScore >= GoalNumber Then
-                WinFlag = True
+            If GameType = GameEnum.Score And thisPlayer.TotalScore >= GoalNumber Then
+                UrbanBlight.SetWinFlag(True)
             End If
-            If GameType = TerritoryGame And thisPlayer.TotalTerritory >= GoalNumber Then
-                WinFlag = True
+            If GameType = GameEnum.Territory And thisPlayer.TotalTerritory >= GoalNumber Then
+                UrbanBlight.SetWinFlag(True)
             End If
-            If GameType = PopulationGame And thisPlayer.TotalPopulation >= GoalNumber Then
-                WinFlag = True
+            If GameType = GameEnum.Population And thisPlayer.TotalPopulation >= GoalNumber Then
+                UrbanBlight.SetWinFlag(True)
             End If
-            If GameType = DevelopmentGame And thisPlayer.TotalDevelopment >= GoalNumber Then
-                WinFlag = True
+            If GameType = GameEnum.Development And thisPlayer.TotalDevelopment >= GoalNumber Then
+                UrbanBlight.SetWinFlag(True)
             End If
         Next
     End Sub
 
-    Sub UpdateTabs()
-        If ClickCity Is Nothing Then
-            Return
-        End If
-
-        '-- Update the city tab
-        UpdateTextBox(txt_city, ClickCity.toString())
-
-        '-- Update the person tab
-        Dim personText As String = ""
-        Dim currentPop As Integer = ClickCity.getPopulation()
-        If currentPop > 0 Then
-            SelectedPerson = 0
-            personText = ClickCity.People(0).toString()
-            lblPerson.Text = "Displaying 1 of " + currentPop.ToString()
-        Else
-            personText = ""
-            lblPerson.Text = "Displaying 0 of 0"
-        End If
-        UpdateTextBox(txt_person, personText)
-
-        '-- Update the building tab
-        Dim buildingText As String = ""
-        Dim currentDev As Integer = ClickCity.getDevelopment()
-        If currentDev > 0 Then
-            SelectedBuilding = 0
-            buildingText = ClickCity.Buildings(0).toString()
-            lblBuilding.Text = "Displaying 1 of " + currentDev.ToString()
-        Else
-            buildingText = ""
-            lblBuilding.Text = "Displaying 0 of 0"
-        End If
-        UpdateTextBox(txt_building, buildingText)
+    Public Sub SetTab(ByVal TabId As Integer)
+        Infotab.SelectedTab = Infotab.TabPages(TabId)
     End Sub
 
     Sub UpdateTitle()
         Dim PlaceHolderTab As String = "        "
         Dim TitleText As String = "URBAN BLIGHT" + PlaceHolderTab
-        TitleText += "Year: " + theYear.ToString + PlaceHolderTab
+        TitleText += "Year: " + UrbanBlight.theYear.ToString + PlaceHolderTab
 
         Dim GoalText As String = ""
         Select Case (GameType)
-            Case ScoreGame
+            Case GameEnum.Score
                 GoalText = "Score " + GoalNumber.ToString
-            Case TerritoryGame
+            Case GameEnum.Territory
                 GoalText = "Territory " + GoalNumber.ToString
-            Case PopulationGame
+            Case GameEnum.Population
                 GoalText = "Population " + GoalNumber.ToString
-            Case DevelopmentGame
+            Case GameEnum.Development
                 GoalText = "Development " + GoalNumber.ToString
-            Case YearGame
+            Case GameEnum.Year
                 GoalText = "Year " + GoalNumber.ToString
-            Case InfiniteGame
+            Case GameEnum.Infinite
                 GoalText = "None"
         End Select
         TitleText += "Goal: " + GoalText.ToString + PlaceHolderTab
 
-        TitleText += "Current View: " + GetViewName(CurrentView).ToString
+        TitleText += "Current View: " + GetViewName(UrbanBlight.GetSelectedView()).ToString
 
         Me.Text = TitleText
 
-    End Sub
-
-    Sub UpdateCoastline()
-        For i As Integer = 0 To GridWidth
-            For j As Integer = 0 To GridHeight
-                Dim location As CitySquare = GridArray(i, j)
-                location.UpdateCoastline()
-            Next
-        Next
-    End Sub
-
-#End Region
-
-#Region " Game Over "
-    Public Sub GameOver()
-        Dim GameTypeText As String = ""
-        Dim WinningString As String = ""
-        Dim maxValue As Integer = 0
-        Dim currentValue As Integer = 0
-        Dim winningPlayer As Integer = -1
-        For i As Integer = 0 To Players.Count - 1
-            Dim currentPlayer As Player = Players(i)
-
-            Select Case GameType
-                Case ScoreGame
-                    GameTypeText = "Score"
-                    currentValue = currentPlayer.GetPlayerScore()
-                Case TerritoryGame
-                    GameTypeText = "Territory"
-                    currentValue = currentPlayer.GetPlayerTerritoryCount()
-                Case PopulationGame
-                    GameTypeText = "Population"
-                    currentValue = currentPlayer.GetPlayerPopulationCount()
-                Case DevelopmentGame
-                    GameTypeText = "Development"
-                    currentValue = currentPlayer.GetPlayerDevelopment()
-                Case YearGame
-                    GameTypeText = "Score"
-                    currentValue = currentPlayer.GetPlayerScore()
-            End Select
-
-            WinningString += "Player " + (i + 1).ToString + " " + GameTypeText + ": " + currentValue.ToString + ControlChars.NewLine
-            If currentValue > maxValue Then
-                maxValue = currentValue
-                winningPlayer = i + 1
-            End If
-        Next
-        WinningString += ControlChars.NewLine + "The winner is: Player " + winningPlayer.ToString + ControlChars.NewLine
-
-
-        Dim EndingScreen As New GameOver(WinningString)
-        If EndingScreen.ShowDialog = DialogResult.Yes Then
-            StartNewGame()
-        ElseIf EndingScreen.DialogResult = DialogResult.No Then
-            Me.DialogResult = DialogResult.No
-            Me.Close()
-        Else
-            WinFlag = False
-            GameType = InfiniteGame
-        End If
-    End Sub
-#End Region
-
-#Region " Support "
-
-    Sub ResetForNewTurn()
-        If ClickCity IsNot Nothing Then
-            ClickCity.GridSquare.BorderStyle = BorderStyle.FixedSingle
-            'ClickCity = Nothing
-        End If
-
-        SelectedCard = NoCard
-        Cards(ChoiceCard) = Nothing
-        SelectedPerson = -1
-        SelectedBuilding = -1
-        Diary.ClearEvents()
-        UpdateTextBox(txt_event, "")
-        UpdateTextBox(txt_city, "")
-        UpdateTextBox(txt_person, "")
-        lblPerson.Text = "Displaying 0 of 0"
-        CurrentView = ViewEnum.Population
-        ViewDropdown.SelectedIndex = CurrentView
-
-        '-- Display new hint
-        DisplayHint()
-    End Sub
-
-    Sub HighlightCurrentPlayer()
-        txtP1.BackColor = ColorPlayerUnselected
-        txtP2.BackColor = ColorPlayerUnselected
-        txtP3.BackColor = ColorPlayerUnselected
-        txtP4.BackColor = ColorPlayerUnselected
-
-        If CurrentPlayerIndex = 0 Then
-            txtP1.BackColor = ColorPlayerSelected
-        ElseIf CurrentPlayerIndex = 1 Then
-            txtP2.BackColor = ColorPlayerSelected
-        ElseIf CurrentPlayerIndex = 2 Then
-            txtP3.BackColor = ColorPlayerSelected
-        ElseIf CurrentPlayerIndex = 3 Then
-            txtP4.BackColor = ColorPlayerSelected
-        End If
     End Sub
 
     Sub GetCoords(ByRef TheX As Integer, ByRef TheY As Integer, ByVal TheTag As String)
@@ -1354,14 +1007,39 @@ Public Class MainForm
 
     End Sub
 
-#End Region
+
 
 #Region " Texts, Hints and Rules "
 
-    Public Sub UpdateTextBox(ByRef textBox As TextBox, ByVal displayString As String)
+    Public Sub ClearTexts()
+        For i As Integer = 0 To TabsEnum.EnumEnd - 1
+            UpdateTextBox(i, "")
+        Next
+        DisplayHint()
+    End Sub
+
+    Public Function GetTextBoxByTab(ByVal TabId As Integer) As TextBox
+        Select Case TabId
+            Case TabsEnum.Events
+                Return txt_event
+            Case TabsEnum.City
+                Return txt_city
+            Case TabsEnum.Building
+                Return txt_building
+            Case TabsEnum.Person
+                Return txt_person
+            Case TabsEnum.Game
+                Return txtHint
+            Case Else
+                Return Nothing
+        End Select
+    End Function
+
+    Public Sub UpdateTextBox(ByVal TabId As Integer, ByVal displayString As String)
         '-- Update the textbox to display text and then deselect it.
-        textBox.Text = displayString.Trim()
-        textBox.Select(textBox.Text.Length, 0)
+        Dim ThisTextBox As TextBox = GetTextBoxByTab(TabId)
+        ThisTextBox.Text = displayString.Trim()
+        ThisTextBox.Select(ThisTextBox.Text.Length, 0)
     End Sub
 
     Public Sub DisplayInstructions()
@@ -1387,81 +1065,54 @@ Public Class MainForm
     End Sub
 
     Private Sub ubcard1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard1.Click
-        CardClick(0)
+        CardClick(CardEnum.Building1)
     End Sub
     Private Sub ubcard2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard2.Click
-        CardClick(1)
+        CardClick(CardEnum.Building2)
     End Sub
     Private Sub ubcard3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard3.Click
-        CardClick(2)
+        CardClick(CardEnum.Building3)
     End Sub
     Private Sub ubcard4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubcard4.Click
-        CardClick(3)
+        CardClick(CardEnum.Building4)
     End Sub
     Private Sub ubcardChoice_Click(sender As Object, e As EventArgs) Handles ubcardChoice.Click
-        CardClick(ChoiceCard)
+        CardClick(CardEnum.BuildingSpecialOrder)
     End Sub
     Private Sub ubroad_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubroad.Click
-        CardClick(RoadCard)
+        CardClick(CardEnum.Road)
     End Sub
     Private Sub ubroadmax_Click(sender As Object, e As EventArgs) Handles ubroadmax.Click
-        CardClick(RoadMaxCard)
+        CardClick(CardEnum.RoadMax)
     End Sub
     Private Sub ubland_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubland.Click
-        CardClick(LandCard)
+        CardClick(CardEnum.Land)
     End Sub
-
     Private Sub ubWipe_Click(sender As Object, e As EventArgs) Handles ubWipe.Click
-        CardClick(WipeCard)
+        CardClick(CardEnum.WipeBuildings)
     End Sub
 
     Public Sub CardClick(ByVal CardNumber As Integer)
 
         '-- Select the clicked card. 
-        If SelectedCard = CardNumber Then
+        If UrbanBlight.GetSelectedCard() = CardNumber Then
             '-- If they click on it a second time, deselect it.
-            SelectedCard = NoCard
+            UrbanBlight.SetSelectedCard(CardEnum.NoCard)
         Else
-            SelectedCard = CardNumber
-
-            '-- If the user selected the Building of Choice card without a building there, consider that selecting no card
-            If SelectedCard = ChoiceCard Then
-                If Cards(CardNumber) Is Nothing Then
-                    SelectedCard = NoCard
-                End If
-            End If
+            UrbanBlight.SetSelectedCard(CardNumber)
         End If
 
-        UpdateCardSelection()
+        UpdateButtonSelection()
 
         '-- Display the card text
-        Dim cardText As String = ""
-        If (SelectedCard >= 0 And SelectedCard < CardCount) Then
-            cardText += Cards(SelectedCard).toString()
-        ElseIf SelectedCard = RoadCard Then
-            cardText += "Roads help increase the mobility of you population and allows them to reach nearby squares within your kingdom. Roads always cost " + RoadCostBase.ToString()
-        ElseIf SelectedCard = LandCard Then
-            cardText += "Land can only be bought adjacent to land you already own. The cost increases by 20 after every time you buy."
-        ElseIf SelectedCard = WipeCard Then
-            cardText += "Redraw discards the currently available buildings and draws new ones, for the base price of $100. Click anywhere on the map to confirm." + ControlChars.NewLine + ControlChars.NewLine
-            cardText += "Like with buildings, the cost drops $5 after every action you take." + ControlChars.NewLine + ControlChars.NewLine
-            cardText += "Unlike buildings, the cost is unique to each player and can go below $0."
-        ElseIf SelectedCard = RoadMaxCard Then
-            cardText += "Increase road on a square to the maximum level you can afford."
-        ElseIf CardNumber = ChoiceCard Then
-            cardText += "You can special order a building of your choice from the dropdown so long as its special order price is within your cap." + ControlChars.NewLine + ControlChars.NewLine
-            cardText += "Your cap increases by $10 after every action you take. If you build a special order your cap drops by the purchase price. "
-            cardText += "Each additional special order of the same building type costs $50 more than the previous."
-        End If
-        UpdateTextBox(txt_building, cardText)
-
-        Infotab.SelectedTab = Infotab.TabPages(BuildingTab)
+        UpdateTextBox(TabsEnum.Building, UrbanBlight.GetSelectedCardText())
+        SetTab(TabsEnum.Building)
     End Sub
 
     Sub UpdateButtonEnables()
         '-- Toggle the buttons so humans can't play for the computer
         Dim toggleButtons As Boolean = True
-        If CurrentPlayer.PlayerType = PlayerAI Then
+        If CurrentPlayer.PlayerType = PlayerTypeEnum.AI Then
             toggleButtons = False
         End If
 
@@ -1476,7 +1127,7 @@ Public Class MainForm
         'Next
 
         '-- Disable access to cards banned for this player
-        If CurrentPlayer.PlayerType = PlayerHuman Then
+        If CurrentPlayer.PlayerType = PlayerTypeEnum.Human Then
             For i As Integer = 0 To Cards.Length - 1
                 Dim CardBuilding As Building = Cards(i)
                 If CardBuilding IsNot Nothing Then
@@ -1490,14 +1141,14 @@ Public Class MainForm
         End If
     End Sub
 
-    Public Sub UpdateCardSelection()
+    Public Sub UpdateButtonSelection()
 
         Dim newBold As New Font(ubEnd.Font.FontFamily, 10, FontStyle.Bold)
         Dim newRegular As New Font(ubEnd.Font.FontFamily, 10, FontStyle.Regular)
 
         '-- Bold the text on the selected card
         For i As Integer = 0 To ButtonList.Count - 1
-            If i = SelectedCard Then
+            If i = UrbanBlight.GetSelectedCard() Then
                 ButtonList(i).Font = newBold
             Else
                 ButtonList(i).Font = newRegular
@@ -1505,105 +1156,107 @@ Public Class MainForm
         Next
     End Sub
 
+    Public Sub UpdateButtonText(ByVal ButtonId As Integer, ByVal ButtonText As String)
+        ButtonList(ButtonId).Text = ButtonText
+    End Sub
+
     Private Sub ubEnd_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubEnd.Click
-        StartNewTurn()
+        UrbanBlight.EndTurn()
     End Sub
 
     '-- Person viewing
     Private Sub ubPBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPBack.Click
-        CycleThroughPersons(False, False)
+        UrbanBlight.CycleThroughPersons(False, False)
     End Sub
 
     Private Sub ubPForward_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubPForward.Click
-        CycleThroughPersons(True, False)
+        UrbanBlight.CycleThroughPersons(True, False)
     End Sub
 
-    Public Sub CycleThroughPersons(ByVal CycleForward As Boolean, ByVal LoopAround As Boolean)
-        If ClickCity Is Nothing Then
-            Return
-        End If
+    Sub DisplaySelectedPerson(ByVal PersonId As Integer)
+        '-- Set the selected building ID
+        UpdateTextBox(TabsEnum.Person, "")
 
-        Dim CityPopulation As Integer = ClickCity.getPopulation()
-        If CityPopulation = 0 Then
-            Return
-        End If
-
-        '-- Cycle forward or backward
-        Dim NewSelectedPerson As Integer = SelectedPerson
-        If CycleForward Then
-            NewSelectedPerson += 1
-        Else
-            NewSelectedPerson -= 1
-        End If
-
-        '-- Optionally loop around
-        If NewSelectedPerson < 0 Then
-            If LoopAround Then
-                NewSelectedPerson = CityPopulation - 1
+        '-- Make sure this building ID is valid
+        Dim ClickCity As CitySquare = UrbanBlight.GetSelectedCity()
+        If ClickCity IsNot Nothing Then
+            Dim PersonCount As Integer = ClickCity.getPopulation()
+            If PersonCount = 0 Then
+                lblPerson.Text = "Displaying 0 of 0"
             Else
-                Return
-            End If
-        ElseIf NewSelectedPerson >= CityPopulation Then
-            If LoopAround Then
-                NewSelectedPerson = 0
-            Else
-                Return
+                If PersonId >= 0 And PersonId < PersonCount Then
+                    '-- Update the building tab textbox
+                    Dim thePerson As Citizen = ClickCity.People(PersonId)
+                    UpdateTextBox(TabsEnum.Person, thePerson.toString())
+
+                    lblPerson.Text = "Displaying " + (PersonId + 1).ToString() + " of " + PersonCount.ToString()
+
+                    '-- Players can only take actions on citizens of their nationality
+                    Return
+                End If
             End If
         End If
 
-        '-- Display the new person information
-        SelectedPerson = NewSelectedPerson
-        lblPerson.Text = "Displaying " + (SelectedPerson + 1).ToString() + " of " + CityPopulation.ToString()
-        UpdateTextBox(txt_person, ClickCity.People(SelectedPerson).toString())
     End Sub
+
 
     '-- Building viewing
     Private Sub ubBBack_Click(sender As Object, e As EventArgs) Handles ubBBack.Click
-        CycleThroughBuildings(False, False)
+        UrbanBlight.CycleThroughBuildings(False, False)
     End Sub
 
     Private Sub ubBForward_Click(sender As Object, e As EventArgs) Handles ubBForward.Click
-        CycleThroughBuildings(True, False)
+        UrbanBlight.CycleThroughBuildings(True, False)
     End Sub
 
-    Public Sub CycleThroughBuildings(ByVal CycleForward As Boolean, ByVal LoopAround As Boolean)
-        If ClickCity Is Nothing Then
-            Return
-        End If
+    Sub DisplaySelectedBuilding(ByVal BuildingId As Integer)
+        '-- Set the selected building ID
+        ubCloseBuilding.Visible = False
+        UpdateTextBox(TabsEnum.Building, "")
 
-        Dim CityBuildings As Integer = ClickCity.getDevelopment()
-        If CityBuildings = 0 Then
-            Return
-        End If
-
-        '-- Cycle forward or backward
-        Dim NewSelectedBuilding As Integer = SelectedBuilding
-        If CycleForward Then
-            NewSelectedBuilding += 1
-        Else
-            NewSelectedBuilding -= 1
-        End If
-
-        '-- Optionally loop around
-        If NewSelectedBuilding < 0 Then
-            If LoopAround Then
-                NewSelectedBuilding = CityBuildings - 1
+        '-- Make sure this building ID is valid
+        Dim ClickCity As CitySquare = UrbanBlight.GetSelectedCity()
+        If ClickCity IsNot Nothing Then
+            Dim BuildingCount As Integer = ClickCity.getDevelopment()
+            If BuildingCount = 0 Then
+                lblBuilding.Text = "Displaying 0 of 0"
             Else
-                Return
-            End If
-        ElseIf NewSelectedBuilding >= CityBuildings Then
-            If LoopAround Then
-                NewSelectedBuilding = 0
-            Else
-                Return
+                If BuildingId >= 0 And BuildingId < BuildingCount Then
+                    '-- Update the building tab textbox
+                    Dim theBuilding As Building = ClickCity.Buildings(BuildingId)
+                    UpdateTextBox(TabsEnum.Building, theBuilding.toString())
+
+                    lblBuilding.Text = "Displaying " + (BuildingId + 1).ToString() + " of " + BuildingCount.ToString()
+
+                    '-- Players can only close buildings they own
+                    If theBuilding.OwnerID = CurrentPlayer.ID Then
+                        ubCloseBuilding.Visible = True
+                    End If
+                    Return
+                End If
             End If
         End If
 
-        '-- Display the new person information
-        SelectedBuilding = NewSelectedBuilding
-        lblBuilding.Text = "Displaying " + (SelectedBuilding + 1).ToString() + " of " + CityBuildings.ToString()
-        UpdateTextBox(txt_building, ClickCity.Buildings(SelectedBuilding).toString())
     End Sub
+
+#Region " Views "
+
+    Private Sub ViewDropdown_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ViewDropdown.SelectedIndexChanged
+        Dim NewSelectedIndex As Integer = ViewDropdown.SelectedIndex
+        If NewSelectedIndex <> UrbanBlight.GetSelectedView Then
+            UrbanBlight.SetSelectedView(NewSelectedIndex)
+        End If
+    End Sub
+
+    Private Sub ubVForward_Click(sender As Object, e As EventArgs) Handles ubVForward.Click
+        UrbanBlight.CycleThroughViews(True, True)
+    End Sub
+
+    Private Sub ubVBack_Click(sender As Object, e As EventArgs) Handles ubVBack.Click
+        UrbanBlight.CycleThroughViews(False, True)
+    End Sub
+
+#End Region
 
     Private Sub ubNew_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubNew.Click
         If MsgBox("Are you sure you want to start a new game?", MsgBoxStyle.YesNo, "Restart Game") = MsgBoxResult.Yes Then
@@ -1622,19 +1275,16 @@ Public Class MainForm
 
     Private Sub Infotab_SelectedTabChanged(ByVal sender As System.Object, ByVal e As EventArgs) Handles Infotab.TabIndexChanged
         If init Then
-            If Not (CurrentView = ViewEnum.Roads And SelectedCard = RoadCard) Then
-                CurrentView = ViewEnum.Population
-                UpdateTitle()
-                UpdateGrid()
-            End If
+            UrbanBlight.ResetView()
         End If
     End Sub
 
-    Private Sub ubName_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubName.Click
-        Dim CName As New RenameCity
-        CName.ShowDialog()
-        ClickCity.CityName = LastCityName
-        UpdateTabs()
+    Private Sub ubRename_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubRename.Click
+
+    End Sub
+
+    Private Sub ubCloseBuilding_Click(sender As Object, e As EventArgs) Handles ubCloseBuilding.Click
+        UrbanBlight.CloseCurrentBuilding()
     End Sub
 
     Private Sub ubHint_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ubHint.Click
@@ -1663,11 +1313,28 @@ Public Class MainForm
 
         Dim playerInfoText As String = ""
         playerInfoText += thisPlayer.toString() + ControlChars.NewLine
-        If thisPlayer.PlayerType = PlayerAI Then
+        If thisPlayer.PlayerType = PlayerTypeEnum.AI Then
             playerInfoText += thisPlayer.Personality.toString()
         End If
 
         MsgBox(playerInfoText, MsgBoxStyle.Information, "Player Info")
+    End Sub
+
+    Sub HighlightCurrentPlayer()
+        txtP1.BackColor = ColorPlayerUnselected
+        txtP2.BackColor = ColorPlayerUnselected
+        txtP3.BackColor = ColorPlayerUnselected
+        txtP4.BackColor = ColorPlayerUnselected
+
+        If CurrentPlayer.ID = 0 Then
+            txtP1.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayer.ID = 1 Then
+            txtP2.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayer.ID = 2 Then
+            txtP3.BackColor = ColorPlayerSelected
+        ElseIf CurrentPlayer.ID = 3 Then
+            txtP4.BackColor = ColorPlayerSelected
+        End If
     End Sub
 
 #End Region
@@ -1676,23 +1343,6 @@ Public Class MainForm
     Public Sub FillBuildingDropdown()
 
         DisableDropdownChange = True
-
-        'Dim comboSource As New Dictionary(Of String, String)()
-
-        'For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
-        '    Dim BaseCost As Integer = BuildingGenerator.GetBaseCost(i)
-        '    If BaseCost >= 0 And BaseCost <= CurrentPlayer.ChoiceCost Then 'CurrentPlayer.ChoiceCost
-        '        comboSource.Add(i.ToString(), BuildingGenerator.GetName(i))
-        '    End If
-        'Next
-
-        'If comboSource.Count = 0 Then
-        '    BuildingDropdown.DataSource = Nothing
-        'Else
-        '    BuildingDropdown.DataSource = New BindingSource(comboSource, Nothing)
-        '    BuildingDropdown.DisplayMember = "Value"
-        '    BuildingDropdown.ValueMember = "Key"
-        'End If
 
         BuildingDropdown.Items.Clear()
         For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
@@ -1721,16 +1371,18 @@ Public Class MainForm
             newBuilding.SetMarkdownPrice(SpecialOrderPrice)
 
             If newBuilding.GetPurchasePrice() <= CurrentPlayer.GetSpecialOrderCap() Then
-                Cards(ChoiceCard) = newBuilding
+                Cards(CardEnum.BuildingSpecialOrder) = newBuilding
             Else
-                Cards(ChoiceCard) = Nothing
+                Cards(CardEnum.BuildingSpecialOrder) = Nothing
             End If
 
-            UpdateCards(False)
+            UrbanBlight.UpdateCards(False)
         End If
 
     End Sub
 #End Region
+
+
 
 #Region " Debug Stuff "
 
@@ -1743,8 +1395,8 @@ Public Class MainForm
     Private Sub btnCheat_Click(sender As Object, e As EventArgs) Handles btnCheat.Click
         CurrentPlayer.TotalMoney += 100000
         CurrentPlayer.SpecialOrderCap += 500
-        UpdatePlayers()
-        UpdateCards(True)
+        DisplayPlayerText()
+        UrbanBlight.UpdateCards(True)
     End Sub
 
     Private Sub Label2_Click(sender As Object, e As EventArgs) Handles MarketLabel.Click
@@ -1752,19 +1404,19 @@ Public Class MainForm
         For Each Location As CitySquare In GridArray
             Location.UpdateTerrain()
         Next
-        UpdateGrid()
+        UrbanBlight.UpdateGrid()
     End Sub
 
     Private Sub btnSkip_Click(sender As Object, e As EventArgs) Handles btnSkip.Click
         '-- Let the user decide how many turns to skip
-        GameType = InfiniteGame
+        GameType = GameEnum.Infinite
         Dim ReturnString As String = InputBox("Skip how many turns?", "Fast Forward")
         If ReturnString.Length = 0 Then
             Return
         End If
         Dim SkipTurns As Integer = ReturnString
         For i As Integer = 0 To SkipTurns - 1
-            StartNewTurn()
+            UrbanBlight.EndTurn()
         Next
     End Sub
 

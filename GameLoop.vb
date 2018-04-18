@@ -1,18 +1,10 @@
-﻿Partial Public Class MainForm
+﻿Partial Public Class Main
 
 #Region " Game Loop "
-    Sub StartNewTurn()
-        SelectedCard = NoCard
-        UpdateCardSelection()
-        NextPlayer()
-    End Sub
+    Sub StartTurn()
 
-    Sub NextPlayer()
         '-- Cleanup
         ResetForNewTurn()
-
-        '--Advance to next player (If last player in round and end condition is met, show Game Over screen)
-        AdvanceToNextPlayer()
 
         '-- Handle events: births, deaths, movement, employment, crime, taxation, and business expansion
         EventsHappen()
@@ -24,19 +16,25 @@
         RunAI()
 
         '-- Display event messages
-        UpdateTextBox(txt_event, Diary.toString())
-        Infotab.SelectedTab = Infotab.TabPages(EventTab)
-        UpdateTabs()
+        MyGUI.UpdateTextBox(TabsEnum.Events, Diary.toString())
+        MyGUI.SetTab(TabsEnum.Events)
 
     End Sub
 
-    Sub RunAI()
+    Sub EndTurn()
+        '-- Advance to next player (If last player in round and end condition is met, show Game Over screen)
+        AdvanceToNextPlayer()
 
+        '-- Start the next turn
+        StartTurn()
+    End Sub
+
+    Sub RunAI()
         '-- Toggle the buttons so humans can't play for the computer
-        UpdateButtonEnables()
+        MyGUI.UpdateButtonEnables()
 
         '-- If not an AI bail at this point
-        If CurrentPlayer.PlayerType <> PlayerAI Then
+        If CurrentPlayer.PlayerType <> PlayerTypeEnum.AI Then
             Return
         End If
 
@@ -49,23 +47,23 @@
             '-- Get the AIs decision (the action they chose and where they chose to make it)
             Dim AIDecision As Integer = CurrentPlayer.ChooseNextAction(Cards)
 
-            If AIDecision = AIPass Then
+            If AIDecision = CardEnum.NoCard Then
                 ActionSuccess = False
             Else
                 SelectedCard = AIDecision
-                ClickCity = CurrentPlayer.BestMove
+                SetSelectedCity(CurrentPlayer.BestMove)
                 ActionSuccess = Build()
             End If
 
             If ActionSuccess Then
                 AIActionCount += 1
-                If AIDecision >= 0 And AIDecision < CardCount Then
-                    Dim newBuilding As Building = ClickCity.Buildings(ClickCity.Buildings.Count - 1) '-- Get latest building
+                If AIDecision >= 0 And AIDecision <= CardEnum.BuildingSpecialOrder Then
+                    Dim newBuilding As Building = SelectedCity.Buildings(SelectedCity.Buildings.Count - 1) '-- Get latest building
                     Diary.AIBuildEvents.AddEvent(CurrentPlayer.GetPlayerName() + " bought a " + newBuilding.GetNameAndAddress())
-                ElseIf AIDecision = RoadCard Then
-                    Diary.AIRoadEvents.AddEvent(CurrentPlayer.GetPlayerName() + " upgraded the road at " + ClickCity.GetName())
-                ElseIf AIDecision = LandCard Then
-                    Diary.AILandEvents.AddEvent(CurrentPlayer.GetPlayerName() + " founded " + ClickCity.GetName() + " at " + ClickCity.GetLocationText())
+                ElseIf AIDecision = CardEnum.Road Then
+                    Diary.AIRoadEvents.AddEvent(CurrentPlayer.GetPlayerName() + " upgraded the road at " + SelectedCity.GetName())
+                ElseIf AIDecision = CardEnum.Land Then
+                    Diary.AILandEvents.AddEvent(CurrentPlayer.GetPlayerName() + " founded " + SelectedCity.GetName() + " at " + SelectedCity.GetLocationText())
                 End If
             ElseIf AIActionCount = 0 Then
                 Diary.AILandEvents.AddEvent(CurrentPlayer.GetPlayerName() + " passed on their turn")
@@ -79,31 +77,28 @@
     Sub AdvanceToNextPlayer()
         '-- Move to next human or AI player. 
         Do
-            CurrentPlayerIndex += 1
-            If CurrentPlayerIndex = Players.Count Then
-                CurrentPlayerIndex = 0
+            Dim NextPlayerID As Integer = CurrentPlayer.ID + 1
+            If NextPlayerID = Players.Count Then
+                NextPlayerID = 0
 
                 '-- If this was the end of the round, advance the clock
                 theYear += TimeIncrement
-                UpdateTitle()
+                MyGUI.UpdateTitle()
 
                 '-- Check for a winner
-                If (GameType = YearGame And theYear >= GoalNumber) Or WinFlag = True Then
+                If (GameType = GameEnum.Year And theYear >= GoalNumber) Or WinFlag = True Then
                     GameOver()
                 End If
             End If
-            CurrentPlayer = Players(CurrentPlayerIndex)
-        Loop While CurrentPlayer.PlayerType = PlayerNone
-
-        '-- Highlight current player
-        HighlightCurrentPlayer()
+            UrbanBlight.SetCurrentPlayer(Players(NextPlayerID))
+        Loop While CurrentPlayer.PlayerType = PlayerTypeEnum.None
 
         '-- Update player info
         CurrentPlayer.GetPlayerScore()
     End Sub
 
     Sub EventsHappen()
-        Dim TurnEvents As New Turn(CurrentPlayer, theYear)
+        Dim TurnEvents As New Turn(theYear)
         TurnEvents.UpdatePeople()
     End Sub
 

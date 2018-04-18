@@ -22,6 +22,7 @@ Public Class Building
     Public OwnerID As Integer = -1
     Public Location As CitySquare = Nothing
     Public Employees As New List(Of Citizen)
+    Public Founder As Citizen = Nothing
 
     '-- Keep track of who rejected this building for free
     Public RejecterList As New List(Of Player)
@@ -42,7 +43,6 @@ Public Class Building
     Public TotalRevenue As Integer = 0
     Public CurrentUpkeep As Integer = 0
     Public TotalUpkeep As Integer = 0
-
 
 #End Region
 
@@ -326,7 +326,8 @@ Public Class Building
         '-- Decommission old buildings
         Dim DecomissionOdds As Integer = SafeDivide(Age - 50, TimeIncrement)
         If GetRandom(1, 100) < DecomissionOdds Then
-            Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " closed after " + Age + " years")
+            Location.ClosedHistory += 1
+            Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " closed after " + Age.ToString() + " years")
             Return False
         End If
 
@@ -543,7 +544,7 @@ Public Class Building
                 '-- Count the number of active players
                 Dim ActivePlayers As Integer = 0
                 For i As Integer = 0 To Players.Count - 1
-                    If Players(i).PlayerType <> PlayerNone Then
+                    If Players(i).PlayerType <> PlayerTypeEnum.None Then
                         ActivePlayers += 1
                     End If
                 Next
@@ -566,6 +567,11 @@ Public Class Building
             Dim theEmployee As Citizen = Employees(i)
             theEmployee.JobBuilding = Nothing
         Next
+
+        '-- The founder loses the building
+        If Founder IsNot Nothing Then
+            Founder.BuildingsFounded.Remove(Me)
+        End If
 
         '-- Food Tag: +1 Health for Farm or Ranch
         If HasTag(BuildingGen.TagEnum.Food) Then
@@ -631,6 +637,13 @@ Public Class Building
         Dim BuildingString As String = ""
 
         BuildingString += GetName() + ControlChars.NewLine '"Name: " + 
+
+        If OwnerID > 0 Then
+            BuildingString += "Player: " + (OwnerID + 1).ToString() + ControlChars.NewLine
+            If Founder IsNot Nothing Then
+                BuildingString += "Founder: " + Founder.Name + ControlChars.NewLine
+            End If
+        End If
 
         If Location IsNot Nothing Then
             BuildingString += "Location: " + Location.GetName() + ControlChars.NewLine
