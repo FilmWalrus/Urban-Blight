@@ -405,6 +405,7 @@
 
         Dim CityBuildings As Integer = SelectedCity.getDevelopment()
         If CityBuildings = 0 Then
+            SetSelectedBuilding(0)
             Return
         End If
 

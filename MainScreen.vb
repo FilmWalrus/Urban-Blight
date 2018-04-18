@@ -869,8 +869,10 @@ Public Class MainForm
 
         '-- Update the most recently clicked on box and its info
         ClickCity = GridArray(X, Y)
+
+        '-- Update the current selected city, building, and person info and display it
+        UrbanBlight.SetSelectedCity(ClickCity)
         If Not DoubleClick Then
-            UrbanBlight.SetSelectedCity(ClickCity)
             UrbanBlight.SetSelectedBuilding(0)
             UrbanBlight.SetSelectedPerson(0)
         End If
@@ -1229,7 +1231,7 @@ Public Class MainForm
                     lblBuilding.Text = "Displaying " + (BuildingId + 1).ToString() + " of " + BuildingCount.ToString()
 
                     '-- Players can only close buildings they own
-                    If theBuilding.OwnerID = CurrentPlayer.ID Then
+                    If theBuilding.OwnerID = CurrentPlayer.ID And CurrentPlayer.PlayerType = PlayerTypeEnum.Human Then
                         ubCloseBuilding.Visible = True
                     End If
                     Return
