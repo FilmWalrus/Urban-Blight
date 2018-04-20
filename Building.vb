@@ -118,7 +118,7 @@ Public Class Building
 
 #Region " Gets "
 
-    Public Function GetName() As String
+    Public Overridable Function GetName() As String
         Return BuildingGenerator.GetName(Type)
     End Function
 

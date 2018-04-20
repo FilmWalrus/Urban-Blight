@@ -117,14 +117,6 @@ Public Class CitySquare
         GridSquare.BorderStyle = BorderStyle.FixedSingle
     End Sub
 
-    Public Sub Occupy(ByVal PlayerID As Integer)
-        OwnerID = PlayerID
-        '-- Generate random city name
-        CityName = Namer.GenerateCityName(Me)
-
-        OrderAcquired = Players(PlayerID).GetPlayerTerritoryCount()
-    End Sub
-
     Public Sub SetTerrain(ByVal TerrainType As Integer)
         Terrain = TerrainType
         UpdateTerrain()
@@ -340,11 +332,43 @@ Public Class CitySquare
         Return (OwnerID = playerID)
     End Function
 
-    Public Sub AddBuilding(ByVal NewBuilding As Building, ByVal PlayerIndex As Integer)
+    Public Sub Occupy(ByVal PlayerID As Integer)
+        OwnerID = PlayerID
+        '-- Generate random city name
+        CityName = Namer.GenerateCityName(Me)
+
+        Dim thePlayer As Player = Players(PlayerID)
+        OrderAcquired = thePlayer.GetPlayerTerritoryCount()
+
+        '-- Check if this is connected via an exurb
+        If thePlayer.ExurbStations.Count > 0 Then
+            '-- Find the home and work commuter stations that we should connect
+            Dim WorkStation As ExurbBuilding = thePlayer.ExurbStations(0)
+            Dim HomeStation As ExurbBuilding = BuildingGenerator.CreateBuilding(BuildingGen.BuildingEnum.Exurb)
+            Me.AddBuilding(HomeStation, PlayerID, False)
+
+            '-- Link these two stations
+            WorkStation.PairedStation = HomeStation
+            HomeStation.PairedStation = WorkStation
+
+            '-- Remove the exurb from the player lists
+            thePlayer.ExurbStations.Remove(WorkStation)
+            thePlayer.LandOptionBuildings.Remove(WorkStation)
+
+            '-- Seed the location with people
+            HomeStation.SeedExurb(3)
+        End If
+    End Sub
+
+    Public Sub AddBuilding(ByVal NewBuilding As Building, ByVal PlayerIndex As Integer, Optional ByVal TriggerConstruction As Boolean = True)
         NewBuilding.Location = Me
         NewBuilding.OwnerID = PlayerIndex
         Buildings.Add(NewBuilding)
-        NewBuilding.ConstructionEffects()
+
+        '-- Activate any construction effects
+        If TriggerConstruction Then
+            NewBuilding.ConstructionEffects()
+        End If
 
         '-- Record the history of how many buildings were built here
         BuildingHistory += 1
@@ -879,7 +903,8 @@ Public Class CitySquare
             If CurrentBuilding.Type = BuildingGen.BuildingEnum.Taxi_Service Or
                 CurrentBuilding.Type = BuildingGen.BuildingEnum.Harbor Or
                 CurrentBuilding.Type = BuildingGen.BuildingEnum.Mass_Transit Or
-                CurrentBuilding.Type = BuildingGen.BuildingEnum.Airport Then
+                CurrentBuilding.Type = BuildingGen.BuildingEnum.Airport Or
+                CurrentBuilding.Type = BuildingGen.BuildingEnum.Exurb Then
 
                 AddToAdjList(AdjacentList, CurrentBuilding)
             End If
@@ -920,11 +945,13 @@ Public Class CitySquare
                 Case BuildingGen.BuildingEnum.Harbor
                     visitString += "boat"
                 Case BuildingGen.BuildingEnum.Mass_Transit
-                    visitString += "train"
+                    visitString += "bus"
                 Case BuildingGen.BuildingEnum.Airport
                     visitString += "plane"
                 Case BuildingGen.BuildingEnum.Taxi_Service
                     visitString += "taxi"
+                Case BuildingGen.BuildingEnum.Exurb
+                    visitString += "commuter train"
             End Select
         End If
         Return visitString

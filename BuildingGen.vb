@@ -651,7 +651,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("You can build in other player's territory at 120% cost -10% for each additional embassy. You retain ownership, keep any revenue, and pay any upkeep.")
                     Return newBuilding
                 Case BuildingEnum.Exurb
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 0) 'Check phrasing of Exurb special ability text.
+                    Dim newBuilding As New ExurbBuilding(bType, GetBaseCost(bType), 0) 'Check phrasing of Exurb special ability text.
                     newBuilding.SetStat(StatEnum.Mobility, 15, 2)
                     newBuilding.SetInfo("Sometimes you just need to escape the city.  Exurbs let you get away, but still remain close to the hustle and bustle of your metropolis.")
                     newBuilding.SetSpecialAbility("After purchasing an Exurbs, the next piece of land you buy can be any unoccupied square on the board. This square will be considered adjacent to the tile where you placed the Exurb.")

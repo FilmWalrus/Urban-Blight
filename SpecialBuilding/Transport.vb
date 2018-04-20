@@ -47,6 +47,70 @@ Public Class AirportBuilding
 
 End Class
 
+Public Class ExurbBuilding
+    Inherits Building
+
+    Public PairedStation As ExurbBuilding = Nothing
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        EffectText = "commuters transported"
+    End Sub
+
+    Public Overrides Function GetName() As String
+        If OwnerID < 0 Then
+            Return MyBase.GetName()
+        Else
+            If PairedStation IsNot Nothing Then
+                Return "Commuter train to " + PairedStation.Location.GetName()
+            Else
+                Return "Unconnected commuter station"
+            End If
+        End If
+    End Function
+
+    Public Overrides Function GetAdjacentLocations() As List(Of CitySquare)
+
+        '-- Exurbs are adjacent to their commuter station location
+        Dim ValidDestinationList As New List(Of CitySquare)
+        If PairedStation IsNot Nothing Then
+            ValidDestinationList.Add(PairedStation.Location)
+        End If
+
+        Return ValidDestinationList
+    End Function
+
+    Public Overrides Function IsLandExpansionOption(ByRef testLocation As CitySquare) As Boolean
+        Return True
+    End Function
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Add to the owner's list of exurb stations
+        Players(OwnerID).ExurbStations.Add(Me)
+        Players(OwnerID).LandOptionBuildings.Add(Me)
+    End Sub
+
+    Public Sub SeedExurb(ByVal SeedCount As Integer)
+        For i As Integer = 0 To SeedCount - 1
+            Dim SeedPerson As New Citizen(True)
+            Location.AddPerson(SeedPerson)
+        Next
+    End Sub
+
+    Public Overrides Sub Destroy()
+
+        '-- Remove this location from its paired station
+        If PairedStation IsNot Nothing Then
+            PairedStation.PairedStation = Nothing
+        End If
+
+        MyBase.Destroy()
+    End Sub
+
+End Class
+
 Public Class FreewayBuilding
     Inherits Building
 
