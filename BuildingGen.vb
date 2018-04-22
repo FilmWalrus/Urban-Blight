@@ -965,8 +965,8 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Criminality, 50, -3)
                     newBuilding.AddTag(TagEnum.Security)
                     newBuilding.AddTag(TagEnum.Government)
-                    newBuilding.SetInfo("Police Stations are the best way to crack down on crime, even if every once in a while they spoil some mostly-harmless fun.")
-					newBuilding.SetSpecialAbility("Police Stations can prevent crimes within a range of 2.")
+                    newBuilding.SetInfo("Police Stations crack down on crime, even if every once in a while they spoil some mostly-harmless fun.")
+                    newBuilding.SetSpecialAbility("Police Stations can prevent crimes within a range of 2.")
                     Return newBuilding
                 Case BuildingEnum.Polling_Place 'Special Ability text not done - still some question marks as to how it will function: frequency, cost, etc.
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
@@ -1011,7 +1011,8 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 10, 4)
                     newBuilding.SetStat(StatEnum.Drunkenness, 50, -2)
                     newBuilding.AddTag(TagEnum.Medical)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Soothing, bubbling fountains. The sound of birds calling in the distance. Let yourself rest, relax, recouperate, and sober up at the Rehab Clinic.")
+                    newBuilding.SetSpecialAbility("Rehab Clinics have a chance of reducing drunkenness in citizens to 0.  Only citizens with a Drunkenness value greater than 10 can be checked in.  Their Mobility will be decreased by half. More effective on Mountain and Desert tiles.")
                     Return newBuilding
                 Case BuildingEnum.Restaurant
                     Dim newBuilding As New RestaurantBuilding(bType, GetBaseCost(bType), 2)
@@ -1019,7 +1020,8 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 26, 1)
                     newBuilding.SetStat(StatEnum.Drunkenness, 5, 1)
                     newBuilding.AddTag(TagEnum.Food)
-                    newBuilding.SetInfo("Restaurants provide a charming setting for healthy meals and happy dates.")
+                    newBuilding.SetInfo("Restaurants provide a charming setting for healthy meals and promising dates.")
+                    newBuilding.SetSpecialAbility("The more the population drops on a tile with a Restaurant, the more likely it is to shut down, fire all staff, and move to an adjacent tile.")
                     Return newBuilding
                 Case BuildingEnum.Retirement_Home
                     Dim newBuilding As New RetirementBuilding(bType, GetBaseCost(bType), 1)
@@ -1027,7 +1029,8 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 18, 3)
                     newBuilding.SetStat(StatEnum.Mobility, 20, -3)
                     newBuilding.SetStat(StatEnum.Drunkenness, 20, -2)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("At the Retirement Home, Seniors can spend their days kicking up their heels and enjoying life.  Their knees may have gone, but their ability to party is still very much present.")
+                    newBuilding.SetSpecialAbility("Seniors at the Retirement Home do not count towards overpopulation.")
                     Return newBuilding
                 Case BuildingEnum.Safe_House
                     Dim newBuilding As New SafeHouseBuilding(bType, GetBaseCost(bType), 0)
@@ -1035,27 +1038,31 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Mobility, 20, -3)
                     newBuilding.SetStat(StatEnum.Intelligence, 20, 3)
                     newBuilding.AddTag(TagEnum.Transportation)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Whether it be protective custody or hiding from a rival crime syndicate, Safe Houses give your citizens need a place to lie low.")
+                    newBuilding.SetSpecialAbility("When citizens pass through the Safe House, their Mobility has a chance of temporarily increasing by the numerical value of their Criminality.")
                     Return newBuilding
                 Case BuildingEnum.School
                     Dim newBuilding As New SchoolBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Happiness, 33, -1)
                     newBuilding.SetStat(StatEnum.Intelligence, 50, 4)
                     newBuilding.SetStat(StatEnum.Creativity, 33, 1)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Reading, writing, arithmetic, history, art, music, science... the topics seem to go on and on for students at the School.  Too bad recess is so short.")
+                    newBuilding.SetSpecialAbility("The effects of the School are double on minors.")
                     Return newBuilding
                 Case BuildingEnum.Shipping_Center
                     Dim newBuilding As New ShippingBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Mobility, 12, 2)
                     newBuilding.AddTag(TagEnum.Transportation)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("In the land of packages, logistics are key.  Shipping Centers have systems in place to get your parcels from one side of the city to the other.")
+                    newBuilding.SetSpecialAbility("Shipping Centers double the number of jobs at Manufacturing buildings on the same tile.")
                     Return newBuilding
                 Case BuildingEnum.Sidewalks
                     Dim newBuilding As New SidewalkBuilding(bType, GetBaseCost(bType), 0)
                     newBuilding.SetStat(StatEnum.Happiness, 8, 1)
                     newBuilding.SetStat(StatEnum.Mobility, 30, 1)
                     newBuilding.AddTag(TagEnum.Transportation)
-                    newBuilding.SetInfo("Sidewalks give a little mobility to almost everyone and even a touch of happiness for friendly pedestrians.")
+                    newBuilding.SetInfo("Sidewalks make it a little easier for pedestrians to get around.")
+                    newBuilding.SetSpecialAbility("Sidewalks provide a temporary Mobility boost of 3 for citizens.")
                     Return newBuilding
                 Case BuildingEnum.Ski_Resort
                     Dim newBuilding As New SkiResortBuilding(bType, GetBaseCost(bType), 3)
@@ -1063,8 +1070,8 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 12, 3)
                     newBuilding.SetStat(StatEnum.Mobility, 5, 2)
                     newBuilding.SetStat(StatEnum.Drunkenness, 5, 2)
-                    newBuilding.SetInfo("")
-                    newBuilding.SetSpecialAbility("Only works on mountains.")
+                    newBuilding.SetInfo("The white, fluffy powder; the feel of the wind in your hair; the warmth of a fire in the lodge - Ski Resorts have something for everyone.")
+                    newBuilding.SetSpecialAbility("Ski Resorts are only effective on Mountain tiles.")
                     Return newBuilding
                 Case BuildingEnum.Skyscraper
                     Dim newBuilding As New SkyscraperBuilding(bType, GetBaseCost(bType), 6)
