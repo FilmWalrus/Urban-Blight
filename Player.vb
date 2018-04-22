@@ -27,6 +27,7 @@ Public Class Player
     Public BannedBuildings As New List(Of Integer)
     Public ExurbStations As New List(Of Building)
     Public EmbassyCount As Integer = 0
+    Public PollCount As Integer = 0
     Public GovernmentCount As Integer = 0
     Public CommerceCount As Integer = 0
 
@@ -275,6 +276,16 @@ Public Class Player
         End If
 
         Return True
+    End Function
+
+    Public Function GetPollingOptions() As Integer
+        Dim PollingOptions As Integer = 1
+        For i As Integer = 0 To PollCount - 1
+            If GetRandom(0, 1) = 0 Then
+                PollingOptions += 1
+            End If
+        Next
+        Return PollingOptions
     End Function
 
     Public Overrides Function toString() As String

@@ -209,10 +209,8 @@
             If SelectedCard = CardEnum.RoadMax Then
                 Build()
             End If
-            SelectedCard = CardEnum.NoCard
 
             UpdateAll()
-            MyGUI.UpdateTextBox(TabsEnum.City, SelectedCity.toString())
         End If
 
         Return True
@@ -222,8 +220,12 @@
     Sub UpdateAll()
         UpdateGrid()
         UpdateCards(True)
+        SelectedCard = CardEnum.NoCard
         MyGUI.UpdateButtonSelection()
         MyGUI.DisplayPlayerText()
+        If SelectedCity IsNot Nothing Then
+            MyGUI.UpdateTextBox(TabsEnum.City, SelectedCity.toString())
+        End If
     End Sub
 
     Sub UpdateGrid()
@@ -252,8 +254,18 @@
 
             If CardBuilding Is Nothing Then
                 If i <> CardEnum.BuildingSpecialOrder Then
-                    '--Increase hand to full
-                    CardBuilding = BuildingGenerator.CreateBuilding(-1)
+                    '-- Refill the building market to full
+                    Dim NewBulidingType As Integer = -1
+
+                    '-- If the player has polling stations, let them determine the next building for the market
+                    Dim PollingOptions As Integer = CurrentPlayer.GetPollingOptions()
+                    If PollingOptions > 1 And SelectedCard <> CardEnum.WipeBuildings Then
+                        Dim PollScreen As New PollingScreen(PollingOptions)
+                        PollScreen.ShowDialog()
+                        NewBulidingType = PollScreen.BuildingChoice
+                    End If
+
+                    CardBuilding = BuildingGenerator.CreateBuilding(NewBulidingType)
                     Cards(i) = CardBuilding
                 End If
             Else

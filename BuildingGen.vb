@@ -307,7 +307,7 @@ Public Class BuildingGen
             Case BuildingEnum.Power_Plant
                 Return 455
             Case BuildingEnum.Private_Security_Company
-                Return 300
+                Return 205
             Case BuildingEnum.Ranch
                 Return 130
             Case BuildingEnum.Refugee_Camp
@@ -857,14 +857,14 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("A mall has something for nearly everyone, but the cookie-cutter nature of stores can stifle creativity and be damaging to small business owners.")
-					newBuilding.SetSpecialAbility("Odds of happiness increase with every other building on the tile.")
+                    newBuilding.SetSpecialAbility("Odds of happiness increase with every other building on the tile.")
                     Return newBuilding
                 Case BuildingEnum.Mass_Transit
                     Dim newBuilding As New MassTransitBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Mobility, 32, 5)
                     newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Mass Transit allows your citizens to travel around in ways they never would have had without it.")
-					newBuilding.SetSpecialAbility("Mass Transits within range of 3 tiles are considered adjacent to each other.  The price of Mass Transit decreases with each built.")
+                    newBuilding.SetSpecialAbility("Mass Transits within range of 3 tiles are considered adjacent to each other.  The price of Mass Transit decreases with each built.")
                     Return newBuilding
                 Case BuildingEnum.Military_Base
                     Dim newBuilding As New MilitaryBaseBuilding(bType, GetBaseCost(bType), 5)
@@ -877,7 +877,7 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Monument)
                     newBuilding.AddTag(TagEnum.Security)
                     newBuilding.SetInfo("The Military Base is all about uniformity.  The sameness might squash some of your individuality but at least you can still knock back a few beers with your brothers-in-arms.")
-					newBuilding.SetSpecialAbility("Military Bases help to reduce the effects of disasters.")
+                    newBuilding.SetSpecialAbility("Military Bases help to reduce the effects of disasters.")
                     Return newBuilding
                 Case BuildingEnum.Mine
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
@@ -885,7 +885,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 50, -3)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Mines provide you with the resources any thriving city needs to push itself to the next level.")
-					newBuilding.SetSpecialAbility("Mines give you a 10% rebate on any building that occurs within range 1; range 2 on Mountain tiles.")
+                    newBuilding.SetSpecialAbility("Mines give you a 10% rebate on any building that occurs within range 1; range 2 on Mountain tiles.")
                     Return newBuilding
                 Case BuildingEnum.Monument
                     Dim newBuilding As New MonumentBuilding(bType, GetBaseCost(bType), 0)
@@ -900,13 +900,13 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Creativity, 22, 10)
                     newBuilding.AddTag(TagEnum.Monument)
                     newBuilding.SetInfo("Museums are the best. End of story.")
-					newBuilding.SetSpecialAbility("")
+                    newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Observatory
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Intelligence, 20, 4)
                     newBuilding.SetInfo("Have you ever gazed up at the stars and wondered how small the world really is?  Get lost in the sheer size of the universe at the Observatory.")
-					newBuilding.SetSpecialAbility("Double the effect of the Observatory on Desert and Mountain tiles. They may also warn you of impending danger.")
+                    newBuilding.SetSpecialAbility("Double the effect of the Observatory on Desert and Mountain tiles. They may also warn you of impending danger.")
                     Return newBuilding
                 Case BuildingEnum.Oil_Well
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 4)
@@ -914,14 +914,14 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Mobility, 75, 1)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("It many not be the best for the wellbeing of you or the planet, but if you strike black gold with the Oil Well, the money will come pouring in.")
-					newBuilding.SetSpecialAbility("The Oil Well only works on Desert, Dirt, and Swamp tiles. It generates revenue for you for as long as the oil lasts.")
+                    newBuilding.SetSpecialAbility("The Oil Well only works on Desert, Dirt, and Swamp tiles. It generates revenue for you for as long as the oil lasts.")
                     Return newBuilding
                 Case BuildingEnum.Office
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 4)
                     newBuilding.SetStat(StatEnum.Creativity, 30, -2)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Offices are a stable sources of jobs but the day-to-day monotony of the cubicle farm tends to wear on the workers.")
-					newBuilding.SetSpecialAbility("It's an Office.  Isn't that enough?")
+                    newBuilding.SetSpecialAbility("It's an Office.  Isn't that enough?")
                     Return newBuilding
                 Case BuildingEnum.Park 'no special ability written
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
@@ -931,7 +931,7 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.AddTag(TagEnum.Monument)
                     newBuilding.SetInfo("With leafy trees and nicely-paved paths, Parks allow those out for a causal stroll to enjoy the great outdoors and admire the beauty around them.")
-					newBuilding.SetSpecialAbility("")
+                    newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Parking_Garage
                     Dim newBuilding As New ParkingGarageBuilding(bType, GetBaseCost(bType), 1)
@@ -940,7 +940,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Criminality, 20, 2)
                     newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Parking Garages have a bit of a seedy side, but provide a useful service to other buildings in the area.")
-					newBuilding.SetSpecialAbility("With the Parking Garage, there is a 33% chance that citizens will visit each building on the tile an extra time each turn.")
+                    newBuilding.SetSpecialAbility("With the Parking Garage, there is a 33% chance that citizens will visit each building on the tile an extra time each turn.")
                     Return newBuilding
                 Case BuildingEnum.Parking_Lot
                     Dim newBuilding As New ParkingLotBuilding(bType, GetBaseCost(bType), 0)
@@ -949,7 +949,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Criminality, 10, 1)
                     newBuilding.AddTag(TagEnum.Transportation)
                     newBuilding.SetInfo("Less effective than a Garage, Parking Lots provide a place for you to park - attractive to both travelers and petty criminals.")
-					newBuilding.SetSpecialAbility("With the Parking Lot, there is a 67% chance that citizens will visit a building on the tile an additional time each turn.")
+                    newBuilding.SetSpecialAbility("With the Parking Lot, there is a 67% chance that citizens will visit a building on the tile an additional time each turn.")
                     Return newBuilding
                 Case BuildingEnum.Pharmacy
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
@@ -967,7 +967,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Police stations are the best way to crack down on crime, even if every once in a while they spoil some harmless fun.")
                     Return newBuilding
                 Case BuildingEnum.Polling_Place
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New PollingBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Happiness, 25, 2)
                     newBuilding.SetStat(StatEnum.Intelligence, 25, 1)
                     newBuilding.AddTag(TagEnum.Government)
