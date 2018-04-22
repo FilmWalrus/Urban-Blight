@@ -885,7 +885,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 50, -3)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Mines provide you with the resources any thriving city needs to push itself to the next level.")
-					newBuilding.SetSpecialAbility("Mines give you a 10% rebate on any building that occurs within range 1; range 2 on Mountain tiles.")
+					newBuilding.SetSpecialAbility("Mines give you a 10% rebate on any building that is constructed within range 1; range 2 on Mountain tiles.")
                     Return newBuilding
                 Case BuildingEnum.Monument
                     Dim newBuilding As New MonumentBuilding(bType, GetBaseCost(bType), 0)
@@ -956,7 +956,8 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 50, 1)
                     newBuilding.SetStat(StatEnum.Drunkenness, 5, 5)
                     newBuilding.AddTag(TagEnum.Medical)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Pharmacies give your citizens a place to stock up on perscriptions and possibly some self-medications.")
+					newBuilding.SetSpecialAbility("Pharmacies are twice as effective on Hospitals, Laboratories, and Grocery Stores.")
                     Return newBuilding
                 Case BuildingEnum.Police_Station
                     Dim newBuilding As New PoliceBuilding(bType, GetBaseCost(bType), 2)
@@ -964,19 +965,20 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Criminality, 50, -3)
                     newBuilding.AddTag(TagEnum.Security)
                     newBuilding.AddTag(TagEnum.Government)
-                    newBuilding.SetInfo("Police stations are the best way to crack down on crime, even if every once in a while they spoil some harmless fun.")
+                    newBuilding.SetInfo("Police Stations are the best way to crack down on crime, even if every once in a while they spoil some mostly-harmless fun.")
+					newBuilding.SetSpecialAbility("Police Stations can prevent crimes within a range of 2.")
                     Return newBuilding
-                Case BuildingEnum.Polling_Place
+                Case BuildingEnum.Polling_Place 'Special Ability text not done - still some question marks as to how it will function: frequency, cost, etc.
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Happiness, 25, 2)
                     newBuilding.SetStat(StatEnum.Intelligence, 25, 1)
                     newBuilding.AddTag(TagEnum.Government)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Polling Places let your citizens participate in the democratic process - something that always goes their way.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
                 Case BuildingEnum.Post_Office
                     'newBuilding.AddTag(TagEnum.Government)
-                Case BuildingEnum.Power_Plant
+                Case BuildingEnum.Power_Plant 'skipping until variations are ready - want to write all at once
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 3)
                     newBuilding.SetInfo("")
                     'Return newBuilding
@@ -984,7 +986,8 @@ Public Class BuildingGen
                     Dim newBuilding As New PrivateSecurityBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Criminality, 12, -5)
                     newBuilding.AddTag(TagEnum.Security)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Private Security Companies are excellent at keeping your citizens safe - often at the expense of the potential perpetrator.")
+					newBuilding.SetSpecialAbility("Private Security Companies can prevent crimes, but will kill whomever attempts to carry them out.")
                     Return newBuilding
                 Case BuildingEnum.Ranch
                     Dim newBuilding As New RanchBuilding(bType, GetBaseCost(bType), 2)
@@ -992,14 +995,16 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 33, 2)
                     newBuilding.AddTag(TagEnum.Food)
                     newBuilding.AddTag(TagEnum.Nature)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Ranches give your citizens a breath of the clean air found good ol' outdoors.  There's nothing like being home on the range.")
+					newBuilding.SetSpecialAbility("Ranches give Food buildings a +1 health effect. The also expand by 2 jobs at a time if build on a Plain tile.  Ranches do not stack.")
                     Return newBuilding
                 Case BuildingEnum.Refugee_Camp
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Happiness, 20, -2)
                     newBuilding.SetStat(StatEnum.Health, 25, -2)
                     newBuilding.SetStat(StatEnum.Criminality, 25, 3)
-                    newBuilding.SetInfo("")
+                    newBuilding.SetInfo("Refugee Camps are not ideal for the general health, happiness, and crime rate of a city, but they give people in a dire situation a place where they can escape.")
+					newBuilding.SetSpecialAbility("Refugee Camps increase the chances of immigrant arrival to the tile on which it is built.")
                     'Return newBuilding
                 Case BuildingEnum.Rehab_Clinic
                     Dim newBuilding As New RehabBuilding(bType, GetBaseCost(bType), 1)
