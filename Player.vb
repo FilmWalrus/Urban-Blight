@@ -30,6 +30,7 @@ Public Class Player
     Public PollCount As Integer = 0
     Public GovernmentCount As Integer = 0
     Public CommerceCount As Integer = 0
+    Public BlackMarketList As New List(Of BlackMarketBuilding)
 
     '-- AI stuff
     Public BestMove As CitySquare = Nothing

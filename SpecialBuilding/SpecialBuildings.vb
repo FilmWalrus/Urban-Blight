@@ -30,6 +30,35 @@ Public Class ActivismBuilding
 
 End Class
 
+Public Class BlackMarketBuilding
+    Inherits Building
+
+    Dim BuildingCardNumber As Integer = -1
+    Dim DiscountPercentage As Integer = -1
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+        BuildingCardNumber = GetRandom(0, CardEnum.BuildingSpecialOrder - 1)
+        DiscountPercentage = GetRandom(5, 20)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Add to the owner's black market list
+        Players(OwnerID).BlackMarketList.Add(Me)
+    End Sub
+
+    Public Overrides Sub Destroy()
+
+        '-- Remove this from the owner's black market list
+        Players(OwnerID).BlackMarketList.Remove(Me)
+
+        MyBase.Destroy()
+    End Sub
+
+End Class
+
 Public Class ChurchBuilding
     Inherits Building
 
