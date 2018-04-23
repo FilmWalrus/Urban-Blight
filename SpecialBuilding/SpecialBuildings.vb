@@ -198,6 +198,30 @@ Public Class MonumentBuilding
     End Sub
 End Class
 
+Public Class PollingBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+        MyBase.New(bType, bCost, bJobs)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Add to the owner's count of polling places
+        Players(OwnerID).PollCount += 1
+    End Sub
+
+    Public Overrides Sub Destroy()
+
+        '-- Remove this from the owner's count of polling places
+        Players(OwnerID).PollCount -= 1
+
+        MyBase.Destroy()
+    End Sub
+
+End Class
+
 Public Class RehabBuilding
     Inherits Building
 
