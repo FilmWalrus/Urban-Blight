@@ -527,12 +527,18 @@ Public Class Building
         PurchasePrice = MarkdownCost
     End Sub
 
-    Public Sub AdjPurchasePrice(ByRef thisPlayer As Player)
+    Public Sub AdjPurchasePrice(ByRef thisPlayer As Player, ByVal CardPosition As Integer)
         '-- Government buildings get 5% more expensive for each one you already have
         If HasTag(BuildingGen.TagEnum.Government) Then
             Dim PriceAdjust As Double = 1.0 + (thisPlayer.GovernmentCount * 0.05)
             PurchasePrice *= PriceAdjust
         End If
+
+        For Each BlackMarket As BlackMarketBuilding In thisPlayer.BlackMarketList
+            If BlackMarket.CardPosition = CardPosition Then
+                PurchasePrice *= SafeDivide(100.0 - BlackMarket.DiscountPercentage, 100.0)
+            End If
+        Next
     End Sub
 
     Public Function IsBuildingUnwanted(ByRef thisPlayer As Player) As Boolean

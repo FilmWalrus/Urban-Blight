@@ -462,12 +462,12 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Bars double the effect of Stadiums and Colleges on the same square.")
                     Return newBuilding
                 Case BuildingEnum.Black_Market
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New BlackMarketBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Criminality, 50, 3)
                     newBuilding.AddTag(TagEnum.Criminal)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Though dubious in nature, the Black Market can get you what you want.")
-                    newBuilding.SetSpecialAbility("Gives owner a permanent 10% cost reduction to a randomly-selected building card (i.e. top right, top left, bottom right, bottom left).")
+                    newBuilding.SetSpecialAbility("Gives owner a permanent " + newBuilding.DiscountPercentage.ToString + "% cost reduction to buildings in market slot #" + (newBuilding.CardPosition + 1).ToString() + ".")
                     Return newBuilding
                 Case BuildingEnum.Botanical_Garden
                     Dim newBuilding As New BotanicalBuilding(bType, GetBaseCost(bType), 2)

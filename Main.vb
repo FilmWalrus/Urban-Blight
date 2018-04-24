@@ -289,7 +289,7 @@
                 cardText += "$" + CurrentPlayer.GetSpecialOrderCap().ToString() + " - Cap"
             Else
                 '-- Adjust the purchase price for this player
-                CardBuilding.AdjPurchasePrice(CurrentPlayer)
+                CardBuilding.AdjPurchasePrice(CurrentPlayer, i)
 
                 '--Update building card text
                 cardText += CardBuilding.GetName() + ControlChars.NewLine

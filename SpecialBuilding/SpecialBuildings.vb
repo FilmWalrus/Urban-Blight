@@ -33,14 +33,24 @@ End Class
 Public Class BlackMarketBuilding
     Inherits Building
 
-    Dim BuildingCardNumber As Integer = -1
-    Dim DiscountPercentage As Integer = -1
+    Public CardPosition As Integer = -1
+    Public DiscountPercentage As Integer = -1
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
         MyBase.New(bType, bCost, bJobs)
-        BuildingCardNumber = GetRandom(0, CardEnum.BuildingSpecialOrder - 1)
+        CardPosition = GetRandom(0, CardEnum.BuildingSpecialOrder - 1)
         DiscountPercentage = GetRandom(5, 20)
+
+
     End Sub
+
+    Public Function GetCardPosition() As Integer
+        Return CardPosition
+    End Function
+
+    Public Function GetDiscount() As Integer
+        Return DiscountPercentage
+    End Function
 
     Public Overrides Sub ConstructionEffects()
         MyBase.ConstructionEffects()
