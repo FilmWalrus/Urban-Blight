@@ -352,12 +352,13 @@ Public Class Citizen
         End If
 
         '-- Population
-        If thePop >= 5 Then
+        Dim AdjustedPopulation As Integer = Residence.GetAdjustedPopulation()
+        If AdjustedPopulation >= 5 Then
             '-- A person suffers from urban blight once per 5 population
-            Dim numberOfBlights As Integer = Math.Floor(SafeDivide(thePop, 5.0))
+            Dim numberOfBlights As Integer = Math.Floor(SafeDivide(AdjustedPopulation, 5.0))
 
             For i As Integer = 0 To numberOfBlights - 1
-                maxBonus = SafeDivide(thePop, 5.0)
+                maxBonus = SafeDivide(AdjustedPopulation, 5.0)
                 Dim switchman As Integer = GetRandom(0, 2)
                 '-- Crowded areas reduces health, happiness and increased crime
                 If switchman = 0 Then

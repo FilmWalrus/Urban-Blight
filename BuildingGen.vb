@@ -13,8 +13,8 @@ Public Class BuildingGen
         Apartments
         Aquarium
         Architecture_Firm
-        Art_Gallery
-        Bank
+        'Art_Gallery
+        'Bank
         Bar
         Black_Market
         Botanical_Garden
@@ -84,7 +84,7 @@ Public Class BuildingGen
         Power_Plant
         Private_Security_Company
         Ranch
-        Refugee_Camp
+        'Refugee_Camp
         Rehab_Clinic
         Research_Hospital
         Restaurant
@@ -120,6 +120,7 @@ Public Class BuildingGen
         Coffee
         Commerce
         Criminal
+        Entertainment
         Food
         Franchise
         Government
@@ -166,10 +167,10 @@ Public Class BuildingGen
                 Return 195
             Case BuildingEnum.Architecture_Firm
                 Return 210
-            Case BuildingEnum.Art_Gallery
-                Return 120
-            Case BuildingEnum.Bank
-                Return -1
+            'Case BuildingEnum.Art_Gallery
+            '    Return 120
+            'Case BuildingEnum.Bank
+            '    Return -1
             Case BuildingEnum.Bar
                 Return 60
             Case BuildingEnum.Black_Market
@@ -310,8 +311,8 @@ Public Class BuildingGen
                 Return 205
             Case BuildingEnum.Ranch
                 Return 130
-            Case BuildingEnum.Refugee_Camp
-                Return 80
+            'Case BuildingEnum.Refugee_Camp
+            '    Return 80
             Case BuildingEnum.Rehab_Clinic
                 Return 145
             Case BuildingEnum.Restaurant
@@ -419,13 +420,14 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Happiness, 16, 7)
                     newBuilding.SetStat(StatEnum.Health, 20, -1)
                     newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Remember the excitement (mixed with a little terror) that coursed through you at the top of your first roller coaster?  Relive those experiences at the Amusement Park!")
                     newBuilding.SetSpecialAbility("Minors visit twice as often as adults.")
                     Return newBuilding
-                Case BuildingEnum.Apartments 'I'm also going to let you write this Special Ability.  I get what you mean but can't figure out a way to phrase it.
+                Case BuildingEnum.Apartments
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetInfo("Everyone needs a place to call home.  Apartment-living is cheap and puts you in the middle of the action.")
-                    newBuilding.SetSpecialAbility("")
+                    newBuilding.SetSpecialAbility("Increases the threshold by 10 where overpopulation begins to have a negative effect.")
                     Return newBuilding
                 Case BuildingEnum.Aquarium
                     Dim newBuilding As New AquariumBuilding(bType, GetBaseCost(bType), 3)
@@ -433,6 +435,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 15, 2)
                     newBuilding.SetStat(StatEnum.Intelligence, 15, 1)
                     newBuilding.AddTag(TagEnum.Nature)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("")
                     newBuilding.SetSpecialAbility("+1 max effect for each lake in range 1. +2% odds for each coastline you own.")
                     Return newBuilding
@@ -444,13 +447,13 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Paris. New York. Dubai. Three cities full of culture and architectural wonders.  Should your city join them?")
                     newBuilding.SetSpecialAbility("The Architecture Firm increases the chances that the 'Wipe Cards' action will cost $0.")
                     Return newBuilding
-                Case BuildingEnum.Art_Gallery
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
-                    newBuilding.SetStat(StatEnum.Creativity, 33, 4)
-                    newBuilding.SetInfo("Feel inspired by the works of the great paintings, drawings, sculptures, and photography that surround you at the Art Gallery.")
-                    newBuilding.SetSpecialAbility("")
-                    Return newBuilding
-                Case BuildingEnum.Bank
+                'Case BuildingEnum.Art_Gallery
+                '    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                '    newBuilding.SetStat(StatEnum.Creativity, 33, 4)
+                '    newBuilding.SetInfo("Feel inspired by the works of the great paintings, drawings, sculptures, and photography that surround you at the Art Gallery.")
+                '    newBuilding.SetSpecialAbility("")
+                '    Return newBuilding
+                'Case BuildingEnum.Bank
 
                 Case BuildingEnum.Bar
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
@@ -497,6 +500,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Drunkenness, 50, 3)
                     newBuilding.SetStat(StatEnum.Criminality, 22, 3)
                     newBuilding.AddTag(TagEnum.Commerce)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Roll the dice at the Casino!  Will you hit it big and leave happy or lose it all and drown your sorrows?")
                     newBuilding.SetSpecialAbility("The player will receive a payout for each person that visits the Casino.")
                     Return newBuilding
@@ -553,6 +557,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Happiness, 45, 1)
                     newBuilding.SetStat(StatEnum.Creativity, 55, 4)
                     newBuilding.SetStat(StatEnum.Drunkenness, 45, 3)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Whether you jam out in the mosh pit or sway in you seat, Concert Venues can allow for a crazy good time.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
@@ -720,6 +725,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Happiness, 10, 2)
                     newBuilding.SetStat(StatEnum.Health, 22, 2)
                     newBuilding.SetStat(StatEnum.Drunkenness, 10, 1)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Trees. Grass. Water. Sand. Why go to a park when you can visit a Golf Course? Enjoy the great outdoors and try not to let the beverage cart keep you down.")
                     newBuilding.SetSpecialAbility("All effects of the Golf Course are doubled if built on a Plain tile.")
                     Return newBuilding
@@ -856,6 +862,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Creativity, 20, -3)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("A mall has something for nearly everyone, but the cookie-cutter nature of stores can stifle creativity and be damaging to small business owners.")
                     newBuilding.SetSpecialAbility("Odds of happiness increase with every other building on the tile.")
                     Return newBuilding
@@ -930,6 +937,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Creativity, 20, 2)
                     newBuilding.AddTag(TagEnum.Nature)
                     newBuilding.AddTag(TagEnum.Monument)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("With leafy trees and nicely-paved paths, Parks allow those out for a causal stroll to enjoy the great outdoors and admire the beauty around them.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
@@ -998,14 +1006,14 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Ranches give your citizens a breath of the clean air found good ol' outdoors.  There's nothing like being home on the range.")
                     newBuilding.SetSpecialAbility("Ranches give Food buildings a +1 health effect. The also expand by 2 jobs at a time if build on a Plain tile.  Ranches do not stack.")
                     Return newBuilding
-                Case BuildingEnum.Refugee_Camp
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
-                    newBuilding.SetStat(StatEnum.Happiness, 20, -2)
-                    newBuilding.SetStat(StatEnum.Health, 25, -2)
-                    newBuilding.SetStat(StatEnum.Criminality, 25, 3)
-                    newBuilding.SetInfo("Refugee Camps are not ideal for the general health, happiness, and crime rate of a city, but they give people in a dire situation a place where they can escape.")
-                    newBuilding.SetSpecialAbility("Refugee Camps increase the chances of immigrant arrival to the tile on which it is built.")
-                    'Return newBuilding
+                'Case BuildingEnum.Refugee_Camp
+                '    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                '    newBuilding.SetStat(StatEnum.Happiness, 20, -2)
+                '    newBuilding.SetStat(StatEnum.Health, 25, -2)
+                '    newBuilding.SetStat(StatEnum.Criminality, 25, 3)
+                '    newBuilding.SetInfo("Refugee Camps are not ideal for the general health, happiness, and crime rate of a city, but they give people in a dire situation a place where they can escape.")
+                '    newBuilding.SetSpecialAbility("Refugee Camps increase the chances of immigrant arrival to the tile on which it is built.")
+                '    Return newBuilding
                 Case BuildingEnum.Rehab_Clinic
                     Dim newBuilding As New RehabBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Health, 10, 4)
@@ -1020,6 +1028,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 26, 1)
                     newBuilding.SetStat(StatEnum.Drunkenness, 5, 1)
                     newBuilding.AddTag(TagEnum.Food)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Restaurants provide a charming setting for healthy meals and promising dates.")
                     newBuilding.SetSpecialAbility("The more the population drops on a tile with a Restaurant, the more likely it is to shut down, fire all staff, and move to an adjacent tile.")
                     Return newBuilding
@@ -1070,6 +1079,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 12, 3)
                     newBuilding.SetStat(StatEnum.Mobility, 5, 2)
                     newBuilding.SetStat(StatEnum.Drunkenness, 5, 2)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("The white, fluffy powder; the feel of the wind in your hair; the warmth of a fire in the lodge - Ski Resorts have something for everyone.")
                     newBuilding.SetSpecialAbility("Ski Resorts are only effective on Mountain tiles.")
                     Return newBuilding
@@ -1084,6 +1094,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Happiness, 24, 4)
                     newBuilding.SetStat(StatEnum.Health, 5, 5)
                     newBuilding.SetStat(StatEnum.Drunkenness, 20, 3)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Stadiums bring fun, especially when the home team wins, and a little friendly competition. The players get exercise and the audience gets entertainment and overpriced beer.")
                     Return newBuilding
                 Case BuildingEnum.Steel_Mill
@@ -1133,6 +1144,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Happiness, 30, 3)
                     newBuilding.SetStat(StatEnum.Creativity, 25, 3)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Theaters bring movies of all different types that increase happiness and often possess creative artistic merit too.")
                     Return newBuilding
                 Case BuildingEnum.Think_Tank
@@ -1161,6 +1173,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 3)
                     newBuilding.SetStat(StatEnum.Happiness, 70, 2)
                     newBuilding.SetStat(StatEnum.Creativity, 50, -1)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("The TV station reaches almost house, boosting mindless contentment while subtly stifling creativity.")
                     Return newBuilding
                 Case BuildingEnum.University
@@ -1193,6 +1206,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Intelligence, 26, 1)
                     newBuilding.SetStat(StatEnum.Creativity, 6, 0)
                     newBuilding.AddTag(TagEnum.Nature)
+                    newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("")
                     newBuilding.SetSpecialAbility("+1 max effect for each unique terrain type in range 1. +3% odds for each unique terrain type you own.")
                     Return newBuilding

@@ -178,6 +178,24 @@ Public Class CitySquare
         Return People.Count
     End Function
 
+    Public Function GetAdjustedPopulation() As Integer
+        Dim AdjustedPopluation As Integer = getPopulation()
+
+        For i As Integer = 0 To Buildings.Count - 1
+            Dim thisBuilding As Building = Buildings(i)
+            If thisBuilding.Type = BuildingGen.BuildingEnum.Apartments Then
+                '-- Apartment buildings reduce effective population by 10
+                AdjustedPopluation -= 10
+            End If
+            If thisBuilding.HasTag(BuildingGen.TagEnum.Entertainment) Then
+                '-- Each building with an Entertainment tag reduces population by 1
+                AdjustedPopluation -= 1
+            End If
+        Next
+
+        Return AdjustedPopluation
+    End Function
+
     Public Function getDevelopment() As Integer
         Return Buildings.Count
     End Function

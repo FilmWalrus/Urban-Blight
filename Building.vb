@@ -534,6 +534,7 @@ Public Class Building
             PurchasePrice *= PriceAdjust
         End If
 
+        '-- Black markets reduce the price of buildings in certain market locations
         For Each BlackMarket As BlackMarketBuilding In thisPlayer.BlackMarketList
             If BlackMarket.CardPosition = CardPosition Then
                 PurchasePrice *= SafeDivide(100.0 - BlackMarket.DiscountPercentage, 100.0)
