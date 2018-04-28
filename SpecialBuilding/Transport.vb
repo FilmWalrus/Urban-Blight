@@ -5,8 +5,8 @@ Public Class AirportBuilding
 
     Public Shared DestinationList As New List(Of CitySquare)
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "passengers transported"
     End Sub
 
@@ -52,8 +52,8 @@ Public Class ExurbBuilding
 
     Public PairedStation As ExurbBuilding = Nothing
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "commuters transported"
     End Sub
 
@@ -116,8 +116,8 @@ Public Class FreewayBuilding
 
     Public Const EnduranceBoost As Integer = 10
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         Range = 2
     End Sub
 
@@ -146,8 +146,8 @@ Public Class GasStationBuilding
 
     Public Const EnduranceBoost As Integer = 10
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "customers served"
     End Sub
 
@@ -165,8 +165,8 @@ Public Class HarborBuilding
 
     Public DestinationList As New List(Of CitySquare)
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "passengers transported"
     End Sub
 
@@ -251,8 +251,8 @@ End Class
 Public Class HotelBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "guest checked in"
     End Sub
 
@@ -270,8 +270,8 @@ Public Class MassTransitBuilding
 
     Public Shared DestinationList As New List(Of CitySquare)
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         SetRange(3) '-- Default mass transit range is 3
         EffectText = "passengers transported"
     End Sub
@@ -318,8 +318,8 @@ End Class
 Public Class ParkingGarageBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "cars parked"
     End Sub
 
@@ -339,8 +339,8 @@ End Class
 Public Class ParkingLotBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "cars parked"
     End Sub
 
@@ -361,8 +361,8 @@ End Class
 Public Class SafeHouseBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "criminals sheltered"
     End Sub
 
@@ -384,8 +384,8 @@ Public Class SidewalkBuilding
 
     Public Const EnduranceBoost As Integer = 3
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub UpdateEndurance(ByRef Endurance As Integer, ByRef thePerson As Citizen)
@@ -403,8 +403,8 @@ Public Class TaxiBuilding
 
     Public Shared DestinationList As New List(Of CitySquare)
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         SetRange(3) '-- Default taxi range is 3
         EffectText = "passengers transported"
     End Sub
@@ -445,8 +445,8 @@ Public Class TollBoothBuilding
 
     Public TollList As New List(Of Citizen)
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "tolls paid"
     End Sub
 

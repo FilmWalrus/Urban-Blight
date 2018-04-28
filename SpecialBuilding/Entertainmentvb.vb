@@ -1,8 +1,8 @@
 ﻿Public Class AmusementBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "children amused"
     End Sub
 
@@ -25,4 +25,55 @@
             End If
         End If
     End Sub
+End Class
+
+Public Class MallBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        If StatType = StatEnum.Happiness Then
+            If Location IsNot Nothing Then
+                Dim DevelopmentBonus As Integer = (Location.getDevelopment() - 1) * 3
+                Return MyBase.GetStatOdds(StatType) + DevelopmentBonus
+            End If
+        End If
+        Return MyBase.GetStatOdds(StatType)
+    End Function
+End Class
+
+Public Class SkiResortBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+        If Location IsNot Nothing Then
+            If Location.Terrain <> TerrainEnum.Mountain Then
+                Return 0
+            End If
+        End If
+        Return MyBase.GetStatOdds(StatType)
+    End Function
+
+    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
+        '-- Only affect citizens if built on mountain
+        If Location.Terrain = TerrainEnum.Mountain Then
+            MyBase.AffectPerson(thePerson)
+        End If
+    End Sub
+
+    Public Overrides Function WillHire(ByRef Candidate As Citizen) As Boolean
+        '-- Only hire citizens if built on mountain
+        If Location.Terrain = TerrainEnum.Mountain Then
+            Return MyBase.WillHire(Candidate)
+        Else
+            Return False
+        End If
+    End Function
 End Class

@@ -28,7 +28,7 @@ Public Class Building
     Public RejecterList As New List(Of Player)
 
     '-- Minimum employee standards
-    Public minAge As Integer = 16
+    Public minAge As Integer = Citizen.MinorAge
 
     '-- Effect Odds and Max Adjustments
     Public StatOdds(StatEnum.EnumEnd - 1) As Integer
@@ -52,9 +52,10 @@ Public Class Building
 
     End Sub
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
         Type = bType
         BaseCost = bCost
+        minAge = bMinAge
         MarkdownCost = BaseCost
         PurchasePrice = BaseCost
         Jobs = bJobs
@@ -74,6 +75,10 @@ Public Class Building
 
     Public Sub SetInfo(ByVal bInfo As String)
         Info = bInfo + ControlChars.NewLine
+    End Sub
+
+    Public Sub SetMinAge(ByVal newMinAge As Integer)
+        minAge = newMinAge
     End Sub
 
     Public Sub SetSpecialAbility(ByVal bSpecial As String)
@@ -661,11 +666,12 @@ Public Class Building
         If Range > 0 Then
             BuildingString += "Range: " + GetRange().ToString() + ControlChars.NewLine
         End If
-        If ExpandRate > 0 Then
+        If ExpandRate > 1 Then
             BuildingString += "Expansion Rate: " + ExpandRate.ToString() + ControlChars.NewLine
         End If
 
         '-- Show job info
+        BuildingString += "Hiring Age: " + minAge.ToString + ControlChars.NewLine
         BuildingString += "Jobs: " + GetEmployeeCount.ToString + "/" + Jobs.ToString + "   Success: " + BusinessSuccess.ToString() + ControlChars.NewLine
         If Employees.Count > 0 Then
             BuildingString += "Employees: "

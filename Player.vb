@@ -23,14 +23,16 @@ Public Class Player
     Public SpecialOrderOffsets(BuildingGen.BuildingEnum.BuildingCount) As Integer
 
     '-- Stuff that effects player's choices
-    Public LandOptionBuildings As New List(Of Building)
     Public BannedBuildings As New List(Of Integer)
-    Public ExurbStations As New List(Of Building)
-    Public EmbassyCount As Integer = 0
-    Public PollCount As Integer = 0
-    Public GovernmentCount As Integer = 0
-    Public CommerceCount As Integer = 0
     Public BlackMarketList As New List(Of BlackMarketBuilding)
+    Public ExurbStations As New List(Of Building)
+    Public LandOptionBuildings As New List(Of Building)
+
+    Public CommerceCount As Integer = 0
+    Public EmbassyCount As Integer = 0
+    Public GovernmentCount As Integer = 0
+    Public PollCount As Integer = 0
+    Public ThinkTankCount As Integer = 0
 
     '-- AI stuff
     Public BestMove As CitySquare = Nothing

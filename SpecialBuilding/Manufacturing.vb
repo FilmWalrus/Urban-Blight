@@ -3,8 +3,8 @@
 Public Class ManufacturingBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -36,8 +36,8 @@ End Class
 Public Class ShippingBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()

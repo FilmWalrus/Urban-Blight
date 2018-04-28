@@ -205,9 +205,13 @@
 
         '-- Update grid, cards, and players
         If UpdateNeeded Then
-            '-- If road max was selected keep building more road
+
             If SelectedCard = CardEnum.RoadMax Then
+                '-- If road max was selected keep building more road
                 Build()
+            ElseIf SelectedCard = CardEnum.WipeBuildings Then
+                '-- Check for extra redraws
+                CheckForExtraRedraws()
             End If
 
             UpdateAll()
@@ -320,6 +324,20 @@
     Public Sub ChangePlayerMoney(ByVal PlayerId As Integer, ByVal MoneyChange As Integer)
         Players(PlayerId).TotalMoney += MoneyChange
         MyGUI.DisplayPlayerText()
+    End Sub
+
+    Sub CheckForExtraRedraws()
+        For i As Integer = 0 To CurrentPlayer.ThinkTankCount - 1
+            UpdateCards(False)
+            Dim msgRslt As MsgBoxResult = MsgBox("Redraw a new set of buildings for free?.", MsgBoxStyle.YesNo)
+            If msgRslt = MsgBoxResult.Yes Then
+                For j As Integer = 0 To Cards.Length - 1
+                    Cards(j) = Nothing
+                Next
+            ElseIf msgRslt = MsgBoxResult.No Then
+                Exit For
+            End If
+        Next
     End Sub
 
     Public Sub RenameCurrentCity()

@@ -5,8 +5,8 @@ Public Class ActivismBuilding
 
     Public BannedBuilding As Integer = -1
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "buildings banned"
 
         BannedBuilding = GetRandom(0, BuildingGen.BuildingEnum.BuildingCount - 1)
@@ -30,18 +30,38 @@ Public Class ActivismBuilding
 
 End Class
 
+Public Class ArchitectBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+        EffectText = "free redraws granted"
+    End Sub
+
+    Public Overrides Function UpdateInternal() As Boolean
+        MyBase.UpdateInternal()
+
+        '-- 10% chance of reducing the redraw cost to 0
+        If GetRandom(1, 100) <= 10 Then
+            Players(OwnerID).WipeCost = DropCostBase
+            AddEffects(1)
+        End If
+
+        Return True
+    End Function
+
+End Class
+
 Public Class BlackMarketBuilding
     Inherits Building
 
     Public CardPosition As Integer = -1
     Public DiscountPercentage As Integer = -1
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         CardPosition = GetRandom(0, CardEnum.BuildingSpecialOrder - 1)
         DiscountPercentage = GetRandom(5, 20)
-
-
     End Sub
 
     Public Function GetCardPosition() As Integer
@@ -74,8 +94,8 @@ Public Class ChurchBuilding
 
     Public defaultOdds As Integer = 1
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "religious epiphanies inspired"
     End Sub
 
@@ -104,8 +124,8 @@ End Class
 Public Class CrimeRingBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "kickbacks generated"
     End Sub
 End Class
@@ -113,8 +133,8 @@ End Class
 Public Class CorrectionalFacilityBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "criminals rehabilitated"
     End Sub
 
@@ -138,8 +158,8 @@ End Class
 Public Class DayCareBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
@@ -150,29 +170,11 @@ Public Class DayCareBuilding
     End Sub
 End Class
 
-Public Class MallBuilding
-    Inherits Building
-
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
-    End Sub
-
-    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
-        If StatType = StatEnum.Happiness Then
-            If Location IsNot Nothing Then
-                Dim DevelopmentBonus As Integer = (Location.getDevelopment() - 1) * 3
-                Return MyBase.GetStatOdds(StatType) + DevelopmentBonus
-            End If
-        End If
-        Return MyBase.GetStatOdds(StatType)
-    End Function
-End Class
-
 Public Class MonumentBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -211,8 +213,8 @@ End Class
 Public Class PollingBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -235,8 +237,8 @@ End Class
 Public Class RehabBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "addicts rehabilitated"
     End Sub
 
@@ -260,8 +262,8 @@ End Class
 Public Class RetirementBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
@@ -275,8 +277,8 @@ End Class
 Public Class SchoolBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "children taught"
     End Sub
 
@@ -290,44 +292,11 @@ Public Class SchoolBuilding
     End Sub
 End Class
 
-Public Class SkiResortBuilding
-    Inherits Building
-
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
-    End Sub
-
-    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
-        If Location IsNot Nothing Then
-            If Location.Terrain <> TerrainEnum.Mountain Then
-                Return 0
-            End If
-        End If
-        Return MyBase.GetStatOdds(StatType)
-    End Function
-
-    Public Overrides Sub AffectPerson(ByRef thePerson As Citizen)
-        '-- Only affect citizens if built on mountain
-        If Location.Terrain = TerrainEnum.Mountain Then
-            MyBase.AffectPerson(thePerson)
-        End If
-    End Sub
-
-    Public Overrides Function WillHire(ByRef Candidate As Citizen) As Boolean
-        '-- Only hire citizens if built on mountain
-        If Location.Terrain = TerrainEnum.Mountain Then
-            Return MyBase.WillHire(Candidate)
-        Else
-            Return False
-        End If
-    End Function
-End Class
-
 Public Class TempAgencyBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "temp positions created"
     End Sub
 
@@ -346,11 +315,35 @@ Public Class TempAgencyBuilding
 
 End Class
 
+Public Class ThinkTankBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Add to the owner's count of think tank
+        Players(OwnerID).ThinkTankCount += 1
+    End Sub
+
+    Public Overrides Sub Destroy()
+
+        '-- Remove this from the owner's count of think tank
+        Players(OwnerID).ThinkTankCount -= 1
+
+        MyBase.Destroy()
+    End Sub
+
+End Class
+
 Public Class WelfareBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "welfare recipients"
     End Sub
 
@@ -366,8 +359,8 @@ End Class
 Public Class WarehouseBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         EffectText = "storage contracts sold"
     End Sub
 

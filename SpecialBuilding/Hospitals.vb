@@ -5,8 +5,8 @@ Public Class HospitalBuilding
 
     Public HospitalCampus As New List(Of Integer)
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge as Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         SetRange(1) '-- Hospitals have a base range of 1
         EffectText = "lives saved"
     End Sub
@@ -110,8 +110,8 @@ End Class
 Public Class HospitalCancerBuilding
     Inherits HospitalBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge as Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
@@ -122,8 +122,8 @@ End Class
 Public Class HospitalEmergencyBuilding
     Inherits HospitalBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge as Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
@@ -134,8 +134,8 @@ End Class
 Public Class HospitalPediatricBuilding
     Inherits HospitalBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge as Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
@@ -146,8 +146,8 @@ End Class
 Public Class HospitalGeriatricBuilding
     Inherits HospitalBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge as Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function IsSpecialty(ByRef thePerson As Citizen, ByVal causeOfDeath As Integer) As Boolean
@@ -158,8 +158,8 @@ End Class
 Public Class HospitalMaternityBuilding
     Inherits HospitalBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge as Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function GetBirthrateAdjust(ByRef thePerson As Citizen) As Double
@@ -183,8 +183,8 @@ End Class
 Public Class AmbulanceBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge as Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()

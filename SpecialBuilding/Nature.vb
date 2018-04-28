@@ -3,8 +3,8 @@
 
     Public NatureBonus As Double = 0.0
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
@@ -41,8 +41,8 @@ Public Class AquariumBuilding
     Public AquariumAdjBonus As Double = 0.0
     Public AquariumOddsBonus As Double = 0.0
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
@@ -100,8 +100,8 @@ Public Class BotanicalBuilding
     Public BotanicalAdjBonus As Double = 0.0
     Public BotanicalOddsBonus As Double = 0.0
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
@@ -154,8 +154,8 @@ Public Class ConservationBuilding
     Inherits NatureBuilding
 
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -169,8 +169,8 @@ End Class
 Public Class FarmBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -213,8 +213,8 @@ End Class
 Public Class RanchBuilding
     Inherits Building
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
@@ -260,8 +260,8 @@ Public Class ZooBuilding
     Public ZooAdjBonus As Double = 0.0
     Public ZooOddsBonus As Double = 0.0
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer

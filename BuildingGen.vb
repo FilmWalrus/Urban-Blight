@@ -416,7 +416,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The Ambulance Service boosts the effects of all medical buildings within a radius of two adjacent squares.")
                     Return newBuilding
                 Case BuildingEnum.Amusement_Park
-                    Dim newBuilding As New AmusementBuilding(bType, GetBaseCost(bType), 4)
+                    Dim newBuilding As New AmusementBuilding(bType, GetBaseCost(bType), 4, 14)
                     newBuilding.SetStat(StatEnum.Happiness, 16, 7)
                     newBuilding.SetStat(StatEnum.Health, 20, -1)
                     newBuilding.AddTag(TagEnum.Food)
@@ -440,12 +440,12 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("+1 max effect for each lake in range 1. +2% odds for each coastline you own.")
                     Return newBuilding
                 Case BuildingEnum.Architecture_Firm
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New ArchitectBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Intelligence, 10, 2)
                     newBuilding.SetStat(StatEnum.Creativity, 18, 4)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Paris. New York. Dubai. Three cities full of culture and architectural wonders.  Should your city join them?")
-                    newBuilding.SetSpecialAbility("The Architecture Firm increases the chances that the 'Wipe Cards' action will cost $0.")
+                    newBuilding.SetSpecialAbility("The Architecture Firm increases the chances that the 'Redraw Above' action will be set to $0.")
                     Return newBuilding
                 'Case BuildingEnum.Art_Gallery
                 '    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
@@ -530,7 +530,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The Civic Center provides the owner with increased odds of positive random events.")
                     Return newBuilding
                 Case BuildingEnum.Coffee_Shop
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1, 14)
                     newBuilding.SetStat(StatEnum.Happiness, 20, 1)
                     newBuilding.SetStat(StatEnum.Health, 15, 0)
                     newBuilding.SetStat(StatEnum.Mobility, 20, 1)
@@ -540,7 +540,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Coffee Shops are more effective on Libraries, Offices, Skyscrapers, and at Colleges.")
                     Return newBuilding
                 Case BuildingEnum.Community_Center
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2, 14)
                     newBuilding.SetStat(StatEnum.Health, 10, 2)
                     newBuilding.SetStat(StatEnum.Happiness, 10, 2)
                     newBuilding.SetStat(StatEnum.Intelligence, 10, 2)
@@ -600,7 +600,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Courthouses let the owner collect double the money from fines within a two-square adjacency of the building. If the Courthouse is built on a Swamp tile, fines are tripled.")
                     Return newBuilding
                 Case BuildingEnum.Crime_Ring
-                    Dim newBuilding As New CrimeRingBuilding(bType, GetBaseCost(bType), 4)
+                    Dim newBuilding As New CrimeRingBuilding(bType, GetBaseCost(bType), 4, 10)
                     newBuilding.SetStat(StatEnum.Criminality, 14, 10)
                     newBuilding.AddTag(TagEnum.Criminal)
                     newBuilding.SetInfo("Crime Rings bring plenty of cheap jobs but sharp, sporadic increases in extreme criminal behavior are likely.")
@@ -632,7 +632,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The Daycare Center effects only minors.")
                     Return newBuilding
                 Case BuildingEnum.Department_Store
-                    Dim newBuilding As New DepartmentStoreBuilding(bType, GetBaseCost(bType), 3)
+                    Dim newBuilding As New DepartmentStoreBuilding(bType, GetBaseCost(bType), 3, 14)
                     newBuilding.SetStat(StatEnum.Happiness, 8, 1)
                     newBuilding.SetStat(StatEnum.Creativity, 12, -1)
                     newBuilding.AddTag(TagEnum.Franchise)
@@ -670,7 +670,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The effects of a Factory are worse for every 10 population sharing its square.")
                     Return newBuilding
                 Case BuildingEnum.Farm
-                    Dim newBuilding As New FarmBuilding(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New FarmBuilding(bType, GetBaseCost(bType), 1, 12)
                     newBuilding.SetStat(StatEnum.Health, 65, 2)
                     newBuilding.AddTag(TagEnum.Food)
                     newBuilding.AddTag(TagEnum.Nature)
@@ -678,7 +678,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Farms double the effect of any Food buildings on the same square.  Farms expand faster on a Dirt tile.")
                     Return newBuilding
                 Case BuildingEnum.Fast_Food_Chain
-                    Dim newBuilding As New FastFoodBuilding(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New FastFoodBuilding(bType, GetBaseCost(bType), 1, 14)
                     newBuilding.SetStat(StatEnum.Happiness, 65, 1)
                     newBuilding.SetStat(StatEnum.Health, 65, -2)
                     newBuilding.SetStat(StatEnum.Mobility, 15, 1)
@@ -721,7 +721,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("When your citizens travel to the Gas Station, their mobility increases by 8. However, fires on the same square as the Gas Station are worse.")
                     Return newBuilding
                 Case BuildingEnum.Golf_Course
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1, 13)
                     newBuilding.SetStat(StatEnum.Happiness, 10, 2)
                     newBuilding.SetStat(StatEnum.Health, 22, 2)
                     newBuilding.SetStat(StatEnum.Drunkenness, 10, 1)
@@ -740,7 +740,7 @@ Public Class BuildingGen
                 Case BuildingEnum.Graveyard
                     'newBuilding.AddTag(TagEnum.Monument)
                 Case BuildingEnum.Grocery_Store
-                    Dim newBuilding As New GroceryBuilding(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New GroceryBuilding(bType, GetBaseCost(bType), 2, 14)
                     newBuilding.SetStat(StatEnum.Health, 75, 1)
                     newBuilding.SetStat(StatEnum.Drunkenness, 15, 1)
                     newBuilding.AddTag(TagEnum.Food)
@@ -857,7 +857,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Lumber Mills start with twice as many jobs if built on a Forest tile.  The terrain they are built on has a chance of turning in a Plain tile.")
                     Return newBuilding
                 Case BuildingEnum.Mall
-                    Dim newBuilding As New MallBuilding(bType, GetBaseCost(bType), 5)
+                    Dim newBuilding As New MallBuilding(bType, GetBaseCost(bType), 5, 14)
                     newBuilding.SetStat(StatEnum.Happiness, 35, 3)
                     newBuilding.SetStat(StatEnum.Creativity, 20, -3)
                     newBuilding.AddTag(TagEnum.Commerce)
@@ -998,7 +998,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Private Security Companies can prevent crimes, but will kill whomever attempts to carry them out.")
                     Return newBuilding
                 Case BuildingEnum.Ranch
-                    Dim newBuilding As New RanchBuilding(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New RanchBuilding(bType, GetBaseCost(bType), 2, 12)
                     newBuilding.SetStat(StatEnum.Happiness, 30, 1)
                     newBuilding.SetStat(StatEnum.Health, 33, 2)
                     newBuilding.AddTag(TagEnum.Food)
@@ -1023,7 +1023,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Rehab Clinics have a chance of reducing drunkenness in citizens to 0.  Only citizens with a Drunkenness value greater than 10 can be checked in.  Their Mobility will be decreased by half. More effective on Mountain and Desert tiles.")
                     Return newBuilding
                 Case BuildingEnum.Restaurant
-                    Dim newBuilding As New RestaurantBuilding(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New RestaurantBuilding(bType, GetBaseCost(bType), 2, 14)
                     newBuilding.SetStat(StatEnum.Happiness, 40, 1)
                     newBuilding.SetStat(StatEnum.Health, 26, 1)
                     newBuilding.SetStat(StatEnum.Drunkenness, 5, 1)
@@ -1141,14 +1141,14 @@ Public Class BuildingGen
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Theater
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2, 14)
                     newBuilding.SetStat(StatEnum.Happiness, 30, 3)
                     newBuilding.SetStat(StatEnum.Creativity, 25, 3)
                     newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Theaters bring movies of all different types that increase happiness and often possess creative artistic merit too.")
                     Return newBuilding
                 Case BuildingEnum.Think_Tank
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New ThinkTankBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Intelligence, 12, 7)
                     newBuilding.SetInfo("")
                     Return newBuilding

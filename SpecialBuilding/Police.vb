@@ -12,8 +12,8 @@ Public Class CrimePreventionBuilding
         SuccessFatal
     End Enum
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         SetRange(1)
         EffectText = "crimes prevented"
     End Sub
@@ -83,8 +83,8 @@ End Class
 Public Class DetectiveBuilding
     Inherits CrimePreventionBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         DefaultOdds.Add(50.0)
         DefaultOdds.Add(25.0)
         DefaultOdds.Add(5.0)
@@ -98,8 +98,8 @@ End Class
 Public Class FireStationBuilding
     Inherits CrimePreventionBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         DefaultOdds.Add(90.0)
         DefaultOdds.Add(75.0)
         ChanceFatal = 0
@@ -115,8 +115,8 @@ End Class
 Public Class MilitaryBaseBuilding
     Inherits CrimePreventionBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         DefaultOdds.Add(30.0)
         DefaultOdds.Add(20.0)
         ChanceFatal = 50
@@ -131,8 +131,8 @@ End Class
 Public Class PoliceBuilding
     Inherits CrimePreventionBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         DefaultOdds.Add(80.0)
         DefaultOdds.Add(40.0)
         DefaultOdds.Add(10.0)
@@ -145,8 +145,8 @@ End Class
 Public Class PrivateSecurityBuilding
     Inherits CrimePreventionBuilding
 
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer)
-        MyBase.New(bType, bCost, bJobs)
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
         DefaultOdds.Add(95.0)
         DefaultOdds.Add(65.0)
         ChanceFatal = 0
