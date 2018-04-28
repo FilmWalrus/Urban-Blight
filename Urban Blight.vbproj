@@ -140,6 +140,7 @@
     </Compile>
     <Compile Include="SpecialBuilding\Construction.vb" />
     <Compile Include="EventDiary.vb" />
+    <Compile Include="SpecialBuilding\Entertainmentvb.vb" />
     <Compile Include="SpecialBuilding\Food.vb" />
     <Compile Include="SpecialBuilding\Hospitals.vb" />
     <Compile Include="SpecialBuilding\Manufacturing.vb" />

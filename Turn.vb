@@ -122,10 +122,7 @@
             currentBuilding.AffectPerson(thePerson)
 
             '-- See if this building will hire the person
-            If currentBuilding.WillHire(thePerson) Then
-                'Hire the employee
-                currentBuilding.HireEmployee(thePerson)
-            End If
+            currentBuilding.WillHire(thePerson)
         Next
 
         '-- If you work at a building, you are affected by it an extra time.

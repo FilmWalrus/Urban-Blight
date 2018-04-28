@@ -234,7 +234,6 @@ Public Class Building
             Return True
         Else
             RejectEmployee(Candidate)
-            Candidate.AddEvent("Job application rejected by the " + GetNameAndAddress())
             Return False
         End If
 
@@ -246,6 +245,11 @@ Public Class Building
             Return
         End If
 
+        '-- Post the event
+        If PostEvent Then
+            Diary.HireEvents.AddEvent(Employee.GetNameAndAddress() + " took a job at the " + GetNameAndAddress())
+        End If
+
         '-- Quit any previous job
         If Employee.JobBuilding IsNot Nothing Then
             Employee.JobBuilding.Employees.Remove(Employee)
@@ -255,11 +259,6 @@ Public Class Building
         Employees.Add(Employee)
         Employee.JobBuilding = Me
         Employee.ApplicationAccepted()
-
-        '-- Post the event
-        If PostEvent Then
-            Diary.HireEvents.AddEvent(Employee.GetNameAndAddress() + " took a job at the " + GetNameAndAddress())
-        End If
     End Sub
 
     Public Sub RejectEmployee(ByRef Candidate As Citizen)

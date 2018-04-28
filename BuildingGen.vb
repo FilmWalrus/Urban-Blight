@@ -416,7 +416,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The Ambulance Service boosts the effects of all medical buildings within a radius of two adjacent squares.")
                     Return newBuilding
                 Case BuildingEnum.Amusement_Park
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 4)
+                    Dim newBuilding As New AmusementBuilding(bType, GetBaseCost(bType), 4)
                     newBuilding.SetStat(StatEnum.Happiness, 16, 7)
                     newBuilding.SetStat(StatEnum.Health, 20, -1)
                     newBuilding.AddTag(TagEnum.Food)
