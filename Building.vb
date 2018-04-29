@@ -438,6 +438,9 @@ Public Class Building
                 '-- If temp agencies are here, add a job to this building for each
                 Jobs += 1
                 theBuilding.AddEffects(1)
+            ElseIf theBuilding.Type = BuildingGen.BuildingEnum.Mine Then
+                Dim theMine As MineBuilding = theBuilding
+                theMine.ApplyMineRebate(Me)
             End If
         Next
 
@@ -449,6 +452,9 @@ Public Class Building
                     '-- For each adjacent warehouse, up the expansion rate
                     ExpandRate += 1
                     theBuilding.AddEffects(1)
+                ElseIf theBuilding.Type = BuildingGen.BuildingEnum.Mine Then
+                    Dim theMine As MineBuilding = theBuilding
+                    theMine.ApplyMineRebate(Me)
                 End If
             Next
         Next

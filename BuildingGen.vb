@@ -888,12 +888,12 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Military Bases help to reduce the effects of disasters.")
                     Return newBuilding
                 Case BuildingEnum.Mine
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
+                    Dim newBuilding As New MineBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Happiness, 18, -4)
                     newBuilding.SetStat(StatEnum.Health, 50, -3)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Mines provide you with the resources any thriving city needs to push itself to the next level.")
-                    newBuilding.SetSpecialAbility("Mines give you a 10% rebate on any building that occurs within range 1; range 2 on Mountain tiles.")
+                    newBuilding.SetSpecialAbility("10% rebate on new buildings within range 1; 20% rebate if the mine or the new building are on a mountain. 30% if they both are.")
                     Return newBuilding
                 Case BuildingEnum.Monument
                     Dim newBuilding As New MonumentBuilding(bType, GetBaseCost(bType), 0)

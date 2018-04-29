@@ -167,7 +167,7 @@
 
             '-- Handle special terrain bonuses
             If SelectedCity.Terrain = TerrainEnum.Desert Then
-                '-- Desert effect: rebate
+                '-- Desert effect: 50% rebate
                 CurrentPlayer.TotalMoney += SafeDivide(CardCost, 2)
             ElseIf SelectedCity.Terrain = TerrainEnum.Dirt Then
                 '-- Dirt effect: free road

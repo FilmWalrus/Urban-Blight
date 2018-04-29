@@ -33,6 +33,32 @@ Public Class ManufacturingBuilding
     End Sub
 End Class
 
+Public Class MineBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+        EffectText = "saved w/ mining rebates"
+    End Sub
+
+    Function ApplyMineRebate(ByRef NewBuilding As Building) As Integer
+
+        '-- The mine rebate rate increases if the mine or new construction on a mountain
+        Dim MineRebateRate As Double = 0.1
+        If Location.Terrain = TerrainEnum.Mountain Then
+            MineRebateRate += 0.1
+        End If
+        If NewBuilding.Location.Terrain = TerrainEnum.Mountain Then
+            MineRebateRate += 0.1
+        End If
+
+        Dim MineRebate As Integer = NewBuilding.PurchasePrice * MineRebateRate
+        CurrentPlayer.TotalMoney += MineRebate
+        AddEffects(MineRebate)
+
+    End Function
+End Class
+
 Public Class ShippingBuilding
     Inherits Building
 
