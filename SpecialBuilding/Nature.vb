@@ -8,7 +8,11 @@
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
-        Return MyBase.GetStatOdds(StatType) + NatureBonus
+        If MyBase.GetStatOdds(StatType) > 0 Then
+            Return MyBase.GetStatOdds(StatType) + NatureBonus
+        Else
+            Return MyBase.GetStatOdds(StatType)
+        End If
     End Function
 
     Public Overridable Sub UpdateNatureBonuses()
@@ -46,7 +50,11 @@ Public Class AquariumBuilding
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
-        Return MyBase.GetStatOdds(StatType) + AquariumOddsBonus
+        If MyBase.GetStatOdds(StatType) > 0 Then
+            Return MyBase.GetStatOdds(StatType) + AquariumOddsBonus
+        Else
+            Return MyBase.GetStatOdds(StatType)
+        End If
     End Function
 
     Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
@@ -105,7 +113,11 @@ Public Class BotanicalBuilding
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
-        Return MyBase.GetStatOdds(StatType) + BotanicalOddsBonus
+        If MyBase.GetStatOdds(StatType) > 0 Then
+            Return MyBase.GetStatOdds(StatType) + BotanicalOddsBonus
+        Else
+            Return MyBase.GetStatOdds(StatType)
+        End If
     End Function
 
     Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
@@ -153,16 +165,15 @@ End Class
 Public Class ConservationBuilding
     Inherits NatureBuilding
 
-
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
         MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
     Public Overrides Sub ConstructionEffects()
-        MyBase.ConstructionEffects()
-
         '-- Change the location terrain type to forest
         Location.SetTerrain(TerrainEnum.Forest)
+
+        MyBase.ConstructionEffects()
     End Sub
 End Class
 
@@ -312,7 +323,11 @@ Public Class ZooBuilding
     End Sub
 
     Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
-        Return MyBase.GetStatOdds(StatType) + ZooOddsBonus
+        If MyBase.GetStatOdds(StatType) > 0 Then
+            Return MyBase.GetStatOdds(StatType) + ZooOddsBonus
+        Else
+            Return MyBase.GetStatOdds(StatType)
+        End If
     End Function
 
     Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer

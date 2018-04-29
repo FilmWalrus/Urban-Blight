@@ -4,6 +4,8 @@ Public Class BuildingGen
 
 #Region " Variables "
 
+    Public Const SelfEmployed As Integer = -2
+
     Public Enum BuildingEnum
         Ad_Agency
         Activism_Organization
@@ -244,7 +246,7 @@ Public Class BuildingGen
             Case BuildingEnum.Grocery_Store
                 Return 95
             Case BuildingEnum.Gym
-                Return 95
+                Return 65
             Case BuildingEnum.Harbor
                 Return 95
             Case BuildingEnum.Cancer_Hospital
@@ -393,7 +395,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 30, 4)
                     newBuilding.SetStat(StatEnum.Intelligence, 15, 1)
                     newBuilding.SetInfo("Our mission is to spread awareness, improve community wellbeing, and fight corporate corruption wherever it lurks!")
-                    newBuilding.SetSpecialAbility("Permanently bans the owner from building " + GetName(newBuilding.BannedBuilding) + ".")
+                    ' Special ability text set internally
                     '-- Note: Banned buildings could still get built by Construction Sites, Startup Incubator, etc.
                     Return newBuilding
                 Case BuildingEnum.Airport
@@ -470,7 +472,7 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Criminal)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Though dubious in nature, the Black Market can get you what you want.")
-                    newBuilding.SetSpecialAbility("Gives owner a permanent " + newBuilding.DiscountPercentage.ToString + "% cost reduction to buildings in market slot #" + (newBuilding.CardPosition + 1).ToString() + ".")
+                    'Special ability text set internally
                     Return newBuilding
                 Case BuildingEnum.Botanical_Garden
                     Dim newBuilding As New BotanicalBuilding(bType, GetBaseCost(bType), 2)
@@ -659,7 +661,7 @@ Public Class BuildingGen
                     Dim newBuilding As New ExurbBuilding(bType, GetBaseCost(bType), 0) 'Check phrasing of Exurb special ability text.
                     newBuilding.SetStat(StatEnum.Mobility, 15, 2)
                     newBuilding.SetInfo("Sometimes you just need to escape the city.  Exurbs let you get away, but still remain close to the hustle and bustle of your metropolis.")
-                    newBuilding.SetSpecialAbility("After purchasing an Exurbs, the next piece of land you buy can be any unoccupied square on the board. This square will be considered adjacent to the tile where you placed the Exurb.")
+                    newBuilding.SetSpecialAbility("The next piece of land you buy can be any unoccupied square on the board and starts with +2 population. Citizens can commute between this building and the exurb.")
                     Return newBuilding
                 Case BuildingEnum.Factory
                     Dim newBuilding As New ManufacturingBuilding(bType, GetBaseCost(bType), 5)
@@ -747,12 +749,11 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Grocery Stores provide access to fresh meat, vegetables, fruit, dairy, alcohol, and those boxes of almost-instant mac'n'cheese that are so addictive.")
                     newBuilding.SetSpecialAbility("The health bonus of the Grocery Store increases with the population.")
                     Return newBuilding
-                Case BuildingEnum.Gym 'Added Special Ability text, but it did not look final.
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
-                    newBuilding.SetStat(StatEnum.Happiness, 15, 1)
-                    newBuilding.SetStat(StatEnum.Health, 12, 7)
+                Case BuildingEnum.Gym
+                    Dim newBuilding As New GymBuilding(bType, GetBaseCost(bType), 1)
+                    newBuilding.SetStat(StatEnum.Health, 12, 6)
                     newBuilding.SetInfo("Want to look good and feel better?  Put in some time at the Gym.")
-                    newBuilding.SetSpecialAbility("Effect boost if the Gym is on the same square as a Park or a Botanical Garden.")
+                    newBuilding.SetSpecialAbility("Half as effective if a building with Nature tag is present.")
                     Return newBuilding
                 Case BuildingEnum.Harbor
                     Dim newBuilding As New HarborBuilding(bType, GetBaseCost(bType), 2)

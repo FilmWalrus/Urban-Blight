@@ -142,6 +142,7 @@ Public Class MainForm
         Me.txtP3 = New System.Windows.Forms.TextBox()
         Me.Infotab = New System.Windows.Forms.TabControl()
         Me.TabPageBuilding = New System.Windows.Forms.TabPage()
+        Me.ubCloseBuilding = New System.Windows.Forms.Button()
         Me.lblBuilding = New System.Windows.Forms.Label()
         Me.ubBForward = New System.Windows.Forms.Button()
         Me.ubBBack = New System.Windows.Forms.Button()
@@ -164,7 +165,6 @@ Public Class MainForm
         Me.gbP2 = New System.Windows.Forms.Panel()
         Me.gbP3 = New System.Windows.Forms.Panel()
         Me.gbP4 = New System.Windows.Forms.Panel()
-        Me.ubCloseBuilding = New System.Windows.Forms.Button()
         Me.TabPageEvents.SuspendLayout()
         Me.TabPageCity.SuspendLayout()
         Me.TabPagePerson.SuspendLayout()
@@ -456,11 +456,13 @@ Public Class MainForm
         '
         'txtP1
         '
+        Me.txtP1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtP1.Location = New System.Drawing.Point(8, 8)
         Me.txtP1.Multiline = True
         Me.txtP1.Name = "txtP1"
         Me.txtP1.Size = New System.Drawing.Size(96, 114)
         Me.txtP1.TabIndex = 2
+        Me.txtP1.WordWrap = False
         '
         'p2_details
         '
@@ -473,6 +475,7 @@ Public Class MainForm
         '
         'txtP2
         '
+        Me.txtP2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtP2.Location = New System.Drawing.Point(8, 8)
         Me.txtP2.Multiline = True
         Me.txtP2.Name = "txtP2"
@@ -490,6 +493,7 @@ Public Class MainForm
         '
         'txtP4
         '
+        Me.txtP4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtP4.Location = New System.Drawing.Point(8, 8)
         Me.txtP4.Multiline = True
         Me.txtP4.Name = "txtP4"
@@ -507,6 +511,7 @@ Public Class MainForm
         '
         'txtP3
         '
+        Me.txtP3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtP3.Location = New System.Drawing.Point(8, 8)
         Me.txtP3.Multiline = True
         Me.txtP3.Name = "txtP3"
@@ -539,6 +544,15 @@ Public Class MainForm
         Me.TabPageBuilding.Size = New System.Drawing.Size(290, 547)
         Me.TabPageBuilding.TabIndex = 1
         Me.TabPageBuilding.Text = "Building"
+        '
+        'ubCloseBuilding
+        '
+        Me.ubCloseBuilding.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.ubCloseBuilding.Location = New System.Drawing.Point(192, 13)
+        Me.ubCloseBuilding.Name = "ubCloseBuilding"
+        Me.ubCloseBuilding.Size = New System.Drawing.Size(71, 24)
+        Me.ubCloseBuilding.TabIndex = 22
+        Me.ubCloseBuilding.Text = "Close"
         '
         'lblBuilding
         '
@@ -791,15 +805,6 @@ Public Class MainForm
         Me.gbP4.Name = "gbP4"
         Me.gbP4.Size = New System.Drawing.Size(110, 130)
         Me.gbP4.TabIndex = 30
-        '
-        'ubCloseBuilding
-        '
-        Me.ubCloseBuilding.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.ubCloseBuilding.Location = New System.Drawing.Point(192, 13)
-        Me.ubCloseBuilding.Name = "ubCloseBuilding"
-        Me.ubCloseBuilding.Size = New System.Drawing.Size(71, 24)
-        Me.ubCloseBuilding.TabIndex = 22
-        Me.ubCloseBuilding.Text = "Close"
         '
         'MainForm
         '
@@ -1350,7 +1355,7 @@ Public Class MainForm
         For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
             Dim BaseCost As Integer = BuildingGenerator.GetBaseCost(i) + CurrentPlayer.SpecialOrderOffsets(i)
             Dim CostString As String = "$" + BaseCost.ToString
-            For j As Integer = 0 To 4 - CostString.Length
+            For j As Integer = 0 To 3 - CostString.Length
                 CostString += "  "
             Next
             BuildingDropdown.Items.Add(CostString + " - " + BuildingGenerator.GetName(i))
@@ -1377,6 +1382,7 @@ Public Class MainForm
             newBuilding.SetMarkdownPrice(SpecialOrderPrice)
 
             If newBuilding.GetPurchasePrice() <= CurrentPlayer.GetSpecialOrderCap() Then
+                newBuilding.MarketPosition = CardEnum.BuildingSpecialOrder
                 Cards(CardEnum.BuildingSpecialOrder) = newBuilding
             Else
                 Cards(CardEnum.BuildingSpecialOrder) = Nothing

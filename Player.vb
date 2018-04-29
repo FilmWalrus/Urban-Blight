@@ -66,7 +66,7 @@ Public Class Player
     Function GetPlayerName() As String
         Dim playerName As String = "Player " + (ID + 1).ToString()
         If PlayerType = PlayerTypeEnum.Human Then
-            playerName += ", Human"
+            'playerName += ", Human"
         ElseIf PlayerType = PlayerTypeEnum.AI Then
             playerName += ", AI"
         Else
@@ -294,7 +294,7 @@ Public Class Player
     Public Overrides Function toString() As String
         Dim textString As String = ""
         textString += GetPlayerName().ToString() + ControlChars.NewLine
-        textString += "Money: $" + TotalMoney.ToString() + ControlChars.NewLine
+        textString += "$" + TotalMoney.ToString() + ControlChars.NewLine
         textString += "Pop: " + TotalPopulation.ToString() + ControlChars.NewLine
         textString += "Jobs: " + TotalEmployed.ToString() + "/" + TotalJobs.ToString() + ControlChars.NewLine
         textString += "Territory: " + TotalTerritory.ToString() + ControlChars.NewLine

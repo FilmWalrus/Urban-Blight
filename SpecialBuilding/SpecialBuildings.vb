@@ -10,7 +10,17 @@ Public Class ActivismBuilding
         EffectText = "buildings banned"
 
         BannedBuilding = GetRandom(0, BuildingGen.BuildingEnum.BuildingCount - 1)
+
+        SetSpecialAbility("Permanently bans the owner from building " + BuildingGenerator.GetName(BannedBuilding) + ".")
     End Sub
+
+    Public Overrides Function GetSpecialAbility() As String
+        If MarketPosition = CardEnum.BuildingSpecialOrder Then
+            Return "Permanently bans the owner from building ?."
+        Else
+            Return MyBase.GetSpecialAbility()
+        End If
+    End Function
 
     Public Overrides Sub ConstructionEffects()
         MyBase.ConstructionEffects()
@@ -62,7 +72,17 @@ Public Class BlackMarketBuilding
         MyBase.New(bType, bCost, bJobs, bMinAge)
         CardPosition = GetRandom(0, CardEnum.BuildingSpecialOrder - 1)
         DiscountPercentage = GetRandom(5, 20)
+
+        SetSpecialAbility("Gives owner a permanent " + DiscountPercentage.ToString + "% cost reduction to buildings in market slot #" + (CardPosition + 1).ToString() + ".")
     End Sub
+
+    Public Overrides Function GetSpecialAbility() As String
+        If MarketPosition = CardEnum.BuildingSpecialOrder Then
+            Return "Gives owner a permanent ?% cost reduction to buildings in market slot #?."
+        Else
+            Return MyBase.GetSpecialAbility()
+        End If
+    End Function
 
     Public Function GetCardPosition() As Integer
         Return CardPosition
@@ -168,6 +188,42 @@ Public Class DayCareBuilding
             MyBase.AffectPerson(thePerson)
         End If
     End Sub
+End Class
+
+Public Class GymBuilding
+    Inherits Building
+
+    Public GymAdjBonus As Double = 1.0
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
+        Return MyBase.GetStatAdjust(StatType) * GymAdjBonus
+    End Function
+
+    Public Sub UpdateBonuses()
+
+        '-- Gym is half as effective if on Nature tag
+        If Location.CountBuildingsByTag(BuildingGen.TagEnum.Nature) > 0 Then
+            GymAdjBonus = 0.5
+        Else
+            GymAdjBonus = 1.0
+        End If
+
+    End Sub
+
+    Public Overrides Sub UpdateBuildingEffects()
+        MyBase.UpdateBuildingEffects()
+        UpdateBonuses()
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+        UpdateBonuses()
+    End Sub
+
 End Class
 
 Public Class MonumentBuilding

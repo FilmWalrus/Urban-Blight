@@ -170,6 +170,13 @@ Public Class Citizen
         AddEvent("Founded a " + newBuilding.GetName())
     End Sub
 
+    Public Sub SelfEmploy()
+        '-- Self-employ at a random job
+        Dim newBuilding As New SelfEmployBuilding(-1, 0, 1)
+        newBuilding.ChooseSelfEmployment(Me)
+        newBuilding.HireEmployee(Me, True)
+    End Sub
+
     Public Sub UpdateInternal()
         Dim maxBonus, maxLoss As Double
         Dim statChange As Integer = 0
@@ -229,10 +236,16 @@ Public Class Citizen
         If IsEmployed() Then
             TimeAtJob += TimeIncrement
 
+            If IsSelfEmployed() Then
+                '-- Be your own boss
+                statChange = GetRandom(0, 1)
+                OffsetStat(StatEnum.Happiness, statChange, "Self-employed")
+            End If
+
             '-- Success leads to promotions
             maxBonus = (GetStat(StatEnum.Intelligence) / 8.0) + (GetStat(StatEnum.Creativity) / 9.0) ' - 5 (allow work performance to be bad and employee to be fired. Also maybe upper cap on this?
             statChange = GetRandom(0, maxBonus)
-            OffsetStat(StatEnum.Employment, statChange, "Solid work performance")
+            OffsetStat(StatEnum.Employment, statChange, "Work performance")
 
             '-- Criminality drops
             statChange = GetRandom(0, 1)
@@ -407,11 +420,24 @@ Public Class Citizen
         '-- Cap all values between 0 and 100
         Cap()
 
-        '-- Found new buildings
-        If Not IsMinor() And GetRandom(1, 2000) < GetStat(StatEnum.Intelligence) Then
-            FoundBuilding(-1)
-        End If
 
+        If Not IsMinor() Then
+            '-- Found new buildings
+            If GetRandom(1, 2000) < GetStat(StatEnum.Intelligence) Then
+                FoundBuilding(-1)
+            End If
+
+            '-- Self Employ
+            If Not IsSelfEmployed() Then
+                Dim SelfEmployOdds As Integer = GetStat(StatEnum.Creativity)
+                If IsEmployed() Then '-- Odds of self-employment go up when unemployed
+                    SelfEmployOdds *= 2.0
+                End If
+                If GetRandom(1, 1000) < SelfEmployOdds Then
+                    SelfEmploy()
+                End If
+            End If
+        End If
     End Sub
 
 #Region " Reproduce "
@@ -532,6 +558,14 @@ Public Class Citizen
         Return (JobBuilding IsNot Nothing)
     End Function
 
+    Function IsSelfEmployed() As Boolean
+        If JobBuilding Is Nothing Then
+            Return False
+        End If
+
+        Return JobBuilding.Type = BuildingGen.SelfEmployed
+    End Function
+
     Function WillApply(ByRef newJob As Building) As Boolean
 
         If IsEmployed() Then
@@ -555,8 +589,13 @@ Public Class Citizen
         OffsetStat(StatEnum.Employment, 1)
         OffsetStat(StatEnum.Happiness, 3, "New job")
 
-        AddEvent("Hired by the " + JobBuilding.GetNameAndAddress())
-        If Age = 16 Then
+        If IsSelfEmployed() Then
+            AddEvent(JobBuilding.GetEmploymentStatement())
+        Else
+            AddEvent("Hired by the " + JobBuilding.GetNameAndAddress())
+        End If
+
+        If Age <= MinorAge Then
             '-- If employed from an early age, buy a hotrod
             Dim statChange As Integer = GetRandom(3, 4)
             OffsetStat(StatEnum.Mobility, statChange, "Bought car while young")
@@ -579,6 +618,12 @@ Public Class Citizen
     Sub Fired()
         '-- Fired from job
         If JobBuilding IsNot Nothing Then
+
+            '-- Can't be fired from self-employment
+            If IsSelfEmployed() Then
+                Return
+            End If
+
             JobBuilding.Employees.Remove(Me)
             AddEvent("Fired from the " + JobBuilding.GetNameAndAddress())
             JobBuilding = Nothing
@@ -791,7 +836,7 @@ Public Class Citizen
                 WorkStatus += "Currently unemployed." + ControlChars.NewLine
             End If
         Else
-            WorkStatus += "Employed by the " + JobBuilding.GetNameAndAddress() + "." + ControlChars.NewLine
+            WorkStatus += JobBuilding.GetEmploymentStatement() + "." + ControlChars.NewLine
         End If
         If WorkStatus.Length > 0 Then
             PersonString += WorkStatus + ControlChars.NewLine

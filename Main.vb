@@ -263,7 +263,7 @@
 
                     '-- If the player has polling stations, let them determine the next building for the market
                     Dim PollingOptions As Integer = CurrentPlayer.GetPollingOptions()
-                    If PollingOptions > 1 And SelectedCard <> CardEnum.WipeBuildings Then
+                    If PollingOptions > 1 And SelectedCard <> CardEnum.WipeBuildings And CurrentPlayer.PlayerType = PlayerTypeEnum.Human Then
                         Dim PollScreen As New PollingScreen(PollingOptions)
                         PollScreen.ShowDialog()
                         NewBulidingType = PollScreen.BuildingChoice
@@ -327,6 +327,10 @@
     End Sub
 
     Sub CheckForExtraRedraws()
+        If CurrentPlayer.PlayerType <> PlayerTypeEnum.Human Then
+            Return
+        End If
+
         For i As Integer = 0 To CurrentPlayer.ThinkTankCount - 1
             UpdateCards(False)
             Dim msgRslt As MsgBoxResult = MsgBox("Redraw a new set of buildings for free?", MsgBoxStyle.YesNo)

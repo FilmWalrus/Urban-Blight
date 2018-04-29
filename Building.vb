@@ -6,6 +6,7 @@ Public Class Building
     Public BaseCost As Integer = 0
     Public MarkdownCost As Integer = 0
     Public PurchasePrice As Integer = 0
+    Public MarketPosition As Integer = -1
 
     Public Jobs As Integer = 0
     Public BusinessSuccess As Integer = 0
@@ -131,8 +132,16 @@ Public Class Building
         Return GetName() + " at " + Location.GetName()
     End Function
 
+    Public Overridable Function GetEmploymentStatement() As String
+        Return "Employed by the " + GetNameAndAddress()
+    End Function
+
     Public Function GetEmployeeCount() As Integer
         Return Employees.Count
+    End Function
+
+    Public Overridable Function GetSpecialAbility() As String
+        Return SpecialAbility.Trim
     End Function
 
     Public Overridable Function GetBaseCost() As Integer
@@ -252,7 +261,11 @@ Public Class Building
 
         '-- Post the event
         If PostEvent Then
-            Diary.HireEvents.AddEvent(Employee.GetNameAndAddress() + " took a job at the " + GetNameAndAddress())
+            If Type = BuildingGen.SelfEmployed Then
+                Diary.HireEvents.AddEvent(Employee.GetNameAndAddress() + GetEmploymentStatement())
+            Else
+                Diary.HireEvents.AddEvent(Employee.GetNameAndAddress() + " took a job at the " + GetNameAndAddress())
+            End If
         End If
 
         '-- Quit any previous job
@@ -417,6 +430,8 @@ Public Class Building
         For Each theBuilding As Building In Location.Buildings
             If theBuilding.Equals(Me) Then
                 Continue For
+            Else
+                theBuilding.UpdateBuildingEffects()
             End If
 
             If theBuilding.Type = BuildingGen.BuildingEnum.Temp_Agency Then
@@ -715,8 +730,8 @@ Public Class Building
         End If
 
         '-- Show special ability text
-        If SpecialAbility.TrimEnd.Length > 0 Then
-            BuildingString += SpecialAbility + ControlChars.NewLine
+        If GetSpecialAbility().Length > 0 Then
+            BuildingString += GetSpecialAbility() + ControlChars.NewLine + ControlChars.NewLine
         End If
 
         '-- Show tags

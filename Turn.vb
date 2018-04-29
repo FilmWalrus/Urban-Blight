@@ -411,6 +411,9 @@
         For i As Integer = 0 To CitizenList.Count - 1
             Dim thePerson As Citizen = CitizenList(i)
 
+            '-- Cap stats while we're here
+            thePerson.Cap()
+
             '-- Collect taxes for each person
             Dim personalTax As Integer = 0
             If thePerson.Age < 16 Then
@@ -523,7 +526,11 @@
             '-- Update the buildings age and other info
             If Not theBuilding.UpdateInternal() Then
                 DestroyedBuildings.Add(theBuilding)
+                Continue For
             End If
+
+            '-- Update building effects
+            theBuilding.UpdateBuildingEffects()
 
             '-- Check if the building expanded
             theBuilding.ExpandIfSuccessful()

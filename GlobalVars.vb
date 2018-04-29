@@ -161,7 +161,8 @@ Module GlobalVars
         Minors
         Elderly
 
-        Employees
+        Employed
+        Self_Employed
         Unemployed_Adults
         Unemployed_Total
 

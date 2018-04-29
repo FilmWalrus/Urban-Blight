@@ -265,14 +265,20 @@ Public Class CitySquare
         Return unemploymentValue
     End Function
 
-    Public Function getEmployment() As Integer
+    Public Function getEmployment(Optional ByVal SelfEmployedOnly As Boolean = False) As Integer
         '-- We have to actually check every citizen since they might have jobs elsewhere
         Dim citizensEmployed As Integer = 0
         For i As Integer = 0 To People.Count - 1
             '-- Add up how many citizens employed
             Dim currentCitizen As Citizen = People(i)
             If currentCitizen.JobBuilding IsNot Nothing Then
-                citizensEmployed += 1
+                If SelfEmployedOnly Then
+                    If currentCitizen.IsSelfEmployed() Then
+                        citizensEmployed += 1
+                    End If
+                Else
+                    citizensEmployed += 1
+                End If
             End If
         Next
         Return citizensEmployed
@@ -374,7 +380,7 @@ Public Class CitySquare
             thePlayer.LandOptionBuildings.Remove(WorkStation)
 
             '-- Seed the location with people
-            HomeStation.SeedExurb(3)
+            HomeStation.SeedExurb(2)
         End If
     End Sub
 
@@ -650,8 +656,10 @@ Public Class CitySquare
                     displayText = getJobsTotal().ToString
                 Case ViewEnum.Jobs_Needed
                     displayText = (getUnemployment(True) - getJobsEmpty()).ToString
-                Case ViewEnum.Employees
+                Case ViewEnum.Employed
                     displayText = getEmployment().ToString
+                Case ViewEnum.Self_Employed
+                    displayText = getEmployment(True).ToString
                 Case ViewEnum.Unemployed_Total
                     displayText = getUnemployment(False).ToString
                 Case ViewEnum.Unemployed_Adults
