@@ -1349,7 +1349,11 @@ Public Class MainForm
         BuildingDropdown.Items.Clear()
         For i As Integer = 0 To BuildingGen.BuildingEnum.BuildingCount - 1
             Dim BaseCost As Integer = BuildingGenerator.GetBaseCost(i) + CurrentPlayer.SpecialOrderOffsets(i)
-            BuildingDropdown.Items.Add("$" + BaseCost.ToString + " - " + BuildingGenerator.GetName(i))
+            Dim CostString As String = "$" + BaseCost.ToString
+            For j As Integer = 0 To 4 - CostString.Length
+                CostString += "  "
+            Next
+            BuildingDropdown.Items.Add(CostString + " - " + BuildingGenerator.GetName(i))
         Next
 
         DisableDropdownChange = False

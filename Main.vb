@@ -329,7 +329,7 @@
     Sub CheckForExtraRedraws()
         For i As Integer = 0 To CurrentPlayer.ThinkTankCount - 1
             UpdateCards(False)
-            Dim msgRslt As MsgBoxResult = MsgBox("Redraw a new set of buildings for free?.", MsgBoxStyle.YesNo)
+            Dim msgRslt As MsgBoxResult = MsgBox("Redraw a new set of buildings for free?", MsgBoxStyle.YesNo)
             If msgRslt = MsgBoxResult.Yes Then
                 For j As Integer = 0 To Cards.Length - 1
                     Cards(j) = Nothing

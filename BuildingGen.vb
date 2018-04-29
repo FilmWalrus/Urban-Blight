@@ -18,7 +18,7 @@ Public Class BuildingGen
         Bar
         Black_Market
         Botanical_Garden
-        Campsite
+        'Campsite
         Cancer_Hospital
         Cartel
         Casino
@@ -59,7 +59,7 @@ Public Class BuildingGen
         Hotel
         Laboratory
         Land_Developer
-        Landfill
+        'Landfill
         Law_Firm
         Library
         Lumber_Mill
@@ -80,7 +80,7 @@ Public Class BuildingGen
         Pharmacy
         Police_Station
         Polling_Place
-        Post_Office
+        'Post_Office
         Power_Plant
         Private_Security_Company
         Ranch
@@ -98,7 +98,7 @@ Public Class BuildingGen
         Stadium
         Startup_Incubator
         Steel_Mill
-        Suburb
+        'Suburb
         Tax_Assessor
         Taxi_Service
         Temp_Agency
@@ -177,8 +177,8 @@ Public Class BuildingGen
                 Return 305
             Case BuildingEnum.Botanical_Garden
                 Return 260
-            Case BuildingEnum.Campsite
-                Return -1
+            'Case BuildingEnum.Campsite
+            '    Return -1
             Case BuildingEnum.Cartel
                 Return 140
             Case BuildingEnum.Casino
@@ -265,8 +265,8 @@ Public Class BuildingGen
                 Return 205
             Case BuildingEnum.Land_Developer
                 Return 350
-            Case BuildingEnum.Landfill
-                Return -1
+            'Case BuildingEnum.Landfill
+            '    Return -1
             Case BuildingEnum.Law_Firm
                 Return 280
             Case BuildingEnum.Library
@@ -303,8 +303,8 @@ Public Class BuildingGen
                 Return 155
             Case BuildingEnum.Polling_Place
                 Return 255
-            Case BuildingEnum.Post_Office
-                Return -1
+            'Case BuildingEnum.Post_Office
+            '    Return -1
             Case BuildingEnum.Power_Plant
                 Return 455
             Case BuildingEnum.Private_Security_Company
@@ -337,8 +337,8 @@ Public Class BuildingGen
                 Return 325
             Case BuildingEnum.Steel_Mill
                 Return 505
-            Case BuildingEnum.Suburb
-                Return -1
+            'Case BuildingEnum.Suburb
+            '    Return -1
             Case BuildingEnum.Tax_Assessor
                 Return 125
             Case BuildingEnum.Taxi_Service
@@ -481,7 +481,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Stretch your legs and see what nature has to offer at the Botanical Garden.  Wander around the flowers, trees, and hedges and feel the tranquility set in.")
                     newBuilding.SetSpecialAbility("+1 max effect for each forest in range 1. +2% odds for each forest you own.")
                     Return newBuilding
-                Case BuildingEnum.Campsite
+                'Case BuildingEnum.Campsite
 
                 Case BuildingEnum.Cartel
                     Dim newBuilding As New ManufacturingBuilding(bType, GetBaseCost(bType), 3)
@@ -721,13 +721,13 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("When your citizens travel to the Gas Station, their mobility increases by 8. However, fires on the same square as the Gas Station are worse.")
                     Return newBuilding
                 Case BuildingEnum.Golf_Course
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1, 13)
-                    newBuilding.SetStat(StatEnum.Happiness, 10, 2)
-                    newBuilding.SetStat(StatEnum.Health, 22, 2)
+                    Dim newBuilding As New GolfBuilding(bType, GetBaseCost(bType), 1, 13)
+                    newBuilding.SetStat(StatEnum.Happiness, 10, 1)
+                    newBuilding.SetStat(StatEnum.Health, 22, 1)
                     newBuilding.SetStat(StatEnum.Drunkenness, 10, 1)
                     newBuilding.AddTag(TagEnum.Entertainment)
                     newBuilding.SetInfo("Trees. Grass. Water. Sand. Why go to a park when you can visit a Golf Course? Enjoy the great outdoors and try not to let the beverage cart keep you down.")
-                    newBuilding.SetSpecialAbility("All effects of the Golf Course are doubled if built on a Plain tile.")
+                    newBuilding.SetSpecialAbility("+1 health and happiness for the first instance of each of the following in range 1: forest, plain, lake, desert.")
                     Return newBuilding
                 Case BuildingEnum.Government_Bureau 'Does special ability just effect owner or does it effect all players?  Can this 10% stack with other Govt. Bureaus?
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 5)
@@ -984,7 +984,7 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Polling Places let your citizens participate in the democratic process - something that always goes their way.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
-                Case BuildingEnum.Post_Office
+                'Case BuildingEnum.Post_Office
                     'newBuilding.AddTag(TagEnum.Government)
                 Case BuildingEnum.Power_Plant 'skipping until variations are ready - want to write all at once
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 3)
@@ -1110,7 +1110,7 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("")
                     Return newBuilding
-                Case BuildingEnum.Suburb
+                'Case BuildingEnum.Suburb
 
                 Case BuildingEnum.Tax_Assessor
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)

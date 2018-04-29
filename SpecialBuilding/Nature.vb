@@ -210,6 +210,53 @@ Public Class FarmBuilding
     End Sub
 End Class
 
+Public Class GolfBuilding
+    Inherits Building
+
+    Public GolfAdjBonus As Double = 0.0
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Function GetStatAdjust(ByVal StatType As Integer) As Integer
+        If StatType = StatEnum.Drunkenness Then
+            Return MyBase.GetStatAdjust(StatType)
+        Else
+            Return MyBase.GetStatAdjust(StatType) + GolfAdjBonus
+        End If
+    End Function
+
+    Public Sub UpdateBonuses()
+
+        '-- Golf courses provide a +1 effect for unique terrain type on or adj
+        Dim AdjTerrainTypes As New List(Of Integer)
+        Dim AdjLocations As List(Of CitySquare) = Location.GetTrueAdjacents()
+        AdjLocations.Add(Location)
+        For Each theLocation As CitySquare In AdjLocations
+            If Not AdjTerrainTypes.Contains(theLocation.Terrain) Then
+                If theLocation.Terrain = TerrainEnum.Plain Or theLocation.Terrain = TerrainEnum.Forest Or
+                        theLocation.Terrain = TerrainEnum.Lake Or theLocation.Terrain = TerrainEnum.Desert Then
+                    AdjTerrainTypes.Add(theLocation.Terrain)
+                End If
+            End If
+        Next
+        GolfAdjBonus = AdjTerrainTypes.Count
+
+    End Sub
+
+    Public Overrides Sub UpdateBuildingEffects()
+        MyBase.UpdateBuildingEffects()
+        UpdateBonuses()
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+        UpdateBonuses()
+    End Sub
+
+End Class
+
 Public Class RanchBuilding
     Inherits Building
 
