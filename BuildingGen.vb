@@ -122,6 +122,7 @@ Public Class BuildingGen
         Coffee
         Commerce
         Criminal
+        Disreputable
         Entertainment
         Food
         Franchise
@@ -497,14 +498,15 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("The Cartel starts with twice the number of jobs if built on a Dirt tile.")
                     Return newBuilding
                 Case BuildingEnum.Casino
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 4) 'Check my Special Ability wording on this one.
+                    Dim newBuilding As New CasinoBuilding(bType, GetBaseCost(bType), 4)
                     newBuilding.SetStat(StatEnum.Happiness, 50, 3)
                     newBuilding.SetStat(StatEnum.Drunkenness, 50, 3)
                     newBuilding.SetStat(StatEnum.Criminality, 22, 3)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.AddTag(TagEnum.Entertainment)
+                    newBuilding.AddTag(TagEnum.Disreputable)
                     newBuilding.SetInfo("Roll the dice at the Casino!  Will you hit it big and leave happy or lose it all and drown your sorrows?")
-                    newBuilding.SetSpecialAbility("The player will receive a payout for each person that visits the Casino.")
+                    newBuilding.SetSpecialAbility("Revenue from visitors is 5 times higher than regular buildings.")
                     Return newBuilding
                 Case BuildingEnum.Church
                     Dim newBuilding As New ChurchBuilding(bType, GetBaseCost(bType), 1)
@@ -560,6 +562,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Creativity, 55, 4)
                     newBuilding.SetStat(StatEnum.Drunkenness, 45, 3)
                     newBuilding.AddTag(TagEnum.Entertainment)
+                    newBuilding.AddTag(TagEnum.Disreputable)
                     newBuilding.SetInfo("Whether you jam out in the mosh pit or sway in you seat, Concert Venues can allow for a crazy good time.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
@@ -605,6 +608,7 @@ Public Class BuildingGen
                     Dim newBuilding As New CrimeRingBuilding(bType, GetBaseCost(bType), 4, 10)
                     newBuilding.SetStat(StatEnum.Criminality, 14, 10)
                     newBuilding.AddTag(TagEnum.Criminal)
+                    newBuilding.AddTag(TagEnum.Disreputable)
                     newBuilding.SetInfo("Crime Rings bring plenty of cheap jobs but sharp, sporadic increases in extreme criminal behavior are likely.")
                     newBuilding.SetSpecialAbility("Crimes committed on the square of the Crime Ring result in monetary kickbacks to the owner.")
                     Return newBuilding
@@ -614,6 +618,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Intelligence, 10, -6)
                     newBuilding.SetStat(StatEnum.Criminality, 25, 3)
                     newBuilding.AddTag(TagEnum.Franchise)
+                    newBuilding.AddTag(TagEnum.Disreputable)
                     newBuilding.SetInfo("")
                     Return newBuilding
                 Case BuildingEnum.Customs_House
@@ -668,6 +673,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Happiness, 16, -3)
                     newBuilding.SetStat(StatEnum.Health, 33, -6)
                     newBuilding.AddTag(TagEnum.Commerce)
+                    newBuilding.AddTag(TagEnum.Disreputable)
                     newBuilding.SetInfo("Factories provide many needed jobs but their monotony can be depressing and their pollution harmful.")
                     newBuilding.SetSpecialAbility("The effects of a Factory are worse for every 10 population sharing its square.")
                     Return newBuilding
@@ -1007,19 +1013,21 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Ranches give your citizens a breath of the clean air found good ol' outdoors.  There's nothing like being home on the range.")
                     newBuilding.SetSpecialAbility("Ranches give Food buildings a +1 health effect. The also expand by 2 jobs at a time if build on a Plain tile.  Ranches do not stack.")
                     Return newBuilding
-                'Case BuildingEnum.Refugee_Camp
-                '    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
-                '    newBuilding.SetStat(StatEnum.Happiness, 20, -2)
-                '    newBuilding.SetStat(StatEnum.Health, 25, -2)
-                '    newBuilding.SetStat(StatEnum.Criminality, 25, 3)
-                '    newBuilding.SetInfo("Refugee Camps are not ideal for the general health, happiness, and crime rate of a city, but they give people in a dire situation a place where they can escape.")
-                '    newBuilding.SetSpecialAbility("Refugee Camps increase the chances of immigrant arrival to the tile on which it is built.")
-                '    Return newBuilding
+                    'Case BuildingEnum.Refugee_Camp
+                    '    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                    '    newBuilding.SetStat(StatEnum.Happiness, 20, -2)
+                    '    newBuilding.SetStat(StatEnum.Health, 25, -2)
+                    '    newBuilding.SetStat(StatEnum.Criminality, 25, 3)
+                    '    newBuilding.AddTag(TagEnum.Disreputable)
+                    '    newBuilding.SetInfo("Refugee Camps are not ideal for the general health, happiness, and crime rate of a city, but they give people in a dire situation a place where they can escape.")
+                    '    newBuilding.SetSpecialAbility("Refugee Camps increase the chances of immigrant arrival to the tile on which it is built.")
+                    '    Return newBuilding
                 Case BuildingEnum.Rehab_Clinic
                     Dim newBuilding As New RehabBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Health, 10, 4)
                     newBuilding.SetStat(StatEnum.Drunkenness, 50, -2)
                     newBuilding.AddTag(TagEnum.Medical)
+                    newBuilding.AddTag(TagEnum.Disreputable)
                     newBuilding.SetInfo("Soothing, bubbling fountains. The sound of birds calling in the distance. Let yourself rest, relax, recouperate, and sober up at the Rehab Clinic.")
                     newBuilding.SetSpecialAbility("Rehab Clinics have a chance of reducing drunkenness in citizens to 0.  Only citizens with a Drunkenness value greater than 10 can be checked in.  Their Mobility will be decreased by half. More effective on Mountain and Desert tiles.")
                     Return newBuilding
@@ -1096,6 +1104,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 5, 5)
                     newBuilding.SetStat(StatEnum.Drunkenness, 20, 3)
                     newBuilding.AddTag(TagEnum.Entertainment)
+                    newBuilding.AddTag(TagEnum.Disreputable)
                     newBuilding.SetInfo("Stadiums bring fun, especially when the home team wins, and a little friendly competition. The players get exercise and the audience gets entertainment and overpriced beer.")
                     Return newBuilding
                 Case BuildingEnum.Steel_Mill

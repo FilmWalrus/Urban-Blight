@@ -27,6 +27,20 @@
     End Sub
 End Class
 
+Public Class CasinoBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Function CollectRevenue() As Integer
+        '-- Casino revenue is much higher than regular buildings
+        AddRevenue(SafeDivide(CurrentVisitors, 1.0))
+        Return CurrentRevenue
+    End Function
+End Class
+
 Public Class MallBuilding
     Inherits Building
 

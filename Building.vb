@@ -534,7 +534,7 @@ Public Class Building
         TotalUpkeep += NewUpkeep
     End Sub
 
-    Public Function CollectRevenue() As Integer
+    Public Overridable Function CollectRevenue() As Integer
         AddRevenue(SafeDivide(CurrentVisitors, 5.0)) '-- Building revenue increases with visitors
         Return CurrentRevenue
     End Function

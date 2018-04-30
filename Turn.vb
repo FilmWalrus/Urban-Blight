@@ -89,6 +89,11 @@
             For j As Integer = 0 To locationsInRange.Count - 1
                 Dim theLocation As CitySquare = locationsInRange(j)
 
+                '-- Citizens are less likely to visit disreputable locations
+                If Not thePerson.WillVisit(theLocation) Then
+                    Continue For
+                End If
+
                 '-- Record the visit to this location
                 theLocation.VisitHere(thePerson)
 
@@ -164,11 +169,9 @@
                     End If
                 End If
 
-                '-- People are reluctant to move to the desert
-                If newHome.Terrain = TerrainEnum.Desert Then
-                    If GetRandom(0, 1) = 0 Then
-                        Return
-                    End If
+                '-- People are reluctant to move to the desert, factories, ect.
+                If Not thePerson.WillMove(newHome) Then
+                    Return
                 End If
 
                 '-- Move out of original home

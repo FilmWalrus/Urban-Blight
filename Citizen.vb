@@ -763,6 +763,35 @@ Public Class Citizen
 
 #End Region
 
+#Region " Movement "
+    Public Function WillMove(ByRef thisLocation As CitySquare) As Boolean
+
+        Dim DissuasiveFactors As Integer = 0
+
+        '-- People are reluctant to move to the desert
+        If thisLocation.Terrain = TerrainEnum.Desert Then
+            DissuasiveFactors += 1
+        End If
+        '-- People are reluctant to move to locations with disreputable buildings
+        DissuasiveFactors += thisLocation.CountBuildingsByTag(BuildingGen.TagEnum.Disreputable)
+
+        If DissuasiveFactors = 0 Then
+            Return True
+        End If
+
+        Dim OddsOfMoving As Double = SafeDivide(100, DissuasiveFactors + 1)
+
+        Return (GetRandom(1, 100) < OddsOfMoving)
+    End Function
+
+    Public Function WillVisit(ByRef thisLocation As CitySquare) As Boolean
+        '-- Every dissuasive building reduces the change a citizen will visit by 10%
+        Dim DissuasiveFactors As Integer = thisLocation.CountBuildingsByTag(BuildingGen.TagEnum.Disreputable)
+        Dim OddsOfVisiting As Double = 100 - (10 * DissuasiveFactors)
+        Return (GetRandom(1, 100) < OddsOfVisiting)
+    End Function
+#End Region
+
 #Region " Support "
 
     Public Function GetNameAndAddress() As String
