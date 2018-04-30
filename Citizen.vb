@@ -480,6 +480,8 @@ Public Class Citizen
                 Odds = (32.0 - GetStat(StatEnum.Health)) / 4.0
             Case DeathEnum.Murder
             Case DeathEnum.NaturalCauses
+                '-- Science increases average life expectancy
+                Dim AdjustedAge As Integer = Age - Players(Residence.OwnerID).ScienceCount
                 Odds += (Age - 20.0) / 4.0
             Case DeathEnum.TrafficAccident
                 Dim currentLocation As CitySquare = Residence

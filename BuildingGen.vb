@@ -481,6 +481,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 45, 2)
                     newBuilding.SetStat(StatEnum.Creativity, 15, 1)
                     newBuilding.AddTag(TagEnum.Nature)
+                    newBuilding.AddTag(TagEnum.Science)
                     newBuilding.SetInfo("Stretch your legs and see what nature has to offer at the Botanical Garden.  Wander around the flowers, trees, and hedges and feel the tranquility set in.")
                     newBuilding.SetSpecialAbility("+1 max effect for each forest in range 1. +2% odds for each forest you own.")
                     Return newBuilding
@@ -816,6 +817,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 5, 10)
                     newBuilding.SetStat(StatEnum.Intelligence, 40, 5)
                     newBuilding.AddTag(TagEnum.Medical)
+                    newBuilding.AddTag(TagEnum.Science)
                     newBuilding.SetInfo("At the Research Ward we don't treat the illnesses of today, we work to create the medicines of tomorrow.")
                     newBuilding.SetSpecialAbility("Stacking hospitals of different types on the same square boosts health.")
                     Return newBuilding
@@ -831,6 +833,7 @@ Public Class BuildingGen
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Health, 20, -2)
                     newBuilding.SetStat(StatEnum.Intelligence, 16, 8)
+                    newBuilding.AddTag(TagEnum.Science)
                     newBuilding.SetInfo("Laboratories are on the cutting-edge of research and intellectual advancement, but the chemicals they use and experiments they perform can be unhealthy.")
                     newBuilding.SetSpecialAbility("Laboratories may produce a one-time invention that permanently changes the tile stats on its square. Labs also help with outbreak relief.")
                     Return newBuilding
@@ -919,6 +922,7 @@ Public Class BuildingGen
                 Case BuildingEnum.Observatory
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Intelligence, 20, 4)
+                    newBuilding.AddTag(TagEnum.Science)
                     newBuilding.SetInfo("Have you ever gazed up at the stars and wondered how small the world really is?  Get lost in the sheer size of the universe at the Observatory.")
                     newBuilding.SetSpecialAbility("Double the effect of the Observatory on Desert and Mountain tiles. They may also warn you of impending danger.")
                     Return newBuilding
@@ -971,6 +975,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Health, 50, 1)
                     newBuilding.SetStat(StatEnum.Drunkenness, 5, 5)
                     newBuilding.AddTag(TagEnum.Medical)
+                    newBuilding.AddTag(TagEnum.Science)
                     newBuilding.SetInfo("Pharmacies give your citizens a place to stock up on perscriptions and possibly some self-medications.")
                     newBuilding.SetSpecialAbility("Pharmacies are twice as effective on Hospitals, Laboratories, and Grocery Stores.")
                     Return newBuilding
@@ -1191,6 +1196,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Intelligence, 30, 8)
                     newBuilding.SetStat(StatEnum.Creativity, 25, 3)
                     newBuilding.SetStat(StatEnum.Drunkenness, 40, 2)
+                    newBuilding.AddTag(TagEnum.Science)
                     newBuilding.SetInfo("Universities are important bastions of academic learning and discovery but are also known for their wild drunken parties.")
                     newBuilding.SetSpecialAbility("The presence of a University increases chances of employment on the square.")
                     Return newBuilding

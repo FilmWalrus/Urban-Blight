@@ -32,6 +32,7 @@ Public Class Player
     Public EmbassyCount As Integer = 0
     Public GovernmentCount As Integer = 0
     Public PollCount As Integer = 0
+    Public ScienceCount As Integer = 0
     Public ThinkTankCount As Integer = 0
 
     '-- AI stuff

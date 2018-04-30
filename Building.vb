@@ -175,6 +175,10 @@ Public Class Building
         Tags.Add(newTag)
     End Sub
 
+    Public Sub RemoveTag(ByVal newTag As Integer)
+        Tags.Remove(newTag)
+    End Sub
+
     Public Function HasTag(ByVal newTag As Integer) As Boolean
         Return Tags.Contains(newTag)
     End Function
@@ -426,6 +430,11 @@ Public Class Building
             Location.NatureCount += 1
         End If
 
+        '-- Science Tag: Update the player's science count
+        If HasTag(BuildingGen.TagEnum.Science) Then
+            Players(OwnerID).ScienceCount += 1
+        End If
+
         '-- Check all buildings at this location
         For Each theBuilding As Building In Location.Buildings
             If theBuilding.Equals(Me) Then
@@ -605,6 +614,11 @@ Public Class Building
             Founder.BuildingsFounded.Remove(Me)
         End If
 
+        '-- Commerce Tag:  Lower the player's CommerceCount
+        If HasTag(BuildingGen.TagEnum.Commerce) Then
+            Players(OwnerID).CommerceCount -= 1
+        End If
+
         '-- Food Tag: +1 Health for Farm or Ranch
         If HasTag(BuildingGen.TagEnum.Food) Then
             Location.FoodCount -= 1
@@ -615,9 +629,9 @@ Public Class Building
             Players(OwnerID).GovernmentCount -= 1
         End If
 
-        '-- If this building has a "Commerce" tag, lower the player's CommerceBuilding count.
-        If HasTag(BuildingGen.TagEnum.Commerce) Then
-            Players(OwnerID).CommerceCount -= 1
+        '-- Science Tag: Update the player's ScienceCount
+        If HasTag(BuildingGen.TagEnum.Science) Then
+            Players(OwnerID).ScienceCount -= 1
         End If
 
         '-- Remove the building from this location
