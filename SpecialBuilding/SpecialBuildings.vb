@@ -141,15 +141,6 @@ Public Class ChurchBuilding
     End Sub
 End Class
 
-Public Class CrimeRingBuilding
-    Inherits Building
-
-    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
-        MyBase.New(bType, bCost, bJobs, bMinAge)
-        EffectText = "kickbacks generated"
-    End Sub
-End Class
-
 Public Class CorrectionalFacilityBuilding
     Inherits Building
 
@@ -172,6 +163,37 @@ Public Class CorrectionalFacilityBuilding
                 AddEffects(1)
             End If
         End If
+    End Sub
+End Class
+
+Public Class CommunityCenterBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+        EffectText = "reputations restored"
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+        MyBase.ConstructionEffects()
+
+        '-- Remove disreputable tag from all buildings at this location
+        For Each theBuilding As Building In Location.Buildings
+            If theBuilding.HasTag(BuildingGen.TagEnum.Disreputable) Then
+                AddEffects(1)
+                theBuilding.RemoveTag(BuildingGen.TagEnum.Disreputable)
+            End If
+        Next
+    End Sub
+
+End Class
+
+Public Class CrimeRingBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+        EffectText = "kickbacks generated"
     End Sub
 End Class
 

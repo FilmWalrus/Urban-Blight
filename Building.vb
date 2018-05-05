@@ -450,6 +450,11 @@ Public Class Building
             ElseIf theBuilding.Type = BuildingGen.BuildingEnum.Mine Then
                 Dim theMine As MineBuilding = theBuilding
                 theMine.ApplyMineRebate(Me)
+            ElseIf theBuilding.Type = BuildingGen.BuildingEnum.Community_Center Then
+                If Me.HasTag(BuildingGen.TagEnum.Disreputable) Then
+                    Me.RemoveTag(BuildingGen.TagEnum.Disreputable)
+                    theBuilding.AddEffects(1)
+                End If
             End If
         Next
 

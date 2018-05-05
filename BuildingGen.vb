@@ -545,7 +545,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("Coffee Shops are more effective on Libraries, Offices, Skyscrapers, and at Colleges.")
                     Return newBuilding
                 Case BuildingEnum.Community_Center
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 2, 14)
+                    Dim newBuilding As New CommunityCenterBuilding(bType, GetBaseCost(bType), 2, 14)
                     newBuilding.SetStat(StatEnum.Health, 10, 2)
                     newBuilding.SetStat(StatEnum.Happiness, 10, 2)
                     newBuilding.SetStat(StatEnum.Intelligence, 10, 2)
