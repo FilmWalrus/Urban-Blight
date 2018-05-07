@@ -187,6 +187,10 @@ Public Class CitySquare
                 '-- Apartment buildings reduce effective population by 10
                 AdjustedPopluation -= 10
             End If
+            If thisBuilding.Type = BuildingGen.BuildingEnum.Apartments Then
+                '-- Suburb buildings reduce effective population by 5
+                AdjustedPopluation -= 5
+            End If
             If thisBuilding.HasTag(BuildingGen.TagEnum.Entertainment) Then
                 '-- Each building with an Entertainment tag reduces population by 1
                 AdjustedPopluation -= 1
@@ -380,7 +384,7 @@ Public Class CitySquare
             thePlayer.LandOptionBuildings.Remove(WorkStation)
 
             '-- Seed the location with people
-            HomeStation.SeedExurb(2)
+            HomeStation.Location.AddNewPeople(2)
         End If
     End Sub
 
@@ -412,6 +416,13 @@ Public Class CitySquare
         '-- Use for immigration
         newPerson.Residence = Me
         People.Add(newPerson)
+    End Sub
+
+    Public Sub AddNewPeople(ByVal NewPeopleCount As Integer)
+        For i As Integer = 0 To NewPeopleCount - 1
+            Dim SeedPerson As New Citizen(True)
+            AddPerson(SeedPerson)
+        Next
     End Sub
 
     Function GetDistance(ByRef OtherSquare As CitySquare) As Integer

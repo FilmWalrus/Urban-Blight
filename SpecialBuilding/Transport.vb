@@ -92,13 +92,6 @@ Public Class ExurbBuilding
         Players(OwnerID).LandOptionBuildings.Add(Me)
     End Sub
 
-    Public Sub SeedExurb(ByVal SeedCount As Integer)
-        For i As Integer = 0 To SeedCount - 1
-            Dim SeedPerson As New Citizen(True)
-            Location.AddPerson(SeedPerson)
-        Next
-    End Sub
-
     Public Overrides Sub Destroy()
 
         '-- Remove this location from its paired station

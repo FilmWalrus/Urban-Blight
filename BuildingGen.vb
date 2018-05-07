@@ -100,7 +100,7 @@ Public Class BuildingGen
         Stadium
         Startup_Incubator
         Steel_Mill
-        'Suburb
+        Suburb
         Tax_Assessor
         Taxi_Service
         Temp_Agency
@@ -340,8 +340,8 @@ Public Class BuildingGen
                 Return 325
             Case BuildingEnum.Steel_Mill
                 Return 505
-            'Case BuildingEnum.Suburb
-            '    Return -1
+            Case BuildingEnum.Suburb
+                Return 220
             Case BuildingEnum.Tax_Assessor
                 Return 125
             Case BuildingEnum.Taxi_Service
@@ -459,13 +459,13 @@ Public Class BuildingGen
                 'Case BuildingEnum.Bank
 
                 Case BuildingEnum.Bar
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
+                    Dim newBuilding As New BarBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Happiness, 30, 4)
                     newBuilding.SetStat(StatEnum.Health, 10, 0)
                     newBuilding.SetStat(StatEnum.Drunkenness, 30, 6)
                     newBuilding.AddTag(TagEnum.Food)
                     newBuilding.SetInfo("Bars provide a social atmosphere to cheer people up but can result in overindulgence.")
-                    newBuilding.SetSpecialAbility("Bars double the effect of Stadiums and Colleges on the same square.")
+                    newBuilding.SetSpecialAbility("Twice the odds of increasing happiness if located with Stadiums or Colleges. 50% chance of becoming 'Disreputable' when built.")
                     Return newBuilding
                 Case BuildingEnum.Black_Market
                     Dim newBuilding As New BlackMarketBuilding(bType, GetBaseCost(bType), 2)
@@ -555,7 +555,7 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Criminality, 10, -2)
                     newBuilding.AddTag(TagEnum.Government)
                     newBuilding.SetInfo("Community Centers allow for people of different walks of life to come together for the benefit of society.")
-                    newBuilding.SetSpecialAbility("Nullifies the negative effects of Refugee Camps, Correctional Facilities, and Rehab Clinics.  Upkeep costs are required for each visitor.")
+                    newBuilding.SetSpecialAbility("Removes 'Disreputable' from buildings on the same location.  Visitors cost upkeep rather than generate revenue.")
                     Return newBuilding
                 Case BuildingEnum.Concert_Venue
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 3)
@@ -664,7 +664,7 @@ Public Class BuildingGen
                     newBuilding.SetSpecialAbility("You can build in other player's territory at 120% cost -10% for each additional embassy. You retain ownership, keep any revenue, and pay any upkeep.")
                     Return newBuilding
                 Case BuildingEnum.Exurb
-                    Dim newBuilding As New ExurbBuilding(bType, GetBaseCost(bType), 0) 'Check phrasing of Exurb special ability text.
+                    Dim newBuilding As New ExurbBuilding(bType, GetBaseCost(bType), 0)
                     newBuilding.SetStat(StatEnum.Mobility, 15, 2)
                     newBuilding.SetInfo("Sometimes you just need to escape the city.  Exurbs let you get away, but still remain close to the hustle and bustle of your metropolis.")
                     newBuilding.SetSpecialAbility("The next piece of land you buy can be any unoccupied square on the board and starts with +2 population. Citizens can commute between this building and the exurb.")
@@ -1125,8 +1125,13 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("")
                     Return newBuilding
-                'Case BuildingEnum.Suburb
-
+                Case BuildingEnum.Suburb
+                    Dim newBuilding As New SuburbBuilding(bType, GetBaseCost(bType), 1)
+                    newBuilding.SetStat(StatEnum.Creativity, 30, -4)
+                    newBuilding.SetStat(StatEnum.Criminality, 12, -2)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Adds 3 new citizens. Increases the threshold by 5 where overpopulation begins to have a negative effect.")
+                    Return newBuilding
                 Case BuildingEnum.Tax_Assessor
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Happiness, 50, -2)

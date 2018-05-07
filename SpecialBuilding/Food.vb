@@ -1,4 +1,40 @@
-﻿Public Class GroceryBuilding
+﻿Public Class BarBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Function GetStatOdds(ByVal StatType As Integer) As Integer
+
+        '-- Bar gets double odds of happiness if on stadium or university
+        Dim DoubleBonus As Boolean = False
+        If StatType = StatEnum.Happiness And Location IsNot Nothing Then
+            If Location.CountBuildingsByType(BuildingGen.BuildingEnum.Stadium) > 0 Then
+                DoubleBonus = True
+            ElseIf Location.CountBuildingsByType(BuildingGen.BuildingEnum.University) > 0 Then
+                DoubleBonus = True
+            End If
+        End If
+
+        If DoubleBonus Then
+            Return MyBase.GetStatOdds(StatType) * 2.0
+        Else
+            Return MyBase.GetStatOdds(StatType)
+        End If
+    End Function
+
+    Public Overrides Sub ConstructionEffects()
+        '-- 50% chance of gaining disreputable tag when built
+        If GetRandom(0, 1) = 0 Then
+            AddTag(BuildingGen.TagEnum.Disreputable)
+        End If
+
+        MyBase.ConstructionEffects()
+    End Sub
+End Class
+
+Public Class GroceryBuilding
     Inherits Building
 
     Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)

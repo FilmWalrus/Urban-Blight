@@ -186,6 +186,17 @@ Public Class CommunityCenterBuilding
         Next
     End Sub
 
+    Public Overrides Sub AddRevenue(ByVal NewRevenue As Integer)
+        '-- Revenue for the community center is instead upkeep
+        CurrentUpkeep += NewRevenue
+        TotalUpkeep += NewRevenue
+    End Sub
+
+    Public Overrides Function CollectRevenue() As Integer
+        AddRevenue(SafeDivide(CurrentVisitors, 2.0)) '-- Building revenue increases with visitors
+        Return CurrentRevenue
+    End Function
+
 End Class
 
 Public Class CrimeRingBuilding
@@ -368,6 +379,23 @@ Public Class SchoolBuilding
             AddEffects(1)
         End If
     End Sub
+End Class
+
+Public Class SuburbBuilding
+    Inherits Building
+
+    Sub New(ByVal bType As Integer, ByVal bCost As Integer, ByVal bJobs As Integer, Optional ByVal bMinAge As Integer = Citizen.MinorAge)
+        MyBase.New(bType, bCost, bJobs, bMinAge)
+    End Sub
+
+    Public Overrides Sub ConstructionEffects()
+
+        '-- Suburb starts with 3 people
+        Location.AddNewPeople(3)
+
+        MyBase.ConstructionEffects()
+    End Sub
+
 End Class
 
 Public Class TempAgencyBuilding

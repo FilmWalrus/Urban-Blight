@@ -528,7 +528,7 @@ Public Class Building
 #End Region
 
 #Region " Visits, Effects, Revenue, and Upkeep "
-    Public Sub AddVisitors(ByVal NewVisitors As Integer)
+    Public Overridable Sub AddVisitors(ByVal NewVisitors As Integer)
         CurrentVisitors += NewVisitors
         TotalVisitors += NewVisitors
     End Sub
@@ -538,12 +538,12 @@ Public Class Building
         TotalEffects += NewEffect
     End Sub
 
-    Public Sub AddRevenue(ByVal NewRevenue As Integer)
+    Public Overridable Sub AddRevenue(ByVal NewRevenue As Integer)
         CurrentRevenue += NewRevenue
         TotalRevenue += NewRevenue
     End Sub
 
-    Public Sub AddUpkeep(ByVal NewUpkeep As Integer)
+    Public Overridable Sub AddUpkeep(ByVal NewUpkeep As Integer)
         CurrentUpkeep += NewUpkeep
         TotalUpkeep += NewUpkeep
     End Sub
@@ -553,7 +553,7 @@ Public Class Building
         Return CurrentRevenue
     End Function
 
-    Public Function CollectUpkeep() As Integer
+    Public Overridable Function CollectUpkeep() As Integer
         AddUpkeep(SafeDivide(Age, 10.0)) '-- Building upkeep increases with age
         Return CurrentUpkeep
     End Function
