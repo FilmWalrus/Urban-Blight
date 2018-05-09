@@ -119,6 +119,7 @@ Module GlobalVars
         TrafficAccident
         Murder
         ResistingArrest
+        NuclearMeltdown
         Unknown
         EnumEnd
     End Enum
@@ -205,6 +206,7 @@ Module GlobalVars
         Deaths_by_Traffic_Accident
         Deaths_by_Murder
         Deaths_by_Resisting_Arrest
+        Deaths_by_Nuclear_Meltdown
 
         Buildings_owned_by_current_player
         Buildings_owned_by_other_players

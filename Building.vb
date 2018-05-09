@@ -329,8 +329,11 @@ Public Class Building
             Dim odds As Double = 0.0
             odds += SafeDivide(BusinessSuccess, 2.0)
 
+            '-- Odds increase based on power level
+            odds += Location.PowerCount
+
             '-- Odds of expanding go down as you get larger
-            Dim oddsRange As Integer = 100 + (10 * Jobs)
+            Dim oddsRange As Integer = 100 + (20 * Jobs)
 
             If GetRandom(0, oddsRange) <= odds Then '-- Remove equal sign to prevent 0 job businesses from expanding?
                 '--Buildings expand
@@ -341,7 +344,7 @@ Public Class Building
 
     End Sub
 
-    Public Overridable Function UpdateInternal() As Boolean
+    Public Overridable Sub UpdateInternal(ByRef DestroyList As List(Of Building))
         Age = Age + TimeIncrement
 
         '-- Decommission old buildings
@@ -349,29 +352,12 @@ Public Class Building
         If GetRandom(1, 100) < DecomissionOdds Then
             Location.ClosedHistory += 1
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " closed after " + Age.ToString() + " years")
-            Return False
+            DestroyList.Add(Me)
         End If
 
         '-- Business Success is sum of the employee's employment scores (calculated earlier) divided by the # of jobs
         '-- Plus 1 for every 10 visitors this turn
         BusinessSuccess = SafeDivide(BusinessSuccess, Jobs) + SafeDivide(CurrentVisitors, 10.0)
-
-        Return True
-    End Function
-
-    Public Sub UpdateNeighbors(ByVal AddThis As Boolean)
-
-        '-- Update the city squares within range with a refernce to this building
-        Dim LocationsInRange As New List(Of CitySquare)
-        Location.GetLocationsInRange(GetRange(), LocationsInRange)
-        For i As Integer = 0 To LocationsInRange.Count - 1
-            If AddThis Then
-                Location.NeighborBuildings.Add(Me)
-            Else
-                Location.NeighborBuildings.Remove(Me)
-            End If
-        Next
-
     End Sub
 
 #End Region

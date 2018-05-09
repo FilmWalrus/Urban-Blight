@@ -527,10 +527,7 @@
             Dim theBuilding As Building = DevelopmentList(i)
 
             '-- Update the buildings age and other info
-            If Not theBuilding.UpdateInternal() Then
-                DestroyedBuildings.Add(theBuilding)
-                Continue For
-            End If
+            theBuilding.UpdateInternal(DestroyedBuildings)
 
             '-- Update building effects
             theBuilding.UpdateBuildingEffects()
@@ -761,15 +758,20 @@
         '-- (Don't recalculate the drag loss if we've been here already)
         If theLocation.DragLoss < 0 Then
             '-- Poor roads make travel difficult
-            'Dim DragLoss1 As Integer = (7 - GetRandom(0, location.Transportation + 2))
             Dim DragLoss1 As Integer = (5 - GetRandom(0, theLocation.Transportation))
             Dim DragLoss2 As Integer = (5 - GetRandom(0, theLocation.Transportation))
-            theLocation.DragLoss = (DragLoss1 * DragLoss2) + 4
+            theLocation.DragLoss = (DragLoss1 * DragLoss2) '+ 4
         End If
 
         Endurance -= theLocation.DragLoss
 
-        '-- Mountains also slow travel
+        '-- Development slows travel
+        Endurance -= theLocation.Buildings.Count
+
+        '-- Population congestion slows travel
+        Endurance -= SafeDivide(theLocation.People.Count, 4.0)
+
+        '-- Mountains slow travel
         If theLocation.Terrain = TerrainEnum.Mountain Then
             Endurance -= 6
         End If

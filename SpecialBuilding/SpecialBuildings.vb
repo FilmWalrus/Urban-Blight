@@ -48,17 +48,15 @@ Public Class ArchitectBuilding
         EffectText = "free redraws granted"
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         '-- 10% chance of reducing the redraw cost to 0
         If GetRandom(1, 100) <= 10 Then
             Players(OwnerID).WipeCost = DropCostBase
             AddEffects(1)
         End If
-
-        Return True
-    End Function
+    End Sub
 
 End Class
 

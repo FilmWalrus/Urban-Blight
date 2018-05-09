@@ -33,15 +33,13 @@ Public Class SpreadableBuilding
         End If
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         If GetRandom(1, 100) <= SpreadOdds Then
             SpreadToAdjacent()
         End If
-
-        Return True
-    End Function
+    End Sub
 
 End Class
 
@@ -52,8 +50,8 @@ Public Class ConglomerateBuilding
         MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         '-- Conglomerates only acquire other buildings once they hit full employment
         If Employees.Count = Jobs Then
@@ -64,12 +62,11 @@ Public Class ConglomerateBuilding
                     Me.Jobs += newAcquisition.Jobs
                     Me.TransferEmployees(newAcquisition)
                     Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " acquired " + newAcquisition.GetName())
-                    newAcquisition.Destroy()
+                    DestroyList.Add(newAcquisition)
                 End If
             End If
         End If
-        Return True
-    End Function
+    End Sub
 End Class
 
 Public Class ConstructionSiteBuilding
@@ -79,19 +76,17 @@ Public Class ConstructionSiteBuilding
         MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         If GetRandom(1, 5) = 1 Then
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
             newBuilding.PurchasePrice = GetPurchasePrice()
             Location.AddBuilding(newBuilding, OwnerID)
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " is now a " + newBuilding.GetName())
-            Return False
-        Else
-            Return True
+            DestroyList.Add(Me)
         End If
-    End Function
+    End Sub
 End Class
 
 Public Class CultBuilding
@@ -104,8 +99,8 @@ Public Class CultBuilding
         EffectText = "chapters opened"
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         If GetEmployeeCount() < Jobs Then
             '-- If there is an opening at the cult steal an employee of another building and brainwash him
@@ -120,9 +115,7 @@ Public Class CultBuilding
                 End If
             Next
         End If
-
-        Return True
-    End Function
+    End Sub
 
 End Class
 
@@ -136,8 +129,8 @@ Public Class DepartmentStoreBuilding
         EffectText = "branches opened"
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         If GetRandom(1, 100) <= 3 Then
             '-- Create a mall
@@ -151,11 +144,9 @@ Public Class DepartmentStoreBuilding
             newBuilding.TransferEmployees(Me)
 
             '-- Get rid of the department store
-            Return False
-        Else
-            Return True
+            DestroyList.Add(Me)
         End If
-    End Function
+    End Sub
 End Class
 
 Public Class EmbassyBuilding
@@ -228,8 +219,8 @@ Public Class StartupIncubatorBuilding
         EffectText = "buildings launched"
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         If GetRandom(1, 100) <= 15 Then '-- 15% chance to spawn a new building
             Dim newBuilding As Building = BuildingGenerator.CreateBuilding(-1)
@@ -241,9 +232,7 @@ Public Class StartupIncubatorBuilding
 
         If GetRandom(1, 100) <= 5 Then '-- 5% chance of failing
             Diary.SpecialBuildingEvents.AddEventNoLimit(GetNameAndAddress() + " declared bankruptcy")
-            Return False
-        Else
-            Return True
+            DestroyList.Add(Me)
         End If
-    End Function
+    End Sub
 End Class

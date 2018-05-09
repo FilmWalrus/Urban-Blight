@@ -65,8 +65,8 @@ Public Class RestaurantBuilding
         MyBase.New(bType, bCost, bJobs, bMinAge)
     End Sub
 
-    Public Overrides Function UpdateInternal() As Boolean
-        MyBase.UpdateInternal()
+    Public Overrides Sub UpdateInternal(ByRef DestroyList As List(Of Building))
+        MyBase.UpdateInternal(DestroyList)
 
         Dim CurrentPopulation As Integer = Location.getPopulation()
 
@@ -76,7 +76,7 @@ Public Class RestaurantBuilding
 
         '-- Only consider moving if there was a population drop
         If PopulationDrop <= 0 Then
-            Return True
+            Return
         End If
 
         If GetRandom(1, 6) <= PopulationDrop Then
@@ -98,11 +98,9 @@ Public Class RestaurantBuilding
                 BestAdj.AddBuilding(newBuilding, BestAdj.OwnerID)
                 Diary.SpecialBuildingEvents.AddEventNoLimit(GetName() + " closed shop and moved to " + BestAdj.GetName())
                 PreviousPopulation = HighestPopulation
-                Return False
+                DestroyList.Add(Me)
             End If
         End If
-
-        Return True
-    End Function
+    End Sub
 
 End Class

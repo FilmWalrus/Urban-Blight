@@ -547,6 +547,8 @@ Public Class Citizen
                 Diary.DeathTrafficEvents.AddEvent(GetNameAndAddress() + ", age " + Age.ToString() + ", died in a car accident")
             Case DeathEnum.ResistingArrest
                 AddEvent("Died resisting arrest")
+            Case DeathEnum.NuclearMeltdown
+                AddEvent("Died in a nuclear meltdown")
             Case DeathEnum.Unknown
                 AddEvent("Died of unknown causes")
         End Select

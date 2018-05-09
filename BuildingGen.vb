@@ -27,6 +27,7 @@ Public Class BuildingGen
         Church
         City_Wall
         Civic_Center
+        Coal_Power_Plant
         Coffee_Shop
         Community_Center
         Concert_Venue
@@ -50,6 +51,7 @@ Public Class BuildingGen
         Fire_Station
         Fishery
         Freeway
+        Gas_Power_Plant
         Gas_Station
         Geriatric_Hospital
         Golf_Course
@@ -59,6 +61,7 @@ Public Class BuildingGen
         Gym
         Harbor
         Hotel
+        Hydro_Power_Plant
         Laboratory
         Land_Developer
         'Landfill
@@ -72,6 +75,7 @@ Public Class BuildingGen
         Monument
         Military_Base
         Museum
+        Nuclear_Power_Plant
         Observatory
         Oil_Well
         Office
@@ -83,7 +87,6 @@ Public Class BuildingGen
         Police_Station
         Polling_Place
         'Post_Office
-        Power_Plant
         Private_Security_Company
         Ranch
         'Refugee_Camp
@@ -97,6 +100,7 @@ Public Class BuildingGen
         Sidewalks
         Ski_Resort
         Skyscraper
+        Solar_Power_Plant
         Stadium
         Startup_Incubator
         Steel_Mill
@@ -113,6 +117,7 @@ Public Class BuildingGen
         University
         Warehouse
         Welfare_Service
+        Wind_Power_Plant
         Zoo
         BuildingCount
     End Enum
@@ -131,6 +136,7 @@ Public Class BuildingGen
         Medical
         Monument
         Nature
+        Power
         Science
         Security
         Transportation
@@ -192,6 +198,8 @@ Public Class BuildingGen
                 Return 100
             Case BuildingEnum.Civic_Center
                 Return 635
+            Case BuildingEnum.Coal_Power_Plant
+                Return 450
             Case BuildingEnum.Coffee_Shop
                 Return 75
             Case BuildingEnum.Community_Center
@@ -236,12 +244,14 @@ Public Class BuildingGen
                 Return 165
             Case BuildingEnum.Freeway
                 Return 275
+            Case BuildingEnum.Gas_Power_Plant
+                Return 400
             Case BuildingEnum.Gas_Station
                 Return 110
             Case BuildingEnum.Golf_Course
                 Return 140
             Case BuildingEnum.Government_Bureau
-                Return 240
+                Return 220
             Case BuildingEnum.Graveyard
                 Return 100
             Case BuildingEnum.Grocery_Store
@@ -264,6 +274,8 @@ Public Class BuildingGen
                 Return 260
             Case BuildingEnum.Hotel
                 Return 275
+            Case BuildingEnum.Hydro_Power_Plant
+                Return 350
             Case BuildingEnum.Laboratory
                 Return 205
             Case BuildingEnum.Land_Developer
@@ -288,6 +300,8 @@ Public Class BuildingGen
                 Return 260
             Case BuildingEnum.Museum
                 Return 150
+            Case BuildingEnum.Nuclear_Power_Plant
+                Return 575
             Case BuildingEnum.Observatory
                 Return 95
             Case BuildingEnum.Oil_Well
@@ -308,8 +322,6 @@ Public Class BuildingGen
                 Return 255
             'Case BuildingEnum.Post_Office
             '    Return -1
-            Case BuildingEnum.Power_Plant
-                Return 455
             Case BuildingEnum.Private_Security_Company
                 Return 205
             Case BuildingEnum.Ranch
@@ -334,6 +346,8 @@ Public Class BuildingGen
                 Return 215
             Case BuildingEnum.Skyscraper
                 Return 325
+            Case BuildingEnum.Solar_Power_Plant
+                Return 100
             Case BuildingEnum.Stadium
                 Return 310
             Case BuildingEnum.Startup_Incubator
@@ -366,6 +380,8 @@ Public Class BuildingGen
                 Return 210
             Case BuildingEnum.Welfare_Service
                 Return 100
+            Case BuildingEnum.Wind_Power_Plant
+                Return 175
             Case BuildingEnum.Zoo
                 Return 410
             Case Else
@@ -533,6 +549,14 @@ Public Class BuildingGen
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Civic Centers provide public spaces and shared landscapes for the free flow of commerce, art, and culture.")
                     newBuilding.SetSpecialAbility("The Civic Center provides the owner with increased odds of positive random events.")
+                    Return newBuilding
+                Case BuildingEnum.Coal_Power_Plant
+                    Dim newBuilding As New CoalPowerBuilding(bType, GetBaseCost(bType), 3)
+                    newBuilding.SetStat(StatEnum.Happiness, 40, -5)
+                    newBuilding.SetStat(StatEnum.Health, 20, -2)
+                    newBuilding.AddTag(TagEnum.Power)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Only works on mountains. Increases power level by 10 in range 2")
                     Return newBuilding
                 Case BuildingEnum.Coffee_Shop
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1, 14)
@@ -720,6 +744,14 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Eight lanes of shimmering cement. Smooth, ""safe"", fast. Traffic jams will be a thing of the past.")
                     newBuilding.SetSpecialAbility("Upgrades all roads within a two square adjacency, regardless of owner, by one level.")
                     Return newBuilding
+                Case BuildingEnum.Gas_Power_Plant
+                    Dim newBuilding As New GasPowerBuilding(bType, GetBaseCost(bType), 2)
+                    newBuilding.SetStat(StatEnum.Happiness, 15, -8)
+                    newBuilding.SetStat(StatEnum.Health, 15, -1)
+                    newBuilding.AddTag(TagEnum.Power)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Only works on dirt. Increases power level by 4 in range 3")
+                    Return newBuilding
                 Case BuildingEnum.Gas_Station
                     Dim newBuilding As New GasStationBuilding(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Health, 30, -2)
@@ -829,6 +861,13 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Treat yourself to the luxury of a night away.")
                     newBuilding.SetSpecialAbility("Citizens who stop at the Hotel will rest and recover up to half of their Mobility.")
                     Return newBuilding
+                Case BuildingEnum.Hydro_Power_Plant
+                    Dim newBuilding As New HydroPowerBuilding(bType, GetBaseCost(bType), 2)
+                    newBuilding.SetStat(StatEnum.Mobility, 25, -3)
+                    newBuilding.AddTag(TagEnum.Power)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Only works on coastal tiles. Increases power level by 12 in range 1")
+                    Return newBuilding
                 Case BuildingEnum.Laboratory
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Health, 20, -2)
@@ -919,6 +958,13 @@ Public Class BuildingGen
                     newBuilding.SetInfo("Museums are the best. End of story.")
                     newBuilding.SetSpecialAbility("")
                     Return newBuilding
+                Case BuildingEnum.Nuclear_Power_Plant
+                    Dim newBuilding As New NuclearPowerBuilding(bType, GetBaseCost(bType), 2)
+                    newBuilding.AddTag(TagEnum.Power)
+                    newBuilding.AddTag(TagEnum.Disreputable)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Increases power level by 8 in range 3. Small chance of a meltdown that destroys all buildings and citizens on this location.")
+                    Return newBuilding
                 Case BuildingEnum.Observatory
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 1)
                     newBuilding.SetStat(StatEnum.Intelligence, 20, 4)
@@ -998,10 +1044,6 @@ Public Class BuildingGen
                     Return newBuilding
                 'Case BuildingEnum.Post_Office
                     'newBuilding.AddTag(TagEnum.Government)
-                Case BuildingEnum.Power_Plant 'skipping until variations are ready - want to write all at once
-                    Dim newBuilding As New Building(bType, GetBaseCost(bType), 3)
-                    newBuilding.SetInfo("")
-                    'Return newBuilding
                 Case BuildingEnum.Private_Security_Company
                     Dim newBuilding As New PrivateSecurityBuilding(bType, GetBaseCost(bType), 2)
                     newBuilding.SetStat(StatEnum.Criminality, 12, -5)
@@ -1102,6 +1144,12 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Intelligence, 30, 1)
                     newBuilding.AddTag(TagEnum.Commerce)
                     newBuilding.SetInfo("Skyscrapers provide tons of jobs and a place for smart minds and ambitious career climbers to collaborate.")
+                    Return newBuilding
+                Case BuildingEnum.Solar_Power_Plant
+                    Dim newBuilding As New SolarPowerBuilding(bType, GetBaseCost(bType), 0)
+                    newBuilding.AddTag(TagEnum.Power)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Only works on deserts. Increases power level by 3 in range 1")
                     Return newBuilding
                 Case BuildingEnum.Stadium
                     Dim newBuilding As New Building(bType, GetBaseCost(bType), 4)
@@ -1219,6 +1267,12 @@ Public Class BuildingGen
                     newBuilding.SetStat(StatEnum.Creativity, 10, -2)
                     newBuilding.AddTag(TagEnum.Government)
                     newBuilding.SetInfo("")
+                    Return newBuilding
+                Case BuildingEnum.Wind_Power_Plant
+                    Dim newBuilding As New WindPowerBuilding(bType, GetBaseCost(bType), 0)
+                    newBuilding.AddTag(TagEnum.Power)
+                    newBuilding.SetInfo("")
+                    newBuilding.SetSpecialAbility("Only works on plains. Increases power level by 5 in range 1")
                     Return newBuilding
                 Case BuildingEnum.Zoo
                     Dim newBuilding As New ZooBuilding(bType, GetBaseCost(bType), 3)

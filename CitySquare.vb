@@ -29,7 +29,6 @@ Public Class CitySquare
 
     '-- Buildings
     Public Buildings As New List(Of Building)
-    Public NeighborBuildings As New List(Of Building)
     Public BuildingHistory As Integer = 0
     Public FoundedHistory As Integer = 0
     Public ClosedHistory As Integer = 0
@@ -42,6 +41,7 @@ Public Class CitySquare
     Public OrderAcquired As Integer = 1
     Public NatureCount As Integer = 0
     Public FoodCount As Integer = 0
+    Public PowerCount As Integer = 0
 
     Public Enum TransportType
         Bike
@@ -712,6 +712,8 @@ Public Class CitySquare
                     displayText = DeathCauseCounts(DeathEnum.Murder).ToString
                 Case ViewEnum.Deaths_by_Resisting_Arrest
                     displayText = DeathCauseCounts(DeathEnum.ResistingArrest).ToString
+                Case ViewEnum.Deaths_by_Nuclear_Meltdown
+                    displayText = DeathCauseCounts(DeathEnum.NuclearMeltdown).ToString
 
                 Case ViewEnum.Buildings_owned_by_current_player
                     displayText = BuildingsOwnedByPlayer(-1).ToString
@@ -827,6 +829,12 @@ Public Class CitySquare
                 Case RoadEnum.Highway
                     CityString += "Highway" + ControlChars.NewLine
             End Select
+
+            '-- Power level
+            If PowerCount > 0 Then
+                CityString += "Power level: " + PowerCount.ToString + ControlChars.NewLine
+            End If
+
             '--Building details
             CityString += ControlChars.NewLine + "Development:" + ControlChars.NewLine
             Dim i As Integer
@@ -991,6 +999,9 @@ Public Class CitySquare
                     visitString += "commuter train"
             End Select
         End If
+
+        visitString += ". Endurance: " + VisitedKey.ToString()
+
         Return visitString
     End Function
 
